@@ -13,6 +13,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<cdk.version>1.5.8</cdk.version>
+		<controlsfx.version>8.20.8</controlsfx.version>
 	</properties>
 
 	<modules>
