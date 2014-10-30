@@ -27,8 +27,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import net.sf.mzmine.main.MZmineCore;
 
 /**
  * MZmine JavaFX Application class
@@ -38,7 +38,7 @@ public final class MZmineGUI extends Application {
     public void start(Stage stage) {
 	MainWindow mainWindow = new MainWindow();
 	Scene scene = new Scene(mainWindow, 600, 700);
-	stage.setTitle("My JavaFX Application");
+	stage.setTitle("MZmine " + MZmineCore.getMZmineVersion());
 	stage.setScene(scene);
 	stage.setMinWidth(300);
 	stage.setMinHeight(300);
