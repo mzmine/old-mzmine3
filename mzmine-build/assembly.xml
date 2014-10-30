@@ -48,6 +48,13 @@
 			<directoryMode>0755</directoryMode>
 			<filtered>false</filtered>
 		</fileSet>
+		<fileSet>
+			<directory>src/main/icon</directory>
+			<outputDirectory>/lib</outputDirectory>
+			<fileMode>0755</fileMode>
+			<directoryMode>0755</directoryMode>
+			<filtered>false</filtered>
+		</fileSet>
 	</fileSets>
 
 </assembly>

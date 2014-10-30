@@ -19,11 +19,15 @@
 
 package net.sf.mzmine.gui;
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 /**
@@ -38,6 +42,10 @@ public final class MZmineGUI extends Application {
 	stage.setScene(scene);
 	stage.setMinWidth(300);
 	stage.setMinHeight(300);
+
+	final Image mzMineIcon = new Image("file:lib" + File.separator
+		+ "mzmine-icon.png", true);
+	stage.getIcons().setAll(mzMineIcon);
 
 	stage.setOnCloseRequest(e -> {
 
@@ -57,6 +65,7 @@ public final class MZmineGUI extends Application {
 	});
 
 	stage.show();
+
     }
 
 }
