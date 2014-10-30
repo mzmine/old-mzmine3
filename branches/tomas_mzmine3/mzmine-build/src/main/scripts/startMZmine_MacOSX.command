@@ -10,25 +10,17 @@ HEAP_SIZE=`sysctl hw.memsize | awk '{print int($2 / 1024^2 / 2)}'`
 # files (parsed raw data) will be placed. Default is /tmp.
 TMP_FILE_DIRECTORY=/tmp
 
-# Set R environment variables.
-export R_HOME=/Library/Frameworks/R.framework/Versions/Current/Resources/
-
-# The directory holding the JRI shared library (libjri.jnilib).
-JRI_LIB_PATH=${R_HOME}/library/rJava/jri
-
 # It is usually not necessary to modify the JAVA_COMMAND parameter, but 
 # if you like to run a specific Java Virtual Machine, you may set the 
 # path to the java command of that JVM.
 JAVA_COMMAND=`/usr/libexec/java_home -v 1.8`/bin/java
 
 # It is not necessary to modify the following section
-JAVA_PARAMETERS="-showversion -Xdock:name='MZmine 2' -Xdock:icon=icons/MZmineIcon.png -Djava.io.tmpdir=$TMP_FILE_DIRECTORY -Xms${HEAP_SIZE}m -Xmx${HEAP_SIZE}m"
+JAVA_PARAMETERS="-showversion -Xdock:name='MZmine 3' -Xdock:icon=lib/mzmine-icon.png -Djava.io.tmpdir=$TMP_FILE_DIRECTORY -Xms${HEAP_SIZE}m -Xmx${HEAP_SIZE}m"
 CLASS_PATH="lib/\*"
 MAIN_CLASS=net.sf.mzmine.main.MZmineCore 
 
 # Make sure we are in the correct directory
-pwd
-
 SCRIPTDIR=`dirname "$0"`
 cd "$SCRIPTDIR"
 
