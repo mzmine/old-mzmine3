@@ -21,24 +21,17 @@ package net.sf.mzmine.parameters;
 
 import java.util.Collection;
 
+import org.controlsfx.control.PropertySheet.Item;
 import org.w3c.dom.Element;
 
 /**
  * Parameter interface, represents parameters or variables used in the project
  */
-public interface Parameter<ValueType> {
+public interface Parameter<ValueType> extends Item {
 
-    /**
-     * Returns this parameter's name. The name must be unique within one
-     * ParameterSet.
-     * 
-     * @return Parameter name
-     */
-    public String getName();
 
+    @Override
     public ValueType getValue();
-
-    public void setValue(ValueType newValue);
 
     public boolean checkValue(Collection<String> errorMessages);
 
