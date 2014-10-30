@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.sf.mzmine</groupId>
+	<artifactId>mzmine</artifactId>
+	<packaging>pom</packaging>
+	<version>3.0</version>
+	<name>MZmine</name>
+	<description>MZmine 2 is an open-source project delivering a software for mass-spectrometry data processing, with the main focus on LC-MS data.</description>
+	<url>http://mzmine.sourceforge.net/</url>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<cdk.version>1.5.8</cdk.version>
+	</properties>
+
+	<modules>
+		<module>mzmine-core</module>
+		<module>mzmine-gui</module>
+		<module>mzmine-modules</module>
+		<module>mzmine-build</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.2</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.5</version>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
