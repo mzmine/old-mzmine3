@@ -126,7 +126,7 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
     }
 
     @Override
-    public MassSpectrumType getMassSpectrumType() {
+    public MassSpectrumType getSpectrumType() {
 	// TODO Auto-generated method stub
 	return null;
     }

@@ -12,13 +12,12 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<cdk.version>1.5.8</cdk.version>
+		<cdk.version>1.5.10</cdk.version>
 		<controlsfx.version>8.20.8</controlsfx.version>
 	</properties>
 
 	<modules>
 		<module>mzmine-core</module>
-		<module>mzmine-gui</module>
 		<module>mzmine-modules</module>
 		<module>mzmine-build</module>
 	</modules>

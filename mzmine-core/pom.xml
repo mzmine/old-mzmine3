@@ -8,17 +8,7 @@
 	</parent>
 	<artifactId>mzmine-core</artifactId>
 
-	<repositories>
-		<repository>
-			<!-- CDK repository -->
-			<id>ebi-repo</id>
-			<name>The EBI Maven 2 repository</name>
-			<url>http://www.ebi.ac.uk/~maven/m2repo</url>
-		</repository>
-	</repositories>
-
 	<dependencies>
-
 		<dependency>
 			<groupId>net.sf.extcos</groupId>
 			<artifactId>extcos</artifactId>
@@ -47,6 +37,18 @@
 			<groupId>org.controlsfx</groupId>
 			<artifactId>controlsfx</artifactId>
 			<version>${controlsfx.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.0.19</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>xml-apis</artifactId>
+					<groupId>xml-apis</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 	</dependencies>

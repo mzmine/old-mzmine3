@@ -1,5 +1,6 @@
+package net.sf.mzmine.modules;
 /*
- * Copyright 2006-2014 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -17,14 +18,15 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package net.sf.mzmine.main;
+
 
 import javax.annotation.Nonnull;
 
 import net.sf.mzmine.parameters.ParameterSet;
 
 /**
- * This interface represents MZmine module.
+ * This interface represents any component of MZmine that has a ParameterSet,
+ * and therefore can store its settings.
  */
 public interface MZmineModule {
 

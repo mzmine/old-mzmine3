@@ -1,4 +1,5 @@
 package net.sf.mzmine.modules.rawdataimport;
+
 /*
  * Copyright 2006-2014 The MZmine 2 Development Team
  * 
@@ -18,31 +19,28 @@ package net.sf.mzmine.modules.rawdataimport;
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-
-
 import java.io.File;
+import java.util.List;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import net.sf.mzmine.main.MZmineCore;
+import net.sf.mzmine.main.SimpleParameterSet;
 import net.sf.mzmine.parameters.Parameter;
-import net.sf.mzmine.parameters.impl.SimpleParameterSet;
 import net.sf.mzmine.util.ExitCode;
 
 public class RawDataImportParameters extends SimpleParameterSet {
 
-	private static final FileFilter filters[] = new FileFilter[] {
-			new FileNameExtensionFilter("All raw data files", "cdf", "nc",
-					"mzData", "mzML", "mzXML", "xml", "raw", "csv"),
-			new FileNameExtensionFilter("All XML files", "xml"),
-			new FileNameExtensionFilter("NetCDF files", "cdf", "nc"),
-			new FileNameExtensionFilter("mzData files", "mzData"),
-			new FileNameExtensionFilter("mzML files", "mzML"),
-			new FileNameExtensionFilter("XCalibur RAW files", "raw"),
-			new FileNameExtensionFilter("mzXML files", "mzXML"),
-			new FileNameExtensionFilter("Agilent CSV files", "csv") };
+	private static final ExtensionFilter filters[] = new ExtensionFilter[] {
+			new ExtensionFilter("All raw data files", "cdf", "nc", "mzData",
+					"mzML", "mzXML", "xml", "raw", "csv"),
+			new ExtensionFilter("All XML files", "xml"),
+			new ExtensionFilter("NetCDF files", "cdf", "nc"),
+			new ExtensionFilter("mzData files", "mzData"),
+			new ExtensionFilter("mzML files", "mzML"),
+			new ExtensionFilter("XCalibur RAW files", "raw"),
+			new ExtensionFilter("mzXML files", "mzXML"),
+			new ExtensionFilter("Agilent CSV files", "csv") };
 
 	public static final FileNamesParameter fileNames = new FileNamesParameter();
 
@@ -52,33 +50,16 @@ public class RawDataImportParameters extends SimpleParameterSet {
 
 	public ExitCode showSetupDialog() {
 
-		JFileChooser chooser = new JFileChooser();
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open Resource File");
+		fileChooser.getExtensionFilters().addAll(filters);
 
-		for (FileFilter filter : filters)
-			chooser.setFileFilter(filter);
-		chooser.setFileFilter(filters[0]);
-
-		File lastFiles[] = getParameter(fileNames).getValue();
-		if ((lastFiles != null) && (lastFiles.length > 0)) {
-			File currentDir = lastFiles[0].getParentFile();
-			if ((currentDir != null) && (currentDir.exists()))
-				chooser.setCurrentDirectory(currentDir);
-		}
-
-		chooser.setMultiSelectionEnabled(true);
-		
-		int returnVal = chooser.showOpenDialog(MZmineCore.getDesktop()
-				.getMainWindow());
-
-		if (returnVal != JFileChooser.APPROVE_OPTION)
-			return ExitCode.CANCEL;
-
-		File selectedFiles[] = chooser.getSelectedFiles();
+		List<File> selectedFiles = fileChooser
+				.showOpenMultipleDialog(MZmineCore.getMainWindow());
 
 		getParameter(fileNames).setValue(selectedFiles);
 
 		return ExitCode.OK;
 
 	}
-
 }

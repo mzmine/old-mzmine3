@@ -51,7 +51,7 @@ public interface MassSpectrum {
      * 
      * @return True if the spectrum is centroided
      */
-    @Nonnull MassSpectrumType getMassSpectrumType();
+    @Nonnull MassSpectrumType getSpectrumType();
 
     /**
      * @return Number of m/z and intensity data points.

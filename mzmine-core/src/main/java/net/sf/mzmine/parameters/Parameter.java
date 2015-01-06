@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -21,17 +21,24 @@ package net.sf.mzmine.parameters;
 
 import java.util.Collection;
 
-import org.controlsfx.control.PropertySheet.Item;
 import org.w3c.dom.Element;
 
 /**
  * Parameter interface, represents parameters or variables used in the project
  */
-public interface Parameter<ValueType> extends Item {
+public interface Parameter<ValueType> {
 
+    /**
+     * Returns this parameter's name. The name must be unique within one
+     * ParameterSet.
+     * 
+     * @return Parameter name
+     */
+    public String getName();
 
-    @Override
     public ValueType getValue();
+
+    public void setValue(ValueType newValue);
 
     public boolean checkValue(Collection<String> errorMessages);
 

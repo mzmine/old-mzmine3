@@ -26,12 +26,16 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
+import javafx.stage.Stage;
 
 import javax.annotation.Nonnull;
 
 import net.sf.extcos.ComponentQuery;
 import net.sf.extcos.ComponentScanner;
+import net.sf.mzmine.conf.MZmineConfiguration;
 import net.sf.mzmine.datamodel.MZmineProject;
+import net.sf.mzmine.gui.MZmineGUI;
+import net.sf.mzmine.modules.MZmineProcessingModule;
 
 /**
  * MZmine main class
@@ -42,28 +46,21 @@ public final class MZmineCore {
 
     public static void main(String args[]) {
 
-	final Set<Class<? extends MZmineProcessingModule>> samples = new HashSet<Class<? extends MZmineProcessingModule>>();
-	 
+	final Set<Class<? extends MZmineProcessingModule>> samples = new HashSet<>();
+
 	ComponentScanner scanner = new ComponentScanner();
-	 
+
 	scanner.getClasses(new ComponentQuery() {
 	    protected void query() {
-	        select().from("net.sf.mzmine.modules").andStore(
-	            thoseImplementing(MZmineProcessingModule.class).into(samples));
+		select().from("net.sf.mzmine.modules").andStore(
+			thoseImplementing(MZmineProcessingModule.class).into(
+				samples));
 	    }
 	});
-	
+
 	System.out.println(samples.toString());
 
-	
-	try {
-	    @SuppressWarnings("unchecked")
-	    Class<? extends Application> guiClass = (Class<? extends Application>) Class
-		    .forName("net.sf.mzmine.gui.MZmineGUI");
-	    Application.launch(guiClass, args);
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
+	Application.launch(MZmineGUI.class, args);
 
     }
 
@@ -72,6 +69,10 @@ public final class MZmineCore {
     }
 
     public static MZmineProject getCurrentProject() {
+	return null;
+    }
+
+    public static Stage getMainWindow() {
 	return null;
     }
 

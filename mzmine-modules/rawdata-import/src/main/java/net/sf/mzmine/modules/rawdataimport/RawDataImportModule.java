@@ -1,4 +1,3 @@
-package net.sf.mzmine.modules.rawdataimport;
 /*
  * Copyright 2006-2014 The MZmine 2 Development Team
  * 
@@ -18,169 +17,132 @@ package net.sf.mzmine.modules.rawdataimport;
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-
+package net.sf.mzmine.modules.rawdataimport;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Collection;
-import java.util.logging.Level;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
 
 import net.sf.mzmine.datamodel.RawDataFile;
-import net.sf.mzmine.main.MZmineCore;
-import net.sf.mzmine.main.MZmineModuleCategory;
-import net.sf.mzmine.main.MZmineProcessingModule;
-import net.sf.mzmine.modules.rawdataimport.fileformats.AgilentCsvReadTask;
-import net.sf.mzmine.modules.rawdataimport.fileformats.MzDataReadTask;
+import net.sf.mzmine.datamodel.impl.MZmineObjectBuilder;
+import net.sf.mzmine.modules.MZmineModuleCategory;
+import net.sf.mzmine.modules.MZmineProcessingModule;
 import net.sf.mzmine.modules.rawdataimport.fileformats.MzMLReadTask;
-import net.sf.mzmine.modules.rawdataimport.fileformats.MzXMLReadTask;
-import net.sf.mzmine.modules.rawdataimport.fileformats.NetCDFReadTask;
-import net.sf.mzmine.modules.rawdataimport.fileformats.XcaliburRawFileReadTask;
 import net.sf.mzmine.parameters.ParameterSet;
+import net.sf.mzmine.taskcontrol.Task;
 import net.sf.mzmine.util.ExitCode;
 
 /**
  * Raw data import module
  */
-public class RawDataImportModule implements MZmineProcessingModule,
-	TaskListener {
+public class RawDataImportModule implements MZmineProcessingModule {
 
-    private Logger logger = Logger.getLogger(this.getClass().getName());
+	private Logger logger = Logger.getLogger(this.getClass().getName());
 
-    private static final String MODULE_NAME = "Raw data import";
-    private static final String MODULE_DESCRIPTION = "This module imports raw data into the project.";
+	private static final String MODULE_NAME = "Raw data import";
+	private static final String MODULE_DESCRIPTION = "This module imports raw data into the project.";
 
-    @Override
-    public @Nonnull String getName() {
-	return MODULE_NAME;
-    }
+	@Override
+	public @Nonnull String getName() {
+		return MODULE_NAME;
+	}
 
-    @Override
-    public @Nonnull String getDescription() {
-	return MODULE_DESCRIPTION;
-    }
+	@Override
+	public @Nonnull String getDescription() {
+		return MODULE_DESCRIPTION;
+	}
 
-    @Override
-    @Nonnull
-    public ExitCode runModule(@Nonnull ParameterSet parameters,
-	    @Nonnull Collection<Task> tasks) {
+	@Override
+	@Nonnull
+	public ExitCode runModule(@Nonnull ParameterSet parameters,
+			@Nonnull Collection<Task> tasks) {
 
-	File fileNames[] = parameters.getParameter(
-		RawDataImportParameters.fileNames).getValue();
+		List<File> fileNames = parameters.getParameter(
+				RawDataImportParameters.fileNames).getValue();
 
-	for (int i = 0; i < fileNames.length; i++) {
+		for (File fileName : fileNames) {
 
-	    if ((!fileNames[i].exists()) || (!fileNames[i].canRead())) {
-		MZmineCore.getDesktop().displayErrorMessage(
-			"Cannot read file " + fileNames[i]);
-		logger.warning("Cannot read file " + fileNames[i]);
-		return ExitCode.ERROR;
-	    }
+			if ((!fileName.exists()) || (!fileName.canRead())) {
+				// MZmineCore.getDesktop().displayErrorMessage("Cannot read file " + fileName);
+				logger.warning("Cannot read file " + fileName);
+				return ExitCode.ERROR;
+			}
 
-	    RawDataFileWriter newMZmineFile;
-	    try {
-		newMZmineFile = MZmineCore
-			.createNewFile(fileNames[i].getName());
-	    } catch (IOException e) {
-		MZmineCore.getDesktop().displayErrorMessage(
-			"Could not create a new temporary file " + e);
-		logger.log(Level.SEVERE,
-			"Could not create a new temporary file ", e);
-		return ExitCode.ERROR;
-	    }
+			RawDataFile newMZmineFile = MZmineObjectBuilder.getRawDataFile();
 
-	    String extension = fileNames[i].getName()
-		    .substring(fileNames[i].getName().lastIndexOf(".") + 1)
-		    .toLowerCase();
-	    Task newTask = null;
+			String extension = fileName.getName()
+					.substring(fileName.getName().lastIndexOf(".") + 1)
+					.toLowerCase();
+			Task newTask = null;
 
-	    if (extension.endsWith("mzdata")) {
-		newTask = new MzDataReadTask(fileNames[i], newMZmineFile);
-	    }
-	    if (extension.endsWith("mzxml")) {
-		newTask = new MzXMLReadTask(fileNames[i], newMZmineFile);
-	    }
-	    if (extension.endsWith("mzml")) {
-		newTask = new MzMLReadTask(fileNames[i], newMZmineFile);
-	    }
-	    if (extension.endsWith("cdf")) {
-		newTask = new NetCDFReadTask(fileNames[i], newMZmineFile);
-	    }
-	    if (extension.endsWith("raw")) {
-		newTask = new XcaliburRawFileReadTask(fileNames[i],
-			newMZmineFile);
-	    }
-	    if (extension.endsWith("xml")) {
+			if (extension.endsWith("mzml")) {
+				newTask = new MzMLReadTask(fileName, newMZmineFile);
+			}
+			/*
+			if (extension.endsWith("mzdata")) {
+				newTask = new MzDataReadTask(fileName, newMZmineFile);
+			}
+			if (extension.endsWith("mzxml")) {
+				newTask = new MzXMLReadTask(fileName, newMZmineFile);
+			}
+			if (extension.endsWith("cdf")) {
+				newTask = new NetCDFReadTask(fileName, newMZmineFile);
+			}
+			if (extension.endsWith("raw")) {
+				newTask = new XcaliburRawFileReadTask(fileName, newMZmineFile);
+			}
+			if (extension.endsWith("xml")) {
 
-		try {
-		    // Check the first 512 bytes of the file, to determine the
-		    // file type
-		    FileReader reader = new FileReader(fileNames[i]);
-		    char buffer[] = new char[512];
-		    reader.read(buffer);
-		    reader.close();
-		    String fileHeader = new String(buffer);
-		    if (fileHeader.contains("mzXML")) {
-			newTask = new MzXMLReadTask(fileNames[i], newMZmineFile);
-		    }
-		    if (fileHeader.contains("mzData")) {
-			newTask = new MzDataReadTask(fileNames[i],
-				newMZmineFile);
-		    }
-		    if (fileHeader.contains("mzML")) {
-			newTask = new MzMLReadTask(fileNames[i], newMZmineFile);
-		    }
-		} catch (Exception e) {
-		    logger.warning("Cannot read file " + fileNames[i] + ": "
-			    + e);
-		    return ExitCode.ERROR;
+				try {
+					// Check the first 512 bytes of the file, to determine the
+					// file type
+					FileReader reader = new FileReader(fileName);
+					char buffer[] = new char[512];
+					reader.read(buffer);
+					reader.close();
+					String fileHeader = new String(buffer);
+					if (fileHeader.contains("mzXML")) {
+						newTask = new MzXMLReadTask(fileName, newMZmineFile);
+					}
+					if (fileHeader.contains("mzData")) {
+						newTask = new MzDataReadTask(fileName, newMZmineFile);
+					}
+					if (fileHeader.contains("mzML")) {
+						newTask = new MzMLReadTask(fileName, newMZmineFile);
+					}
+				} catch (Exception e) {
+					logger.warning("Cannot read file " + fileName + ": " + e);
+					return ExitCode.ERROR;
+				}
+			}
+
+			if (extension.endsWith("csv")) {
+				newTask = new AgilentCsvReadTask(fileName, newMZmineFile);
+			}*/
+
+			if (newTask == null) {
+				logger.warning("Cannot determine file type of file " + fileName);
+				return ExitCode.ERROR;
+			}
+
+			tasks.add(newTask);
+
 		}
-	    }
 
-	    if (extension.endsWith("csv")) {
-		newTask = new AgilentCsvReadTask(fileNames[i], newMZmineFile);
-	    }
-
-	    if (newTask == null) {
-		logger.warning("Cannot determine file type of file "
-			+ fileNames[i]);
-		return ExitCode.ERROR;
-	    }
-
-	    newTask.addTaskListener(this);
-	    tasks.add(newTask);
-
+		return ExitCode.OK;
 	}
 
-	return ExitCode.OK;
-    }
-
-    /**
-     * The statusChanged method of the TaskEvent interface
-     * 
-     * @param e
-     *            The TaskEvent which triggered this action
-     */
-    @Override
-    public void statusChanged(TaskEvent e) {
-	if (e.getStatus() == TaskStatus.FINISHED) {
-	    MZmineCore.getCurrentProject().addFile(
-		    (RawDataFile) e.getSource().getCreatedObjects()[0]);
+	@Override
+	public @Nonnull MZmineModuleCategory getModuleCategory() {
+		return MZmineModuleCategory.RAWDATA;
 	}
 
-    }
-
-    @Override
-    public @Nonnull MZmineModuleCategory getModuleCategory() {
-	return MZmineModuleCategory.RAWDATA;
-    }
-
-    @Override
-    public @Nonnull Class<? extends ParameterSet> getParameterSetClass() {
-	return RawDataImportParameters.class;
-    }
+	@Override
+	public @Nonnull Class<? extends ParameterSet> getParameterSetClass() {
+		return RawDataImportParameters.class;
+	}
 
 }

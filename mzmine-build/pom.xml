@@ -14,11 +14,6 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.mzmine</groupId>
-			<artifactId>mzmine-gui</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>net.sf.mzmine.modules</groupId>
 			<artifactId>mzmine-rawdata-import</artifactId>
 			<version>${project.version}</version>

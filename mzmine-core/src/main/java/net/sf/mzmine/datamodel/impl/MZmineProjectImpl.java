@@ -27,7 +27,7 @@ import net.sf.mzmine.datamodel.MZmineProject;
 import net.sf.mzmine.datamodel.PeakList;
 import net.sf.mzmine.datamodel.RawDataFile;
 import net.sf.mzmine.datamodel.Sample;
-import net.sf.mzmine.main.MZmineProcessingStep;
+import net.sf.mzmine.modules.MZmineProcessingStep;
 import net.sf.mzmine.parameters.UserParameter;
 
 /**
