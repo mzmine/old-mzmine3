@@ -24,7 +24,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.sf.mzmine.main.MZmineProcessingStep;
+import net.sf.mzmine.modules.MZmineProcessingStep;
 import net.sf.mzmine.parameters.UserParameter;
 
 /**

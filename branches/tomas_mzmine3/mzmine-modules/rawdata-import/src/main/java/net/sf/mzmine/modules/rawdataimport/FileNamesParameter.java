@@ -1,7 +1,5 @@
-package net.sf.mzmine.modules.rawdataimport;
-
 /*
- * Copyright 2006-2014 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -19,47 +17,77 @@ package net.sf.mzmine.modules.rawdataimport;
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+package net.sf.mzmine.modules.rawdataimport;
+
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import org.controlsfx.control.PropertySheet.Item;
+import net.sf.mzmine.parameters.Parameter;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * This parameter stores filenames for raw data importer
  * 
  */
-public class FileNamesParameter implements Item {
+public class FileNamesParameter implements Parameter<List<File>> {
 
-    private List<File> value;
+	private List<File> value;
 
-    @Override
-    public String getName() {
-	return "Raw data file names";
-    }
-
-    @Override
-    public String getCategory() {
-	return "File names category";
-    }
-
-    @Override
-    public String getDescription() {
-	return "Select files to import";
-    }
-
-    @Override
-	public Class<?> getType() {
-	    return List.class;
+	@Override
+	public String getName() {
+		return "Raw data file names";
 	}
 
-    @Override
-    public void setValue(Object value) {
-	this.value = (List<File>) value;
-    }
+	public List<File> getValue() {
+		return value;
+	}
 
-    @Override
-    public Object getValue() {
-	return value;
-    }
+	public void setValue(List<File> value) {
+		this.value = value;
+	}
+
+	@Override
+	public FileNamesParameter cloneParameter() {
+		FileNamesParameter copy = new FileNamesParameter();
+		copy.setValue(this.getValue());
+		return copy;
+	}
+
+	@Override
+	public void loadValueFromXML(Element xmlElement) {
+		NodeList list = xmlElement.getElementsByTagName("file");
+		this.value = new ArrayList<>();
+		for (int i = 0; i < list.getLength(); i++) {
+			Element nextElement = (Element) list.item(i);
+			File newFile = new File(nextElement.getTextContent());
+			value.add(newFile);
+		}
+	}
+
+	@Override
+	public void saveValueToXML(Element xmlElement) {
+		if (value == null)
+			return;
+		Document parentDocument = xmlElement.getOwnerDocument();
+		for (File f : value) {
+			Element newElement = parentDocument.createElement("file");
+			newElement.setTextContent(f.getPath());
+			xmlElement.appendChild(newElement);
+		}
+	}
+
+	@Override
+	public boolean checkValue(Collection<String> errorMessages) {
+		if (value == null) {
+			errorMessages.add("File names are not set");
+			return false;
+		}
+		return true;
+	}
 
 }

@@ -17,12 +17,13 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package net.sf.mzmine.main;
+package net.sf.mzmine.conf;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
 
+import net.sf.mzmine.modules.MZmineModule;
 import net.sf.mzmine.parameters.ParameterSet;
 
 /**

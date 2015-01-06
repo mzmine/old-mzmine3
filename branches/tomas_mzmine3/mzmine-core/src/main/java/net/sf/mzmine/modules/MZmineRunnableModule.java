@@ -1,5 +1,6 @@
+package net.sf.mzmine.modules;
 /*
- * Copyright 2006-2014 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -17,22 +18,22 @@
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package net.sf.mzmine.main;
+
 
 import java.util.Collection;
-
-import javafx.concurrent.Task;
 
 import javax.annotation.Nonnull;
 
 import net.sf.mzmine.parameters.ParameterSet;
+import net.sf.mzmine.taskcontrol.Task;
 import net.sf.mzmine.util.ExitCode;
 
 /**
- * Interface representing a data processing method which can be executed in a
- * batch
+ * Interface representing a module that can be executed from the GUI through a
+ * menu item. This can be either a data processing method (@see
+ * MZmineProcessingModule) or a visualization/data analysis method.
  */
-public interface MZmineProcessingModule extends MZmineModule {
+public interface MZmineRunnableModule extends MZmineModule {
 
     /**
      * Returns a brief module description for quick tooltips in the GUI

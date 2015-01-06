@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -17,26 +17,27 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package net.sf.mzmine.datamodel;
+package net.sf.mzmine.parameters;
 
-import javax.annotation.Nonnull;
+import javax.swing.JComponent;
 
 /**
- * This class represent masses (ions) detected in one mass spectrum. Each ion is
- * represented by a DataPoint. In other words, the MassList represents a
- * centroided mass spectrum with majority of the noise removed. Mass lists are
- * attached to scans (raw data).
+ * Parameter interface, represents parameters or variables used in the project
  */
-public interface MassList extends MassSpectrum {
+public interface UserParameter<ValueType, EditorComponent extends JComponent>
+	extends Parameter<ValueType> {
 
-    @Nonnull
-    String getName();
+    /**
+     * 
+     * @return Detailed description of the parameter
+     */
+    public String getDescription();
 
-    void setName(@Nonnull String name);
+    public EditorComponent createEditingComponent();
 
-    @Nonnull
-    MsScan getScan();
+    public void setValueFromComponent(EditorComponent component);
 
-    void setScan(@Nonnull MsScan scan);
+    public void setValueToComponent(EditorComponent component,
+	    ValueType newValue);
 
 }
