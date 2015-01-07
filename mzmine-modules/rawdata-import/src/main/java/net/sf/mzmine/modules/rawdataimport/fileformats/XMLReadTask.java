@@ -20,8 +20,9 @@
 package net.sf.mzmine.modules.rawdataimport.fileformats;
 
 import java.io.File;
+import java.io.FileReader;
 import java.util.Hashtable;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -40,46 +41,35 @@ import org.apache.http.util.ExceptionUtils;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArrayList;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
-import uk.ac.ebi.jmzml.model.mzml.ParamGroup;
-import uk.ac.ebi.jmzml.model.mzml.Precursor;
 import uk.ac.ebi.jmzml.model.mzml.PrecursorList;
-import uk.ac.ebi.jmzml.model.mzml.Scan;
 import uk.ac.ebi.jmzml.model.mzml.ScanList;
 import uk.ac.ebi.jmzml.model.mzml.SelectedIonList;
-import uk.ac.ebi.jmzml.model.mzml.Spectrum;
-import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
-import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
+import uk.ac.ebi.pride.tools.jmzreader.JMzReader;
+import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
+import uk.ac.ebi.pride.tools.jmzreader.model.impl.ParamGroup;
+import uk.ac.ebi.pride.tools.mzdata_parser.MzDataFile;
+import uk.ac.ebi.pride.tools.mzdata_parser.mzdata.model.Precursor;
+import uk.ac.ebi.pride.tools.mzml_wrapper.MzMlWrapper;
+import uk.ac.ebi.pride.tools.mzxml_parser.MzXMLFile;
+import uk.ac.ebi.pride.tools.mzxml_parser.mzxml.model.Scan;
 
 /**
- * This class reads mzML 1.0 and 1.1.0 files
- * (http://www.psidev.info/index.php?q=node/257) using the jmzml library
- * (http://code.google.com/p/jmzml/).
+ * This class reads XML-based mass spec data formats (mzData, mzXML, and mzML)
+ * using the jmzreader library.
  */
-public class MzMLReadTask extends AbstractTask {
+public class XMLReadTask extends AbstractTask {
 
 	private Logger logger = Logger.getLogger(this.getClass().getName());
 
 	private File file;
 	private RawDataFile newMZmineFile;
-	private RawDataFile finalRawDataFile;
 	private int totalScans = 0, parsedScans;
 
 	private int lastScanNumber = 0;
 
 	private Map<String, Integer> scanIdTable = new Hashtable<String, Integer>();
 
-	/*
-	 * This stack stores at most 20 consecutive scans. This window serves to
-	 * find possible fragments (current scan) that belongs to any of the stored
-	 * scans in the stack. The reason of the size follows the concept of
-	 * neighborhood of scans and all his fragments. These solution is
-	 * implemented because exists the possibility to find fragments of one scan
-	 * after one or more full scans.
-	 */
-	private static final int PARENT_STACK_SIZE = 20;
-	private LinkedList<Scan> parentStack = new LinkedList<Scan>();
-
-	public MzMLReadTask(File fileToOpen, RawDataFile newMZmineFile) {
+	public XMLReadTask(File fileToOpen, RawDataFile newMZmineFile) {
 		this.file = fileToOpen;
 		this.newMZmineFile = newMZmineFile;
 	}
@@ -87,31 +77,51 @@ public class MzMLReadTask extends AbstractTask {
 	/**
 	 * @see net.sf.mzmine.taskcontrol.Task#getFinishedPercentage()
 	 */
+	@Override
 	public double getFinishedPercentage() {
-		return totalScans == 0 ? 0 : (double) parsedScans / totalScans;
+		return totalScans == 0 ? 0.0 : (double) parsedScans / totalScans;
 	}
 
 	/**
 	 * @see java.lang.Runnable#run()
 	 */
+	@Override
 	public void run() {
 
 		setStatus(TaskStatus.PROCESSING);
 		logger.info("Started parsing file " + file);
 
-		MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(file);
+		JMzReader parser;
 
-		totalScans = unmarshaller
-				.getObjectCountForXpath("/run/spectrumList/spectrum");
+		// Check the first 512 bytes of the file, to determine the file type
+		FileReader reader = new FileReader(file);
+		char buffer[] = new char[512];
+		reader.read(buffer);
+		reader.close();
+		String fileHeader = new String(buffer);
+		if (fileHeader.contains("mzXML")) {
+			parser = new MzXMLFile(file);
+		}
+		if (fileHeader.contains("mzData")) {
+			parser = new MzDataFile(file);
+		}
+		if (fileHeader.contains("mzML")) {
+			parser = new MzMlWrapper(file);
+		}
 
-		MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller
-				.unmarshalCollectionFromXpath("/run/spectrumList/spectrum",
-						Spectrum.class);
+		if (parser == null) {
+			setErrorMessage("Cannot determine file type of file " + file);
+			return;
+		}
+
+		totalScans = parser.getSpectraCount();
+
+		Iterator<Spectrum> iterator = parser.getSpectrumIterator();
+
 		try {
 
-			while (spectrumIterator.hasNext()) {
-
-				Spectrum spectrum = spectrumIterator.next();
+			while (iterator.hasNext()) {
+				Spectrum spectrum = iterator.next();
 
 				String scanId = spectrum.getId();
 				int scanNumber = convertScanIdToScanNumber(scanId);
@@ -129,10 +139,6 @@ public class MzMLReadTask extends AbstractTask {
 				// Auto-detect whether this scan is centroided
 				boolean centroided = ScanUtils.isCentroided(dataPoints);
 
-				// Remove zero data points
-				DataPoint optimizedDataPoints[] = ScanUtils
-						.removeZeroDataPoints(dataPoints, centroided);
-
 				SimpleScan scan = new SimpleScan(null, scanNumber, msLevel,
 						retentionTime, parentScan, precursorMz,
 						precursorCharge, null, optimizedDataPoints, centroided);
@@ -143,29 +149,13 @@ public class MzMLReadTask extends AbstractTask {
 					}
 				}
 
-				/*
-				 * Verify the size of parentStack. The actual size of the window
-				 * to cover possible candidates is defined by limitSize.
-				 */
-				if (parentStack.size() > PARENT_STACK_SIZE) {
-					SimpleScan firstScan = parentStack.removeLast();
-					newMZmineFile.addScan(firstScan);
-				}
-
-				parentStack.addFirst(scan);
+				newMZmineFile.addScan(scan);
 
 				parsedScans++;
 
 			}
 
-			while (!parentStack.isEmpty()) {
-				SimpleScan scan = parentStack.removeLast();
-				newMZmineFile.addScan(scan);
-
-			}
-
-			finalRawDataFile = newMZmineFile.finishWriting();
-
+		
 		} catch (Throwable e) {
 			setStatus(TaskStatus.ERROR);
 			errorMessage = "Error parsing mzML: "
@@ -392,12 +382,9 @@ public class MzMLReadTask extends AbstractTask {
 		return 0;
 	}
 
+	@Override
 	public String getTaskDescription() {
 		return "Opening file" + file;
-	}
-
-	public Object[] getCreatedObjects() {
-		return new Object[] { finalRawDataFile };
 	}
 
 }

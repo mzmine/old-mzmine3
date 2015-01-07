@@ -71,6 +71,7 @@ public abstract class AbstractTask implements Task {
     /**
      */
     public final void setErrorMessage(String errorMessage) {
+	setStatus(TaskStatus.ERROR);
 	this.errorMessage = errorMessage;
     }
 

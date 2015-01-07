@@ -30,7 +30,7 @@ import net.sf.mzmine.datamodel.RawDataFile;
 import net.sf.mzmine.datamodel.impl.MZmineObjectBuilder;
 import net.sf.mzmine.modules.MZmineModuleCategory;
 import net.sf.mzmine.modules.MZmineProcessingModule;
-import net.sf.mzmine.modules.rawdataimport.fileformats.MzMLReadTask;
+import net.sf.mzmine.modules.rawdataimport.fileformats.XMLReadTask;
 import net.sf.mzmine.parameters.ParameterSet;
 import net.sf.mzmine.taskcontrol.Task;
 import net.sf.mzmine.util.ExitCode;
@@ -66,7 +66,8 @@ public class RawDataImportModule implements MZmineProcessingModule {
 		for (File fileName : fileNames) {
 
 			if ((!fileName.exists()) || (!fileName.canRead())) {
-				// MZmineCore.getDesktop().displayErrorMessage("Cannot read file " + fileName);
+				// MZmineCore.getDesktop().displayErrorMessage("Cannot read file "
+				// + fileName);
 				logger.warning("Cannot read file " + fileName);
 				return ExitCode.ERROR;
 			}
@@ -78,50 +79,19 @@ public class RawDataImportModule implements MZmineProcessingModule {
 					.toLowerCase();
 			Task newTask = null;
 
-			if (extension.endsWith("mzml")) {
-				newTask = new MzMLReadTask(fileName, newMZmineFile);
+			if (extension.endsWith("mzml") || extension.endsWith("mzdata")
+					|| extension.endsWith("mzxml") || extension.endsWith("xml")) {
+				newTask = new XMLReadTask(fileName, newMZmineFile);
 			}
 			/*
-			if (extension.endsWith("mzdata")) {
-				newTask = new MzDataReadTask(fileName, newMZmineFile);
-			}
-			if (extension.endsWith("mzxml")) {
-				newTask = new MzXMLReadTask(fileName, newMZmineFile);
-			}
-			if (extension.endsWith("cdf")) {
-				newTask = new NetCDFReadTask(fileName, newMZmineFile);
-			}
-			if (extension.endsWith("raw")) {
-				newTask = new XcaliburRawFileReadTask(fileName, newMZmineFile);
-			}
-			if (extension.endsWith("xml")) {
-
-				try {
-					// Check the first 512 bytes of the file, to determine the
-					// file type
-					FileReader reader = new FileReader(fileName);
-					char buffer[] = new char[512];
-					reader.read(buffer);
-					reader.close();
-					String fileHeader = new String(buffer);
-					if (fileHeader.contains("mzXML")) {
-						newTask = new MzXMLReadTask(fileName, newMZmineFile);
-					}
-					if (fileHeader.contains("mzData")) {
-						newTask = new MzDataReadTask(fileName, newMZmineFile);
-					}
-					if (fileHeader.contains("mzML")) {
-						newTask = new MzMLReadTask(fileName, newMZmineFile);
-					}
-				} catch (Exception e) {
-					logger.warning("Cannot read file " + fileName + ": " + e);
-					return ExitCode.ERROR;
-				}
-			}
-
-			if (extension.endsWith("csv")) {
-				newTask = new AgilentCsvReadTask(fileName, newMZmineFile);
-			}*/
+			 * 
+			 * if (extension.endsWith("cdf")) { newTask = new
+			 * NetCDFReadTask(fileName, newMZmineFile); } if
+			 * (extension.endsWith("raw")) { newTask = new
+			 * XcaliburRawFileReadTask(fileName, newMZmineFile); } if
+			 * (extension.endsWith("csv")) { newTask = new
+			 * AgilentCsvReadTask(fileName, newMZmineFile); }
+			 */
 
 			if (newTask == null) {
 				logger.warning("Cannot determine file type of file " + fileName);
