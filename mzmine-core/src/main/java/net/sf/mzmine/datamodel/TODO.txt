@@ -16,3 +16,7 @@
 - add selection checkbox to peak list treetable
 - rename PeakList to DataSet?
 
+RawDataFileParameter should represent raw data files using Strings, can include patterns *T2D* etc
+- same for peaklists
+- raw data file name in a project must be unique
+
