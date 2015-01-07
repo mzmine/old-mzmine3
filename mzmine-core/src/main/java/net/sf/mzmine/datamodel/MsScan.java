@@ -22,7 +22,6 @@ package net.sf.mzmine.datamodel;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
@@ -77,16 +76,5 @@ public interface MsScan extends MassSpectrum {
      */
     @Nonnull
     List<MsMsScan> getFragmentScans();
-
-    @Nonnull
-    List<MassList> getMassLists();
-
-    /**
-     * Shortcut method
-     * @param name
-     * @return
-     */
-    @Nullable
-    MassList getMassList(@Nonnull String name);
 
 }

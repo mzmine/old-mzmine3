@@ -26,7 +26,6 @@ import net.sf.mzmine.datamodel.Feature;
 import net.sf.mzmine.datamodel.IonType;
 import net.sf.mzmine.datamodel.IsotopePattern;
 import net.sf.mzmine.datamodel.MZmineProject;
-import net.sf.mzmine.datamodel.MassList;
 import net.sf.mzmine.datamodel.MsScan;
 import net.sf.mzmine.datamodel.PeakList;
 import net.sf.mzmine.datamodel.PeakListRowAnnotation;
@@ -37,13 +36,14 @@ import net.sf.mzmine.datamodel.RawDataFile;
  */
 public class MZmineObjectBuilder {
 
-    public static final @Nonnull DataPoint getDataPoint(double mz, double intensity) {
+    public static final @Nonnull DataPoint getDataPoint(double mz,
+	    double intensity) {
 	return new DataPointImpl(mz, intensity);
     }
-    
+
     public static final @Nonnull IonType getIonType() {
- 	return new IonTypeImpl();
-     }
+	return new IonTypeImpl();
+    }
 
     public static final @Nonnull DataPoint[] getDataPointArray(
 	    final double mz[], final double intensities[]) {
@@ -58,14 +58,10 @@ public class MZmineObjectBuilder {
 	return new FeatureImpl();
     }
 
-    public static final @Nonnull IsotopePattern getIsotopePattern(@Nonnull PeakList peakList) {
+    public static final @Nonnull IsotopePattern getIsotopePattern(
+	    @Nonnull PeakList peakList) {
 	assert peakList instanceof DataPointStoreImpl;
 	return new IsotopePatternImpl((DataPointStoreImpl) peakList);
-    }
-
-    public static final @Nonnull MassList getMassList(@Nonnull RawDataFile dataFile, @Nonnull MsScan scan) {
-	assert dataFile instanceof DataPointStoreImpl;
-	return new MassListImpl((DataPointStoreImpl) dataFile, scan);
     }
 
     public static final @Nonnull MZmineProject getMZmineProject() {

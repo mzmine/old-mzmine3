@@ -21,11 +21,11 @@ package net.sf.mzmine.datamodel.impl;
 
 import javax.annotation.Nonnull;
 
-import org.openscience.cdk.interfaces.IMolecularFormula;
-
 import net.sf.mzmine.datamodel.IsotopePattern;
 import net.sf.mzmine.datamodel.IsotopePatternType;
 import net.sf.mzmine.datamodel.MassSpectrumType;
+
+import org.openscience.cdk.interfaces.IMolecularFormula;
 
 /**
  * Simple implementation of IsotopePattern interface
@@ -55,7 +55,7 @@ public class IsotopePatternImpl extends SpectrumImpl implements IsotopePattern {
     }
 
     @Override
-    public MassSpectrumType getMassSpectrumType() {
+    public MassSpectrumType getSpectrumType() {
 	// TODO Auto-generated method stub
 	return null;
     }

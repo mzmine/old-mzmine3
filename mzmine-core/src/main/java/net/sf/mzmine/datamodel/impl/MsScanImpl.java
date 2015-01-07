@@ -25,7 +25,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import net.sf.mzmine.datamodel.ChromatographyData;
-import net.sf.mzmine.datamodel.MassList;
 import net.sf.mzmine.datamodel.MassSpectrumType;
 import net.sf.mzmine.datamodel.MsLevel;
 import net.sf.mzmine.datamodel.MsMsScan;
@@ -46,13 +45,11 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
     private MsLevel msLevel;
     private double retentionTime;
     private final List<MsMsScan> fragmentScans;
-    private final List<MassList> massLists;
 
     public MsScanImpl(@Nonnull RawDataFile dataFile) {
 	super((RawDataFileImpl) dataFile);
 	this.dataFile = dataFile;
 	this.fragmentScans = new ArrayList<MsMsScan>();
-	this.massLists = new ArrayList<MassList>();
     }
 
     /**
@@ -97,16 +94,6 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
     @Override
     public @Nonnull RawDataFile getDataFile() {
 	return dataFile;
-    }
-
-    @Override
-    public @Nonnull List<MassList> getMassLists() {
-	return massLists;
-    }
-
-    @Override
-    public MassList getMassList(@Nonnull String name) {
-	throw new UnsupportedOperationException();
     }
 
     @Override
