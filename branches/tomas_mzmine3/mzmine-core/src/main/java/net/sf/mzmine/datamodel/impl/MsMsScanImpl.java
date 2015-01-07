@@ -21,13 +21,13 @@ package net.sf.mzmine.datamodel.impl;
 
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Range;
-
 import net.sf.mzmine.datamodel.ChromatographyData;
 import net.sf.mzmine.datamodel.MassSpectrumType;
 import net.sf.mzmine.datamodel.MsMsScan;
 import net.sf.mzmine.datamodel.MsScan;
 import net.sf.mzmine.datamodel.RawDataFile;
+
+import com.google.common.collect.Range;
 
 /**
  * Simple implementation of the Scan interface.
@@ -80,7 +80,7 @@ public class MsMsScanImpl extends MsScanImpl implements MsMsScan {
     }
 
     @Override
-    public MassSpectrumType getMassSpectrumType() {
+    public MassSpectrumType getSpectrumType() {
 	// TODO Auto-generated method stub
 	return null;
     }
@@ -100,7 +100,7 @@ public class MsMsScanImpl extends MsScanImpl implements MsMsScan {
     @Override
     public void setPrecursorMz(Double precursorMZ) {
 	// TODO Auto-generated method stub
-	
+
     }
 
 }
