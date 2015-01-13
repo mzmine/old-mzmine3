@@ -72,7 +72,6 @@ public class RawDataImportModule implements MZmineProcessingModule {
 				return ExitCode.ERROR;
 			}
 
-			RawDataFile newMZmineFile = MZmineObjectBuilder.getRawDataFile();
 
 			String extension = fileName.getName()
 					.substring(fileName.getName().lastIndexOf(".") + 1)
