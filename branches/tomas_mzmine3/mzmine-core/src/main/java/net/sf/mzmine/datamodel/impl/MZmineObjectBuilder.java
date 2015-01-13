@@ -26,6 +26,7 @@ import net.sf.mzmine.datamodel.Feature;
 import net.sf.mzmine.datamodel.IonType;
 import net.sf.mzmine.datamodel.IsotopePattern;
 import net.sf.mzmine.datamodel.MZmineProject;
+import net.sf.mzmine.datamodel.MsMsScan;
 import net.sf.mzmine.datamodel.MsScan;
 import net.sf.mzmine.datamodel.PeakList;
 import net.sf.mzmine.datamodel.PeakListRowAnnotation;
@@ -80,8 +81,12 @@ public class MZmineObjectBuilder {
 	return new RawDataFileImpl();
     }
 
-    public static final @Nonnull MsScan getScan(@Nonnull RawDataFile dataFile) {
+    public static final @Nonnull MsScan getMsScan(@Nonnull RawDataFile dataFile) {
 	return new MsScanImpl(dataFile);
     }
 
+    public static final @Nonnull MsMsScan getMsMsScan(@Nonnull RawDataFile dataFile) {
+	return new MsMsScanImpl(dataFile);
+    }
+    
 }
