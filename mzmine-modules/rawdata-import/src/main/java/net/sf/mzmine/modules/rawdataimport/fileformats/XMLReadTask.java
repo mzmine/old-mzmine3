@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -20,8 +20,8 @@
 package net.sf.mzmine.modules.rawdataimport.fileformats;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -34,24 +34,26 @@ import javafx.concurrent.Task;
 import net.sf.mzmine.datamodel.ChromatographyData;
 import net.sf.mzmine.datamodel.DataPoint;
 import net.sf.mzmine.datamodel.MassSpectrumType;
+import net.sf.mzmine.datamodel.MsMsScan;
 import net.sf.mzmine.datamodel.MsScan;
 import net.sf.mzmine.datamodel.RawDataFile;
 import net.sf.mzmine.datamodel.impl.MZmineObjectBuilder;
+import net.sf.mzmine.modules.rawdataimport.RawDataFileType;
+import net.sf.mzmine.util.DataPointSorter;
 import net.sf.mzmine.util.ScanUtils;
-import uk.ac.ebi.jmzml.model.mzml.CVParam;
-import uk.ac.ebi.jmzml.model.mzml.PrecursorList;
-import uk.ac.ebi.jmzml.model.mzml.ScanList;
-import uk.ac.ebi.jmzml.model.mzml.SelectedIonList;
+import net.sf.mzmine.util.SortingDirection;
+import net.sf.mzmine.util.SortingProperty;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReader;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
+import uk.ac.ebi.pride.tools.jmzreader.model.Param;
 import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
+import uk.ac.ebi.pride.tools.jmzreader.model.impl.CvParam;
 import uk.ac.ebi.pride.tools.jmzreader.model.impl.ParamGroup;
+import uk.ac.ebi.pride.tools.jmzreader.model.impl.UserParam;
 import uk.ac.ebi.pride.tools.mzdata_parser.MzDataFile;
-import uk.ac.ebi.pride.tools.mzdata_parser.mzdata.model.Precursor;
 import uk.ac.ebi.pride.tools.mzml_wrapper.MzMlWrapper;
 import uk.ac.ebi.pride.tools.mzxml_parser.MzXMLFile;
 import uk.ac.ebi.pride.tools.mzxml_parser.MzXMLParsingException;
-import uk.ac.ebi.pride.tools.mzxml_parser.mzxml.model.Scan;
 
 /**
  * This class reads XML-based mass spec data formats (mzData, mzXML, and mzML)
@@ -61,7 +63,9 @@ public class XMLReadTask extends Task<RawDataFile> {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
-    private File sourceFile;
+    private final File sourceFile;
+    private final RawDataFileType fileType;
+
     private RawDataFile newMZmineFile;
     private long totalScans = 0, parsedScans;
 
@@ -69,9 +73,9 @@ public class XMLReadTask extends Task<RawDataFile> {
 
     private Map<String, Integer> scanIdTable = new Hashtable<String, Integer>();
 
-    public XMLReadTask(File sourceFile) {
+    public XMLReadTask(File sourceFile, RawDataFileType fileType) {
 	this.sourceFile = sourceFile;
-
+	this.fileType = fileType;
 	updateTitle("Importing file " + sourceFile.getName());
     }
 
@@ -79,11 +83,9 @@ public class XMLReadTask extends Task<RawDataFile> {
      * @throws MzXMLParsingException
      * @throws JMzReaderException
      * @throws IOException
-     * @see java.lang.Runnable#run()
      */
     @Override
-    public RawDataFile call() throws MzXMLParsingException, JMzReaderException,
-	    IOException {
+    public RawDataFile call() throws Exception {
 
 	logger.info("Started parsing file " + sourceFile);
 
@@ -92,25 +94,19 @@ public class XMLReadTask extends Task<RawDataFile> {
 
 	JMzReader parser = null;
 
-	// Check the first 512 bytes of the file, to determine the file type
-	FileReader reader = new FileReader(sourceFile);
-	char buffer[] = new char[512];
-	reader.read(buffer);
-	reader.close();
-	String fileHeader = new String(buffer);
-	if (fileHeader.contains("mzXML")) {
-	    parser = new MzXMLFile(sourceFile);
-	}
-	if (fileHeader.contains("mzData")) {
+	switch (fileType) {
+	case MZDATA:
 	    parser = new MzDataFile(sourceFile);
-	}
-	if (fileHeader.contains("mzML")) {
+	    break;
+	case MZML:
 	    parser = new MzMlWrapper(sourceFile);
-	}
-
-	if (parser == null) {
-	    updateMessage("Cannot determine file type of file " + sourceFile);
-	    return null;
+	    break;
+	case MZXML:
+	    parser = new MzXMLFile(sourceFile);
+	    break;
+	default:
+	    throw new IllegalArgumentException(
+		    "This reader cannot read file type " + fileType);
 	}
 
 	totalScans = parser.getSpectraCount();
@@ -124,30 +120,47 @@ public class XMLReadTask extends Task<RawDataFile> {
 
 	    Spectrum spectrum = iterator.next();
 
+	    // Create a new MsScan or MsMsScan instance depending on the MS
+	    // level
+	    Integer msLevel = spectrum.getMsLevel();
+	    MsScan scan;
+	    if ((msLevel != null) && (msLevel > 1)) {
+		MsMsScan msMsScan = MZmineObjectBuilder
+			.getMsMsScan(newMZmineFile);
+		scan = msMsScan;
+		Double precursorMz = spectrum.getPrecursorMZ();
+		msMsScan.setPrecursorMz(precursorMz);
+		Integer precursorCharge = spectrum.getPrecursorCharge();
+		msMsScan.setPrecursorCharge(precursorCharge);
+	    } else {
+		scan = MZmineObjectBuilder.getMsScan(newMZmineFile);
+	    }
+
+	    // Store the scan MS level
+	    scan.setMSLevel(msLevel);
+
+	    // Store the scan number
 	    String scanId = spectrum.getId();
 	    int scanNumber = convertScanIdToScanNumber(scanId);
-
-	    Integer msLevel = spectrum.getMsLevel();
-	    ChromatographyData chromData = extractChromatography(spectrum);
+	    scan.setScanNumber(scanNumber);
 
 	    // Get parent scan number
 	    int parentScan = extractParentScanNumber(spectrum);
-	    Double precursorMz = spectrum.getPrecursorMZ();
-	    Integer precursorCharge = spectrum.getPrecursorCharge();
 
+	    // Store the chromatography data
+	    ChromatographyData chromData = extractChromatographyData(spectrum);
+	    scan.setChromatographyData(chromData);
+
+	    // Store the scan data points
 	    DataPoint dataPoints[] = extractDataPoints(spectrum);
+	    scan.setDataPoints(dataPoints);
 
 	    // Auto-detect whether this scan is centroided
 	    MassSpectrumType spectrumType = ScanUtils
 		    .detectSpectrumType(dataPoints);
+	    scan.setSpectrumType(spectrumType);
 
-	    MsScan scan = null;
-
-	    if ((msLevel != null) && (msLevel > 1))
-		scan = MZmineObjectBuilder.getMsMsScan(newMZmineFile);
-	    else
-		scan = MZmineObjectBuilder.getMsScan(newMZmineFile);
-
+	    // Add the scan to the final raw data file
 	    newMZmineFile.addScan(scan);
 
 	    parsedScans++;
@@ -187,49 +200,54 @@ public class XMLReadTask extends Task<RawDataFile> {
 	return scanNumber;
     }
 
-    private ChromatographyData extractChromatography(Spectrum spectrum) {
+    private ChromatographyData extractChromatographyData(Spectrum spectrum) {
 
 	ParamGroup params = spectrum.getAdditional();
-	params.getCvParams();
 	
-	ScanList scanListElement = spectrum.getScanList();
-	if (scanListElement == null)
-	    return 0;
-	List<Scan> scanElements = scanListElement.getScan();
-	if (scanElements == null)
-	    return 0;
+	ParamGroup additional = spectrum.getAdditional();
+	// access all cvParams in the ParamGroup
+	for (CvParam cvParam : additional.getCvParams()) {
+	  // process the additional information
+	  System.out.println(cvParam.getAccession() + " - " + cvParam.getName() + " = " + cvParam.getValue());
+	}
+	// access all userParams in the ParamGroup
+	for (UserParam userParam : additional.getUserParams()) {
+	  // process the information
+	  System.out.println(userParam.getName() + " = " + userParam.getValue());
+	}
+	
+	List<CvParam> cvParams = params.getCvParams();
+	List<Param> paramsList = params.getParams();
 
-	for (Scan scan : scanElements) {
-	    List<CVParam> cvParams = scan.getCvParam();
-	    if (cvParams == null)
+	for (CvParam param : cvParams) {
+	    String accession = param.getAccession();
+	    // String unitAccession = param.getUnitAccession();
+	    String value = param.getValue();
+	    if ((accession == null) || (value == null))
 		continue;
 
-	    for (CVParam param : cvParams) {
-		String accession = param.getAccession();
-		String unitAccession = param.getUnitAccession();
-		String value = param.getValue();
-		if ((accession == null) || (value == null))
-		    continue;
-
-		// Retention time (actually "Scan start time") MS:100001
-		if (accession.equals("MS:1000016")) {
-		    // MS:1000038 is used in mzML 1.0, while UO:0000031
-		    // is used in mzML 1.1.0 :-/
-		    double retentionTime;
-		    if ((unitAccession == null)
-			    || (unitAccession.equals("MS:1000038"))
-			    || unitAccession.equals("UO:0000031")) {
-			retentionTime = Double.parseDouble(value);
-		    } else {
-			retentionTime = Double.parseDouble(value) / 60d;
-		    }
-		    return retentionTime;
-
+	    // Retention time (actually "Scan start time") MS:1000016
+	    if (accession.equals("MS:1000016")) {
+		// MS:1000038 is used in mzML 1.0, while UO:0000031
+		// is used in mzML 1.1.0 :-/
+		double retentionTime;
+		String unitAccession = "UO:0000031";
+		if ((unitAccession == null)
+			|| (unitAccession.equals("MS:1000038"))
+			|| unitAccession.equals("UO:0000031")) {
+		    retentionTime = Double.parseDouble(value);
+		} else {
+		    retentionTime = Double.parseDouble(value) / 60d;
 		}
+		final ChromatographyData newChromData = MZmineObjectBuilder
+			.getChromatographyData();
+		newChromData.setRetentionTime(retentionTime);
+		return newChromData;
+
 	    }
 	}
 
-	return 0;
+	return null;
     }
 
     private DataPoint[] extractDataPoints(Spectrum spectrum) {
@@ -241,11 +259,15 @@ public class XMLReadTask extends Task<RawDataFile> {
 	    dataPoints[i] = MZmineObjectBuilder.getDataPoint(mz, intensity);
 	    i++;
 	}
+	Arrays.sort(dataPoints, new DataPointSorter(SortingProperty.MZ,
+		SortingDirection.Ascending));
 	return dataPoints;
 
     }
 
     private int extractParentScanNumber(Spectrum spectrum) {
+	
+	/*
 	PrecursorList precursorListElement = spectrum.getPrecursorList();
 	if ((precursorListElement == null)
 		|| (precursorListElement.getCount().equals(0)))
@@ -262,87 +284,8 @@ public class XMLReadTask extends Task<RawDataFile> {
 	    }
 	    int parentScan = convertScanIdToScanNumber(precursorScanId);
 	    return parentScan;
-	}
+	}*/
 	return -1;
-    }
-
-    private double extractPrecursorMz(Spectrum spectrum) {
-
-	PrecursorList precursorListElement = spectrum.getPrecursorList();
-	if ((precursorListElement == null)
-		|| (precursorListElement.getCount().equals(0)))
-	    return 0;
-
-	List<Precursor> precursorList = precursorListElement.getPrecursor();
-	for (Precursor parent : precursorList) {
-
-	    SelectedIonList selectedIonListElement = parent
-		    .getSelectedIonList();
-	    if ((selectedIonListElement == null)
-		    || (selectedIonListElement.getCount().equals(0)))
-		return 0;
-	    List<ParamGroup> selectedIonParams = selectedIonListElement
-		    .getSelectedIon();
-	    if (selectedIonParams == null)
-		continue;
-
-	    for (ParamGroup pg : selectedIonParams) {
-		List<CVParam> pgCvParams = pg.getCvParam();
-		for (CVParam param : pgCvParams) {
-		    String accession = param.getAccession();
-		    String value = param.getValue();
-		    if ((accession == null) || (value == null))
-			continue;
-		    // MS:1000040 is used in mzML 1.0,
-		    // MS:1000744 is used in mzML 1.1.0
-		    if (accession.equals("MS:1000040")
-			    || accession.equals("MS:1000744")) {
-			double precursorMz = Double.parseDouble(value);
-			return precursorMz;
-		    }
-		}
-
-	    }
-	}
-	return 0;
-    }
-
-    private int extractPrecursorCharge(Spectrum spectrum) {
-	PrecursorList precursorListElement = spectrum.getPrecursorList();
-	if ((precursorListElement == null)
-		|| (precursorListElement.getCount().equals(0)))
-	    return 0;
-
-	List<Precursor> precursorList = precursorListElement.getPrecursor();
-	for (Precursor parent : precursorList) {
-
-	    SelectedIonList selectedIonListElement = parent
-		    .getSelectedIonList();
-	    if ((selectedIonListElement == null)
-		    || (selectedIonListElement.getCount().equals(0)))
-		return 0;
-	    List<ParamGroup> selectedIonParams = selectedIonListElement
-		    .getSelectedIon();
-	    if (selectedIonParams == null)
-		continue;
-
-	    for (ParamGroup pg : selectedIonParams) {
-		List<CVParam> pgCvParams = pg.getCvParam();
-		for (CVParam param : pgCvParams) {
-		    String accession = param.getAccession();
-		    String value = param.getValue();
-		    if ((accession == null) || (value == null))
-			continue;
-		    if (accession.equals("MS:1000041")) {
-			int precursorCharge = Integer.parseInt(value);
-			return precursorCharge;
-		    }
-
-		}
-
-	    }
-	}
-	return 0;
     }
 
 }

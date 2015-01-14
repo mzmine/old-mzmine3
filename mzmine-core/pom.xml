@@ -9,11 +9,6 @@
 	<artifactId>mzmine-core</artifactId>
 
 	<dependencies>
-		<dependency>
-			<groupId>net.sf.extcos</groupId>
-			<artifactId>extcos</artifactId>
-			<version>0.4b</version>
-		</dependency>
 
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
@@ -42,7 +37,7 @@
 		<dependency>
 			<groupId>org.jfree</groupId>
 			<artifactId>jfreechart</artifactId>
-			<version>1.0.19</version>
+			<version>${jfreechart.version}</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>xml-apis</artifactId>

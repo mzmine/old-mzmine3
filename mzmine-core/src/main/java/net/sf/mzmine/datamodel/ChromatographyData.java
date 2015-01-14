@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -19,23 +19,21 @@
 
 package net.sf.mzmine.datamodel;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
 
 /**
  * This class represents the chromatography information of each MS scan or
- * detected feature (peak). This class is immutable to allow passing it by
- * reference.
+ * detected feature (peak).
  */
-@Immutable
 public interface ChromatographyData {
 
     /**
      * @return Retention time in minutes
      */
-    @Nonnull
+    @Nullable
     Double getRetentionTime();
+
+    void setRetentionTime(@Nullable Double retentionTime);
 
     /**
      * @return Secondary retention time in minutes (for two-dimensional
@@ -44,10 +42,14 @@ public interface ChromatographyData {
     @Nullable
     Double getSecondaryRetentionTime();
 
+    void setSecondaryRetentionTime(@Nullable Double retentionTime);
+
     /**
      * @return Drift time in ms, for ion mobility experiments.
      */
     @Nullable
     Double getIonDriftTime();
+
+    void setIonDriftTime(@Nullable Double driftTime);
 
 }

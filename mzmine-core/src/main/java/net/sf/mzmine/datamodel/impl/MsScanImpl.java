@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -19,18 +19,18 @@
 
 package net.sf.mzmine.datamodel.impl;
 
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 import net.sf.mzmine.datamodel.ChromatographyData;
-import net.sf.mzmine.datamodel.MassSpectrumType;
-import net.sf.mzmine.datamodel.MsLevel;
 import net.sf.mzmine.datamodel.MsMsScan;
 import net.sf.mzmine.datamodel.MsScan;
 import net.sf.mzmine.datamodel.PolarityType;
 import net.sf.mzmine.datamodel.RawDataFile;
+import net.sf.mzmine.main.MZmineCore;
 import net.sf.mzmine.util.ScanUtils;
 
 import com.google.common.collect.Range;
@@ -41,9 +41,8 @@ import com.google.common.collect.Range;
 public class MsScanImpl extends SpectrumImpl implements MsScan {
 
     private final RawDataFile dataFile;
-    private int scanNumber;
-    private MsLevel msLevel;
-    private double retentionTime;
+    private Integer scanNumber, msLevel;
+    private ChromatographyData chromData;
     private final List<MsMsScan> fragmentScans;
 
     public MsScanImpl(@Nonnull RawDataFile dataFile) {
@@ -56,8 +55,13 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
      * @see net.sf.mzmine.datamodel.MsScan#getScanNumber()
      */
     @Override
-    public int getScanNumber() {
+    public Integer getScanNumber() {
 	return scanNumber;
+    }
+
+    @Override
+    public void setScanNumber(Integer scanNumber) {
+	this.scanNumber = scanNumber;
     }
 
     /**
@@ -69,12 +73,12 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
     }
 
     @Override
-    public @Nonnull MsLevel getMSLevel() {
+    public @Nonnull Integer getMSLevel() {
 	return msLevel;
     }
 
     @Override
-    public void setMSLevel(@Nonnull MsLevel msLevel) {
+    public void setMSLevel(@Nonnull Integer msLevel) {
 	this.msLevel = msLevel;
     }
 
@@ -84,11 +88,6 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
     @Override
     public @Nonnull List<MsMsScan> getFragmentScans() {
 	return fragmentScans;
-    }
-
-    @Override
-    public String toString() {
-	return ScanUtils.scanToString(this);
     }
 
     @Override
@@ -113,15 +112,38 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
     }
 
     @Override
-    public MassSpectrumType getSpectrumType() {
-	// TODO Auto-generated method stub
-	return null;
+    public ChromatographyData getChromatographyData() {
+	return chromData;
     }
 
     @Override
-    public ChromatographyData getChromatographyData() {
-	// TODO Auto-generated method stub
-	return null;
+    public void setChromatographyData(ChromatographyData chromData) {
+	this.chromData = chromData;
     }
 
+    @Override
+    public String toString() {
+	StringBuffer buf = new StringBuffer();
+	Format rtFormat = MZmineCore.getConfiguration().getRTFormat();
+	Format mzFormat = MZmineCore.getConfiguration().getMZFormat();
+	buf.append("#");
+	buf.append(getScanNumber());
+	buf.append(" @");
+	// buf.append(rtFormat.format(getRetentionTime()));
+	buf.append(" MS");
+	buf.append(getMSLevel());
+	switch (getSpectrumType()) {
+	case CENTROIDED:
+	    buf.append(" c");
+	    break;
+	case PROFILE:
+	    buf.append(" p");
+	    break;
+	case THRESHOLDED:
+	    buf.append(" t");
+	    break;
+	}
+
+	return buf.toString();
+    }
 }

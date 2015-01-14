@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -35,9 +35,9 @@ import com.google.common.collect.Range;
 public class MsMsScanImpl extends MsScanImpl implements MsMsScan {
 
     private MsScan parentScan;
-    private double precursorMZ;
-    private int precursorCharge;
-    private double activationEnergy;
+    private Double precursorMZ;
+    private Integer precursorCharge;
+    private Double activationEnergy;
 
     public MsMsScanImpl(RawDataFile dataFile) {
 	super(dataFile);
