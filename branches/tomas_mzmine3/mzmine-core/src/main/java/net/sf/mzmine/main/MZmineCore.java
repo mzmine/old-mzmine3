@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -20,59 +20,29 @@
 package net.sf.mzmine.main;
 
 import java.io.InputStream;
-import java.util.HashSet;
 import java.util.Properties;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
-import javafx.stage.Stage;
 
 import javax.annotation.Nonnull;
 
-import net.sf.extcos.ComponentQuery;
-import net.sf.extcos.ComponentScanner;
 import net.sf.mzmine.conf.MZmineConfiguration;
 import net.sf.mzmine.datamodel.MZmineProject;
 import net.sf.mzmine.gui.MZmineGUI;
-import net.sf.mzmine.modules.MZmineProcessingModule;
 
 /**
- * MZmine main class
+ * MZmine core functions for modules
  */
 public final class MZmineCore {
 
     private static Logger logger = Logger.getLogger(MZmineCore.class.getName());
-
-    public static void main(String args[]) {
-
-	final Set<Class<? extends MZmineProcessingModule>> samples = new HashSet<>();
-
-	ComponentScanner scanner = new ComponentScanner();
-
-	scanner.getClasses(new ComponentQuery() {
-	    protected void query() {
-		select().from("net.sf.mzmine.modules").andStore(
-			thoseImplementing(MZmineProcessingModule.class).into(
-				samples));
-	    }
-	});
-
-	System.out.println(samples.toString());
-
-	Application.launch(MZmineGUI.class, args);
-
-    }
 
     public static MZmineConfiguration getConfiguration() {
 	return null;
     }
 
     public static MZmineProject getCurrentProject() {
-	return null;
-    }
-
-    public static Stage getMainWindow() {
 	return null;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -27,8 +27,8 @@ import javax.annotation.Nullable;
 
 import net.sf.mzmine.datamodel.DataPoint;
 import net.sf.mzmine.datamodel.MassSpectrum;
+import net.sf.mzmine.datamodel.MassSpectrumType;
 import net.sf.mzmine.util.DataPointSorter;
-import net.sf.mzmine.util.ScanUtils;
 import net.sf.mzmine.util.SortingDirection;
 import net.sf.mzmine.util.SortingProperty;
 
@@ -45,10 +45,9 @@ abstract class SpectrumImpl implements MassSpectrum {
     private int dataStoreId = -1;
     private int numberOfDataPoints;
     private @Nonnull Range<Double> mzRange;
-    private boolean isCentroided;
+    private MassSpectrumType spectrumType;
     private DataPoint highestDataPoint;
 
-    @SuppressWarnings("null")
     SpectrumImpl(@Nonnull DataPointStoreImpl dataPointStore) {
 	this.dataPointStore = dataPointStore;
 	mzRange = Range.singleton(0d);
@@ -66,23 +65,20 @@ abstract class SpectrumImpl implements MassSpectrum {
 	return highestDataPoint;
     }
 
-
-
     @Override
     public int getNumberOfDataPoints() {
 	return numberOfDataPoints;
     }
 
     @Override
-    public synchronized @Nonnull DataPoint[] getDataPoints()  {
+    public synchronized @Nonnull DataPoint[] getDataPoints() {
 	DataPoint storedData[] = dataPointStore.readDataPoints(dataStoreId);
 	return storedData;
     }
 
     @Override
     @Nonnull
-    public DataPoint[] getDataPointsByMass(@Nonnull Range<Double> mzRange)
-	     {
+    public DataPoint[] getDataPointsByMass(@Nonnull Range<Double> mzRange) {
 	final DataPoint[] dataPoints = getDataPoints();
 	int startIndex, endIndex;
 	for (startIndex = 0; startIndex < dataPoints.length; startIndex++) {
@@ -106,8 +102,7 @@ abstract class SpectrumImpl implements MassSpectrum {
 
     @Override
     @Nonnull
-    public DataPoint[] getDataPointsOverIntensity(double intensity)
-	     {
+    public DataPoint[] getDataPointsOverIntensity(double intensity) {
 	DataPoint[] dataPoints = getDataPoints();
 	int index;
 	ArrayList<DataPoint> points = new ArrayList<DataPoint>();
@@ -123,8 +118,8 @@ abstract class SpectrumImpl implements MassSpectrum {
     }
 
     @Override
-    public synchronized void setDataPoints(@Nonnull DataPoint[] newDataPoints)  {
-	
+    public synchronized void setDataPoints(@Nonnull DataPoint[] newDataPoints) {
+
 	// Remove previous data, if any
 	if (dataStoreId != -1) {
 	    dataPointStore.removeStoredDataPoints(dataStoreId);
@@ -136,12 +131,22 @@ abstract class SpectrumImpl implements MassSpectrum {
 		SortingDirection.Ascending));
 
 	dataStoreId = dataPointStore.storeDataPoints(newDataPoints);
-	
+
 	numberOfDataPoints = newDataPoints.length;
 	// mzRange = ScanUtils.findMzRange(newDataPoints);
 	// highestDataPoint = ScanUtils.findTopDataPoint(newDataPoints);
 	// isCentroided = ScanUtils.isCentroided(newDataPoints);
-	
+
+    }
+
+    @Override
+    public MassSpectrumType getSpectrumType() {
+	return spectrumType;
+    }
+
+    @Override
+    public void setSpectrumType(@Nonnull MassSpectrumType spectrumType) {
+	this.spectrumType = spectrumType;
     }
 
 }

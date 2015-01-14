@@ -14,12 +14,14 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<cdk.version>1.5.10</cdk.version>
 		<controlsfx.version>8.20.8</controlsfx.version>
+		<jfreechart.version>1.0.19</jfreechart.version>
 	</properties>
 
 	<modules>
 		<module>mzmine-core</module>
 		<module>mzmine-modules</module>
 		<module>mzmine-build</module>
+		<module>mzmine-utils</module>
 	</modules>
 
 	<build>

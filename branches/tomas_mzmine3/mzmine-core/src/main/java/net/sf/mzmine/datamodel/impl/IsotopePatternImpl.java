@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -23,7 +23,6 @@ import javax.annotation.Nonnull;
 
 import net.sf.mzmine.datamodel.IsotopePattern;
 import net.sf.mzmine.datamodel.IsotopePatternType;
-import net.sf.mzmine.datamodel.MassSpectrumType;
 
 import org.openscience.cdk.interfaces.IMolecularFormula;
 
@@ -52,12 +51,6 @@ public class IsotopePatternImpl extends SpectrumImpl implements IsotopePattern {
     @Override
     public void setDescription(@Nonnull String description) {
 	this.description = description;
-    }
-
-    @Override
-    public MassSpectrumType getSpectrumType() {
-	// TODO Auto-generated method stub
-	return null;
     }
 
     @Override

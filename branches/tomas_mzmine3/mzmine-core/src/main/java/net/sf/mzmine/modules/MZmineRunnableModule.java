@@ -1,4 +1,3 @@
-package net.sf.mzmine.modules;
 /*
  * Copyright 2006-2015 The MZmine 2 Development Team
  * 
@@ -18,14 +17,15 @@ package net.sf.mzmine.modules;
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-
+package net.sf.mzmine.modules;
 
 import java.util.Collection;
+
+import javafx.concurrent.Task;
 
 import javax.annotation.Nonnull;
 
 import net.sf.mzmine.parameters.ParameterSet;
-import net.sf.mzmine.taskcontrol.Task;
 import net.sf.mzmine.util.ExitCode;
 
 /**
@@ -67,7 +67,7 @@ public interface MZmineRunnableModule extends MZmineModule {
      */
     @Nonnull
     public ExitCode runModule(@Nonnull ParameterSet parameters,
-	    @Nonnull Collection<Task> tasks);
+	    @Nonnull Collection<Task<?>> tasks);
 
     /**
      * Returns the category of the module (e.g. raw data processing, peak

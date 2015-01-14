@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -22,6 +22,7 @@ package net.sf.mzmine.datamodel;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
@@ -37,30 +38,35 @@ public interface MsScan extends MassSpectrum {
     @Nonnull
     RawDataFile getDataFile();
 
+    @Nullable
     ChromatographyData getChromatographyData();
-    
+
+    void setChromatographyData(@Nullable ChromatographyData chromData);
+
     /**
      * 
      * @return Scan number
      */
-    int getScanNumber();
+    @Nonnull
+    Integer getScanNumber();
+
+    void setScanNumber(@Nonnull Integer scanNumber);
 
     /**
      * 
      * @return MS level
      */
-    @Nonnull MsLevel getMSLevel();
+    @Nonnull
+    Integer getMSLevel();
 
-    void setMSLevel(@Nonnull MsLevel msLevel);
-    
+    void setMSLevel(@Nonnull Integer msLevel);
+
     /**
      * Returns the sum of intensities of all data points.
      * 
      * @return Total ion current
      */
     double getTIC();
-
-
 
     /**
      * @return the actual scanning range of the instrument

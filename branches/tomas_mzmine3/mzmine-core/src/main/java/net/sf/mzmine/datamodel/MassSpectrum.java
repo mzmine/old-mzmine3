@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -51,7 +51,14 @@ public interface MassSpectrum {
      * 
      * @return True if the spectrum is centroided
      */
-    @Nonnull MassSpectrumType getSpectrumType();
+    @Nonnull
+    MassSpectrumType getSpectrumType();
+
+    /**
+     * 
+     * @return True if the spectrum is centroided
+     */
+    void setSpectrumType(@Nonnull MassSpectrumType spectrumType);
 
     /**
      * @return Number of m/z and intensity data points.

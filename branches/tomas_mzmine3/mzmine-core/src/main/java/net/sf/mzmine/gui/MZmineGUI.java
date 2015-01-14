@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -35,8 +35,13 @@ import net.sf.mzmine.main.MZmineCore;
  */
 public final class MZmineGUI extends Application {
 
+    private static Stage mainStage;
+    
     public void start(Stage stage) {
-	MainWindow mainWindow = new MainWindow();
+	
+	mainStage = stage;
+	
+	MainWindowVBox mainWindow = new MainWindowVBox();
 	Scene scene = new Scene(mainWindow, 600, 700);
 	stage.setTitle("MZmine " + MZmineCore.getMZmineVersion());
 	stage.setScene(scene);
@@ -66,6 +71,10 @@ public final class MZmineGUI extends Application {
 
 	stage.show();
 
+    }
+    
+    public static Stage getMainWindow() {
+	return mainStage;
     }
 
 }

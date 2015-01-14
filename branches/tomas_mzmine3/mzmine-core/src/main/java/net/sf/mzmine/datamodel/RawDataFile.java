@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -48,26 +48,26 @@ public interface RawDataFile {
     void removeScan(@Nonnull MsScan scan);
 
     /**
-     * Returns an immutable list of all scans. The list can be
-     * safely iterated on, as it cannot be modified by another thread.
+     * Returns an immutable list of all scans. The list can be safely iterated
+     * on, as it cannot be modified by another thread.
      */
     @Nonnull
     List<MsScan> getScans();
 
     /**
-     * Returns an immutable list of all scans. The list can be
-     * safely iterated on, as it cannot be modified by another thread.
+     * Returns an immutable list of all scans. The list can be safely iterated
+     * on, as it cannot be modified by another thread.
      */
     @Nonnull
-    List<MsScan> getScans(@Nonnull MsLevel msLevel,
+    List<MsScan> getScans(@Nonnull Integer msLevel,
 	    @Nonnull Range<Double> rtRange);
 
     /**
-     * Returns immutable list of MS levels of scans in this file. Items in
-     * the list are sorted in ascending order.
+     * Returns immutable list of MS levels of scans in this file. Items in the
+     * list are sorted in ascending order.
      */
     @Nonnull
-    List<MsLevel> getMSLevels();
+    List<Integer> getMSLevels();
 
     /**
      * 
@@ -88,13 +88,13 @@ public interface RawDataFile {
     Range<Double> getRawDataRTRange();
 
     @Nonnull
-    Range<Double> getRawDataMZRange(@Nonnull MsLevel msLevel);
+    Range<Double> getRawDataMZRange(@Nonnull Integer msLevel);
 
     @Nonnull
-    Range<Double> getRawDataScanRange(@Nonnull MsLevel msLevel);
+    Range<Double> getRawDataScanRange(@Nonnull Integer msLevel);
 
     @Nonnull
-    Range<Double> getRawDataRTRange(@Nonnull MsLevel msLevel);
+    Range<Double> getRawDataRTRange(@Nonnull Integer msLevel);
 
     /**
      * Remove all data associated to this file from the disk.
