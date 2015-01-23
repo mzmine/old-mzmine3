@@ -22,8 +22,6 @@ package net.sf.mzmine.datamodel;
 
 import java.util.List;
 
-import com.google.common.collect.Range;
-
 /**
  * 
  */

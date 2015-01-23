@@ -23,13 +23,10 @@ import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import javafx.application.Application;
-
 import javax.annotation.Nonnull;
 
 import net.sf.mzmine.conf.MZmineConfiguration;
 import net.sf.mzmine.datamodel.MZmineProject;
-import net.sf.mzmine.gui.MZmineGUI;
 
 /**
  * MZmine core functions for modules

@@ -20,7 +20,6 @@
 package net.sf.mzmine.datamodel.impl;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import net.sf.mzmine.datamodel.ChromatographyData;
 import net.sf.mzmine.datamodel.DataPoint;

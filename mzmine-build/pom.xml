@@ -14,6 +14,12 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>net.sf.mzmine</groupId>
+			<artifactId>mzmine-core-tests</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>net.sf.mzmine.modules</groupId>
 			<artifactId>mzmine-rawdata-import</artifactId>
 			<version>${project.version}</version>
@@ -39,7 +45,7 @@
 						</goals>
 						<configuration>
 							<descriptors>
-								<descriptor>assembly.xml</descriptor>
+								<descriptor>src/main/assembly/assembly.xml</descriptor>
 							</descriptors>
 							<finalName>MZmine-${project.version}</finalName>
 							<outputDirectory>../</outputDirectory>

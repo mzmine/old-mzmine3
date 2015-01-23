@@ -6,7 +6,7 @@
 		<artifactId>mzmine</artifactId>
 		<version>3.0</version>
 	</parent>
-	<artifactId>mzmine-utils</artifactId>
+	<artifactId>mzmine-core-tests</artifactId>
 
 	<dependencies>
 
@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 
