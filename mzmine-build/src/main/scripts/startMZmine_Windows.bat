@@ -52,7 +52,7 @@ set JAVA_COMMAND=java
 
 rem It is not necessary to modify the following section
 set JAVA_PARAMETERS=-showversion -classpath lib\* -Djava.ext.dirs= -XX:+UseParallelGC -Djava.io.tmpdir=%TMP_FILE_DIRECTORY% -Xms%HEAP_SIZE%m -Xmx%HEAP_SIZE%m -Djava.library.path="%JRI_LIB_PATH%"
-set MAIN_CLASS=net.sf.mzmine.main.MZmineCore
+set MAIN_CLASS=net.sf.mzmine.main.MZmineMain
 
 rem This command starts the Java Virtual Machine
 %JAVA_COMMAND% %JAVA_PARAMETERS% %MAIN_CLASS% %*

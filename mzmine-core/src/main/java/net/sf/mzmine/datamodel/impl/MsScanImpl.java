@@ -31,7 +31,6 @@ import net.sf.mzmine.datamodel.MsScan;
 import net.sf.mzmine.datamodel.PolarityType;
 import net.sf.mzmine.datamodel.RawDataFile;
 import net.sf.mzmine.main.MZmineCore;
-import net.sf.mzmine.util.ScanUtils;
 
 import com.google.common.collect.Range;
 

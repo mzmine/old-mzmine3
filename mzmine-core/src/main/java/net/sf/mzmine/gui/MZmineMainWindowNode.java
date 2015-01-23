@@ -21,14 +21,10 @@ package net.sf.mzmine.gui;
 
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TreeTableView;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.CornerRadii;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import net.sf.mzmine.datamodel.PeakListRow;
+import net.sf.mzmine.main.MZmineCore;
 
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.TaskProgressView;
@@ -37,20 +33,24 @@ import org.controlsfx.control.TaskProgressView;
  * This class is the main window of application
  * 
  */
-public class MainWindowVBox extends VBox {
+public class MZmineMainWindowNode extends VBox {
 
-    private TreeTableView<PeakListRow> rawDataTree, peakListTree;
+    private MZmineMenuBar menuBar;
+    private RawDataFilesTreeNode rawDataTree;
+    private PeakListsTreeNode peakListTree;
     private TaskProgressView<?> taskTable;
     private StatusBar statusBar;
 
-    public MainWindowVBox() {
+    public MZmineMainWindowNode() {
 
-	rawDataTree = new TreeTableView<PeakListRow>();
+	menuBar = new MZmineMenuBar();
+
+	rawDataTree = new RawDataFilesTreeNode();
 	ScrollPane rawDataTreeScroll = new ScrollPane(rawDataTree);
 	rawDataTreeScroll.setFitToWidth(true);
 	rawDataTreeScroll.setFitToHeight(true);
-	
-	peakListTree = new TreeTableView<PeakListRow>();
+
+	peakListTree = new PeakListsTreeNode();
 	ScrollPane peakListTreeScroll = new ScrollPane(peakListTree);
 	peakListTreeScroll.setFitToWidth(true);
 	peakListTreeScroll.setFitToHeight(true);
@@ -67,23 +67,26 @@ public class MainWindowVBox extends VBox {
 
 	statusBar = new StatusBar();
 	statusBar.setMinHeight(statusBar.getPrefHeight());
-
-	//VBox vbox = new VBox(8);
-	setFillWidth(true);
-	getChildren().addAll(split, taskTable, statusBar);
-	VBox.setVgrow(split, Priority.ALWAYS);
-	BorderStroke stroke = new BorderStroke(Color.RED,
-		BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.MEDIUM);
-	//setBorder(new Border(stroke));
+	statusBar.setText("Welcome to MZmine " + MZmineCore.getMZmineVersion());
 	
+	setFillWidth(true);
+
+	getChildren().addAll(menuBar, split, taskTable, statusBar);
+	VBox.setVgrow(split, Priority.ALWAYS);
+
+	/*
+	 * BorderStroke stroke = new BorderStroke(Color.RED,
+	 * BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.MEDIUM);
+	 * setBorder(new Border(stroke));
+	 */
 
     }
 
-    public TreeTableView<PeakListRow> getRawDataTree() {
+    public TreeView getRawDataTree() {
 	return rawDataTree;
     }
 
-    public TreeTableView<PeakListRow> getPeakListTree() {
+    public TreeView getPeakListTree() {
 	return peakListTree;
     }
 

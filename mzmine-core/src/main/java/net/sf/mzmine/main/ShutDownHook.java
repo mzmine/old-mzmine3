@@ -20,6 +20,7 @@
 package net.sf.mzmine.main;
 
 import net.sf.mzmine.conf.MZmineConfiguration;
+import net.sf.mzmine.datamodel.PeakList;
 import net.sf.mzmine.datamodel.RawDataFile;
 
 /**
@@ -38,9 +39,12 @@ class ShutDownHook extends Thread {
 	    e.printStackTrace();
 	}
 
-	// Close all temporary files
+	// Remove all temporary files
 	for (RawDataFile dataFile : MZmineCore.getCurrentProject().getDataFiles()) {
 	    dataFile.dispose();
+	}
+	for (PeakList peakList : MZmineCore.getCurrentProject().getPeakLists()) {
+	    peakList.dispose();
 	}
 
     }

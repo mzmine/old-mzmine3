@@ -36,20 +36,22 @@ import net.sf.mzmine.main.MZmineCore;
 public final class MZmineGUI extends Application {
 
     private static Stage mainStage;
-    
+
     public void start(Stage stage) {
-	
+
 	mainStage = stage;
-	
-	MainWindowVBox mainWindow = new MainWindowVBox();
+
+	MZmineMainWindowNode mainWindow = new MZmineMainWindowNode();
 	Scene scene = new Scene(mainWindow, 600, 700);
 	stage.setTitle("MZmine " + MZmineCore.getMZmineVersion());
 	stage.setScene(scene);
 	stage.setMinWidth(300);
 	stage.setMinHeight(300);
+	
+	
 
 	final Image mzMineIcon = new Image("file:lib" + File.separator
-		+ "mzmine-icon.png", true);
+		+ "mzmine-icon.png");
 	stage.getIcons().setAll(mzMineIcon);
 
 	stage.setOnCloseRequest(e -> {
@@ -72,7 +74,7 @@ public final class MZmineGUI extends Application {
 	stage.show();
 
     }
-    
+
     public static Stage getMainWindow() {
 	return mainStage;
     }
