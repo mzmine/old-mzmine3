@@ -21,8 +21,6 @@ package net.sf.mzmine.datamodel.impl;
 
 import java.net.URL;
 
-import javax.annotation.Nullable;
-
 import net.sf.mzmine.datamodel.PeakListRowAnnotation;
 
 import org.openscience.cdk.interfaces.IAtomContainer;
