@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.input.*?>
+<?import org.controlsfx.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.animation.*?>
+
+<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="net.sf.mzmine.gui.MainWindowController">
+	<children>
+		<MenuBar useSystemMenuBar="true">
+			<menus>
+				<Menu mnemonicParsing="false" text="Project">
+					<items>
+						<MenuItem mnemonicParsing="false" text="Close" />
+						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem mnemonicParsing="false" text="Exit">
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="X"
+									control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Edit">
+					<items>
+						<MenuItem mnemonicParsing="false" text="Delete" />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Windows">
+					<items>
+						<MenuItem mnemonicParsing="false" text="Action 1" />
+					</items>
+				</Menu>
+				<Menu mnemonicParsing="false" text="Help">
+					<items>
+						<MenuItem mnemonicParsing="false" text="About MZmine" />
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+		<SplitPane dividerPositions="0.5" minHeight="60.0"
+			VBox.vgrow="ALWAYS">
+			<items>
+				<ScrollPane fitToHeight="true" fitToWidth="true">
+					<content>
+						<TreeView fx:id="rawDataTree" editable="true" />
+					</content>
+				</ScrollPane>
+				<ScrollPane fitToHeight="true" fitToWidth="true">
+					<content>
+						<TreeView fx:id="peakListTree" editable="true" />
+					</content>
+				</ScrollPane>
+			</items>
+		</SplitPane>
+		<TaskProgressView fx:id="tasksView" minHeight="60.0"
+			prefHeight="120.0" />
+		<StatusBar fx:id="statusBar" minHeight="30.0" maxHeight="30.0">
+			<rightItems>
+				<StackPane minWidth="1" minHeight="1" scaleShape="true">
+					<ProgressBar fx:id="memoryBar" maxWidth="1000" opacity="0.3" />
+					<Label fx:id="memoryBarLabel" maxWidth="1000"
+						style="-fx-font-size: 11px; -fx-label-padding: 0 20 0 20;"
+						onMouseClicked="#memoryBarClicked">
+						<tooltip>
+							<Tooltip text="Free/total memory available for the application"
+								style="-fx-font-size: 12px" />
+						</tooltip>
+					</Label>
+				</StackPane>
+			</rightItems>
+		</StatusBar>
+	</children>
+</VBox>

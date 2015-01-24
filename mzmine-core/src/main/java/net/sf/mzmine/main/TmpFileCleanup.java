@@ -27,12 +27,12 @@ import java.nio.channels.FileLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class TmpFileCleanup {
+class TmpFileCleanup implements Runnable {
 
-    private static Logger logger = Logger.getLogger(TmpFileCleanup.class
-	    .getName());
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    static void removeOldTemporaryFiles() {
+    @Override
+    public void run() {
 
 	logger.fine("Checking for old temporary files...");
 	try {

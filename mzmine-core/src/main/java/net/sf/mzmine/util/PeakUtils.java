@@ -41,7 +41,7 @@ public class PeakUtils {
     public static String peakToString(Feature peak) {
 	StringBuffer buf = new StringBuffer();
 	Format mzFormat = MZmineCore.getConfiguration().getMZFormat();
-	Format timeFormat = MZmineCore.getConfiguration().getRTFormat();
+	// Format timeFormat = MZmineCore.getConfiguration().getRTFormat();
 	buf.append(mzFormat.format(peak.getMZ()));
 	buf.append(" m/z @");
 //	buf.append(timeFormat.format(peak.getRT()));

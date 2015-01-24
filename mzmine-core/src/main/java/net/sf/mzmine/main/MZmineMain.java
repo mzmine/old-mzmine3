@@ -32,6 +32,19 @@ public final class MZmineMain {
     private static Logger logger = Logger.getLogger(MZmineMain.class.getName());
 
     public static void main(String args[]) {
+
+	/*
+	 * Cleanup old temporary files
+	 */
+	Thread tmpFileCleanup = new Thread(new TmpFileCleanup());
+	tmpFileCleanup.start();
+
+	/*
+	 * Register shutdown hook
+	 */
+	Thread shutDownHook = new Thread(new ShutDownHook());
+	Runtime.getRuntime().addShutdownHook(shutDownHook);
+
 	logger.finest("Starting MZmine GUI");
 	Application.launch(MZmineGUI.class, args);
     }

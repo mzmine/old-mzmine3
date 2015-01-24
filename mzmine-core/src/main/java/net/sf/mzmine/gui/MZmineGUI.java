@@ -20,9 +20,13 @@
 package net.sf.mzmine.gui;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -35,21 +39,31 @@ import net.sf.mzmine.main.MZmineCore;
  */
 public final class MZmineGUI extends Application {
 
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
+
     private static Stage mainStage;
 
     public void start(Stage stage) {
 
 	mainStage = stage;
 
-	MZmineMainWindowNode mainWindow = new MZmineMainWindowNode();
-	Scene scene = new Scene(mainWindow, 600, 700);
+	try {
+	    Parent rootNode = FXMLLoader.load(getClass().getResource(
+		    "MainWindow.fxml"));
+	    Scene scene = new Scene(rootNode, 600, 700);
+	    stage.setScene(scene);
+	} catch (IOException e) {
+	    e.printStackTrace();
+	    logger.severe("Error loading MZmine GUI from FXML: " + e);
+	    Platform.exit();
+	}
+
 	stage.setTitle("MZmine " + MZmineCore.getMZmineVersion());
-	stage.setScene(scene);
+
 	stage.setMinWidth(300);
 	stage.setMinHeight(300);
-	
-	
 
+	// Set application icon
 	final Image mzMineIcon = new Image("file:lib" + File.separator
 		+ "mzmine-icon.png");
 	stage.getIcons().setAll(mzMineIcon);

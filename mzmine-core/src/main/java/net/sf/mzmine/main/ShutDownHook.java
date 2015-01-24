@@ -20,6 +20,7 @@
 package net.sf.mzmine.main;
 
 import net.sf.mzmine.conf.MZmineConfiguration;
+import net.sf.mzmine.datamodel.MZmineProject;
 import net.sf.mzmine.datamodel.PeakList;
 import net.sf.mzmine.datamodel.RawDataFile;
 
@@ -27,24 +28,31 @@ import net.sf.mzmine.datamodel.RawDataFile;
  * Shutdown hook - invoked on JRE shutdown. This method saves current
  * configuration to XML and closes (and removes) all opened temporary files.
  */
-class ShutDownHook extends Thread {
+class ShutDownHook implements Runnable {
 
-    public void start() {
+    @Override
+    public void run() {
 
 	// Save configuration
 	try {
-	    MZmineCore.getConfiguration().saveConfiguration(
-		    MZmineConfiguration.CONFIG_FILE);
+	    MZmineConfiguration configuration = MZmineCore.getConfiguration();
+	    if (configuration != null) {
+		configuration
+			.saveConfiguration(MZmineConfiguration.CONFIG_FILE);
+	    }
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
 
 	// Remove all temporary files
-	for (RawDataFile dataFile : MZmineCore.getCurrentProject().getDataFiles()) {
-	    dataFile.dispose();
-	}
-	for (PeakList peakList : MZmineCore.getCurrentProject().getPeakLists()) {
-	    peakList.dispose();
+	MZmineProject currentProject = MZmineCore.getCurrentProject();
+	if (currentProject != null) {
+	    for (RawDataFile dataFile : currentProject.getDataFiles()) {
+		dataFile.dispose();
+	    }
+	    for (PeakList peakList : currentProject.getPeakLists()) {
+		peakList.dispose();
+	    }
 	}
 
     }
