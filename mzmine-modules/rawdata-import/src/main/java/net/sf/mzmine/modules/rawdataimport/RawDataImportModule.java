@@ -25,15 +25,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javafx.concurrent.Task;
-
 import javax.annotation.Nonnull;
 
-import net.sf.mzmine.datamodel.RawDataFile;
+import net.sf.mzmine.datamodel.MZmineProject;
 import net.sf.mzmine.modules.MZmineModuleCategory;
 import net.sf.mzmine.modules.MZmineProcessingModule;
 import net.sf.mzmine.modules.rawdataimport.fileformats.XMLReadTask;
 import net.sf.mzmine.parameters.ParameterSet;
+import net.sf.mzmine.taskcontrol.Task;
 import net.sf.mzmine.util.ExitCode;
 
 /**
@@ -46,9 +45,10 @@ public class RawDataImportModule implements MZmineProcessingModule {
     private static final String MODULE_NAME = "Raw data import";
     private static final String MODULE_DESCRIPTION = "This module imports raw data into the project.";
 
-    private static final char[] thermoHeader = new char[] {       0x01, 0xA1,
-        'F', 0, 'i', 0, 'n', 0, 'n', '\0',
-        'i', '\0', 'g', '\0', 'a', '\0', 'n', '\0' };
+    private static final char[] thermoHeader = new char[] { 0x01, 0xA1, 'F', 0,
+	    'i', 0, 'n', 0, 'n', '\0', 'i', '\0', 'g', '\0', 'a', '\0', 'n',
+	    '\0' };
+
     @Override
     public @Nonnull String getName() {
 	return MODULE_NAME;
@@ -61,8 +61,8 @@ public class RawDataImportModule implements MZmineProcessingModule {
 
     @Override
     @Nonnull
-    public ExitCode runModule(@Nonnull ParameterSet parameters,
-	    @Nonnull Collection<Task<?>> tasks) {
+    public ExitCode runModule(@Nonnull MZmineProject project,
+	    @Nonnull ParameterSet parameters, @Nonnull Collection<Task> tasks) {
 
 	List<File> fileNames = parameters.getParameter(
 		RawDataImportParameters.fileNames).getValue();
@@ -77,22 +77,22 @@ public class RawDataImportModule implements MZmineProcessingModule {
 	    }
 
 	    RawDataFileType fileType = null;
-	    
+
 	    try {
-	    FileReader reader = new FileReader(fileName);
-	    char buffer[] = new char[512];
-	    reader.read(buffer);
-	    reader.close();
-	    String fileHeader = new String(buffer);
-	    if (fileHeader.contains("mzXML")) {
-		fileType = RawDataFileType.MZXML;
-	    }
-	    if (fileHeader.contains("mzData")) {
-		fileType = RawDataFileType.MZXML;
-	    }
-	    if (fileHeader.contains("mzML")) {
-		fileType = RawDataFileType.MZML;
-	    }
+		FileReader reader = new FileReader(fileName);
+		char buffer[] = new char[512];
+		reader.read(buffer);
+		reader.close();
+		String fileHeader = new String(buffer);
+		if (fileHeader.contains("mzXML")) {
+		    fileType = RawDataFileType.MZXML;
+		}
+		if (fileHeader.contains("mzData")) {
+		    fileType = RawDataFileType.MZXML;
+		}
+		if (fileHeader.contains("mzML")) {
+		    fileType = RawDataFileType.MZML;
+		}
 	    } catch (Exception e) {
 		e.printStackTrace();
 	    }
@@ -100,14 +100,14 @@ public class RawDataImportModule implements MZmineProcessingModule {
 	    if (fileType == null) {
 		return null;
 	    }
-	    
-	    Task<RawDataFile> newTask = null;
-	    
+
+	    Task newTask = null;
+
 	    switch (fileType) {
 	    case MZDATA:
 	    case MZML:
 	    case MZXML:
-		newTask = new XMLReadTask(fileName, fileType);
+		newTask = new XMLReadTask(project, fileName, fileType);
 		break;
 	    }
 

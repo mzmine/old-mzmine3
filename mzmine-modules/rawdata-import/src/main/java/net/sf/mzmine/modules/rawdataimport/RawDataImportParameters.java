@@ -40,6 +40,7 @@ public class RawDataImportParameters extends SimpleParameterSet {
 	    new ExtensionFilter("mzData files", "mzData"),
 	    new ExtensionFilter("mzML files", "mzML"),
 	    new ExtensionFilter("XCalibur RAW files", "raw"),
+	    new ExtensionFilter("Waters RAW folders", "raw"),
 	    new ExtensionFilter("mzXML files", "mzXML"),
 	    new ExtensionFilter("Agilent CSV files", "csv") };
 
@@ -52,11 +53,13 @@ public class RawDataImportParameters extends SimpleParameterSet {
     public ExitCode showSetupDialog() {
 
 	FileChooser fileChooser = new FileChooser();
-	fileChooser.setTitle("Open Resource File");
+	fileChooser.setTitle("Select files to import");
 	fileChooser.getExtensionFilters().addAll(filters);
 
-	List<File> selectedFiles = fileChooser.showOpenMultipleDialog(MZmineGUI
-		.getMainWindow());
+	List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
+
+	if ((selectedFiles == null) || (selectedFiles.isEmpty()))
+	    return ExitCode.CANCEL;
 
 	getParameter(fileNames).setValue(selectedFiles);
 

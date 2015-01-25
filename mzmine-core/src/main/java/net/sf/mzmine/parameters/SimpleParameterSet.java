@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.stage.Stage;
 import net.sf.mzmine.main.MZmineCore;
 import net.sf.mzmine.util.ExitCode;
 
@@ -116,7 +117,7 @@ public class SimpleParameterSet implements ParameterSet {
     /**
      * Make a deep copy
      */
-    public ParameterSet cloneParameter() {
+    public ParameterSet cloneParameterSet() {
 
 	// Make a deep copy of the parameters
 	Parameter newParameters[] = new Parameter[parameters.length];

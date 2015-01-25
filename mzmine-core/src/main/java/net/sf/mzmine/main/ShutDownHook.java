@@ -19,6 +19,8 @@
 
 package net.sf.mzmine.main;
 
+import java.util.logging.Logger;
+
 import net.sf.mzmine.conf.MZmineConfiguration;
 import net.sf.mzmine.datamodel.MZmineProject;
 import net.sf.mzmine.datamodel.PeakList;
@@ -30,8 +32,12 @@ import net.sf.mzmine.datamodel.RawDataFile;
  */
 class ShutDownHook implements Runnable {
 
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
+
     @Override
     public void run() {
+
+	logger.finest("Running post-shutdown code");
 
 	// Save configuration
 	try {

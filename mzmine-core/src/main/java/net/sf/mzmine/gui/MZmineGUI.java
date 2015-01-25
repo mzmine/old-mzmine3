@@ -21,37 +21,56 @@ package net.sf.mzmine.gui;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.util.Collection;
 import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
+import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import net.sf.mzmine.datamodel.MZmineProject;
+import net.sf.mzmine.datamodel.impl.MZmineObjectBuilder;
 import net.sf.mzmine.main.MZmineCore;
+import net.sf.mzmine.taskcontrol.Task;
 
 /**
  * MZmine JavaFX Application class
  */
 public final class MZmineGUI extends Application {
 
+    private static final File MENU_FILE = new File("conf/MainMenu.fxml");
+
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    private static Stage mainStage;
+    private static MainWindowController mainWindowController;
+    private static MZmineProject currentProject;
 
     public void start(Stage stage) {
 
-	mainStage = stage;
+	// Create an empty project
+	currentProject = MZmineObjectBuilder.getMZmineProject();
 
 	try {
-	    Parent rootNode = FXMLLoader.load(getClass().getResource(
-		    "MainWindow.fxml"));
-	    Scene scene = new Scene(rootNode, 600, 700);
+	    // Load the main window
+	    URL mainFXML = getClass().getResource("MainWindow.fxml");
+	    FXMLLoader loader = new FXMLLoader(mainFXML);
+	    BorderPane rootPane = (BorderPane) loader.load();
+	    mainWindowController = loader.getController();
+	    Scene scene = new Scene(rootPane, 600, 700, Color.RED);
 	    stage.setScene(scene);
+
+	    // Load menu
+	    MenuBar menu = (MenuBar) FXMLLoader.load(MENU_FILE.toURI().toURL());
+	    rootPane.setTop(menu);
+
 	} catch (IOException e) {
 	    e.printStackTrace();
 	    logger.severe("Error loading MZmine GUI from FXML: " + e);
@@ -69,19 +88,7 @@ public final class MZmineGUI extends Application {
 	stage.getIcons().setAll(mzMineIcon);
 
 	stage.setOnCloseRequest(e -> {
-
-	    Dialog<ButtonType> dialog = new Dialog<>();
-	    dialog.initOwner(stage);
-	    dialog.setTitle("Confirmation");
-	    dialog.setContentText("Are you sure you want to exit?");
-	    dialog.getDialogPane().getButtonTypes()
-		    .addAll(ButtonType.YES, ButtonType.NO);
-	    dialog.showAndWait().ifPresent(response -> {
-		if (response == ButtonType.YES) {
-		    Platform.exit();
-		    System.exit(0);
-		}
-	    });
+	    requestQuit();
 	    e.consume();
 	});
 
@@ -89,8 +96,41 @@ public final class MZmineGUI extends Application {
 
     }
 
-    public static Stage getMainWindow() {
-	return mainStage;
+    public static void requestQuit() {
+	Dialog<ButtonType> dialog = new Dialog<>();
+	// dialog.initOwner(stage);
+	dialog.setTitle("Confirmation");
+	dialog.setContentText("Are you sure you want to exit?");
+	dialog.getDialogPane().getButtonTypes()
+		.addAll(ButtonType.YES, ButtonType.NO);
+	dialog.showAndWait().ifPresent(response -> {
+	    if (response == ButtonType.YES) {
+		Platform.exit();
+		System.exit(0);
+	    }
+	});
+
+    }
+
+    public static void displayMessage(String msg) {
+	Dialog<ButtonType> dialog = new Dialog<>();
+	// dialog.initOwner(stage);
+	dialog.setTitle("Message");
+	dialog.setContentText(msg);
+	dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+	dialog.showAndWait();
+    }
+
+    static MZmineProject getCurrentProject() {
+	return currentProject;
+    }
+
+    static void submitTasks(Collection<Task> tasks) {
+	for (Task task : tasks) {
+	    TaskJavaFXWrapper wrappedTask = new TaskJavaFXWrapper(task);
+	    mainWindowController.addTask(wrappedTask);
+	}
+
     }
 
 }

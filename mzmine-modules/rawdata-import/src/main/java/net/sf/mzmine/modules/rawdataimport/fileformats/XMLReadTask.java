@@ -30,15 +30,16 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javafx.concurrent.Task;
 import net.sf.mzmine.datamodel.ChromatographyData;
 import net.sf.mzmine.datamodel.DataPoint;
+import net.sf.mzmine.datamodel.MZmineProject;
 import net.sf.mzmine.datamodel.MassSpectrumType;
 import net.sf.mzmine.datamodel.MsMsScan;
 import net.sf.mzmine.datamodel.MsScan;
 import net.sf.mzmine.datamodel.RawDataFile;
 import net.sf.mzmine.datamodel.impl.MZmineObjectBuilder;
 import net.sf.mzmine.modules.rawdataimport.RawDataFileType;
+import net.sf.mzmine.taskcontrol.AbstractTask;
 import net.sf.mzmine.util.DataPointSorter;
 import net.sf.mzmine.util.ScanUtils;
 import net.sf.mzmine.util.SortingDirection;
@@ -59,10 +60,11 @@ import uk.ac.ebi.pride.tools.mzxml_parser.MzXMLParsingException;
  * This class reads XML-based mass spec data formats (mzData, mzXML, and mzML)
  * using the jmzreader library.
  */
-public class XMLReadTask extends Task<RawDataFile> {
+public class XMLReadTask extends AbstractTask {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
+    private final MZmineProject project;
     private final File sourceFile;
     private final RawDataFileType fileType;
 
@@ -73,10 +75,10 @@ public class XMLReadTask extends Task<RawDataFile> {
 
     private Map<String, Integer> scanIdTable = new Hashtable<String, Integer>();
 
-    public XMLReadTask(File sourceFile, RawDataFileType fileType) {
+    public XMLReadTask(MZmineProject project,File sourceFile, RawDataFileType fileType) {
+	this.project=project;
 	this.sourceFile = sourceFile;
 	this.fileType = fileType;
-	updateTitle("Importing file " + sourceFile.getName());
     }
 
     /**
@@ -85,7 +87,7 @@ public class XMLReadTask extends Task<RawDataFile> {
      * @throws IOException
      */
     @Override
-    public RawDataFile call() throws Exception {
+    public void run() {
 
 	logger.info("Started parsing file " + sourceFile);
 
@@ -94,19 +96,26 @@ public class XMLReadTask extends Task<RawDataFile> {
 
 	JMzReader parser = null;
 
-	switch (fileType) {
-	case MZDATA:
-	    parser = new MzDataFile(sourceFile);
-	    break;
-	case MZML:
-	    parser = new MzMlWrapper(sourceFile);
-	    break;
-	case MZXML:
-	    parser = new MzXMLFile(sourceFile);
-	    break;
-	default:
-	    throw new IllegalArgumentException(
-		    "This reader cannot read file type " + fileType);
+	try {
+
+	    switch (fileType) {
+	    case MZDATA:
+		parser = new MzDataFile(sourceFile);
+		break;
+	    case MZML:
+		parser = new MzMlWrapper(sourceFile);
+		break;
+	    case MZXML:
+		parser = new MzXMLFile(sourceFile);
+		break;
+	    default:
+		setErrorMessage("This reader cannot read file type " + fileType);
+		return;
+	    }
+	} catch (Throwable e) {
+	    e.printStackTrace();
+	    setErrorMessage("Error opening file: " + e);
+	    return;
 	}
 
 	totalScans = parser.getSpectraCount();
@@ -115,8 +124,8 @@ public class XMLReadTask extends Task<RawDataFile> {
 
 	while (iterator.hasNext()) {
 
-	    if (isCancelled())
-		return null;
+	    if (isCanceled())
+		return;
 
 	    Spectrum spectrum = iterator.next();
 
@@ -164,14 +173,14 @@ public class XMLReadTask extends Task<RawDataFile> {
 	    newMZmineFile.addScan(scan);
 
 	    parsedScans++;
-	    updateProgress(parsedScans, totalScans);
 
 	}
 
+	// Add the new file to the project
+	project.addFile(newMZmineFile);
+
 	logger.info("Finished importing " + sourceFile + ", parsed "
 		+ parsedScans + " scans");
-
-	return newMZmineFile;
 
     }
 
@@ -203,19 +212,21 @@ public class XMLReadTask extends Task<RawDataFile> {
     private ChromatographyData extractChromatographyData(Spectrum spectrum) {
 
 	ParamGroup params = spectrum.getAdditional();
-	
+
 	ParamGroup additional = spectrum.getAdditional();
 	// access all cvParams in the ParamGroup
 	for (CvParam cvParam : additional.getCvParams()) {
-	  // process the additional information
-	  System.out.println(cvParam.getAccession() + " - " + cvParam.getName() + " = " + cvParam.getValue());
+	    // process the additional information
+	    System.out.println(cvParam.getAccession() + " - "
+		    + cvParam.getName() + " = " + cvParam.getValue());
 	}
 	// access all userParams in the ParamGroup
 	for (UserParam userParam : additional.getUserParams()) {
-	  // process the information
-	  System.out.println(userParam.getName() + " = " + userParam.getValue());
+	    // process the information
+	    System.out.println(userParam.getName() + " = "
+		    + userParam.getValue());
 	}
-	
+
 	List<CvParam> cvParams = params.getCvParams();
 	List<Param> paramsList = params.getParams();
 
@@ -266,26 +277,31 @@ public class XMLReadTask extends Task<RawDataFile> {
     }
 
     private int extractParentScanNumber(Spectrum spectrum) {
-	
-	/*
-	PrecursorList precursorListElement = spectrum.getPrecursorList();
-	if ((precursorListElement == null)
-		|| (precursorListElement.getCount().equals(0)))
-	    return -1;
 
-	List<Precursor> precursorList = precursorListElement.getPrecursor();
-	for (Precursor parent : precursorList) {
-	    // Get the precursor scan number
-	    String precursorScanId = parent.getSpectrumRef();
-	    if (precursorScanId == null) {
-		logger.warning("Missing precursor spectrumRef tag for spectrum ID "
-			+ spectrum.getId());
-		return -1;
-	    }
-	    int parentScan = convertScanIdToScanNumber(precursorScanId);
-	    return parentScan;
-	}*/
+	/*
+	 * PrecursorList precursorListElement = spectrum.getPrecursorList(); if
+	 * ((precursorListElement == null) ||
+	 * (precursorListElement.getCount().equals(0))) return -1;
+	 * 
+	 * List<Precursor> precursorList = precursorListElement.getPrecursor();
+	 * for (Precursor parent : precursorList) { // Get the precursor scan
+	 * number String precursorScanId = parent.getSpectrumRef(); if
+	 * (precursorScanId == null) {
+	 * logger.warning("Missing precursor spectrumRef tag for spectrum ID " +
+	 * spectrum.getId()); return -1; } int parentScan =
+	 * convertScanIdToScanNumber(precursorScanId); return parentScan; }
+	 */
 	return -1;
+    }
+
+    @Override
+    public String getTaskDescription() {
+	return "Importing file " + sourceFile.getName();
+    }
+
+    @Override
+    public double getFinishedPercentage() {
+	return totalScans == 0 ? 0 : (double) parsedScans / totalScans;
     }
 
 }

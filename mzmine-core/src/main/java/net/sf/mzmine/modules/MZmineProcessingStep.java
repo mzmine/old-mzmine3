@@ -1,4 +1,3 @@
-package net.sf.mzmine.modules;
 /*
  * Copyright 2006-2015 The MZmine 2 Development Team
  * 
@@ -18,7 +17,7 @@ package net.sf.mzmine.modules;
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-
+package net.sf.mzmine.modules;
 
 import javax.annotation.Nonnull;
 

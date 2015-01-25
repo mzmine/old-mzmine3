@@ -39,10 +39,6 @@ public final class MZmineCore {
 	return null;
     }
 
-    public static MZmineProject getCurrentProject() {
-	return null;
-    }
-
     @Nonnull
     public static String getMZmineVersion() {
 	try {
@@ -58,6 +54,10 @@ public final class MZmineCore {
 	    e.printStackTrace();
 	    return "0.0";
 	}
+    }
+    
+    static MZmineProject getCurrentProject() {
+	return null;
     }
 
 }

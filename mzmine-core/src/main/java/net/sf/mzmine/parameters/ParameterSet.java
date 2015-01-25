@@ -21,6 +21,7 @@ package net.sf.mzmine.parameters;
 
 import java.util.Collection;
 
+import javafx.stage.Stage;
 import net.sf.mzmine.util.ExitCode;
 
 import org.w3c.dom.Element;
@@ -45,7 +46,7 @@ public interface ParameterSet {
 
 	public boolean checkAllParameterValues(Collection<String> errorMessages);
 	
-	public ParameterSet cloneParameter();
+	public ParameterSet cloneParameterSet();
 
 	/**
 	 * Represent method's parameters and their values in human-readable format

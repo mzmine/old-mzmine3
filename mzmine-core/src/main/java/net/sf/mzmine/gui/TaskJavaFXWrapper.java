@@ -17,42 +17,26 @@
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package net.sf.mzmine.datamodel;
+package net.sf.mzmine.gui;
 
-import java.util.List;
-import java.util.Optional;
-
-import javax.annotation.Nonnull;
+import javafx.concurrent.Task;
 
 /**
+ * Wraps MZmine Task to JavaFX Task
  * 
  */
-public interface PeakListRow {
+class TaskJavaFXWrapper extends Task<Void> {
 
-    /**
-     * @return
-     */
-    @Nonnull
-    PeakList getParentPeakList();
+    private net.sf.mzmine.taskcontrol.Task myTask;
 
-    /**
-     * Returns ID of this row
-     */
-    int getId();
+    TaskJavaFXWrapper(net.sf.mzmine.taskcontrol.Task myTask) {
+	this.myTask = myTask;
+    }
 
-    /**
-     * Returns number of peaks assigned to this row
-     */
-    int getNumberOfColumns();
-
-    /**
-     * Return peaks assigned to this row
-     */
-    <DataType> List<PeakListColumn<DataType>> getColumns();
-
-    /**
-     * 
-     */
-    <DataType> Optional<DataType> getData(PeakListColumn<DataType> column);
+    @Override
+    protected Void call() throws Exception {
+	myTask.run();
+	return null;
+    }
 
 }

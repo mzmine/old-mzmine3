@@ -21,6 +21,7 @@ package net.sf.mzmine.parameters.parametertypes;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
 import javax.swing.JComboBox;
 
@@ -33,122 +34,123 @@ import org.w3c.dom.Element;
  * 
  */
 public class ComboParameter<ValueType> implements
-		UserParameter<ValueType, JComboBox> {
+	UserParameter<ValueType, JComboBox> {
 
-	private String name, description;
-	private ValueType choices[], value;
+    private String name, description;
+    private ValueType choices[];
+    private Optional<ValueType> value;
 
-	public ComboParameter(String name, String description, ValueType choices[]) {
-		this(name, description, choices, null);
+    public ComboParameter(String name, String description, ValueType choices[]) {
+	this(name, description, choices, Optional.empty());
+    }
+
+    public ComboParameter(String name, String description, ValueType choices[],
+	    Optional<ValueType> defaultValue) {
+	this.name = name;
+	this.description = description;
+	this.choices = choices;
+	this.value = defaultValue;
+    }
+
+    /**
+     * @see net.sf.mzmine.data.Parameter#getDescription()
+     */
+    @Override
+    public String getDescription() {
+	return description;
+    }
+
+    @Override
+    public JComboBox createEditingComponent() {
+	return new JComboBox(choices);
+    }
+
+    @Override
+    public ValueType getValue() {
+	return value.get();
+    }
+
+    public ValueType[] getChoices() {
+	return choices;
+    }
+
+    public void setChoices(ValueType newChoices[]) {
+	this.choices = newChoices;
+    }
+
+    @Override
+    public void setValue(ValueType value) {
+	this.value = Optional.of(value);
+    }
+
+    @Override
+    public ComboParameter<ValueType> cloneParameter() {
+	ComboParameter<ValueType> copy = new ComboParameter<ValueType>(name,
+		description, choices);
+	copy.value = this.value;
+	return copy;
+    }
+
+    @Override
+    public void setValueFromComponent(JComboBox component) {
+	Object selectedItem = component.getSelectedItem();
+	if (selectedItem == null) {
+	    value = null;
+	    return;
 	}
-
-	public ComboParameter(String name, String description, ValueType choices[],
-			ValueType defaultValue) {
-		this.name = name;
-		this.description = description;
-		this.choices = choices;
-		this.value = defaultValue;
+	if (!Arrays.asList(choices).contains(selectedItem)) {
+	    throw new IllegalArgumentException("Invalid value for parameter "
+		    + name + ": " + selectedItem);
 	}
+	int index = component.getSelectedIndex();
+	if (index < 0)
+	    return;
 
-	/**
-	 * @see net.sf.mzmine.data.Parameter#getDescription()
-	 */
-	@Override
-	public String getDescription() {
-		return description;
-	}
+	value = Optional.of(choices[index]);
+    }
 
-	@Override
-	public JComboBox createEditingComponent() {
-		return new JComboBox(choices);
-	}
+    @Override
+    public void setValueToComponent(JComboBox component, ValueType newValue) {
+	component.setSelectedItem(newValue);
+    }
 
-	@Override
-	public ValueType getValue() {
-		return value;
+    @Override
+    public void loadValueFromXML(Element xmlElement) {
+	String elementString = xmlElement.getTextContent();
+	if (elementString.length() == 0)
+	    return;
+	for (ValueType option : choices) {
+	    if (option.toString().equals(elementString)) {
+		value = Optional.of(option);
+		break;
+	    }
 	}
+    }
 
-	public ValueType[] getChoices() {
-		return choices;
-	}
+    @Override
+    public void saveValueToXML(Element xmlElement) {
+	if (value == null)
+	    return;
+	xmlElement.setTextContent(value.toString());
+    }
 
-	public void setChoices(ValueType newChoices[]) {
-		this.choices = newChoices;
-	}
+    @Override
+    public String getName() {
+	return name;
+    }
 
-	@Override
-	public void setValue(ValueType value) {
-		this.value = value;
-	}
+    @Override
+    public String toString() {
+	return name;
+    }
 
-	@Override
-	public ComboParameter<ValueType> cloneParameter() {
-		ComboParameter<ValueType> copy = new ComboParameter<ValueType>(name,
-				description, choices);
-		copy.value = this.value;
-		return copy;
+    @Override
+    public boolean checkValue(Collection<String> errorMessages) {
+	if (value == null) {
+	    errorMessages.add(name + " is not set properly");
+	    return false;
 	}
-
-	@Override
-	public void setValueFromComponent(JComboBox component) {
-		Object selectedItem = component.getSelectedItem();
-		if (selectedItem == null) {
-			value = null;
-			return;
-		}
-		if (!Arrays.asList(choices).contains(selectedItem)) {
-			throw new IllegalArgumentException("Invalid value for parameter "
-					+ name + ": " + selectedItem);
-		}
-		int index = component.getSelectedIndex();
-		if (index < 0)
-			return;
-
-		value = choices[index];
-	}
-
-	@Override
-	public void setValueToComponent(JComboBox component, ValueType newValue) {
-		component.setSelectedItem(newValue);
-	}
-
-	@Override
-	public void loadValueFromXML(Element xmlElement) {
-		String elementString = xmlElement.getTextContent();
-		if (elementString.length() == 0)
-			return;
-		for (ValueType option : choices) {
-			if (option.toString().equals(elementString)) {
-				value = option;
-				break;
-			}
-		}
-	}
-
-	@Override
-	public void saveValueToXML(Element xmlElement) {
-		if (value == null)
-			return;
-		xmlElement.setTextContent(value.toString());
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public String toString() {
-	    return name;
-	}
-	
-	@Override
-	public boolean checkValue(Collection<String> errorMessages) {
-		if (value == null) {
-			errorMessages.add(name + " is not set properly");
-			return false;
-		}
-		return true;
-	}
+	return true;
+    }
 
 }

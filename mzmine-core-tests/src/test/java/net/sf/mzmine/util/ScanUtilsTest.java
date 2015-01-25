@@ -22,15 +22,16 @@ package net.sf.mzmine.util;
 import java.io.File;
 import java.util.logging.Logger;
 
-import javafx.concurrent.Task;
-import javafx.concurrent.Worker.State;
-import javafx.embed.swing.JFXPanel;
 import net.sf.mzmine.datamodel.DataPoint;
+import net.sf.mzmine.datamodel.MZmineProject;
 import net.sf.mzmine.datamodel.MassSpectrumType;
 import net.sf.mzmine.datamodel.MsScan;
 import net.sf.mzmine.datamodel.RawDataFile;
+import net.sf.mzmine.datamodel.impl.MZmineObjectBuilder;
 import net.sf.mzmine.modules.rawdataimport.RawDataFileType;
 import net.sf.mzmine.modules.rawdataimport.fileformats.XMLReadTask;
+import net.sf.mzmine.taskcontrol.Task;
+import net.sf.mzmine.taskcontrol.TaskStatus;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,11 +47,6 @@ public class ScanUtilsTest {
     @Test
     public void testDetectSpectrumType() throws Exception {
 
-	// initializes JavaFX environment
-	new JFXPanel();
-
-	// problem: task.getState() can only be called from javafx thread
-	
 	File inputFiles[] = new File("src/test/resources").listFiles();
 
 	Assert.assertNotNull(inputFiles);
@@ -60,40 +56,48 @@ public class ScanUtilsTest {
 
 	for (File inputFile : inputFiles) {
 
-	    Task<RawDataFile> newTask = null;
+	    MassSpectrumType trueType;
+	    if (inputFile.getName().startsWith("centroided"))
+		trueType = MassSpectrumType.CENTROIDED;
+	    else if (inputFile.getName().startsWith("thresholded"))
+		trueType = MassSpectrumType.THRESHOLDED;
+	    else if (inputFile.getName().startsWith("profile"))
+		trueType = MassSpectrumType.PROFILE;
+	    else
+		continue;
+
+	    logger.finest("Checking autodetection of centroided/thresholded/profile scans on file "
+		    + inputFile.getName());
+
+	    MZmineProject project = MZmineObjectBuilder.getMZmineProject();
+
+	    Task newTask = null;
 	    String extension = inputFile.getName()
 		    .substring(inputFile.getName().lastIndexOf(".") + 1)
 		    .toLowerCase();
 
 	    if (extension.endsWith("mzdata")) {
-		newTask = new XMLReadTask(inputFile, RawDataFileType.MZDATA);
+		newTask = new XMLReadTask(project, inputFile,
+			RawDataFileType.MZDATA);
 	    }
 
 	    if (extension.endsWith("mzxml")) {
-		newTask = new XMLReadTask(inputFile, RawDataFileType.MZXML);
+		newTask = new XMLReadTask(project, inputFile,
+			RawDataFileType.MZXML);
 	    }
 
 	    if (extension.endsWith("mzml")) {
-		newTask = new XMLReadTask(inputFile, RawDataFileType.MZML);
+		newTask = new XMLReadTask(project, inputFile,
+			RawDataFileType.MZML);
 	    }
 
 	    Assert.assertNotNull(newTask);
 	    newTask.run();
-	    Assert.assertEquals(State.SUCCEEDED, newTask.getState());
+	    Assert.assertEquals(TaskStatus.FINISHED, newTask.getStatus());
+	    Assert.assertEquals(1, project.getDataFiles().size());
 
-	    RawDataFile file = newTask.get();
+	    RawDataFile file = project.getDataFiles().get(0);
 
-	    MassSpectrumType trueType;
-	    if (file.getName().startsWith("centroided"))
-		trueType = MassSpectrumType.CENTROIDED;
-	    else if (file.getName().startsWith("thresholded"))
-		trueType = MassSpectrumType.THRESHOLDED;
-	    else if (file.getName().startsWith("profile"))
-		trueType = MassSpectrumType.PROFILE;
-	    else
-		continue;
-	    logger.finest("Checking autodetection of centroided/thresholded/profile scans on file "
-		    + file.getName());
 	    for (MsScan scan : file.getScans()) {
 		DataPoint dataPoints[] = scan.getDataPoints();
 		MassSpectrumType detectedType = ScanUtils

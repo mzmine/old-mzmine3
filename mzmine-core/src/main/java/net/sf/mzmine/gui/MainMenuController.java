@@ -17,42 +17,21 @@
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package net.sf.mzmine.datamodel;
+package net.sf.mzmine.gui;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.logging.Logger;
 
-import javax.annotation.Nonnull;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 
 /**
+ * The controller class for conf/mainmenu.fxml
  * 
  */
-public interface PeakListRow {
+public class MainMenuController {
 
-    /**
-     * @return
-     */
-    @Nonnull
-    PeakList getParentPeakList();
-
-    /**
-     * Returns ID of this row
-     */
-    int getId();
-
-    /**
-     * Returns number of peaks assigned to this row
-     */
-    int getNumberOfColumns();
-
-    /**
-     * Return peaks assigned to this row
-     */
-    <DataType> List<PeakListColumn<DataType>> getColumns();
-
-    /**
-     * 
-     */
-    <DataType> Optional<DataType> getData(PeakListColumn<DataType> column);
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    
+ 
 
 }

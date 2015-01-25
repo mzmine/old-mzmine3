@@ -66,7 +66,7 @@ public class MainWindowController implements Initializable {
     private TreeView<Object> peakListTree;
 
     @FXML
-    private TaskProgressView<?> tasksView;
+    private TaskProgressView<TaskJavaFXWrapper> tasksView;
 
     @FXML
     private StatusBar statusBar;
@@ -169,6 +169,10 @@ public class MainWindowController implements Initializable {
 
     public TaskProgressView<?> getTaskTable() {
 	return tasksView;
+    }
+    
+    void addTask(TaskJavaFXWrapper task) {
+	tasksView.getTasks().add(task);
     }
 
 }

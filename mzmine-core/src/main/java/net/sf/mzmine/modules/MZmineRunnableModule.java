@@ -21,11 +21,11 @@ package net.sf.mzmine.modules;
 
 import java.util.Collection;
 
-import javafx.concurrent.Task;
-
 import javax.annotation.Nonnull;
 
+import net.sf.mzmine.datamodel.MZmineProject;
 import net.sf.mzmine.parameters.ParameterSet;
+import net.sf.mzmine.taskcontrol.Task;
 import net.sf.mzmine.util.ExitCode;
 
 /**
@@ -66,8 +66,8 @@ public interface MZmineRunnableModule extends MZmineModule {
      *         problem starting the module.
      */
     @Nonnull
-    public ExitCode runModule(@Nonnull ParameterSet parameters,
-	    @Nonnull Collection<Task<?>> tasks);
+    public ExitCode runModule(@Nonnull MZmineProject project,
+	    @Nonnull ParameterSet parameters, @Nonnull Collection<Task> tasks);
 
     /**
      * Returns the category of the module (e.g. raw data processing, peak

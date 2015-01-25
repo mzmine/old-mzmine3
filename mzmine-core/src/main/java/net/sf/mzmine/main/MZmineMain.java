@@ -34,17 +34,31 @@ public final class MZmineMain {
     public static void main(String args[]) {
 
 	/*
-	 * Cleanup old temporary files
+	 * Cleanup old temporary files on a new thread
 	 */
-	Thread tmpFileCleanup = new Thread(new TmpFileCleanup());
-	tmpFileCleanup.start();
+	TmpFileCleanup cleanupClass = new TmpFileCleanup();
+	Thread cleanupThread = new Thread(cleanupClass);
+	cleanupThread.setPriority(Thread.MIN_PRIORITY);
+	cleanupThread.start();
 
 	/*
 	 * Register shutdown hook
 	 */
-	Thread shutDownHook = new Thread(new ShutDownHook());
-	Runtime.getRuntime().addShutdownHook(shutDownHook);
+	ShutDownHook shutDownHook = new ShutDownHook();
+	Thread shutDownThread = new Thread(shutDownHook);
+	Runtime.getRuntime().addShutdownHook(shutDownThread);
 
+	/*
+	 * Load modules on a new thread
+	 */
+	MZmineModules moduleStarter = new MZmineModules();
+	Thread moduleStarterThread = new Thread(moduleStarter);
+	moduleStarterThread.setPriority(Thread.MIN_PRIORITY);
+	moduleStarterThread.start();
+
+	/*
+	 * Start the JavaFX GUI
+	 */
 	logger.finest("Starting MZmine GUI");
 	Application.launch(MZmineGUI.class, args);
     }

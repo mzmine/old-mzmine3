@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.input.*?>
+<?import javafx.scene.control.*?>
+<?import net.sf.mzmine.gui.*?>
+
+<MenuBar useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.sf.mzmine.gui.MainMenuController">
+	<menus>
+		<Menu text="Project">
+			<items>
+				<MenuItem text="Close" />
+				<SeparatorMenuItem />
+				<MenuItem text="Exit">
+					<accelerator>
+						<KeyCodeCombination alt="UP" code="X" control="DOWN"
+							meta="UP" shift="UP" shortcut="UP" />
+					</accelerator>
+				</MenuItem>
+			</items>
+		</Menu>
+		<Menu text="Raw data methods">
+			<items>
+				<ModuleMenuItem text="Import raw data"
+					moduleClass="net.sf.mzmine.modules.rawdataimport.RawDataImportModule" />
+			</items>
+		</Menu>
+		<Menu text="Menu1">
+			<items>
+				<MenuItem text="Delete" />
+			</items>
+		</Menu>
+		<Menu text="Menu2">
+			<items>
+				<MenuItem text="Action 1" />
+			</items>
+		</Menu>
+		<Menu text="Menu3">
+			<items>
+				<MenuItem text="About MZmine" />
+			</items>
+		</Menu>
+		<Menu text="Windows">
+			<items>
+				<MenuItem text="Action 1" />
+			</items>
+		</Menu>
+		<Menu text="Help">
+			<items>
+				<MenuItem text="About MZmine" />
+			</items>
+		</Menu>
+	</menus>
+</MenuBar>
+		
+	

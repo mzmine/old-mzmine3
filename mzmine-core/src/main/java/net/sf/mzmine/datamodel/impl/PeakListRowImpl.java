@@ -20,6 +20,7 @@
 package net.sf.mzmine.datamodel.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.sf.mzmine.datamodel.PeakList;
 import net.sf.mzmine.datamodel.PeakListColumn;
@@ -29,7 +30,7 @@ import net.sf.mzmine.datamodel.PeakListRow;
  * Implementation of PeakListRow
  */
 public class PeakListRowImpl implements PeakListRow {
-
+    
     @Override
     public PeakList getParentPeakList() {
 	// TODO Auto-generated method stub
@@ -55,9 +56,10 @@ public class PeakListRowImpl implements PeakListRow {
     }
 
     @Override
-    public <DataType> DataType getData(PeakListColumn<DataType> column) {
+    
+    public <DataType> Optional<DataType> getData(PeakListColumn<DataType> column) {
 	// TODO Auto-generated method stub
-	return null;
+	return Optional.empty();
     }
 
 	

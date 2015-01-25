@@ -1,66 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.input.*?>
 <?import org.controlsfx.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.animation.*?>
 
-<VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="net.sf.mzmine.gui.MainWindowController">
-	<children>
-		<MenuBar useSystemMenuBar="true">
-			<menus>
-				<Menu mnemonicParsing="false" text="Project">
-					<items>
-						<MenuItem mnemonicParsing="false" text="Close" />
-						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem mnemonicParsing="false" text="Exit">
-							<accelerator>
-								<KeyCodeCombination alt="UP" code="X"
-									control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-							</accelerator>
-						</MenuItem>
-					</items>
-				</Menu>
-				<Menu mnemonicParsing="false" text="Edit">
-					<items>
-						<MenuItem mnemonicParsing="false" text="Delete" />
-					</items>
-				</Menu>
-				<Menu mnemonicParsing="false" text="Windows">
-					<items>
-						<MenuItem mnemonicParsing="false" text="Action 1" />
-					</items>
-				</Menu>
-				<Menu mnemonicParsing="false" text="Help">
-					<items>
-						<MenuItem mnemonicParsing="false" text="About MZmine" />
-					</items>
-				</Menu>
-			</menus>
-		</MenuBar>
-		<SplitPane dividerPositions="0.5" minHeight="60.0"
-			VBox.vgrow="ALWAYS">
+	<center>
+		<SplitPane dividerPositions="0.8" orientation="VERTICAL">
 			<items>
-				<ScrollPane fitToHeight="true" fitToWidth="true">
+				<SplitPane dividerPositions="0.5" minHeight="100"
+					orientation="HORIZONTAL">
+					<items>
+						<ScrollPane minWidth="150" fitToHeight="true"
+							fitToWidth="true">
+							<content>
+								<TreeView fx:id="rawDataTree" editable="true" />
+							</content>
+						</ScrollPane>
+						<ScrollPane minWidth="150" fitToHeight="true"
+							fitToWidth="true">
+							<content>
+								<TreeView fx:id="peakListTree" editable="true" />
+							</content>
+						</ScrollPane>
+					</items>
+				</SplitPane>
+				<ScrollPane minHeight="100" fitToHeight="true"
+					fitToWidth="true" SplitPane.resizableWithParent="false">
 					<content>
-						<TreeView fx:id="rawDataTree" editable="true" />
-					</content>
-				</ScrollPane>
-				<ScrollPane fitToHeight="true" fitToWidth="true">
-					<content>
-						<TreeView fx:id="peakListTree" editable="true" />
+						<TaskProgressView fx:id="tasksView" prefHeight="120" />
 					</content>
 				</ScrollPane>
 			</items>
 		</SplitPane>
-		<TaskProgressView fx:id="tasksView" minHeight="60.0"
-			prefHeight="120.0" />
-		<StatusBar fx:id="statusBar" minHeight="30.0" maxHeight="30.0">
+	</center>
+	<bottom>
+		<StatusBar fx:id="statusBar" minHeight="30" maxHeight="30">
 			<rightItems>
 				<StackPane minWidth="1" minHeight="1" scaleShape="true">
 					<ProgressBar fx:id="memoryBar" maxWidth="1000" opacity="0.3" />
@@ -75,5 +51,5 @@
 				</StackPane>
 			</rightItems>
 		</StatusBar>
-	</children>
-</VBox>
+	</bottom>
+</BorderPane>
