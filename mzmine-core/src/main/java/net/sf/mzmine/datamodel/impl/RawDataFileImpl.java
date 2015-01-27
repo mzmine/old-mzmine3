@@ -35,10 +35,12 @@ import com.google.common.collect.Range;
 class RawDataFileImpl extends DataPointStoreImpl implements RawDataFile {
 
     private @Nonnull String rawDataFileName;
+    private @Nonnull RawDataFile originalRawDataFile;
     private final List<MsScan> scans;
 
     RawDataFileImpl() {
 	rawDataFileName = "New file";
+	originalRawDataFile = this;
 	scans = new ArrayList<MsScan>();
     }
 
@@ -124,6 +126,11 @@ class RawDataFileImpl extends DataPointStoreImpl implements RawDataFile {
     public Range<Double> getRawDataRTRange(Integer msLevel) {
 	// TODO Auto-generated method stub
 	return null;
+    }
+
+    @Override
+    public RawDataFile getOriginalRawDataFile() {
+	return originalRawDataFile;
     }
 
 
