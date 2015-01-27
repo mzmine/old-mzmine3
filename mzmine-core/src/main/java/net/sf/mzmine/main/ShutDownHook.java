@@ -39,6 +39,19 @@ class ShutDownHook implements Runnable {
 
 	logger.finest("Running post-shutdown code");
 
+	// Cancel all running tasks - this is important because tasks can spawn
+	// additional processes (such as ThermoRawDump.exe on Windows) and these
+	// will block the shutdown of the JVM. If we cancel the tasks, the
+	// processes will be killed immediately.
+	/*for (WrappedTask wt : MZmineCore.getTaskController().getTaskQueue()
+		.getQueueSnapshot()) {
+	    Task t = wt.getActualTask();
+	    if ((t.getStatus() == TaskStatus.WAITING)
+		    || (t.getStatus() == TaskStatus.PROCESSING)) {
+		t.cancel();
+	    }
+	}*/
+	
 	// Save configuration
 	try {
 	    MZmineConfiguration configuration = MZmineCore.getConfiguration();
