@@ -38,9 +38,8 @@ import org.junit.Test;
 
 public class ScanUtilsTest {
 
-    private static final Logger logger = Logger.getLogger(ScanUtilsTest.class
-	    .getName());
-
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    
     /**
      * Test the detectSpectrumType() method
      */
