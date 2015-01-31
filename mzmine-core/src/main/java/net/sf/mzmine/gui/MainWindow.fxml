@@ -3,9 +3,13 @@
 <?import org.controlsfx.control.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="net.sf.mzmine.gui.MainWindowController">
+	<stylesheets>
+		<URL value="@MainWindow.css" />
+	</stylesheets>
 	<center>
 		<SplitPane dividerPositions="0.8" orientation="VERTICAL">
 			<items>
@@ -40,12 +44,9 @@
 			<rightItems>
 				<StackPane minWidth="1" minHeight="1" scaleShape="true">
 					<ProgressBar fx:id="memoryBar" maxWidth="1000" opacity="0.3" />
-					<Label fx:id="memoryBarLabel" maxWidth="1000"
-						style="-fx-font-size: 11px; -fx-label-padding: 0 20 0 20;"
-						onMouseClicked="#memoryBarClicked">
+					<Label fx:id="memoryBarLabel" maxWidth="1000" onMouseClicked="#memoryBarClicked">
 						<tooltip>
-							<Tooltip text="Free/total memory available for the application"
-								style="-fx-font-size: 12px" />
+							<Tooltip text="Free/total memory available for the application" />
 						</tooltip>
 					</Label>
 				</StackPane>
