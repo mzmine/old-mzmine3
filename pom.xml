@@ -2,36 +2,45 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>net.sf.mzmine</groupId>
+	<groupId>io.github.mzmine</groupId>
 	<artifactId>mzmine</artifactId>
-	<packaging>pom</packaging>
+	<packaging>jar</packaging>
 	<version>3.0</version>
 	<name>MZmine</name>
-	<description>MZmine 2 is an open-source project delivering a software for mass-spectrometry data processing, with the main focus on LC-MS data.</description>
-	<url>http://mzmine.sourceforge.net/</url>
-	
+	<description>MZmine 3 is an open-source project delivering a software for mass spectrometry data processing.</description>
+	<url>http://mzmine.github.io</url>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<cdk.version>1.5.10</cdk.version>
-		<controlsfx.version>8.20.8</controlsfx.version>
+		<controlsfx.version>8.40.9</controlsfx.version>
 		<jfreechart.version>1.0.19</jfreechart.version>
 		<junit.version>4.12</junit.version>
 	</properties>
 
-	<modules>
-		<module>mzmine-core</module>
-		<module>mzmine-core-tests</module>
-		<module>mzmine-modules</module>
-		<module>mzmine-build</module>
-	</modules>
+	<mailingLists>
+		<mailingList>
+			<name>mzmine-devel</name>
+			<subscribe>mzmine-devel+subscribe@googlegroups.com</subscribe>
+			<unsubscribe>mzmine-devel+unsubscribe@googlegroups.com</unsubscribe>
+			<post>mzmine-devel@googlegroups.com</post>
+			<archive>https://groups.google.com/forum/#!forum/mzmine-devel</archive>
+		</mailingList>
+	</mailingLists>
+
+	<scm>
+		<url>https://github.com/mzmine/mzmine3</url>
+		<connection>scm:git:git://github.com/mzmine/mzmine3.git</connection>
+		<developerConnection>scm:git:git@github.com/mzmine/mzmine3.git</developerConnection>
+	</scm>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.2</version>
+				<version>3.3</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -40,10 +49,152 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.5.5</version>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/assembly.xml</descriptor>
+					</descriptors>
+					<finalName>MZmine-${project.version}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make</id>
+						<phase>package</phase>
+						<goals>
+							<goal>assembly</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.5</version>
+				<version>2.6</version>
+				<configuration>
+					<archive>
+						<index>true</index>
+						<manifest>
+							<addClasspath>false</addClasspath>
+						</manifest>
+					</archive>
+				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
 	</build>
+
+	<repositories>
+		<repository>
+			<!-- jmzreader repository -->
+			<id>ebi-repo</id>
+			<name>The EBI Maven repository</name>
+			<url>http://www.ebi.ac.uk/~maven/m2repo/</url>
+			<!-- <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/</url> -->
+		</repository>
+		<repository>
+			<id>lib</id>
+			<name>MZmine local libraries</name>
+			<url>file://${project.basedir}/src/main/lib</url>
+		</repository>
+		<repository>
+			<id>freehep-maven</id>
+			<name>Maven FreeHEP</name>
+			<url>http://java.freehep.org/maven2</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>jsr305</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.openscience.cdk</groupId>
+			<artifactId>cdk-formula</artifactId>
+			<version>${cdk.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.controlsfx</groupId>
+			<artifactId>controlsfx</artifactId>
+			<version>${controlsfx.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>${jfreechart.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>xml-apis</artifactId>
+					<groupId>xml-apis</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>edu.ucar</groupId>
+			<artifactId>netcdf4</artifactId>
+			<version>4.5.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>uk.ac.ebi.pride.tools</groupId>
+			<artifactId>jmzreader</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>uk.ac.ebi.pride.tools</groupId>
+			<artifactId>mzxml-parser</artifactId>
+			<version>1.3.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>uk.ac.ebi.pride.tools</groupId>
+			<artifactId>mzdata-parser</artifactId>
+			<version>1.2.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>uk.ac.ebi.pride.tools</groupId>
+			<artifactId>mzml-wrapper</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>uk.ac.ebi.jmzml</groupId>
+			<artifactId>jmzml</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+
+	</dependencies>
 
 </project>
