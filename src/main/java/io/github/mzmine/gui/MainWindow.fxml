@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import org.controlsfx.control.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="io.github.mzmine.gui.MainWindowController">
+	<stylesheets>
+		<URL value="@MainWindow.css" />
+	</stylesheets>
+	<center>
+		<SplitPane dividerPositions="0.8" orientation="VERTICAL">
+			<items>
+				<SplitPane dividerPositions="0.5" minHeight="100"
+					orientation="HORIZONTAL">
+					<items>
+						<ScrollPane minWidth="150" fitToHeight="true"
+							fitToWidth="true">
+							<content>
+								<TreeView fx:id="rawDataTree" editable="true" />
+							</content>
+						</ScrollPane>
+						<ScrollPane minWidth="150" fitToHeight="true"
+							fitToWidth="true">
+							<content>
+								<TreeView fx:id="peakListTree" editable="true" />
+							</content>
+						</ScrollPane>
+					</items>
+				</SplitPane>
+				<ScrollPane minHeight="100" fitToHeight="true"
+					fitToWidth="true" SplitPane.resizableWithParent="false">
+					<content>
+						<TaskProgressView fx:id="tasksView" prefHeight="120" />
+					</content>
+				</ScrollPane>
+			</items>
+		</SplitPane>
+	</center>
+	<bottom>
+		<StatusBar fx:id="statusBar" minHeight="30" maxHeight="30">
+			<rightItems>
+				<StackPane minWidth="1" minHeight="1" scaleShape="true">
+					<ProgressBar fx:id="memoryBar" maxWidth="1000" opacity="0.3" />
+					<Label fx:id="memoryBarLabel" maxWidth="1000" onMouseClicked="#memoryBarClicked">
+						<tooltip>
+							<Tooltip text="Free/total memory available for the application" />
+						</tooltip>
+					</Label>
+				</StackPane>
+			</rightItems>
+		</StatusBar>
+	</bottom>
+</BorderPane>

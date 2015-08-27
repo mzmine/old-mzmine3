@@ -2,10 +2,10 @@
 
 <?import javafx.scene.input.*?>
 <?import javafx.scene.control.*?>
-<?import net.sf.mzmine.gui.*?>
+<?import io.github.mzmine.gui.*?>
 
 <MenuBar useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8"
-	xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.sf.mzmine.gui.MainMenuController">
+	xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.mzmine.gui.MainMenuController">
 	<menus>
 		<Menu text="Project">
 			<items>
@@ -22,7 +22,7 @@
 		<Menu text="Raw data methods">
 			<items>
 				<ModuleMenuItem text="Import raw data"
-					moduleClass="net.sf.mzmine.modules.rawdataimport.RawDataImportModule" />
+					moduleClass="io.github.mzmine.modules.rawdataimport.RawDataImportModule" />
 			</items>
 		</Menu>
 		<Menu text="Menu1">

@@ -23,7 +23,7 @@ JAVA_COMMAND=java
 
 # It is not necessary to modify the following section
 JAVA_PARAMETERS="-showversion -classpath lib/\* -XX:+UseParallelGC -Djava.io.tmpdir=$TMP_FILE_DIRECTORY -Xms${HEAP_SIZE}m -Xmx${HEAP_SIZE}m
-MAIN_CLASS=net.sf.mzmine.main.MZmineMain
+MAIN_CLASS=io.github.mzmine.main.MZmineMain
 
 # Make sure we are in the correct directory
 SCRIPTDIR=`dirname "$0"`
