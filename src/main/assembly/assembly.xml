@@ -3,42 +3,17 @@
 	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
-	<id>MZmine 2 distribution package</id>
+	<id>MZmine 3 distribution package</id>
 	<formats>
 		<format>zip</format>
 	</formats>
 	<includeBaseDirectory>true</includeBaseDirectory>
-	<moduleSets>
-		<moduleSet>
+		<dependencySets>
+		<dependencySet>
+			<outputDirectory>lib</outputDirectory>
+		</dependencySet>
+	</dependencySets>
 
-			<!-- Enable access to all projects in the current multimodule build -->
-			<useAllReactorProjects>true</useAllReactorProjects>
-
-			<excludes>
-				<exclude>net.sf.mzmine:mzmine-build</exclude>
-			</excludes>
-			<sources>
-				<includeModuleDirectory>false</includeModuleDirectory>
-				<fileSets>
-					<fileSet>
-						<directory>src/main/java/**</directory>
-					</fileSet>
-				</fileSets>
-			</sources>
-			<binaries>
-				<outputDirectory>lib</outputDirectory>
-				<unpack>false</unpack>
-				<fileMode>0644</fileMode>
-				<includeDependencies>true</includeDependencies>
-				<dependencySets>
-					<dependencySet>
-						<outputDirectory>lib</outputDirectory>
-					</dependencySet>
-				</dependencySets>
-			</binaries>
-
-		</moduleSet>
-	</moduleSets>
 
 	<fileSets>
 		<fileSet>
@@ -48,12 +23,37 @@
 			<directoryMode>0755</directoryMode>
 			<filtered>false</filtered>
 		</fileSet>
+				<fileSet>
+			<directory>src/main/conf</directory>
+			<outputDirectory>conf</outputDirectory>
+			<excludes>
+				<!-- Exclude the current configuration file, if it exists - initial MZmine 
+					distribution should be provided with empty configuration -->
+				<exclude>config.xml</exclude>
+			</excludes>
+		</fileSet>
 		<fileSet>
 			<directory>src/main/icon</directory>
 			<outputDirectory>/lib</outputDirectory>
 			<fileMode>0755</fileMode>
 			<directoryMode>0755</directoryMode>
 			<filtered>false</filtered>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/lib/vendor_lib</directory>
+			<outputDirectory>lib/vendor_lib</outputDirectory>
+			<fileMode>0644</fileMode>
+			<directoryMode>0755</directoryMode>
+		</fileSet>
+		<fileSet>
+			<directory>.</directory>
+			<includes>
+				<!-- Include the manual.pdf, if present -->
+				<include>manual.pdf</include>
+			</includes>
+			<outputDirectory>/</outputDirectory>
+			<fileMode>0644</fileMode>
+			<directoryMode>0755</directoryMode>
 		</fileSet>
 	</fileSets>
 
