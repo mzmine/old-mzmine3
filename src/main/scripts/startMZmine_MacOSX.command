@@ -27,7 +27,7 @@ JAVA_COMMAND=`/usr/libexec/java_home -v 1.8+`/bin/java
 # Auto detection of accessible memory
 # ***********************************
 
-# By default we set the HEAP_SIZE to 1024 MB on 32-bit systems. On 64-bit systems we 
+# By default we set the maximum HEAP_SIZE to 1024 MB on 32-bit systems. On 64-bit systems we 
 # either set it to half of the total memory or 2048 MB less than the total memory.
 echo "Checking physical memory size..."
 TOTAL_MEMORY=`sysctl hw.memsize | awk '{ print int($2 / 1024^2) }'`
@@ -40,7 +40,7 @@ if [ "$HEAP_SIZE" = "AUTO" ]; then
 	HEAP_SIZE=`expr $TOTAL_MEMORY / 2`
   fi
 fi
-echo Java heap size set to $HEAP_SIZE MB
+echo Java maximum heap size set to $HEAP_SIZE MB
 
 
 
@@ -48,7 +48,7 @@ echo Java heap size set to $HEAP_SIZE MB
 # Java specific commands
 # **********************
 
-JAVA_PARAMETERS="-showversion -classpath lib/\* -XX:+UseParallelGC -Xdock:name='MZmine 3' -Xdock:icon=lib/mzmine-icon.png -Djava.io.tmpdir=$TMP_FILE_DIRECTORY -Dapple.laf.useScreenMenuBar=true -Xms${HEAP_SIZE}m -Xmx${HEAP_SIZE}m -Djava.library.path=${JRI_LIB_PATH}"
+JAVA_PARAMETERS="-showversion -classpath lib/\* -XX:+UseParallelGC -Xdock:name='MZmine 3' -Xdock:icon=lib/mzmine-icon.png -Djava.io.tmpdir=$TMP_FILE_DIRECTORY -Dapple.laf.useScreenMenuBar=true -Xms1024m -Xmx${HEAP_SIZE}m -Djava.library.path=${JRI_LIB_PATH}"
 MAIN_CLASS=io.github.mzmine.main.MZmineMain
 
 # Make sure we are in the correct directory
