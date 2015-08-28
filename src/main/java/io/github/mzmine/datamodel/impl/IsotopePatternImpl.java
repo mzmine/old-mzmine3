@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -35,39 +35,39 @@ public class IsotopePatternImpl extends SpectrumImpl implements IsotopePattern {
     private @Nonnull String description = "";
 
     IsotopePatternImpl(@Nonnull DataPointStoreImpl dataPointStore) {
-	super(dataPointStore);
+        super(dataPointStore);
     }
 
     @Override
     public @Nonnull String getDescription() {
-	return description;
+        return description;
     }
 
     @Override
     public String toString() {
-	return "Isotope pattern: " + description;
+        return "Isotope pattern: " + description;
     }
 
     @Override
     public void setDescription(@Nonnull String description) {
-	this.description = description;
+        this.description = description;
     }
 
     @Override
     public IsotopePatternType getType() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public IMolecularFormula getChemicalFormula() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setChemicalFormula(IMolecularFormula formula) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -34,85 +34,85 @@ import javax.swing.border.Border;
  * mouse
  * 
  */
-public class OrderComponent extends JList implements MouseListener,
-		MouseMotionListener {
+public class OrderComponent extends JList
+        implements MouseListener, MouseMotionListener {
 
-	private int dragFrom;
-	private final DefaultListModel listModel;
+    private int dragFrom;
+    private final DefaultListModel listModel;
 
-	public OrderComponent() {
+    public OrderComponent() {
 
-		// for some reason, plain JList does not have a border (at least on Mac)
-		Border border = BorderFactory.createEtchedBorder();
-		setBorder(border);
+        // for some reason, plain JList does not have a border (at least on Mac)
+        Border border = BorderFactory.createEtchedBorder();
+        setBorder(border);
 
-		listModel = new DefaultListModel();
-		setModel(listModel);
+        listModel = new DefaultListModel();
+        setModel(listModel);
 
-		// add mouse listeners
-		addMouseListener(this);
-		addMouseMotionListener(this);
+        // add mouse listeners
+        addMouseListener(this);
+        addMouseMotionListener(this);
 
-	}
+    }
 
-	public Object[] getValues() {
-		return listModel.toArray();
-	}
+    public Object[] getValues() {
+        return listModel.toArray();
+    }
 
-	public void setValues(Object newValues[]) {
-		listModel.removeAllElements();
-		for (Object value : newValues)
-			listModel.addElement(value);
+    public void setValues(Object newValues[]) {
+        listModel.removeAllElements();
+        for (Object value : newValues)
+            listModel.addElement(value);
 
-		// Adjust the size of the component
-		Dimension size = getPreferredSize();
-		if (size.width < 150)
-			size.width = 150;
-		setPreferredSize(size);
+        // Adjust the size of the component
+        Dimension size = getPreferredSize();
+        if (size.width < 150)
+            size.width = 150;
+        setPreferredSize(size);
 
-	}
+    }
 
-	@Override
-	public void mouseDragged(MouseEvent event) {
-		// get drag target
-		int dragTo = getSelectedIndex();
+    @Override
+    public void mouseDragged(MouseEvent event) {
+        // get drag target
+        int dragTo = getSelectedIndex();
 
-		// ignore event if order has not changed
-		if (dragTo == dragFrom)
-			return;
+        // ignore event if order has not changed
+        if (dragTo == dragFrom)
+            return;
 
-		// reorder the item
+        // reorder the item
 
-		Object item = listModel.elementAt(dragFrom);
-		listModel.removeElementAt(dragFrom);
-		listModel.add(dragTo, item);
+        Object item = listModel.elementAt(dragFrom);
+        listModel.removeElementAt(dragFrom);
+        listModel.add(dragTo, item);
 
-		// update drag source
-		dragFrom = dragTo;
-	}
+        // update drag source
+        dragFrom = dragTo;
+    }
 
-	@Override
-	public void mouseMoved(MouseEvent event) {
-	}
+    @Override
+    public void mouseMoved(MouseEvent event) {
+    }
 
-	@Override
-	public void mouseClicked(MouseEvent event) {
-	}
+    @Override
+    public void mouseClicked(MouseEvent event) {
+    }
 
-	@Override
-	public void mouseEntered(MouseEvent event) {
-	}
+    @Override
+    public void mouseEntered(MouseEvent event) {
+    }
 
-	@Override
-	public void mouseExited(MouseEvent event) {
-	}
+    @Override
+    public void mouseExited(MouseEvent event) {
+    }
 
-	@Override
-	public void mousePressed(MouseEvent event) {
-		dragFrom = getSelectedIndex();
-	}
+    @Override
+    public void mousePressed(MouseEvent event) {
+        dragFrom = getSelectedIndex();
+    }
 
-	@Override
-	public void mouseReleased(MouseEvent event) {
-	}
+    @Override
+    public void mouseReleased(MouseEvent event) {
+    }
 }

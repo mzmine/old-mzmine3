@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -67,7 +67,7 @@ public interface MZmineRunnableModule extends MZmineModule {
      */
     @Nonnull
     public ExitCode runModule(@Nonnull MZmineProject project,
-	    @Nonnull ParameterSet parameters, @Nonnull Collection<Task> tasks);
+            @Nonnull ParameterSet parameters, @Nonnull Collection<Task> tasks);
 
     /**
      * Returns the category of the module (e.g. raw data processing, peak

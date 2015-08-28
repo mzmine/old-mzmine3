@@ -14,14 +14,14 @@
 
 package io.github.msdk.datamodel.rawdata;
 
-import io.github.msdk.datapointstore.DataPointStore;
-
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
+
+import io.github.msdk.datamodel.datapointstore.DataPointStore;
 
 /**
  * Represents a single MS scan in a raw data file. This interface extends

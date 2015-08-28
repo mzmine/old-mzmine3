@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -71,30 +71,30 @@ public class FeatureImpl implements Feature {
      * 
      */
     public FeatureImpl(RawDataFile dataFile, double MZ, double RT,
-	    double height, double area, int[] scanNumbers,
-	    DataPoint[] dataPointsPerScan, FeatureType peakStatus,
-	    int representativeScan, int fragmentScanNumber,
-	    Range<Double> rtRange, Range<Double> mzRange,
-	    Range<Double> intensityRange) {
+            double height, double area, int[] scanNumbers,
+            DataPoint[] dataPointsPerScan, FeatureType peakStatus,
+            int representativeScan, int fragmentScanNumber,
+            Range<Double> rtRange, Range<Double> mzRange,
+            Range<Double> intensityRange) {
 
-	if (dataPointsPerScan.length == 0) {
-	    throw new IllegalArgumentException(
-		    "Cannot create a SimplePeak instance with no data points");
-	}
+        if (dataPointsPerScan.length == 0) {
+            throw new IllegalArgumentException(
+                    "Cannot create a SimplePeak instance with no data points");
+        }
 
-	this.dataFile = dataFile;
-	this.mz = MZ;
-	this.rt = RT;
-	this.height = height;
-	this.area = area;
-	this.scanNumbers = scanNumbers;
-	this.peakStatus = peakStatus;
-	this.representativeScan = representativeScan;
-	this.fragmentScanNumber = fragmentScanNumber;
-	this.rtRange = rtRange;
-	this.mzRange = mzRange;
-	this.intensityRange = intensityRange;
-	this.dataPointsPerScan = dataPointsPerScan;
+        this.dataFile = dataFile;
+        this.mz = MZ;
+        this.rt = RT;
+        this.height = height;
+        this.area = area;
+        this.scanNumbers = scanNumbers;
+        this.peakStatus = peakStatus;
+        this.representativeScan = representativeScan;
+        this.fragmentScanNumber = fragmentScanNumber;
+        this.rtRange = rtRange;
+        this.mzRange = mzRange;
+        this.intensityRange = intensityRange;
+        this.dataPointsPerScan = dataPointsPerScan;
 
     }
 
@@ -103,138 +103,138 @@ public class FeatureImpl implements Feature {
      */
     @Override
     public String toString() {
-	return PeakUtils.peakToString(this);
+        return PeakUtils.peakToString(this);
     }
 
     /**
      * @see io.github.mzmine.datamodel.Feature#getRawDataPointsIntensityRange()
      */
     public @Nonnull Range<Double> getRawDataPointsIntensityRange() {
-	return intensityRange;
+        return intensityRange;
     }
 
     /**
      * @see io.github.mzmine.datamodel.Feature#getRawDataPointsMZRange()
      */
     public @Nonnull Range<Double> getRawDataPointsMZRange() {
-	return mzRange;
+        return mzRange;
     }
 
     /**
      * @see io.github.mzmine.datamodel.Feature#getRawDataPointsRTRange()
      */
     public @Nonnull Range<Double> getRawDataPointsRTRange() {
-	return rtRange;
+        return rtRange;
     }
 
     /**
      * @see io.github.mzmine.datamodel.Feature#getRepresentativeScanNumber()
      */
     public int getRepresentativeScanNumber() {
-	return representativeScan;
+        return representativeScan;
     }
 
     public int getMostIntenseFragmentScanNumber() {
-	return fragmentScanNumber;
+        return fragmentScanNumber;
     }
 
     @Override
     public IsotopePattern getIsotopePattern() {
-	return isotopePattern;
+        return isotopePattern;
     }
 
     @Override
     public void setIsotopePattern(@Nonnull IsotopePattern isotopePattern) {
-	this.isotopePattern = isotopePattern;
+        this.isotopePattern = isotopePattern;
     }
 
     @Override
     public PeakListRow getParentPeakListRow() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public FeatureType getFeatureType() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setFeatureType(FeatureType newStatus) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     public Double getMZ() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setMZ(Double newMZ) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     public ChromatographyData getChromatographyData() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setChromatographyData(ChromatographyData chromData) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     public Double getHeight() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setHeight(Double newHeight) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     public Double getArea() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setArea(Double newArea) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     public FeatureShape getFeatureShape() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setFeatureShape(FeatureShape rawData) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     @Override
     public Integer getCharge() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setCharge(Integer charge) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 

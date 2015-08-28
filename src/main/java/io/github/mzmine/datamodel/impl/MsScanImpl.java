@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -45,9 +45,9 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
     private final List<MsMsScan> fragmentScans;
 
     public MsScanImpl(@Nonnull RawDataFile dataFile) {
-	super((RawDataFileImpl) dataFile);
-	this.dataFile = dataFile;
-	this.fragmentScans = new ArrayList<MsMsScan>();
+        super((RawDataFileImpl) dataFile);
+        this.dataFile = dataFile;
+        this.fragmentScans = new ArrayList<MsMsScan>();
     }
 
     /**
@@ -55,12 +55,12 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
      */
     @Override
     public Integer getScanNumber() {
-	return scanNumber;
+        return scanNumber;
     }
 
     @Override
     public void setScanNumber(Integer scanNumber) {
-	this.scanNumber = scanNumber;
+        this.scanNumber = scanNumber;
     }
 
     /**
@@ -68,17 +68,17 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
      *            The scanNumber to set.
      */
     public void setScanNumber(int scanNumber) {
-	this.scanNumber = scanNumber;
+        this.scanNumber = scanNumber;
     }
 
     @Override
     public @Nonnull Integer getMSLevel() {
-	return msLevel;
+        return msLevel;
     }
 
     @Override
     public void setMSLevel(@Nonnull Integer msLevel) {
-	this.msLevel = msLevel;
+        this.msLevel = msLevel;
     }
 
     /**
@@ -86,63 +86,63 @@ public class MsScanImpl extends SpectrumImpl implements MsScan {
      */
     @Override
     public @Nonnull List<MsMsScan> getFragmentScans() {
-	return fragmentScans;
+        return fragmentScans;
     }
 
     @Override
     public @Nonnull RawDataFile getDataFile() {
-	return dataFile;
+        return dataFile;
     }
 
     @Override
     public @Nonnull PolarityType getPolarity() {
-	return PolarityType.UNKNOWN;
+        return PolarityType.UNKNOWN;
     }
 
     @Override
     public Range<Double> getScanRange() {
-	return null;
+        return null;
     }
 
     @Override
     public double getTIC() {
-	// TODO Auto-generated method stub
-	return 0;
+        // TODO Auto-generated method stub
+        return 0;
     }
 
     @Override
     public ChromatographyData getChromatographyData() {
-	return chromData;
+        return chromData;
     }
 
     @Override
     public void setChromatographyData(ChromatographyData chromData) {
-	this.chromData = chromData;
+        this.chromData = chromData;
     }
 
     @Override
     public String toString() {
-	StringBuffer buf = new StringBuffer();
-	Format rtFormat = MZmineCore.getConfiguration().getRTFormat();
-	Format mzFormat = MZmineCore.getConfiguration().getMZFormat();
-	buf.append("#");
-	buf.append(getScanNumber());
-	buf.append(" @");
-	// buf.append(rtFormat.format(getRetentionTime()));
-	buf.append(" MS");
-	buf.append(getMSLevel());
-	switch (getSpectrumType()) {
-	case CENTROIDED:
-	    buf.append(" c");
-	    break;
-	case PROFILE:
-	    buf.append(" p");
-	    break;
-	case THRESHOLDED:
-	    buf.append(" t");
-	    break;
-	}
+        StringBuffer buf = new StringBuffer();
+        Format rtFormat = MZmineCore.getConfiguration().getRTFormat();
+        Format mzFormat = MZmineCore.getConfiguration().getMZFormat();
+        buf.append("#");
+        buf.append(getScanNumber());
+        buf.append(" @");
+        // buf.append(rtFormat.format(getRetentionTime()));
+        buf.append(" MS");
+        buf.append(getMSLevel());
+        switch (getSpectrumType()) {
+        case CENTROIDED:
+            buf.append(" c");
+            break;
+        case PROFILE:
+            buf.append(" p");
+            break;
+        case THRESHOLDED:
+            buf.append(" t");
+            break;
+        }
 
-	return buf.toString();
+        return buf.toString();
     }
 }

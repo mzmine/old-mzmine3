@@ -12,11 +12,11 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datapointstore;
+package io.github.msdk.datamodel.datapointstore;
 
-import io.github.msdk.datamodel.MSDKObjectBuilder;
+import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.DataPointList;
-import io.github.msdk.datapointstore.DataPointStore;
 
 import java.util.HashMap;
 
@@ -74,14 +74,15 @@ class MemoryDataPointStore implements DataPointStore {
      * Reads the data points associated with given ID.
      */
     @Override
-    synchronized public @Nonnull DataPointList readDataPoints(@Nonnull Object ID) {
+    synchronized public @Nonnull DataPointList readDataPoints(
+            @Nonnull Object ID) {
 
         if (dataPointLists == null)
             throw new IllegalStateException("This object has been disposed");
 
         if (!dataPointLists.containsKey(ID))
-            throw new IllegalArgumentException("ID " + ID
-                    + " not found in storage");
+            throw new IllegalArgumentException(
+                    "ID " + ID + " not found in storage");
 
         // Get the stored DataPointList
         final DataPointList storedList = dataPointLists.get(ID);
@@ -104,8 +105,8 @@ class MemoryDataPointStore implements DataPointStore {
             throw new IllegalStateException("This object has been disposed");
 
         if (!dataPointLists.containsKey(ID))
-            throw new IllegalArgumentException("ID " + ID
-                    + " not found in storage");
+            throw new IllegalArgumentException(
+                    "ID " + ID + " not found in storage");
 
         // Get the stored DataPointList
         final DataPointList storedList = dataPointLists.get(ID);

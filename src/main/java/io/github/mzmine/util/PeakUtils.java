@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  *
  * This file is part of MZmine 2.
  *
@@ -39,14 +39,14 @@ public class PeakUtils {
      * @return String representation of the peak
      */
     public static String peakToString(Feature peak) {
-	StringBuffer buf = new StringBuffer();
-	Format mzFormat = MZmineCore.getConfiguration().getMZFormat();
-	// Format timeFormat = MZmineCore.getConfiguration().getRTFormat();
-	buf.append(mzFormat.format(peak.getMZ()));
-	buf.append(" m/z @");
-//	buf.append(timeFormat.format(peak.getRT()));
-	//buf.append(" [" + peak.getDataFile().getName() + "]");
-	return buf.toString();
+        StringBuffer buf = new StringBuffer();
+        Format mzFormat = MZmineCore.getConfiguration().getMZFormat();
+        // Format timeFormat = MZmineCore.getConfiguration().getRTFormat();
+        buf.append(mzFormat.format(peak.getMZ()));
+        buf.append(" m/z @");
+        // buf.append(timeFormat.format(peak.getRT()));
+        // buf.append(" [" + peak.getDataFile().getName() + "]");
+        return buf.toString();
     }
-    
+
 }

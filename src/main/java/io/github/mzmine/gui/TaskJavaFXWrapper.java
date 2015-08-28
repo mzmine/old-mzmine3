@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -30,13 +30,13 @@ class TaskJavaFXWrapper extends Task<Void> {
     private io.github.mzmine.taskcontrol.Task myTask;
 
     TaskJavaFXWrapper(io.github.mzmine.taskcontrol.Task myTask) {
-	this.myTask = myTask;
+        this.myTask = myTask;
     }
 
     @Override
     protected Void call() throws Exception {
-	myTask.run();
-	return null;
+        myTask.run();
+        return null;
     }
 
 }

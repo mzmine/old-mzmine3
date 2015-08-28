@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -30,7 +30,7 @@ public class ChromatographyDataImpl implements ChromatographyData {
      */
     @Override
     public Double getRetentionTime() {
-	return retentionTime;
+        return retentionTime;
     }
 
     /**
@@ -39,7 +39,7 @@ public class ChromatographyDataImpl implements ChromatographyData {
      */
     @Override
     public void setRetentionTime(Double retentionTime) {
-	this.retentionTime = retentionTime;
+        this.retentionTime = retentionTime;
     }
 
     /**
@@ -47,7 +47,7 @@ public class ChromatographyDataImpl implements ChromatographyData {
      */
     @Override
     public Double getSecondaryRetentionTime() {
-	return secondaryRetentionTime;
+        return secondaryRetentionTime;
     }
 
     /**
@@ -56,7 +56,7 @@ public class ChromatographyDataImpl implements ChromatographyData {
      */
     @Override
     public void setSecondaryRetentionTime(Double secondaryRetentionTime) {
-	this.secondaryRetentionTime = secondaryRetentionTime;
+        this.secondaryRetentionTime = secondaryRetentionTime;
     }
 
     /**
@@ -64,7 +64,7 @@ public class ChromatographyDataImpl implements ChromatographyData {
      */
     @Override
     public Double getIonDriftTime() {
-	return ionDriftTime;
+        return ionDriftTime;
     }
 
     /**
@@ -73,7 +73,7 @@ public class ChromatographyDataImpl implements ChromatographyData {
      */
     @Override
     public void setIonDriftTime(Double ionDriftTime) {
-	this.ionDriftTime = ionDriftTime;
+        this.ionDriftTime = ionDriftTime;
     }
 
 }

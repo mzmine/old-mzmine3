@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -48,49 +48,49 @@ public final class MZmineModules implements Runnable {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     private static Map<Class<? extends MZmineModule>, MZmineModule> initializedModules = Collections
-	    .synchronizedMap(new Hashtable<>());
+            .synchronizedMap(new Hashtable<>());
 
     @Override
     public void run() {
 
-	logger.finest("Loading modules");
+        logger.finest("Loading modules");
 
-	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-	Document modulesDocument = null;
-	try {
-	    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-	    modulesDocument = dBuilder.parse(MODULES_FILE);
-	    Element rootElement = modulesDocument.getDocumentElement();
-	    NodeList moduleNodes = rootElement.getChildNodes();
-	    for (int i = 0; i < moduleNodes.getLength(); i++) {
-		Node moduleNode = moduleNodes.item(i);
-		if (moduleNode.getNodeName() != "module")
-		    continue;
-		String moduleClassName = moduleNode.getTextContent();
-		try {
-		    @SuppressWarnings("unchecked")
-		    Class<? extends MZmineModule> moduleClass = (Class<? extends MZmineModule>) Class
-			    .forName(moduleClassName);
-		    MZmineModule newModule = moduleClass.newInstance();
-		    initializedModules.put(moduleClass, newModule);
-		} catch (Exception e) {
-		    logger.warning("Failed to initialize module class "
-			    + moduleClassName + ": " + e);
-		    e.printStackTrace();
-		}
-	    }
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        Document modulesDocument = null;
+        try {
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            modulesDocument = dBuilder.parse(MODULES_FILE);
+            Element rootElement = modulesDocument.getDocumentElement();
+            NodeList moduleNodes = rootElement.getChildNodes();
+            for (int i = 0; i < moduleNodes.getLength(); i++) {
+                Node moduleNode = moduleNodes.item(i);
+                if (moduleNode.getNodeName() != "module")
+                    continue;
+                String moduleClassName = moduleNode.getTextContent();
+                try {
+                    @SuppressWarnings("unchecked")
+                    Class<? extends MZmineModule> moduleClass = (Class<? extends MZmineModule>) Class
+                            .forName(moduleClassName);
+                    MZmineModule newModule = moduleClass.newInstance();
+                    initializedModules.put(moduleClass, newModule);
+                } catch (Exception e) {
+                    logger.warning("Failed to initialize module class "
+                            + moduleClassName + ": " + e);
+                    e.printStackTrace();
+                }
+            }
 
-	} catch (Exception e) {
-	    logger.severe("Could not load modules from " + MODULES_FILE);
-	    System.exit(1);
-	}
+        } catch (Exception e) {
+            logger.severe("Could not load modules from " + MODULES_FILE);
+            System.exit(1);
+        }
 
     }
 
     public static List<MZmineModule> getAllModules() {
-	List<MZmineModule> list = ImmutableList.copyOf(initializedModules
-		.values());
-	return list;
+        List<MZmineModule> list = ImmutableList
+                .copyOf(initializedModules.values());
+        return list;
     }
 
     /**
@@ -98,8 +98,8 @@ public final class MZmineModules implements Runnable {
      */
     @SuppressWarnings("unchecked")
     public static <ModuleType extends MZmineModule> ModuleType getModuleInstance(
-	    Class<ModuleType> moduleClass) {
-	return (ModuleType) initializedModules.get(moduleClass);
+            Class<ModuleType> moduleClass) {
+        return (ModuleType) initializedModules.get(moduleClass);
     }
 
 }

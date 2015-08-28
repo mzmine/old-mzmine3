@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.datamodel.impl;
 
 import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.DataPointList;
@@ -28,10 +28,10 @@ import com.google.common.collect.Range;
 /**
  * Basic implementation of DataPointList.
  * 
- * Important: this class is not thread safe.
+ * Important: this class is not thread-safe.
  */
-class DataPointArrayList extends AbstractList<DataPoint> implements
-        DataPointList {
+class DataPointArrayList extends AbstractList<DataPoint>
+        implements DataPointList {
 
     /**
      * Array for m/z values. Its length defines the capacity of this list.
@@ -288,9 +288,10 @@ class DataPointArrayList extends AbstractList<DataPoint> implements
         }
 
         if (index < size) {
-            System.arraycopy(mzBuffer, index, mzBuffer, index + 1, size - index);
-            System.arraycopy(intensityBuffer, index, intensityBuffer,
-                    index + 1, size - index);
+            System.arraycopy(mzBuffer, index, mzBuffer, index + 1,
+                    size - index);
+            System.arraycopy(intensityBuffer, index, intensityBuffer, index + 1,
+                    size - index);
         }
 
         mzBuffer[index] = newMz;
@@ -312,10 +313,10 @@ class DataPointArrayList extends AbstractList<DataPoint> implements
         DataPoint current = get(index);
 
         if (index < size - 1) {
-            System.arraycopy(mzBuffer, index + 1, mzBuffer, index, size - index
-                    - 1);
-            System.arraycopy(intensityBuffer, index + 1, intensityBuffer,
-                    index, size - index - 1);
+            System.arraycopy(mzBuffer, index + 1, mzBuffer, index,
+                    size - index - 1);
+            System.arraycopy(intensityBuffer, index + 1, intensityBuffer, index,
+                    size - index - 1);
         }
 
         size--;
@@ -446,8 +447,8 @@ class DataPointArrayList extends AbstractList<DataPoint> implements
             if (intensityBuffer[i] > intensityBuffer[maxIndex])
                 maxIndex = i;
         }
-        final DataPoint newDP = MSDKObjectBuilder.getDataPoint(
-                mzBuffer[maxIndex], intensityBuffer[maxIndex]);
+        final DataPoint newDP = MSDKObjectBuilder
+                .getDataPoint(mzBuffer[maxIndex], intensityBuffer[maxIndex]);
         return newDP;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -31,67 +31,67 @@ import io.github.mzmine.parameters.Parameter;
  */
 public class PeakListsParameter implements Parameter<PeakList[]> {
 
-	private int minCount, maxCount;
-	private PeakList value[];
+    private int minCount, maxCount;
+    private PeakList value[];
 
-	public PeakListsParameter() {
-		this(1, Integer.MAX_VALUE);
-	}
+    public PeakListsParameter() {
+        this(1, Integer.MAX_VALUE);
+    }
 
-	public PeakListsParameter(int minCount) {
-		this(minCount, Integer.MAX_VALUE);
-	}
+    public PeakListsParameter(int minCount) {
+        this(minCount, Integer.MAX_VALUE);
+    }
 
-	public PeakListsParameter(int minCount, int maxCount) {
-		this.minCount = minCount;
-		this.maxCount = maxCount;
-	}
+    public PeakListsParameter(int minCount, int maxCount) {
+        this.minCount = minCount;
+        this.maxCount = maxCount;
+    }
 
-	public PeakList[] getValue() {
-		return value;
-	}
+    public PeakList[] getValue() {
+        return value;
+    }
 
-	public void setValue(PeakList newValue[]) {
-		this.value = newValue;
-	}
+    public void setValue(PeakList newValue[]) {
+        this.value = newValue;
+    }
 
-	@Override
-	public PeakListsParameter cloneParameter() {
-		PeakListsParameter copy = new PeakListsParameter(minCount, maxCount);
-		copy.value = value;
-		return copy;
-	}
+    @Override
+    public PeakListsParameter cloneParameter() {
+        PeakListsParameter copy = new PeakListsParameter(minCount, maxCount);
+        copy.value = value;
+        return copy;
+    }
 
-	@Override
-	public String getName() {
-		return "Peak lists";
-	}
+    @Override
+    public String getName() {
+        return "Peak lists";
+    }
 
-	@Override
-	public void loadValueFromXML(Element xmlElement) {
-	}
+    @Override
+    public void loadValueFromXML(Element xmlElement) {
+    }
 
-	@Override
-	public void saveValueToXML(Element xmlElement) {
-	}
+    @Override
+    public void saveValueToXML(Element xmlElement) {
+    }
 
-	@Override
-	public boolean checkValue(Collection<String> errorMessages) {
-		if (value == null) {
-			errorMessages.add("No peak list is selected");
-			return false;
-		}
-		if (value.length < minCount) {
-			errorMessages.add("At least " + minCount
-					+ " peak lists must be selected");
-			return false;
-		}
-		if (value.length > maxCount) {
-			errorMessages.add("Maximum " + maxCount
-					+ " peak lists may be selected");
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public boolean checkValue(Collection<String> errorMessages) {
+        if (value == null) {
+            errorMessages.add("No peak list is selected");
+            return false;
+        }
+        if (value.length < minCount) {
+            errorMessages.add(
+                    "At least " + minCount + " peak lists must be selected");
+            return false;
+        }
+        if (value.length > maxCount) {
+            errorMessages
+                    .add("Maximum " + maxCount + " peak lists may be selected");
+            return false;
+        }
+        return true;
+    }
 
 }

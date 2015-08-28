@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -35,25 +35,25 @@ import io.github.mzmine.util.ExitCode;
  */
 public interface ParameterSet {
 
-	public Parameter[] getParameters();
+    public Parameter[] getParameters();
 
-	public <T extends Parameter> T getParameter(T parameter);
+    public <T extends Parameter> T getParameter(T parameter);
 
-	public void loadValuesFromXML(Element element);
+    public void loadValuesFromXML(Element element);
 
-	public void saveValuesToXML(Element element);
+    public void saveValuesToXML(Element element);
 
-	public boolean checkUserParameterValues(Collection<String> errorMessages);
+    public boolean checkUserParameterValues(Collection<String> errorMessages);
 
-	public boolean checkAllParameterValues(Collection<String> errorMessages);
-	
-	public ParameterSet cloneParameterSet();
+    public boolean checkAllParameterValues(Collection<String> errorMessages);
 
-	/**
-	 * Represent method's parameters and their values in human-readable format
-	 */
-	public String toString();
+    public ParameterSet cloneParameterSet();
 
-	public ExitCode showSetupDialog();
+    /**
+     * Represent method's parameters and their values in human-readable format
+     */
+    public String toString();
+
+    public ExitCode showSetupDialog();
 
 }

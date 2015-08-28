@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -49,104 +49,104 @@ abstract class SpectrumImpl implements MassSpectrum {
     private DataPoint highestDataPoint;
 
     SpectrumImpl(@Nonnull DataPointStoreImpl dataPointStore) {
-	this.dataPointStore = dataPointStore;
-	mzRange = Range.singleton(0d);
+        this.dataPointStore = dataPointStore;
+        mzRange = Range.singleton(0d);
     }
 
     @Override
     @Nonnull
     public Range<Double> getMzRange() {
-	return mzRange;
+        return mzRange;
     }
 
     @Override
     @Nullable
     public DataPoint getHighestDataPoint() {
-	return highestDataPoint;
+        return highestDataPoint;
     }
 
     @Override
     public int getNumberOfDataPoints() {
-	return numberOfDataPoints;
+        return numberOfDataPoints;
     }
 
     @Override
     public synchronized @Nonnull DataPoint[] getDataPoints() {
-	DataPoint storedData[] = dataPointStore.readDataPoints(dataStoreId);
-	return storedData;
+        DataPoint storedData[] = dataPointStore.readDataPoints(dataStoreId);
+        return storedData;
     }
 
     @Override
     @Nonnull
     public DataPoint[] getDataPointsByMass(@Nonnull Range<Double> mzRange) {
-	final DataPoint[] dataPoints = getDataPoints();
-	int startIndex, endIndex;
-	for (startIndex = 0; startIndex < dataPoints.length; startIndex++) {
-	    if (dataPoints[startIndex].getMz() >= mzRange.lowerEndpoint())
-		break;
-	}
+        final DataPoint[] dataPoints = getDataPoints();
+        int startIndex, endIndex;
+        for (startIndex = 0; startIndex < dataPoints.length; startIndex++) {
+            if (dataPoints[startIndex].getMz() >= mzRange.lowerEndpoint())
+                break;
+        }
 
-	for (endIndex = startIndex; endIndex < dataPoints.length; endIndex++) {
-	    if (dataPoints[endIndex].getMz() > mzRange.upperEndpoint())
-		break;
-	}
+        for (endIndex = startIndex; endIndex < dataPoints.length; endIndex++) {
+            if (dataPoints[endIndex].getMz() > mzRange.upperEndpoint())
+                break;
+        }
 
-	DataPoint pointsWithinRange[] = new DataPoint[endIndex - startIndex];
+        DataPoint pointsWithinRange[] = new DataPoint[endIndex - startIndex];
 
-	// Copy the relevant points
-	System.arraycopy(dataPoints, startIndex, pointsWithinRange, 0, endIndex
-		- startIndex);
+        // Copy the relevant points
+        System.arraycopy(dataPoints, startIndex, pointsWithinRange, 0,
+                endIndex - startIndex);
 
-	return pointsWithinRange;
+        return pointsWithinRange;
     }
 
     @Override
     @Nonnull
     public DataPoint[] getDataPointsOverIntensity(double intensity) {
-	DataPoint[] dataPoints = getDataPoints();
-	int index;
-	ArrayList<DataPoint> points = new ArrayList<DataPoint>();
+        DataPoint[] dataPoints = getDataPoints();
+        int index;
+        ArrayList<DataPoint> points = new ArrayList<DataPoint>();
 
-	for (index = 0; index < dataPoints.length; index++) {
-	    if (dataPoints[index].getIntensity() >= intensity)
-		points.add(dataPoints[index]);
-	}
+        for (index = 0; index < dataPoints.length; index++) {
+            if (dataPoints[index].getIntensity() >= intensity)
+                points.add(dataPoints[index]);
+        }
 
-	DataPoint pointsOverIntensity[] = points.toArray(new DataPoint[0]);
+        DataPoint pointsOverIntensity[] = points.toArray(new DataPoint[0]);
 
-	return pointsOverIntensity;
+        return pointsOverIntensity;
     }
 
     @Override
     public synchronized void setDataPoints(@Nonnull DataPoint[] newDataPoints) {
 
-	// Remove previous data, if any
-	if (dataStoreId != -1) {
-	    dataPointStore.removeStoredDataPoints(dataStoreId);
-	}
+        // Remove previous data, if any
+        if (dataStoreId != -1) {
+            dataPointStore.removeStoredDataPoints(dataStoreId);
+        }
 
-	// Sort the data points by m/z, because getDataPoints() guarantees the
-	// returned array is sorted by m/z
-	Arrays.sort(newDataPoints, new DataPointSorter(SortingProperty.MZ,
-		SortingDirection.Ascending));
+        // Sort the data points by m/z, because getDataPoints() guarantees the
+        // returned array is sorted by m/z
+        Arrays.sort(newDataPoints, new DataPointSorter(SortingProperty.MZ,
+                SortingDirection.Ascending));
 
-	dataStoreId = dataPointStore.storeDataPoints(newDataPoints);
+        dataStoreId = dataPointStore.storeDataPoints(newDataPoints);
 
-	numberOfDataPoints = newDataPoints.length;
-	// mzRange = ScanUtils.findMzRange(newDataPoints);
-	// highestDataPoint = ScanUtils.findTopDataPoint(newDataPoints);
-	// isCentroided = ScanUtils.isCentroided(newDataPoints);
+        numberOfDataPoints = newDataPoints.length;
+        // mzRange = ScanUtils.findMzRange(newDataPoints);
+        // highestDataPoint = ScanUtils.findTopDataPoint(newDataPoints);
+        // isCentroided = ScanUtils.isCentroided(newDataPoints);
 
     }
 
     @Override
     public MassSpectrumType getSpectrumType() {
-	return spectrumType;
+        return spectrumType;
     }
 
     @Override
     public void setSpectrumType(@Nonnull MassSpectrumType spectrumType) {
-	this.spectrumType = spectrumType;
+        this.spectrumType = spectrumType;
     }
 
 }

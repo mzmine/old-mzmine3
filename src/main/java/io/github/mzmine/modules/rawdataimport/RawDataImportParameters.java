@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -33,37 +33,37 @@ import java.io.File;
 public class RawDataImportParameters extends SimpleParameterSet {
 
     private static final ExtensionFilter filters[] = new ExtensionFilter[] {
-	    new ExtensionFilter("All raw data files", "cdf", "nc", "mzData",
-		    "mzML", "mzXML", "xml", "raw", "csv"),
-	    new ExtensionFilter("All XML files", "xml"),
-	    new ExtensionFilter("NetCDF files", "cdf", "nc"),
-	    new ExtensionFilter("mzData files", "mzData"),
-	    new ExtensionFilter("mzML files", "mzML"),
-	    new ExtensionFilter("XCalibur RAW files", "raw"),
-	    new ExtensionFilter("Waters RAW folders", "raw"),
-	    new ExtensionFilter("mzXML files", "mzXML"),
-	    new ExtensionFilter("Agilent CSV files", "csv") };
+            new ExtensionFilter("All raw data files", "cdf", "nc", "mzData",
+                    "mzML", "mzXML", "xml", "raw", "csv"),
+            new ExtensionFilter("All XML files", "xml"),
+            new ExtensionFilter("NetCDF files", "cdf", "nc"),
+            new ExtensionFilter("mzData files", "mzData"),
+            new ExtensionFilter("mzML files", "mzML"),
+            new ExtensionFilter("XCalibur RAW files", "raw"),
+            new ExtensionFilter("Waters RAW folders", "raw"),
+            new ExtensionFilter("mzXML files", "mzXML"),
+            new ExtensionFilter("Agilent CSV files", "csv") };
 
     public static final FileNamesParameter fileNames = new FileNamesParameter();
 
     public RawDataImportParameters() {
-	super(new Parameter[] { fileNames });
+        super(new Parameter[] { fileNames });
     }
 
     public ExitCode showSetupDialog() {
 
-	FileChooser fileChooser = new FileChooser();
-	fileChooser.setTitle("Select files to import");
-	fileChooser.getExtensionFilters().addAll(filters);
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select files to import");
+        fileChooser.getExtensionFilters().addAll(filters);
 
-	List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
+        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
 
-	if ((selectedFiles == null) || (selectedFiles.isEmpty()))
-	    return ExitCode.CANCEL;
+        if ((selectedFiles == null) || (selectedFiles.isEmpty()))
+            return ExitCode.CANCEL;
 
-	getParameter(fileNames).setValue(selectedFiles);
+        getParameter(fileNames).setValue(selectedFiles);
 
-	return ExitCode.OK;
+        return ExitCode.OK;
 
     }
 }

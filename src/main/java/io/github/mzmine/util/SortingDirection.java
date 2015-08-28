@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -21,6 +21,6 @@ package io.github.mzmine.util;
 
 public enum SortingDirection {
 
-	Ascending, Descending
+    Ascending, Descending
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -36,8 +36,8 @@ public class FormulaParameter extends StringParameter {
 
         String value = getValue();
         if ((value != null) && (!value.matches(formulaPattern))) {
-            errorMessages.add("\"" + value
-                    + "\" is not a valid chemical formula");
+            errorMessages
+                    .add("\"" + value + "\" is not a valid chemical formula");
             return false;
         }
 

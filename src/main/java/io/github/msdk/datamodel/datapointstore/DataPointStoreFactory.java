@@ -12,17 +12,17 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datapointstore;
+package io.github.msdk.datamodel.datapointstore;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datapointstore.DataPointStore;
 
 import javax.annotation.Nonnull;
 
 /**
  * Data store provider
  */
-public class MSDKDataStore {
+public class DataPointStoreFactory {
 
     private static final MemoryDataPointStore memoryDataStore = new MemoryDataPointStore();
 

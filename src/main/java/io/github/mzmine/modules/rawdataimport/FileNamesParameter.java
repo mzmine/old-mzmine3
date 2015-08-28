@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -36,58 +36,58 @@ import io.github.mzmine.parameters.Parameter;
  */
 public class FileNamesParameter implements Parameter<List<File>> {
 
-	private List<File> value;
+    private List<File> value;
 
-	@Override
-	public String getName() {
-		return "Raw data file names";
-	}
+    @Override
+    public String getName() {
+        return "Raw data file names";
+    }
 
-	public List<File> getValue() {
-		return value;
-	}
+    public List<File> getValue() {
+        return value;
+    }
 
-	public void setValue(List<File> value) {
-		this.value = value;
-	}
+    public void setValue(List<File> value) {
+        this.value = value;
+    }
 
-	@Override
-	public FileNamesParameter cloneParameter() {
-		FileNamesParameter copy = new FileNamesParameter();
-		copy.setValue(this.getValue());
-		return copy;
-	}
+    @Override
+    public FileNamesParameter cloneParameter() {
+        FileNamesParameter copy = new FileNamesParameter();
+        copy.setValue(this.getValue());
+        return copy;
+    }
 
-	@Override
-	public void loadValueFromXML(Element xmlElement) {
-		NodeList list = xmlElement.getElementsByTagName("file");
-		this.value = new ArrayList<>();
-		for (int i = 0; i < list.getLength(); i++) {
-			Element nextElement = (Element) list.item(i);
-			File newFile = new File(nextElement.getTextContent());
-			value.add(newFile);
-		}
-	}
+    @Override
+    public void loadValueFromXML(Element xmlElement) {
+        NodeList list = xmlElement.getElementsByTagName("file");
+        this.value = new ArrayList<>();
+        for (int i = 0; i < list.getLength(); i++) {
+            Element nextElement = (Element) list.item(i);
+            File newFile = new File(nextElement.getTextContent());
+            value.add(newFile);
+        }
+    }
 
-	@Override
-	public void saveValueToXML(Element xmlElement) {
-		if (value == null)
-			return;
-		Document parentDocument = xmlElement.getOwnerDocument();
-		for (File f : value) {
-			Element newElement = parentDocument.createElement("file");
-			newElement.setTextContent(f.getPath());
-			xmlElement.appendChild(newElement);
-		}
-	}
+    @Override
+    public void saveValueToXML(Element xmlElement) {
+        if (value == null)
+            return;
+        Document parentDocument = xmlElement.getOwnerDocument();
+        for (File f : value) {
+            Element newElement = parentDocument.createElement("file");
+            newElement.setTextContent(f.getPath());
+            xmlElement.appendChild(newElement);
+        }
+    }
 
-	@Override
-	public boolean checkValue(Collection<String> errorMessages) {
-		if (value == null) {
-			errorMessages.add("File names are not set");
-			return false;
-		}
-		return true;
-	}
+    @Override
+    public boolean checkValue(Collection<String> errorMessages) {
+        if (value == null) {
+            errorMessages.add("File names are not set");
+            return false;
+        }
+        return true;
+    }
 
 }

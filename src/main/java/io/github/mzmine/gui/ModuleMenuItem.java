@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -40,76 +40,74 @@ import javafx.scene.control.MenuItem;
 /**
  * 
  */
-public final class ModuleMenuItem extends MenuItem implements
-	EventHandler<ActionEvent> {
+public final class ModuleMenuItem extends MenuItem
+        implements EventHandler<ActionEvent> {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     private StringProperty moduleClass = new SimpleStringProperty();
 
     public ModuleMenuItem() {
-	setOnAction(this);
+        setOnAction(this);
     }
 
     public String getModuleClass() {
-	return moduleClass.get();
+        return moduleClass.get();
     }
 
     public void setModuleClass(String newClass) {
-	moduleClass.set(newClass);
+        moduleClass.set(newClass);
     }
 
     public StringProperty moduleClassProperty() {
-	return moduleClass;
+        return moduleClass;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void handle(ActionEvent event) {
 
-	Class<? extends MZmineModule> moduleJavaClass;
-	try {
-	    moduleJavaClass = (Class<? extends MZmineModule>) Class
-		    .forName(moduleClass.get());
-	} catch (ClassNotFoundException e) {
-	    e.printStackTrace();
-	    MZmineGUI.displayMessage("Cannot find module class "
-		    + moduleClass.get());
-	    return;
-	}
+        Class<? extends MZmineModule> moduleJavaClass;
+        try {
+            moduleJavaClass = (Class<? extends MZmineModule>) Class
+                    .forName(moduleClass.get());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            MZmineGUI.displayMessage(
+                    "Cannot find module class " + moduleClass.get());
+            return;
+        }
 
-	MZmineModule module = MZmineModules.getModuleInstance(moduleJavaClass);
+        MZmineModule module = MZmineModules.getModuleInstance(moduleJavaClass);
 
-	if (module == null) {
-	    MZmineGUI.displayMessage("Cannot instantiate module of class "
-		    + moduleClass.get());
-	    return;
-	}
+        if (module == null) {
+            MZmineGUI.displayMessage(
+                    "Cannot instantiate module of class " + moduleClass.get());
+            return;
+        }
 
-	if (!(module instanceof MZmineRunnableModule)) {
-	    MZmineGUI
-		    .displayMessage("Cannot run module "
-			    + module.getName()
-			    + ", because it does not implement the MZmineRunnableModule interface");
-	    return;
-	}
+        if (!(module instanceof MZmineRunnableModule)) {
+            MZmineGUI.displayMessage("Cannot run module " + module.getName()
+                    + ", because it does not implement the MZmineRunnableModule interface");
+            return;
+        }
 
-	MZmineRunnableModule runnableModule = (MZmineRunnableModule) module;
-	ParameterSet moduleParameters = MZmineCore.getConfiguration()
-		.getModuleParameters(moduleJavaClass);
+        MZmineRunnableModule runnableModule = (MZmineRunnableModule) module;
+        ParameterSet moduleParameters = MZmineCore.getConfiguration()
+                .getModuleParameters(moduleJavaClass);
 
-	logger.finest("Setting parameters for module " + module.getName());
-	ExitCode exitCode = moduleParameters.showSetupDialog();
-	if (exitCode == ExitCode.OK) {
-	    ParameterSet parametersCopy = moduleParameters.cloneParameterSet();
-	    logger.finest("Starting module " + module.getName()
-		    + " with parameters " + parametersCopy);
-	    List<Task> tasks = new ArrayList<>();
-	    MZmineProject project = MZmineGUI.getCurrentProject();
-	    runnableModule.runModule(project, parametersCopy, tasks);
-	    MZmineGUI.submitTasks(tasks);
-	}
-	return;
+        logger.finest("Setting parameters for module " + module.getName());
+        ExitCode exitCode = moduleParameters.showSetupDialog();
+        if (exitCode == ExitCode.OK) {
+            ParameterSet parametersCopy = moduleParameters.cloneParameterSet();
+            logger.finest("Starting module " + module.getName()
+                    + " with parameters " + parametersCopy);
+            List<Task> tasks = new ArrayList<>();
+            MZmineProject project = MZmineGUI.getCurrentProject();
+            runnableModule.runModule(project, parametersCopy, tasks);
+            MZmineGUI.submitTasks(tasks);
+        }
+        return;
 
     }
 

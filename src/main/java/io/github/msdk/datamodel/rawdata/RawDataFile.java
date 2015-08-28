@@ -127,7 +127,8 @@ public interface RawDataFile {
      * @return A list of matching scans.
      */
     @Nonnull
-    List<MsScan> getScans(@Nonnull Range<ChromatographyInfo> chromatographyRange);
+    List<MsScan> getScans(
+            @Nonnull Range<ChromatographyInfo> chromatographyRange);
 
     /**
      * Returns an immutable list of all scans of a given MS function and in a

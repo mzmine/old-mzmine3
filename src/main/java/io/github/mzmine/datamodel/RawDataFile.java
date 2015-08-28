@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -60,7 +60,7 @@ public interface RawDataFile {
      */
     @Nonnull
     List<MsScan> getScans(@Nonnull Integer msLevel,
-	    @Nonnull Range<Double> rtRange);
+            @Nonnull Range<Double> rtRange);
 
     /**
      * Returns immutable list of MS levels of scans in this file. Items in the

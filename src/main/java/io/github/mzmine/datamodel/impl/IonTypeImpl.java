@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  *
  * This file is part of MZmine 2.
  *
@@ -27,34 +27,34 @@ import io.github.mzmine.datamodel.PolarityType;
  */
 class IonTypeImpl implements IonType {
 
-	@Override
-	public int getName() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public int getName() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public PolarityType getPolarity() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public PolarityType getPolarity() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public int getNumberOfMolecules() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+    @Override
+    public int getNumberOfMolecules() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-	@Override
-	public String getAdductFormula() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String getAdductFormula() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public String getCharge() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public String getCharge() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

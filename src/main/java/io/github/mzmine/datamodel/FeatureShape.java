@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -43,7 +43,7 @@ public interface FeatureShape {
      * Assigns a raw data file to this feature.
      */
     void setDataFile(@Nullable RawDataFile dataFile);
-    
+
     /**
      * @return The most representative scan of this feature (with highest signal
      *         intensity), or null if this peak is not connected to any raw
@@ -51,7 +51,7 @@ public interface FeatureShape {
      */
     @Nonnull
     MsScan getRepresentativeScan();
-    
+
     /**
      * Returns the number of scan that represents the fragmentation of this peak
      * in MS2 level.

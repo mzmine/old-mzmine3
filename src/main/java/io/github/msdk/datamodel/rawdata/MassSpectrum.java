@@ -98,7 +98,8 @@ public interface MassSpectrum {
      * @return selected data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    DataPointList getDataPointsByIntensity(@Nonnull Range<Float> intensityRange);
+    DataPointList getDataPointsByIntensity(
+            @Nonnull Range<Float> intensityRange);
 
     /**
      * Returns data points in given m/z and intensity ranges. Importantly, a new

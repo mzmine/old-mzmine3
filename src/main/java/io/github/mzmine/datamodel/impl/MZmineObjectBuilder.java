@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -39,60 +39,61 @@ import io.github.mzmine.datamodel.RawDataFile;
 public class MZmineObjectBuilder {
 
     public static final @Nonnull DataPoint getDataPoint(double mz,
-	    double intensity) {
-	return new DataPointImpl(mz, intensity);
+            double intensity) {
+        return new DataPointImpl(mz, intensity);
     }
 
     public static final @Nonnull IonType getIonType() {
-	return new IonTypeImpl();
+        return new IonTypeImpl();
     }
 
     public static final @Nonnull DataPoint[] getDataPointArray(
-	    final double mz[], final double intensities[]) {
-	assert mz.length == intensities.length;
-	final DataPoint dpArray[] = new DataPoint[mz.length];
-	for (int i = 0; i < mz.length; i++)
-	    dpArray[i] = new DataPointImpl(mz[i], intensities[i]);
-	return dpArray;
+            final double mz[], final double intensities[]) {
+        assert mz.length == intensities.length;
+        final DataPoint dpArray[] = new DataPoint[mz.length];
+        for (int i = 0; i < mz.length; i++)
+            dpArray[i] = new DataPointImpl(mz[i], intensities[i]);
+        return dpArray;
     }
 
     public static final @Nonnull Feature getFeature() {
-	return new FeatureImpl();
+        return new FeatureImpl();
     }
 
     public static final @Nonnull IsotopePattern getIsotopePattern(
-	    @Nonnull PeakList peakList) {
-	assert peakList instanceof DataPointStoreImpl;
-	return new IsotopePatternImpl((DataPointStoreImpl) peakList);
+            @Nonnull PeakList peakList) {
+        assert peakList instanceof DataPointStoreImpl;
+        return new IsotopePatternImpl((DataPointStoreImpl) peakList);
     }
 
     public static final @Nonnull MZmineProject getMZmineProject() {
-	return new MZmineProjectImpl();
+        return new MZmineProjectImpl();
     }
 
     public static final @Nonnull PeakListRowAnnotation getPeakListRowAnnotation() {
-	return new PeakListRowAnnotationImpl();
+        return new PeakListRowAnnotationImpl();
     }
 
     public static final @Nonnull PeakList getPeakList() {
-	return new PeakListImpl();
+        return new PeakListImpl();
     }
 
     public static final @Nonnull RawDataFile getRawDataFile() {
-	return new RawDataFileImpl();
+        return new RawDataFileImpl();
     }
 
-    public static final @Nonnull MsScan getMsScan(@Nonnull RawDataFile dataFile) {
-	return new MsScanImpl(dataFile);
+    public static final @Nonnull MsScan getMsScan(
+            @Nonnull RawDataFile dataFile) {
+        return new MsScanImpl(dataFile);
     }
 
     public static final @Nonnull MsMsScan getMsMsScan(
-	    @Nonnull RawDataFile dataFile) {
-	return new MsMsScanImpl(dataFile);
+            @Nonnull RawDataFile dataFile) {
+        return new MsMsScanImpl(dataFile);
     }
 
     public static final @Nonnull ChromatographyData getChromatographyData() {
-	return new ChromatographyDataImpl();
+        return new ChromatographyDataImpl();
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -37,42 +37,40 @@ class ShutDownHook implements Runnable {
     @Override
     public void run() {
 
-	logger.finest("Running post-shutdown code");
+        logger.finest("Running post-shutdown code");
 
-	// Cancel all running tasks - this is important because tasks can spawn
-	// additional processes (such as ThermoRawDump.exe on Windows) and these
-	// will block the shutdown of the JVM. If we cancel the tasks, the
-	// processes will be killed immediately.
-	/*for (WrappedTask wt : MZmineCore.getTaskController().getTaskQueue()
-		.getQueueSnapshot()) {
-	    Task t = wt.getActualTask();
-	    if ((t.getStatus() == TaskStatus.WAITING)
-		    || (t.getStatus() == TaskStatus.PROCESSING)) {
-		t.cancel();
-	    }
-	}*/
-	
-	// Save configuration
-	try {
-	    MZmineConfiguration configuration = MZmineCore.getConfiguration();
-	    if (configuration != null) {
-		configuration
-			.saveConfiguration(MZmineConfiguration.CONFIG_FILE);
-	    }
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
+        // Cancel all running tasks - this is important because tasks can spawn
+        // additional processes (such as ThermoRawDump.exe on Windows) and these
+        // will block the shutdown of the JVM. If we cancel the tasks, the
+        // processes will be killed immediately.
+        /*
+         * for (WrappedTask wt : MZmineCore.getTaskController().getTaskQueue()
+         * .getQueueSnapshot()) { Task t = wt.getActualTask(); if
+         * ((t.getStatus() == TaskStatus.WAITING) || (t.getStatus() ==
+         * TaskStatus.PROCESSING)) { t.cancel(); } }
+         */
 
-	// Remove all temporary files
-	MZmineProject currentProject = MZmineCore.getCurrentProject();
-	if (currentProject != null) {
-	    for (RawDataFile dataFile : currentProject.getDataFiles()) {
-		dataFile.dispose();
-	    }
-	    for (PeakList peakList : currentProject.getPeakLists()) {
-		peakList.dispose();
-	    }
-	}
+        // Save configuration
+        try {
+            MZmineConfiguration configuration = MZmineCore.getConfiguration();
+            if (configuration != null) {
+                configuration
+                        .saveConfiguration(MZmineConfiguration.CONFIG_FILE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Remove all temporary files
+        MZmineProject currentProject = MZmineCore.getCurrentProject();
+        if (currentProject != null) {
+            for (RawDataFile dataFile : currentProject.getDataFiles()) {
+                dataFile.dispose();
+            }
+            for (PeakList peakList : currentProject.getPeakLists()) {
+                peakList.dispose();
+            }
+        }
 
     }
 }

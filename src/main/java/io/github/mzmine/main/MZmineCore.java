@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -36,28 +36,28 @@ public final class MZmineCore {
     private static Logger logger = Logger.getLogger(MZmineCore.class.getName());
 
     public static MZmineConfiguration getConfiguration() {
-	return null;
+        return null;
     }
 
     @Nonnull
     public static String getMZmineVersion() {
-	try {
-	    ClassLoader myClassLoader = MZmineCore.class.getClassLoader();
-	    InputStream inStream = myClassLoader
-		    .getResourceAsStream("META-INF/maven/net.sf.mzmine/mzmine/pom.properties");
-	    if (inStream == null)
-		return "0.0";
-	    Properties properties = new Properties();
-	    properties.load(inStream);
-	    return properties.getProperty("version");
-	} catch (Exception e) {
-	    e.printStackTrace();
-	    return "0.0";
-	}
+        try {
+            ClassLoader myClassLoader = MZmineCore.class.getClassLoader();
+            InputStream inStream = myClassLoader.getResourceAsStream(
+                    "META-INF/maven/net.sf.mzmine/mzmine/pom.properties");
+            if (inStream == null)
+                return "0.0";
+            Properties properties = new Properties();
+            properties.load(inStream);
+            return properties.getProperty("version");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "0.0";
+        }
     }
-    
+
     static MZmineProject getCurrentProject() {
-	return null;
+        return null;
     }
 
 }

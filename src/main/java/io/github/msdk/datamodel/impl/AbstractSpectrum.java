@@ -12,13 +12,13 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.datamodel.impl;
 
+import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.DataPointList;
 import io.github.msdk.datamodel.rawdata.MassSpectrum;
 import io.github.msdk.datamodel.rawdata.MassSpectrumType;
-import io.github.msdk.datapointstore.DataPointStore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -82,7 +82,8 @@ abstract class AbstractSpectrum implements MassSpectrum {
 
     @Nonnull
     public DataPointList getDataPointsByMzAndIntensity(
-            @Nonnull Range<Double> mzRange, @Nonnull Range<Float> intensityRange) {
+            @Nonnull Range<Double> mzRange,
+            @Nonnull Range<Float> intensityRange) {
         Preconditions.checkNotNull(dataStoreId);
         DataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
         return storedData.selectDataPoints(mzRange, intensityRange);
@@ -100,7 +101,8 @@ abstract class AbstractSpectrum implements MassSpectrum {
      * @param newDataPoints
      *            New data points
      */
-    synchronized public void setDataPoints(@Nonnull DataPointList newDataPoints) {
+    synchronized public void setDataPoints(
+            @Nonnull DataPointList newDataPoints) {
         if (dataStoreId != null)
             dataPointStore.removeDataPoints(dataStoreId);
         dataStoreId = dataPointStore.storeDataPoints(newDataPoints);

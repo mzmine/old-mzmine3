@@ -12,12 +12,12 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.datamodel.impl;
 
+import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.peaklists.IsotopePattern;
 import io.github.msdk.datamodel.peaklists.IsotopePatternType;
 import io.github.msdk.datamodel.rawdata.DataPointList;
-import io.github.msdk.datapointstore.DataPointStore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -70,9 +70,5 @@ class SimpleIsotopePattern extends AbstractSpectrum implements IsotopePattern {
         // TODO Auto-generated method stub
 
     }
-
-
-
-
 
 }

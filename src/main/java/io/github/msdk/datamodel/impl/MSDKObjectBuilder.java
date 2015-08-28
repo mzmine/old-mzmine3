@@ -12,8 +12,9 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel;
+package io.github.msdk.datamodel.impl;
 
+import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.DataPoint;
 import io.github.msdk.datamodel.rawdata.DataPointList;
@@ -21,7 +22,6 @@ import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.datapointstore.DataPointStore;
 
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
@@ -99,7 +99,8 @@ public class MSDKObjectBuilder {
      * @param name
      * @return
      */
-    public static final @Nonnull MsFunction getMsFunction(@Nonnull String name) {
+    public static final @Nonnull MsFunction getMsFunction(
+            @Nonnull String name) {
         return getMsFunction(name, null);
     }
 
@@ -119,8 +120,8 @@ public class MSDKObjectBuilder {
     }
 
     public static final @Nonnull MsScan getMsScan(
-            @Nonnull DataPointStore dataPointStore,
-            @Nonnull Integer scanNumber, @Nonnull MsFunction msFunction) {
+            @Nonnull DataPointStore dataPointStore, @Nonnull Integer scanNumber,
+            @Nonnull MsFunction msFunction) {
         return new SimpleMsScan(dataPointStore, scanNumber, msFunction);
     }
 
@@ -134,8 +135,7 @@ public class MSDKObjectBuilder {
         if (separationType.getFeatureDimensions() < 2) {
             throw new IllegalArgumentException(
                     "2D ChromatographyInfo requires at least 2 feature dimensions. Provided separation type "
-                            + separationType
-                            + " has "
+                            + separationType + " has "
                             + separationType.getFeatureDimensions());
         }
         // TODO add further validation
@@ -147,8 +147,7 @@ public class MSDKObjectBuilder {
         if (separationType.getFeatureDimensions() < 2) {
             throw new IllegalArgumentException(
                     "2D ChromatographyInfo requires at least 2 feature dimensions. Provided separation type "
-                            + separationType
-                            + " has "
+                            + separationType + " has "
                             + separationType.getFeatureDimensions());
         }
         if (separationType != SeparationType.IMS) {

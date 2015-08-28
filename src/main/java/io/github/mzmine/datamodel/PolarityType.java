@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -32,7 +32,7 @@ public enum PolarityType {
     private final int sign;
 
     PolarityType(int sign) {
-	this.sign = sign;
+        this.sign = sign;
     }
 
     /**
@@ -40,6 +40,6 @@ public enum PolarityType {
      *         neutral or unknown polarity.
      */
     public int getSign() {
-	return sign;
+        return sign;
     }
 }

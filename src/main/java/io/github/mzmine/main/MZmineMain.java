@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -33,34 +33,34 @@ public final class MZmineMain {
 
     public static void main(String args[]) {
 
-	/*
-	 * Cleanup old temporary files on a new thread
-	 */
-	TmpFileCleanup cleanupClass = new TmpFileCleanup();
-	Thread cleanupThread = new Thread(cleanupClass);
-	cleanupThread.setPriority(Thread.MIN_PRIORITY);
-	cleanupThread.start();
+        /*
+         * Cleanup old temporary files on a new thread
+         */
+        TmpFileCleanup cleanupClass = new TmpFileCleanup();
+        Thread cleanupThread = new Thread(cleanupClass);
+        cleanupThread.setPriority(Thread.MIN_PRIORITY);
+        cleanupThread.start();
 
-	/*
-	 * Register shutdown hook
-	 */
-	ShutDownHook shutDownHook = new ShutDownHook();
-	Thread shutDownThread = new Thread(shutDownHook);
-	Runtime.getRuntime().addShutdownHook(shutDownThread);
+        /*
+         * Register shutdown hook
+         */
+        ShutDownHook shutDownHook = new ShutDownHook();
+        Thread shutDownThread = new Thread(shutDownHook);
+        Runtime.getRuntime().addShutdownHook(shutDownThread);
 
-	/*
-	 * Load modules on a new thread
-	 */
-	MZmineModules moduleStarter = new MZmineModules();
-	Thread moduleStarterThread = new Thread(moduleStarter);
-	moduleStarterThread.setPriority(Thread.MIN_PRIORITY);
-	moduleStarterThread.start();
+        /*
+         * Load modules on a new thread
+         */
+        MZmineModules moduleStarter = new MZmineModules();
+        Thread moduleStarterThread = new Thread(moduleStarter);
+        moduleStarterThread.setPriority(Thread.MIN_PRIORITY);
+        moduleStarterThread.start();
 
-	/*
-	 * Start the JavaFX GUI
-	 */
-	logger.finest("Starting MZmine GUI");
-	Application.launch(MZmineGUI.class, args);
+        /*
+         * Start the JavaFX GUI
+         */
+        logger.finest("Starting MZmine GUI");
+        Application.launch(MZmineGUI.class, args);
     }
 
 }

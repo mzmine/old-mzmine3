@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -55,15 +55,15 @@ public interface MZmineProject {
     /**
      * Return the filename of the project file
      */
-    @Nullable File getProjectFile();
+    @Nullable
+    File getProjectFile();
 
     /**
-     * Returns an immutable list of all raw data files in the project. 
+     * Returns an immutable list of all raw data files in the project.
      * 
      */
     List<Sample> getSamples();
-    
-    
+
     /**
      * Adds a new RawDataFile to the project.
      */
@@ -75,7 +75,7 @@ public interface MZmineProject {
     void removeFile(RawDataFile file);
 
     /**
-     * Returns an immutable list of all raw data files in the project. 
+     * Returns an immutable list of all raw data files in the project.
      * 
      */
     List<RawDataFile> getDataFiles();
@@ -99,9 +99,9 @@ public interface MZmineProject {
      * Returns all peak lists which contain given data file
      */
     List<PeakList> getPeakLists(RawDataFile file);
-    
+
     void performProcessingStep(MZmineProcessingStep<?> step);
-    
+
     List<MZmineProcessingStep<?>> getProcessingHistory();
 
     void notifyObjectChanged(Object object, boolean structureChanged);

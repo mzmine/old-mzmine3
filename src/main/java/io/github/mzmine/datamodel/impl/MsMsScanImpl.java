@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -40,66 +40,66 @@ public class MsMsScanImpl extends MsScanImpl implements MsMsScan {
     private Double activationEnergy;
 
     public MsMsScanImpl(RawDataFile dataFile) {
-	super(dataFile);
+        super(dataFile);
     }
 
     @Override
     public int getPrecursorCharge() {
-	return precursorCharge;
+        return precursorCharge;
     }
 
     @Override
     public void setPrecursorCharge(int precursorCharge) {
-	this.precursorCharge = precursorCharge;
+        this.precursorCharge = precursorCharge;
     }
 
     @Override
     public MsScan getParentScan() {
-	return parentScan;
+        return parentScan;
     }
 
     @Override
     public void setParentScan(@Nullable MsScan parentScan) {
-	this.parentScan = parentScan;
+        this.parentScan = parentScan;
     }
 
     @Override
     public double getActivationEnergy() {
-	return activationEnergy;
+        return activationEnergy;
     }
 
     @Override
     public void setActivationEnergy(double activationEnergy) {
-	this.activationEnergy = activationEnergy;
+        this.activationEnergy = activationEnergy;
     }
 
     @Override
     public ChromatographyData getChromatographyData() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public MassSpectrumType getSpectrumType() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Double getPrecursorMz() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public Range<Double> getIsolationWidth() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public void setPrecursorMz(Double precursorMZ) {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 

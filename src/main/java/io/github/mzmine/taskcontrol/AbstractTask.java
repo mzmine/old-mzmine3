@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  *
  * This file is part of MZmine 2.
  *
@@ -32,7 +32,7 @@ public abstract class AbstractTask implements Task {
      * @see io.github.mzmine.taskcontrol.Task#setStatus()
      */
     public final void setStatus(TaskStatus newStatus) {
-	this.status = newStatus;
+        this.status = newStatus;
     }
 
     /**
@@ -42,7 +42,7 @@ public abstract class AbstractTask implements Task {
      * @return true if this task has been canceled or stopped due to an error
      */
     public final boolean isCanceled() {
-	return (status == TaskStatus.CANCELED) || (status == TaskStatus.ERROR);
+        return (status == TaskStatus.CANCELED) || (status == TaskStatus.ERROR);
     }
 
     /**
@@ -51,28 +51,28 @@ public abstract class AbstractTask implements Task {
      * @return true if this task is finished
      */
     public final boolean isFinished() {
-	return status == TaskStatus.FINISHED;
+        return status == TaskStatus.FINISHED;
     }
 
     /**
      * @see io.github.mzmine.taskcontrol.Task#cancel()
      */
     public void cancel() {
-	setStatus(TaskStatus.CANCELED);
+        setStatus(TaskStatus.CANCELED);
     }
 
     /**
      * @see io.github.mzmine.taskcontrol.Task#getErrorMessage()
      */
     public final String getErrorMessage() {
-	return errorMessage;
+        return errorMessage;
     }
 
     /**
      */
     public final void setErrorMessage(String errorMessage) {
-	setStatus(TaskStatus.ERROR);
-	this.errorMessage = errorMessage;
+        setStatus(TaskStatus.ERROR);
+        this.errorMessage = errorMessage;
     }
 
     /**
@@ -81,7 +81,7 @@ public abstract class AbstractTask implements Task {
      * @return The current status of this task
      */
     public final TaskStatus getStatus() {
-	return this.status;
+        return this.status;
     }
 
 }

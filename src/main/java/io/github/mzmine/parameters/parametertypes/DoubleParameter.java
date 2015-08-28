@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -94,8 +94,8 @@ public class DoubleParameter implements UserParameter<Double, JTextField> {
     public JTextField createEditingComponent() {
 
         final JTextField textField = new JTextField();
-        textField.setPreferredSize(new Dimension(WIDTH, textField
-                .getPreferredSize().height));
+        textField.setPreferredSize(
+                new Dimension(WIDTH, textField.getPreferredSize().height));
 
         // Add an input verifier if any bounds are specified.
         if (minimum != null || maximum != null) {
@@ -228,8 +228,9 @@ public class DoubleParameter implements UserParameter<Double, JTextField> {
             boolean verified = false;
             try {
 
-                verified = checkBounds(format.parse(
-                        ((JTextComponent) input).getText()).doubleValue());
+                verified = checkBounds(
+                        format.parse(((JTextComponent) input).getText())
+                                .doubleValue());
             } catch (ParseException e) {
 
                 // Not a number.

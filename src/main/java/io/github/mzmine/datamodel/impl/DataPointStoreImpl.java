@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -54,33 +54,33 @@ abstract class DataPointStoreImpl {
 
     DataPointStoreImpl() {
 
-	try {
-	    tmpDataFileName = File.createTempFile("mzmine", ".tmp");
-	    tmpDataFile = new RandomAccessFile(tmpDataFileName, "rw");
+        try {
+            tmpDataFileName = File.createTempFile("mzmine", ".tmp");
+            tmpDataFile = new RandomAccessFile(tmpDataFileName, "rw");
 
-	    /*
-	     * Locks the temporary file so it is not removed when another
-	     * instance of MZmine is starting. Lock will be automatically
-	     * released when this instance of MZmine exits.
-	     */
-	    FileChannel fileChannel = tmpDataFile.getChannel();
-	    fileChannel.lock();
+            /*
+             * Locks the temporary file so it is not removed when another
+             * instance of MZmine is starting. Lock will be automatically
+             * released when this instance of MZmine exits.
+             */
+            FileChannel fileChannel = tmpDataFile.getChannel();
+            fileChannel.lock();
 
-	    /*
-	     * Unfortunately, deleteOnExit() doesn't work on Windows, see JDK
-	     * bug #4171239. We will try to remove the temporary files in a
-	     * shutdown hook registered in the main.ShutDownHook class.
-	     */
-	    tmpDataFileName.deleteOnExit();
+            /*
+             * Unfortunately, deleteOnExit() doesn't work on Windows, see JDK
+             * bug #4171239. We will try to remove the temporary files in a
+             * shutdown hook registered in the main.ShutDownHook class.
+             */
+            tmpDataFileName.deleteOnExit();
 
-	} catch (IOException e) {
-	    throw new RuntimeException(
-		    "I/O error while creating a new MZmine object", e);
-	}
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    "I/O error while creating a new MZmine object", e);
+        }
 
-	byteBuffer = ByteBuffer.allocate(20000);
-	dataPointsOffsets = new TreeMap<Integer, Long>();
-	dataPointsLengths = new TreeMap<Integer, Integer>();
+        byteBuffer = ByteBuffer.allocate(20000);
+        dataPointsOffsets = new TreeMap<Integer, Long>();
+        dataPointsLengths = new TreeMap<Integer, Integer>();
 
     }
 
@@ -91,49 +91,46 @@ abstract class DataPointStoreImpl {
      */
     synchronized int storeDataPoints(@Nonnull DataPoint dataPoints[]) {
 
-	long currentOffset;
-	try {
-	    currentOffset = tmpDataFile.length();
+        long currentOffset;
+        try {
+            currentOffset = tmpDataFile.length();
 
+            final int numOfDataPoints = dataPoints.length;
 
-	final int numOfDataPoints = dataPoints.length;
+            /*
+             * Convert the data points into a byte array. Each double takes 8
+             * bytes, so we get the current float offset by dividing the size of
+             * the file by 8.
+             */
+            final int numOfBytes = numOfDataPoints * 2 * 8;
 
-	/*
-	 * Convert the data points into a byte array. Each double takes 8 bytes,
-	 * so we get the current float offset by dividing the size of the file
-	 * by 8.
-	 */
-	final int numOfBytes = numOfDataPoints * 2 * 8;
+            if (byteBuffer.capacity() < numOfBytes) {
+                byteBuffer = ByteBuffer.allocate(numOfBytes * 2);
+            } else {
+                byteBuffer.clear();
+            }
 
-	if (byteBuffer.capacity() < numOfBytes) {
-	    byteBuffer = ByteBuffer.allocate(numOfBytes * 2);
-	} else {
-	    byteBuffer.clear();
-	}
+            DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
+            for (DataPoint dp : dataPoints) {
+                dblBuffer.put(dp.getMz());
+                dblBuffer.put(dp.getIntensity());
+            }
 
-	DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
-	for (DataPoint dp : dataPoints) {
-	    dblBuffer.put(dp.getMz());
-	    dblBuffer.put(dp.getIntensity());
-	}
+            tmpDataFile.seek(currentOffset);
+            tmpDataFile.write(byteBuffer.array(), 0, numOfBytes);
 
-	tmpDataFile.seek(currentOffset);
-	tmpDataFile.write(byteBuffer.array(), 0, numOfBytes);
+            // Increase the storage ID
+            lastStorageId++;
 
-	
-	
-	// Increase the storage ID
-	lastStorageId++;
+            dataPointsOffsets.put(lastStorageId, currentOffset);
+            dataPointsLengths.put(lastStorageId, numOfDataPoints);
 
-	dataPointsOffsets.put(lastStorageId, currentOffset);
-	dataPointsLengths.put(lastStorageId, numOfDataPoints);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return -1;
+        }
 
-	} catch (IOException e) {
-	    e.printStackTrace();
-	    return -1;
-	}
-	
-	return lastStorageId;
+        return lastStorageId;
 
     }
 
@@ -142,41 +139,41 @@ abstract class DataPointStoreImpl {
      */
     synchronized @Nonnull DataPoint[] readDataPoints(int ID) {
 
-	final Long currentOffset = dataPointsOffsets.get(ID);
-	final Integer numOfDataPoints = dataPointsLengths.get(ID);
+        final Long currentOffset = dataPointsOffsets.get(ID);
+        final Integer numOfDataPoints = dataPointsLengths.get(ID);
 
-	if ((currentOffset == null) || (numOfDataPoints == null)) {
-	    throw new RuntimeException("Unknown storage ID " + ID);
-	}
+        if ((currentOffset == null) || (numOfDataPoints == null)) {
+            throw new RuntimeException("Unknown storage ID " + ID);
+        }
 
-	final int numOfBytes = numOfDataPoints * 2 * 8;
+        final int numOfBytes = numOfDataPoints * 2 * 8;
 
-	if (byteBuffer.capacity() < numOfBytes) {
-	    byteBuffer = ByteBuffer.allocate(numOfBytes * 2);
-	} else {
-	    byteBuffer.clear();
-	}
+        if (byteBuffer.capacity() < numOfBytes) {
+            byteBuffer = ByteBuffer.allocate(numOfBytes * 2);
+        } else {
+            byteBuffer.clear();
+        }
 
-	try {
-	    tmpDataFile.seek(currentOffset);
-     	tmpDataFile.read(byteBuffer.array(), 0, numOfBytes);
-	} catch (IOException e) {
-	    e.printStackTrace();
-	    return new DataPoint[0];
-	}
+        try {
+            tmpDataFile.seek(currentOffset);
+            tmpDataFile.read(byteBuffer.array(), 0, numOfBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new DataPoint[0];
+        }
 
-	DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
+        DoubleBuffer dblBuffer = byteBuffer.asDoubleBuffer();
 
-	DataPoint dataPoints[] = new DataPoint[numOfDataPoints];
-	double mz, intensity;
+        DataPoint dataPoints[] = new DataPoint[numOfDataPoints];
+        double mz, intensity;
 
-	for (int i = 0; i < numOfDataPoints; i++) {
-	    mz = dblBuffer.get();
-	    intensity = dblBuffer.get();
-	    dataPoints[i] = MZmineObjectBuilder.getDataPoint(mz, intensity);
-	}
+        for (int i = 0; i < numOfDataPoints; i++) {
+            mz = dblBuffer.get();
+            intensity = dblBuffer.get();
+            dataPoints[i] = MZmineObjectBuilder.getDataPoint(mz, intensity);
+        }
 
-	return dataPoints;
+        return dataPoints;
 
     }
 
@@ -185,21 +182,21 @@ abstract class DataPointStoreImpl {
      * the data from disk, simply remove the reference to it.
      */
     synchronized void removeStoredDataPoints(long ID) {
-	dataPointsOffsets.remove(ID);
-	dataPointsLengths.remove(ID);
+        dataPointsOffsets.remove(ID);
+        dataPointsLengths.remove(ID);
     }
 
     public synchronized void dispose() {
-	if (!tmpDataFileName.exists())
-	    return;
-	try {
-	    tmpDataFile.close();
-	    tmpDataFileName.delete();
-	} catch (IOException e) {
-	    logger.warning("Could not close and remove temporary file "
-		    + tmpDataFileName + ": " + e.toString());
-	    e.printStackTrace();
-	}
+        if (!tmpDataFileName.exists())
+            return;
+        try {
+            tmpDataFile.close();
+            tmpDataFileName.delete();
+        } catch (IOException e) {
+            logger.warning("Could not close and remove temporary file "
+                    + tmpDataFileName + ": " + e.toString());
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -208,6 +205,6 @@ abstract class DataPointStoreImpl {
      */
     @Override
     protected void finalize() {
-	dispose();
+        dispose();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -41,41 +41,41 @@ class DataPointImpl implements DataPoint {
      * @param intensity
      */
     DataPointImpl(double mz, double intensity) {
-	this.mz = mz;
-	this.intensity = intensity;
+        this.mz = mz;
+        this.intensity = intensity;
     }
 
     @Override
     public double getIntensity() {
-	return intensity;
+        return intensity;
     }
 
     @Override
     public double getMz() {
-	return mz;
+        return mz;
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (!(obj instanceof DataPoint))
-	    return false;
-	DataPoint dp = (DataPoint) obj;
-	return (this.mz == dp.getMz()) && (this.intensity == dp.getIntensity());
+        if (!(obj instanceof DataPoint))
+            return false;
+        DataPoint dp = (DataPoint) obj;
+        return (this.mz == dp.getMz()) && (this.intensity == dp.getIntensity());
     }
 
     @Override
     public int hashCode() {
-	return (int) (this.mz + this.intensity);
+        return (int) (this.mz + this.intensity);
     }
 
     @Override
     public String toString() {
-	Format mzFormat = MZmineCore.getConfiguration().getMZFormat();
-	Format intensityFormat = MZmineCore.getConfiguration()
-		.getIntensityFormat();
-	String str = "m/z: " + mzFormat.format(mz) + ", intensity: "
-		+ intensityFormat.format(intensity);
-	return str;
+        Format mzFormat = MZmineCore.getConfiguration().getMZFormat();
+        Format intensityFormat = MZmineCore.getConfiguration()
+                .getIntensityFormat();
+        String str = "m/z: " + mzFormat.format(mz) + ", intensity: "
+                + intensityFormat.format(intensity);
+        return str;
     }
 
 }

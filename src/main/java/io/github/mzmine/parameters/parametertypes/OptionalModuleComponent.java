@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -33,53 +33,53 @@ import io.github.mzmine.parameters.ParameterSet;
  */
 public class OptionalModuleComponent extends JPanel implements ActionListener {
 
-	private JCheckBox checkBox;
-	private JButton setButton;
-	private ParameterSet embeddedParameters;
+    private JCheckBox checkBox;
+    private JButton setButton;
+    private ParameterSet embeddedParameters;
 
-	public OptionalModuleComponent(ParameterSet embeddedParameters) {
+    public OptionalModuleComponent(ParameterSet embeddedParameters) {
 
-		super(new FlowLayout(FlowLayout.LEFT));
+        super(new FlowLayout(FlowLayout.LEFT));
 
-		this.embeddedParameters = embeddedParameters;
+        this.embeddedParameters = embeddedParameters;
 
-		checkBox = new JCheckBox();
-		checkBox.addActionListener(this);
-		add(checkBox);
+        checkBox = new JCheckBox();
+        checkBox.addActionListener(this);
+        add(checkBox);
 
-		setButton = new JButton("Setup..");
-		setButton.addActionListener(this);
-		setButton.setEnabled(false);
-		add(setButton);
+        setButton = new JButton("Setup..");
+        setButton.addActionListener(this);
+        setButton.setEnabled(false);
+        add(setButton);
 
-	}
+    }
 
-	public boolean isSelected() {
-		return checkBox.isSelected();
-	}
+    public boolean isSelected() {
+        return checkBox.isSelected();
+    }
 
-	public void setSelected(boolean selected) {
-		checkBox.setSelected(selected);
-		setButton.setEnabled(selected);
-	}
+    public void setSelected(boolean selected) {
+        checkBox.setSelected(selected);
+        setButton.setEnabled(selected);
+    }
 
-	public void actionPerformed(ActionEvent event) {
+    public void actionPerformed(ActionEvent event) {
 
-		Object src = event.getSource();
+        Object src = event.getSource();
 
-		if (src == checkBox) {
-			boolean checkBoxSelected = checkBox.isSelected();
-			setButton.setEnabled(checkBoxSelected);
-		}
+        if (src == checkBox) {
+            boolean checkBoxSelected = checkBox.isSelected();
+            setButton.setEnabled(checkBoxSelected);
+        }
 
-		if (src == setButton) {
-			embeddedParameters.showSetupDialog();
-		}
+        if (src == setButton) {
+            embeddedParameters.showSetupDialog();
+        }
 
-	}
+    }
 
-	@Override
-	public void setToolTipText(String toolTip) {
-		checkBox.setToolTipText(toolTip);
-	}
+    @Override
+    public void setToolTipText(String toolTip) {
+        checkBox.setToolTipText(toolTip);
+    }
 }

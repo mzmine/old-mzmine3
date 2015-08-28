@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -34,44 +34,44 @@ class TmpFileCleanup implements Runnable {
     @Override
     public void run() {
 
-	logger.fine("Checking for old temporary files...");
-	try {
+        logger.fine("Checking for old temporary files...");
+        try {
 
-	    // Find all temporary files with the mask mzmine*.scans
-	    File tempDir = new File(System.getProperty("java.io.tmpdir"));
-	    File remainingTmpFiles[] = tempDir.listFiles(new FilenameFilter() {
-		public boolean accept(File dir, String name) {
-		    return name.matches("mzmine.*\\.scans");
-		}
-	    });
+            // Find all temporary files with the mask mzmine*.scans
+            File tempDir = new File(System.getProperty("java.io.tmpdir"));
+            File remainingTmpFiles[] = tempDir.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.matches("mzmine.*\\.scans");
+                }
+            });
 
-	    if (remainingTmpFiles != null)
-		for (File remainingTmpFile : remainingTmpFiles) {
+            if (remainingTmpFiles != null)
+                for (File remainingTmpFile : remainingTmpFiles) {
 
-		    // Skip files created by someone else
-		    if (!remainingTmpFile.canWrite())
-			continue;
+                    // Skip files created by someone else
+                    if (!remainingTmpFile.canWrite())
+                        continue;
 
-		    // Try to obtain a lock on the file
-		    RandomAccessFile rac = new RandomAccessFile(
-			    remainingTmpFile, "rw");
+                    // Try to obtain a lock on the file
+                    RandomAccessFile rac = new RandomAccessFile(
+                            remainingTmpFile, "rw");
 
-		    FileLock lock = rac.getChannel().tryLock();
-		    rac.close();
+                    FileLock lock = rac.getChannel().tryLock();
+                    rac.close();
 
-		    if (lock != null) {
-			// We locked the file, which means nobody is using it
-			// anymore and it can be removed
-			logger.finest("Removing unused temporary file "
-				+ remainingTmpFile);
-			remainingTmpFile.delete();
-		    }
+                    if (lock != null) {
+                        // We locked the file, which means nobody is using it
+                        // anymore and it can be removed
+                        logger.finest("Removing unused temporary file "
+                                + remainingTmpFile);
+                        remainingTmpFile.delete();
+                    }
 
-		}
-	} catch (IOException e) {
-	    logger.log(Level.WARNING,
-		    "Error while checking for old temporary files", e);
-	}
+                }
+        } catch (IOException e) {
+            logger.log(Level.WARNING,
+                    "Error while checking for old temporary files", e);
+        }
 
     }
 }

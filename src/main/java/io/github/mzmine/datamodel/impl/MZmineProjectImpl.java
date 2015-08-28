@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -36,80 +36,78 @@ import io.github.mzmine.parameters.UserParameter;
  */
 public class MZmineProjectImpl implements MZmineProject {
 
-	private Hashtable<UserParameter, Hashtable<RawDataFile, Object>> projectParametersAndValues;
+    private Hashtable<UserParameter, Hashtable<RawDataFile, Object>> projectParametersAndValues;
 
-	@Override
-	public File getProjectFile() {
-	    // TODO Auto-generated method stub
-	    return null;
-	}
+    @Override
+    public File getProjectFile() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public List<Sample> getSamples() {
-	    // TODO Auto-generated method stub
-	    return null;
-	}
+    @Override
+    public List<Sample> getSamples() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public void addFile(RawDataFile newFile) {
-	    // TODO Auto-generated method stub
-	    
-	}
+    @Override
+    public void addFile(RawDataFile newFile) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void removeFile(RawDataFile file) {
-	    // TODO Auto-generated method stub
-	    
-	}
+    }
 
-	@Override
-	public List<RawDataFile> getDataFiles() {
-	    // TODO Auto-generated method stub
-	    return null;
-	}
+    @Override
+    public void removeFile(RawDataFile file) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void addPeakList(PeakList peaklist) {
-	    // TODO Auto-generated method stub
-	    
-	}
+    }
 
-	@Override
-	public void removePeakList(PeakList peaklist) {
-	    // TODO Auto-generated method stub
-	    
-	}
+    @Override
+    public List<RawDataFile> getDataFiles() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	@Override
-	public List<PeakList> getPeakLists() {
-	    // TODO Auto-generated method stub
-	    return null;
-	}
+    @Override
+    public void addPeakList(PeakList peaklist) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public List<PeakList> getPeakLists(RawDataFile file) {
-	    // TODO Auto-generated method stub
-	    return null;
-	}
+    }
 
-	@Override
-	public void performProcessingStep(MZmineProcessingStep<?> step) {
-	    // TODO Auto-generated method stub
-	    
-	}
+    @Override
+    public void removePeakList(PeakList peaklist) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public List<MZmineProcessingStep<?>> getProcessingHistory() {
-	    // TODO Auto-generated method stub
-	    return null;
-	}
+    }
 
-	@Override
-	public void notifyObjectChanged(Object object, boolean structureChanged) {
-	    // TODO Auto-generated method stub
-	    
-	}
+    @Override
+    public List<PeakList> getPeakLists() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
+    @Override
+    public List<PeakList> getPeakLists(RawDataFile file) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	
+    @Override
+    public void performProcessingStep(MZmineProcessingStep<?> step) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public List<MZmineProcessingStep<?>> getProcessingHistory() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void notifyObjectChanged(Object object, boolean structureChanged) {
+        // TODO Auto-generated method stub
+
+    }
+
 }

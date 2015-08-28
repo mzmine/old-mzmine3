@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -55,81 +55,81 @@ public final class MZmineGUI extends Application {
 
     public void start(Stage stage) {
 
-	// Create an empty project
-	currentProject = MZmineObjectBuilder.getMZmineProject();
+        // Create an empty project
+        currentProject = MZmineObjectBuilder.getMZmineProject();
 
-	try {
-	    // Load the main window
-	    URL mainFXML = getClass().getResource("MainWindow.fxml");
-	    FXMLLoader loader = new FXMLLoader(mainFXML);
-	    BorderPane rootPane = (BorderPane) loader.load();
-	    mainWindowController = loader.getController();
-	    Scene scene = new Scene(rootPane, 600, 700, Color.RED);
-	    stage.setScene(scene);
+        try {
+            // Load the main window
+            URL mainFXML = getClass().getResource("MainWindow.fxml");
+            FXMLLoader loader = new FXMLLoader(mainFXML);
+            BorderPane rootPane = (BorderPane) loader.load();
+            mainWindowController = loader.getController();
+            Scene scene = new Scene(rootPane, 600, 700, Color.RED);
+            stage.setScene(scene);
 
-	    // Load menu
-	    MenuBar menu = (MenuBar) FXMLLoader.load(MENU_FILE.toURI().toURL());
-	    rootPane.setTop(menu);
+            // Load menu
+            MenuBar menu = (MenuBar) FXMLLoader.load(MENU_FILE.toURI().toURL());
+            rootPane.setTop(menu);
 
-	} catch (IOException e) {
-	    e.printStackTrace();
-	    logger.severe("Error loading MZmine GUI from FXML: " + e);
-	    Platform.exit();
-	}
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.severe("Error loading MZmine GUI from FXML: " + e);
+            Platform.exit();
+        }
 
-	stage.setTitle("MZmine " + MZmineCore.getMZmineVersion());
+        stage.setTitle("MZmine " + MZmineCore.getMZmineVersion());
 
-	stage.setMinWidth(300);
-	stage.setMinHeight(300);
+        stage.setMinWidth(300);
+        stage.setMinHeight(300);
 
-	// Set application icon
-	final Image mzMineIcon = new Image("file:lib" + File.separator
-		+ "mzmine-icon.png");
-	stage.getIcons().setAll(mzMineIcon);
+        // Set application icon
+        final Image mzMineIcon = new Image(
+                "file:lib" + File.separator + "mzmine-icon.png");
+        stage.getIcons().setAll(mzMineIcon);
 
-	stage.setOnCloseRequest(e -> {
-	    requestQuit();
-	    e.consume();
-	});
+        stage.setOnCloseRequest(e -> {
+            requestQuit();
+            e.consume();
+        });
 
-	stage.show();
+        stage.show();
 
     }
 
     public static void requestQuit() {
-	Dialog<ButtonType> dialog = new Dialog<>();
-	// dialog.initOwner(stage);
-	dialog.setTitle("Confirmation");
-	dialog.setContentText("Are you sure you want to exit?");
-	dialog.getDialogPane().getButtonTypes()
-		.addAll(ButtonType.YES, ButtonType.NO);
-	dialog.showAndWait().ifPresent(response -> {
-	    if (response == ButtonType.YES) {
-		Platform.exit();
-		System.exit(0);
-	    }
-	});
+        Dialog<ButtonType> dialog = new Dialog<>();
+        // dialog.initOwner(stage);
+        dialog.setTitle("Confirmation");
+        dialog.setContentText("Are you sure you want to exit?");
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES,
+                ButtonType.NO);
+        dialog.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.YES) {
+                Platform.exit();
+                System.exit(0);
+            }
+        });
 
     }
 
     public static void displayMessage(String msg) {
-	Dialog<ButtonType> dialog = new Dialog<>();
-	// dialog.initOwner(stage);
-	dialog.setTitle("Message");
-	dialog.setContentText(msg);
-	dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-	dialog.showAndWait();
+        Dialog<ButtonType> dialog = new Dialog<>();
+        // dialog.initOwner(stage);
+        dialog.setTitle("Message");
+        dialog.setContentText(msg);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        dialog.showAndWait();
     }
 
     static MZmineProject getCurrentProject() {
-	return currentProject;
+        return currentProject;
     }
 
     static void submitTasks(Collection<Task> tasks) {
-	for (Task task : tasks) {
-	    TaskJavaFXWrapper wrappedTask = new TaskJavaFXWrapper(task);
-	    mainWindowController.addTask(wrappedTask);
-	}
+        for (Task task : tasks) {
+            TaskJavaFXWrapper wrappedTask = new TaskJavaFXWrapper(task);
+            mainWindowController.addTask(wrappedTask);
+        }
 
     }
 

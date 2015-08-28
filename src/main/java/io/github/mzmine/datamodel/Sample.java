@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -24,16 +24,15 @@ import io.github.mzmine.parameters.ParameterSet;
 public interface Sample {
 
     /**
-     * @return Short descriptive name 
+     * @return Short descriptive name
      */
     String getName();
 
     /**
-     * Change the name 
+     * Change the name
      */
     void setName(String name);
 
     ParameterSet getSampleParameters();
-    
 
 }

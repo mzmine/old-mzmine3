@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -30,37 +30,37 @@ import io.github.mzmine.datamodel.PeakListRow;
  * Implementation of PeakListRow
  */
 public class PeakListRowImpl implements PeakListRow {
-    
+
     @Override
     public PeakList getParentPeakList() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
     public int getId() {
-	// TODO Auto-generated method stub
-	return 0;
+        // TODO Auto-generated method stub
+        return 0;
     }
 
     @Override
     public int getNumberOfColumns() {
-	// TODO Auto-generated method stub
-	return 0;
+        // TODO Auto-generated method stub
+        return 0;
     }
 
     @Override
     public <DataType> List<PeakListColumn<DataType>> getColumns() {
-	// TODO Auto-generated method stub
-	return null;
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
-    
-    public <DataType> Optional<DataType> getData(PeakListColumn<DataType> column) {
-	// TODO Auto-generated method stub
-	return Optional.empty();
+
+    public <DataType> Optional<DataType> getData(
+            PeakListColumn<DataType> column) {
+        // TODO Auto-generated method stub
+        return Optional.empty();
     }
 
-	
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -25,7 +25,7 @@ import javax.swing.JComponent;
  * Parameter interface, represents parameters or variables used in the project
  */
 public interface UserParameter<ValueType, EditorComponent extends JComponent>
-	extends Parameter<ValueType> {
+        extends Parameter<ValueType> {
 
     /**
      * 
@@ -38,6 +38,6 @@ public interface UserParameter<ValueType, EditorComponent extends JComponent>
     public void setValueFromComponent(EditorComponent component);
 
     public void setValueToComponent(EditorComponent component,
-	    ValueType newValue);
+            ValueType newValue);
 
 }

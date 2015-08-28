@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -33,23 +33,24 @@ import io.github.mzmine.parameters.UserParameter;
  * Combo Parameter implementation
  * 
  */
-public class ComboParameter<ValueType> implements
-	UserParameter<ValueType, JComboBox> {
+public class ComboParameter<ValueType>
+        implements UserParameter<ValueType, JComboBox> {
 
     private String name, description;
     private ValueType choices[];
     private Optional<ValueType> value;
 
-    public ComboParameter(String name, String description, ValueType choices[]) {
-	this(name, description, choices, Optional.empty());
+    public ComboParameter(String name, String description,
+            ValueType choices[]) {
+        this(name, description, choices, Optional.empty());
     }
 
     public ComboParameter(String name, String description, ValueType choices[],
-	    Optional<ValueType> defaultValue) {
-	this.name = name;
-	this.description = description;
-	this.choices = choices;
-	this.value = defaultValue;
+            Optional<ValueType> defaultValue) {
+        this.name = name;
+        this.description = description;
+        this.choices = choices;
+        this.value = defaultValue;
     }
 
     /**
@@ -57,100 +58,100 @@ public class ComboParameter<ValueType> implements
      */
     @Override
     public String getDescription() {
-	return description;
+        return description;
     }
 
     @Override
     public JComboBox createEditingComponent() {
-	return new JComboBox(choices);
+        return new JComboBox(choices);
     }
 
     @Override
     public ValueType getValue() {
-	return value.get();
+        return value.get();
     }
 
     public ValueType[] getChoices() {
-	return choices;
+        return choices;
     }
 
     public void setChoices(ValueType newChoices[]) {
-	this.choices = newChoices;
+        this.choices = newChoices;
     }
 
     @Override
     public void setValue(ValueType value) {
-	this.value = Optional.of(value);
+        this.value = Optional.of(value);
     }
 
     @Override
     public ComboParameter<ValueType> cloneParameter() {
-	ComboParameter<ValueType> copy = new ComboParameter<ValueType>(name,
-		description, choices);
-	copy.value = this.value;
-	return copy;
+        ComboParameter<ValueType> copy = new ComboParameter<ValueType>(name,
+                description, choices);
+        copy.value = this.value;
+        return copy;
     }
 
     @Override
     public void setValueFromComponent(JComboBox component) {
-	Object selectedItem = component.getSelectedItem();
-	if (selectedItem == null) {
-	    value = null;
-	    return;
-	}
-	if (!Arrays.asList(choices).contains(selectedItem)) {
-	    throw new IllegalArgumentException("Invalid value for parameter "
-		    + name + ": " + selectedItem);
-	}
-	int index = component.getSelectedIndex();
-	if (index < 0)
-	    return;
+        Object selectedItem = component.getSelectedItem();
+        if (selectedItem == null) {
+            value = null;
+            return;
+        }
+        if (!Arrays.asList(choices).contains(selectedItem)) {
+            throw new IllegalArgumentException("Invalid value for parameter "
+                    + name + ": " + selectedItem);
+        }
+        int index = component.getSelectedIndex();
+        if (index < 0)
+            return;
 
-	value = Optional.of(choices[index]);
+        value = Optional.of(choices[index]);
     }
 
     @Override
     public void setValueToComponent(JComboBox component, ValueType newValue) {
-	component.setSelectedItem(newValue);
+        component.setSelectedItem(newValue);
     }
 
     @Override
     public void loadValueFromXML(Element xmlElement) {
-	String elementString = xmlElement.getTextContent();
-	if (elementString.length() == 0)
-	    return;
-	for (ValueType option : choices) {
-	    if (option.toString().equals(elementString)) {
-		value = Optional.of(option);
-		break;
-	    }
-	}
+        String elementString = xmlElement.getTextContent();
+        if (elementString.length() == 0)
+            return;
+        for (ValueType option : choices) {
+            if (option.toString().equals(elementString)) {
+                value = Optional.of(option);
+                break;
+            }
+        }
     }
 
     @Override
     public void saveValueToXML(Element xmlElement) {
-	if (value == null)
-	    return;
-	xmlElement.setTextContent(value.toString());
+        if (value == null)
+            return;
+        xmlElement.setTextContent(value.toString());
     }
 
     @Override
     public String getName() {
-	return name;
+        return name;
     }
 
     @Override
     public String toString() {
-	return name;
+        return name;
     }
 
     @Override
     public boolean checkValue(Collection<String> errorMessages) {
-	if (value == null) {
-	    errorMessages.add(name + " is not set properly");
-	    return false;
-	}
-	return true;
+        if (value == null) {
+            errorMessages.add(name + " is not set properly");
+            return false;
+        }
+        return true;
     }
 
 }

@@ -12,13 +12,13 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datapointstore;
+package io.github.msdk.datamodel.datapointstore;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.MSDKObjectBuilder;
+import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.DataPointList;
-import io.github.msdk.datapointstore.DataPointStore;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,9 +68,10 @@ class TmpFileDataPointStore implements DataPointStore {
 
         try {
             tmpDataFileName = File.createTempFile("msdk", ".tmp");
-            
-            logger.debug("Initializing a new tmp-file data store in " + tmpDataFileName);
-            
+
+            logger.debug("Initializing a new tmp-file data store in "
+                    + tmpDataFileName);
+
             tmpDataFile = new RandomAccessFile(tmpDataFileName, "rw");
 
             /*
@@ -145,7 +146,8 @@ class TmpFileDataPointStore implements DataPointStore {
      * Reads the data points associated with given ID.
      */
     @Override
-    synchronized public @Nonnull DataPointList readDataPoints(@Nonnull Object ID) {
+    synchronized public @Nonnull DataPointList readDataPoints(
+            @Nonnull Object ID) {
 
         if (byteBuffer == null)
             throw new IllegalStateException("This object has been disposed");

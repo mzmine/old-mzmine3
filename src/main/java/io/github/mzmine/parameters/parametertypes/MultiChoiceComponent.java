@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -56,7 +56,8 @@ public class MultiChoiceComponent extends JPanel implements ActionListener {
     /**
      * Create the component.
      *
-     * @param theChoices the choices available to the user.
+     * @param theChoices
+     *            the choices available to the user.
      */
     public MultiChoiceComponent(final Object[] theChoices) {
 
@@ -65,8 +66,8 @@ public class MultiChoiceComponent extends JPanel implements ActionListener {
         // Create choices panel.
         choices = theChoices.clone();
         choicesPanel = new JScrollPane(new CheckBoxPanel(choices),
-                                       ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                                       ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         choicesPanel.getViewport().setBackground(Color.WHITE);
         add(choicesPanel, BorderLayout.CENTER);
 
@@ -106,10 +107,9 @@ public class MultiChoiceComponent extends JPanel implements ActionListener {
     public Object[] getValue() {
 
         final int length = checkBoxes.length;
-        final Collection<Object> selectedObjects = new ArrayList<Object>(length);
-        for (int i = 0;
-             i < length;
-             i++) {
+        final Collection<Object> selectedObjects = new ArrayList<Object>(
+                length);
+        for (int i = 0; i < length; i++) {
             if (checkBoxes[i].isSelected()) {
 
                 selectedObjects.add(choices[i]);
@@ -122,7 +122,8 @@ public class MultiChoiceComponent extends JPanel implements ActionListener {
     /**
      * Set the selections.
      *
-     * @param values the selected objects.
+     * @param values
+     *            the selected objects.
      */
     public void setValue(final Object[] values) {
 
@@ -134,13 +135,13 @@ public class MultiChoiceComponent extends JPanel implements ActionListener {
         }
 
         // Set check-boxes according to selections.
-        for (int i = 0;
-             i < checkBoxes.length;
-             i++) {
+        for (int i = 0; i < checkBoxes.length; i++) {
 
-            // We compare the string representations, not the actual objects, because when a project is saved,
+            // We compare the string representations, not the actual objects,
+            // because when a project is saved,
             // only the string representation is saved to the configuration file
-            checkBoxes[i].setSelected(selections.contains(choices[i].toString()));
+            checkBoxes[i]
+                    .setSelected(selections.contains(choices[i].toString()));
         }
     }
 
@@ -157,7 +158,8 @@ public class MultiChoiceComponent extends JPanel implements ActionListener {
     /**
      * Set the available choices.
      *
-     * @param newChoices the new choices.
+     * @param newChoices
+     *            the new choices.
      */
     public void setChoices(final Object[] newChoices) {
 
@@ -176,7 +178,8 @@ public class MultiChoiceComponent extends JPanel implements ActionListener {
     /**
      * Add a button to the buttons panel.
      *
-     * @param button the button to add.
+     * @param button
+     *            the button to add.
      */
     public void addButton(final JButton button) {
 
@@ -186,7 +189,8 @@ public class MultiChoiceComponent extends JPanel implements ActionListener {
     }
 
     // Font for check boxes.
-    private static final Font CHECKBOX_FONT = new Font("SansSerif", Font.PLAIN, 11);
+    private static final Font CHECKBOX_FONT = new Font("SansSerif", Font.PLAIN,
+            11);
 
     /**
      * A panel holding a check box for each choice.
@@ -203,7 +207,8 @@ public class MultiChoiceComponent extends JPanel implements ActionListener {
         /**
          * Create the pane with a checkbox for each choice.
          *
-         * @param theChoices the available choices.
+         * @param theChoices
+         *            the available choices.
          */
         private CheckBoxPanel(final Object[] theChoices) {
 
@@ -213,12 +218,11 @@ public class MultiChoiceComponent extends JPanel implements ActionListener {
             final int choiceCount = theChoices.length;
             checkBoxes = new JCheckBox[choiceCount];
 
-            for (int i = 0;
-                 i < choiceCount;
-                 i++) {
+            for (int i = 0; i < choiceCount; i++) {
 
                 // Create a check box (inherit tooltip text.
-                final JCheckBox checkBox = new JCheckBox(theChoices[i].toString()) {
+                final JCheckBox checkBox = new JCheckBox(
+                        theChoices[i].toString()) {
 
                     @Override
                     public String getToolTipText() {
@@ -239,26 +243,29 @@ public class MultiChoiceComponent extends JPanel implements ActionListener {
 
             final Dimension preferredSize = getPreferredSize();
             final int length = checkBoxes.length;
-            return new Dimension(Math.max(MIN_PREFERRED_WIDTH, HORIZONTAL_PADDING + preferredSize.width),
-                                 length > 0
-                                 ? checkBoxes[0].getHeight() * Math.min(VISIBLE_ROWS, length)
-                                 : preferredSize.height);
+            return new Dimension(
+                    Math.max(MIN_PREFERRED_WIDTH,
+                            HORIZONTAL_PADDING + preferredSize.width),
+                    length > 0
+                            ? checkBoxes[0].getHeight()
+                                    * Math.min(VISIBLE_ROWS, length)
+                            : preferredSize.height);
         }
 
         @Override
         public int getScrollableUnitIncrement(final Rectangle visibleRect,
-                                              final int orientation,
-                                              final int direction) {
+                final int orientation, final int direction) {
 
-            return orientation == SwingConstants.VERTICAL && checkBoxes.length > 0 ? checkBoxes[0].getHeight() : 1;
+            return orientation == SwingConstants.VERTICAL
+                    && checkBoxes.length > 0 ? checkBoxes[0].getHeight() : 1;
         }
 
         @Override
         public int getScrollableBlockIncrement(final Rectangle visibleRect,
-                                               final int orientation,
-                                               final int direction) {
+                final int orientation, final int direction) {
 
-            return orientation == SwingConstants.VERTICAL ? visibleRect.height : visibleRect.width;
+            return orientation == SwingConstants.VERTICAL ? visibleRect.height
+                    : visibleRect.width;
         }
 
         @Override
