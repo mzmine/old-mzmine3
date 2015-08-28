@@ -16,7 +16,6 @@ package io.github.msdk.datamodel.impl;
 
 import io.github.msdk.datamodel.peaklists.Feature;
 import io.github.msdk.datamodel.peaklists.FeatureShape;
-import io.github.msdk.datamodel.peaklists.FeatureType;
 import io.github.msdk.datamodel.peaklists.IsotopePattern;
 import io.github.msdk.datamodel.peaklists.PeakListRow;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -33,13 +32,15 @@ import com.google.common.collect.Range;
  */
 class SimpleFeature implements Feature {
 
-    private @Nonnull FeatureType peakStatus = FeatureType.UNKNOWN;
     private RawDataFile dataFile;
 
     // Scan numbers
     private int scanNumbers[];
 
     private DataPoint dataPointsPerScan[];
+
+    // Peak detection method
+    private String peakDetectionMethod;
 
     // M/Z, RT, Height and Area
     private double mz, rt, height, area;
@@ -71,7 +72,7 @@ class SimpleFeature implements Feature {
      */
     SimpleFeature(RawDataFile dataFile, double MZ, double RT, double height,
             double area, int[] scanNumbers, DataPoint[] dataPointsPerScan,
-            FeatureType peakStatus, int representativeScan,
+            String peakDetectionMethod, int representativeScan,
             int fragmentScanNumber, Range<Double> rtRange,
             Range<Double> mzRange, Range<Double> intensityRange) {
 
@@ -86,7 +87,7 @@ class SimpleFeature implements Feature {
         this.height = height;
         this.area = area;
         this.scanNumbers = scanNumbers;
-        this.peakStatus = peakStatus;
+        this.peakDetectionMethod = peakDetectionMethod;
         this.representativeScan = representativeScan;
         this.fragmentScanNumber = fragmentScanNumber;
         this.rtRange = rtRange;
@@ -141,19 +142,6 @@ class SimpleFeature implements Feature {
     public PeakListRow getParentPeakListRow() {
         // TODO Auto-generated method stub
         return new SimplePeakListRow();
-    }
-
-    @Override
-    @Nonnull
-    public FeatureType getFeatureType() {
-        // TODO Auto-generated method stub
-        return FeatureType.UNKNOWN;
-    }
-
-    @Override
-    public void setFeatureType(@Nonnull FeatureType newStatus) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -246,5 +234,17 @@ class SimpleFeature implements Feature {
         // TODO Auto-generated method stub
 
     }
+
+	@Override
+	public String getPeakDetectionMethod() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setPeakDetectionMethod(String peakDetectionMethod) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
