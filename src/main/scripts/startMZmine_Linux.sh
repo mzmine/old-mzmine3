@@ -1,27 +1,53 @@
 #!/bin/sh
 
-# The HEAP_SIZE variable defines the Java heap size in MB. 
-# That is the total amount of memory available to MZmine 2.
-# By default we set this to the half of the physical memory 
-# size, but feel free to adjust according to your needs. 
+# *****************************************
+# Optional values - Please modify as needed
+# *****************************************
 
+# Total amount of memory in MB available to MZmine 2.
+# AUTO = automatically determined
+# Default: AUTO
+HEAP_SIZE=AUTO
+
+# Location where temporary files will be stored.
+# Default: /tmp
+TMP_FILE_DIRECTORY=/tmp
+
+# It is usually not necessary to modify the JAVA_COMMAND parameter, but if you like to run
+# a specific Java Virtual Machine, you may set the path to the java command of that JVM
+JAVA_COMMAND=java
+
+# ********************************************
+# You don't need to modify anything below here
+# ********************************************
+
+
+
+# ***********************************
+# Auto detection of accessible memory
+# ***********************************
+
+# By default we set the HEAP_SIZE to 1024 MB on 32-bit systems. On 64-bit systems we 
+# either set it to half of the total memory or 2048 MB less than the total memory.
 echo "Checking physical memory size..."
 TOTAL_MEMORY=`free -b | awk '/Mem:/ { print int($2 / 1024^2) }'`
 echo "Found $TOTAL_MEMORY MB memory"
 
-HEAP_SIZE=`expr $TOTAL_MEMORY / 2`
+if [ "$HEAP_SIZE" = "AUTO" ]; then
+  if [ "$TOTAL_MEMORY" -gt 4096 ]; then
+	HEAP_SIZE=`expr $TOTAL_MEMORY - 2048`
+  else
+	HEAP_SIZE=`expr $TOTAL_MEMORY / 2`
+  fi
+fi
 echo Java heap size set to $HEAP_SIZE MB
 
-# The TMP_FILE_DIRECTORY parameter defines the location where temporary 
-# files (parsed raw data) will be placed. Default is /tmp.
-TMP_FILE_DIRECTORY=/tmp
 
-# It is usually not necessary to modify the JAVA_COMMAND parameter, but 
-# if you like to run a specific Java Virtual Machine, you may set the 
-# path to the java command of that JVM.
-JAVA_COMMAND=java
 
-# It is not necessary to modify the following section
+# **********************
+# Java specific commands
+# **********************
+
 JAVA_PARAMETERS="-showversion -classpath lib/\* -XX:+UseParallelGC -Djava.io.tmpdir=$TMP_FILE_DIRECTORY -Xms${HEAP_SIZE}m -Xmx${HEAP_SIZE}m
 MAIN_CLASS=io.github.mzmine.main.MZmineMain
 
