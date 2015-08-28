@@ -100,4 +100,16 @@ class SimplePeakListRowAnnotation implements PeakListRowAnnotation {
 
     }
 
+	@Override
+	public Double getExpectedMz() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setExpectedMz(Double expectedMz) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
