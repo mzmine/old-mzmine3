@@ -57,6 +57,19 @@ public interface PeakListRowAnnotation {
     void setFormula(@Nullable IMolecularFormula formula);
 
     /**
+     * @return Expected m/z value of this annotation.
+     */
+    @Nullable
+    Double getExpectedMz();
+
+	/**
+	 * Sets the expected m/z value to this annotation. The expected m/z value
+	 * can be the calculated value based on the chemical formula or a value
+	 * from a database.
+	 */
+    void setExpectedMz(@Nullable Double expectedMz);
+
+    /**
      * @return Textual description of this annotation.
      */
     @Nullable

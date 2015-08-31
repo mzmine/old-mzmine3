@@ -43,15 +43,15 @@ public interface Feature {
     PeakListRow getParentPeakListRow();
 
     /**
-     * @return The status of this feature.
+     * @return Name of peak detection method used for peak generation.
      */
-    @Nonnull
-    FeatureType getFeatureType();
+    @Nullable
+    String getPeakDetectionMethod();
 
     /**
-     * Sets a new status of this feature.
+     * Sets the name of the peak detection method used for peak generation.
      */
-    void setFeatureType(@Nonnull FeatureType newStatus);
+    void setPeakDetectionMethod(@Nullable String peakDetectionMethod);
 
     /**
      * @return m/z value of this feature. The m/z value might be different from

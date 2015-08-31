@@ -38,12 +38,12 @@ public interface FeatureShape {
      *         is not connected to any raw data.
      */
     @Nullable
-    RawDataFile getDataFile();
+    RawDataFile getRawDataFile();
 
     /**
      * Assigns a raw data file to this feature.
      */
-    void setDataFile(@Nullable RawDataFile dataFile);
+    void setRawDataFile(@Nullable RawDataFile dataFile);
 
     /**
      * @return The most representative scan of this feature (with highest signal
