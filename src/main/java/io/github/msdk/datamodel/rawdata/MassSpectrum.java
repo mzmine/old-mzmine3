@@ -133,25 +133,6 @@ public interface MassSpectrum {
     void setDataPoints(@Nonnull SpectrumDataPointList newDataPoints);
 
     /**
-     * Returns the m/z range of this mass spectrum (minimum and maximum m/z
-     * values of all data points, inclusive). This method returns null if the
-     * spectrum has no data points.
-     * 
-     * @return m/z range of this mass spectrum, or null
-     */
-    @Nullable
-    Range<Double> getMzRange();
-
-    /**
-     * Returns the top intensity data point, also called "base peak". May return
-     * null if there are no data points in this spectrum.
-     * 
-     * @return highest data point, or null
-     */
-    @Nullable
-    SpectrumDataPoint getHighestDataPoint();
-
-    /**
      * Returns the sum of intensities of all data points (total ion current or
      * TIC).
      * 
