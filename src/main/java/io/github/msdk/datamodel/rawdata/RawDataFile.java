@@ -89,13 +89,6 @@ public interface RawDataFile {
     List<MsFunction> getMsFunctions();
 
     /**
-     * Returns the total number of scans in this file.
-     * 
-     * @return Number of scans.
-     */
-    int getNumberOfScans();
-
-    /**
      * Returns an immutable list of all scans. The list can be safely iterated
      * over, as it cannot be modified by another thread.
      * 
@@ -142,6 +135,15 @@ public interface RawDataFile {
     @Nonnull
     List<MsScan> getScans(@Nonnull MsFunction function,
             @Nonnull Range<ChromatographyInfo> chromatographyRange);
+
+    /**
+     * Returns an immutable list of all chromatograms. The list can be safely
+     * iterated over, as it cannot be modified by another thread.
+     * 
+     * @return A list of all chromatograms.
+     */
+    @Nonnull
+    List<MsScan> getChromatograms();
 
     /**
      * Remove all data associated with this file from the disk. After this

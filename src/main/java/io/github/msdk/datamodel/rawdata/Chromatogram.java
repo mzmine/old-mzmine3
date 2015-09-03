@@ -19,8 +19,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Range;
-
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 
 /**
@@ -34,7 +32,7 @@ import io.github.msdk.datamodel.datapointstore.DataPointStore;
  * belongs to that RawDataFile. When RawDataFile.dispose() is called, the data
  * points are discarded so the MsScan instance cannot be used anymore.
  */
-public interface Chromatogram, Cloneable {
+public interface Chromatogram extends Cloneable {
 
     /**
      * Returns the raw data file that contains this chromatogram. This might
@@ -61,10 +59,11 @@ public interface Chromatogram, Cloneable {
     void setRawDataFile(@Nonnull RawDataFile newDataFile);
 
     /**
-     * Returns the number of this chromatogram, represented by an integer, typically
-     * positive. Typically, the chromatogram number will be unique within the file.
-     * However, the data model does not guarantee that, and in some cases
-     * multiple chromatogram with the same number may be present in the file.
+     * Returns the number of this chromatogram, represented by an integer,
+     * typically positive. Typically, the chromatogram number will be unique
+     * within the file. However, the data model does not guarantee that, and in
+     * some cases multiple chromatogram with the same number may be present in
+     * the file.
      * 
      * @return Chromatogram number
      */
@@ -80,89 +79,56 @@ public interface Chromatogram, Cloneable {
     void setChromatogramNumber(@Nonnull Integer chromatogramNumber);
 
     /**
-     * Returns the chromatography data (retention time, etc.) associated with
-     * this chromatogram. Null is returned if no chromatography data is available.
+     * Returns data points of this chromatogram. Importantly, a new instance of
+     * DataPointList is created by each call to this method.
      * 
-     * @return Associated chromatography data.
-     */
-    @Nullable
-    ChromatographyInfo getChromatographyInfo();
-
-    /**
-     * Updates the associated chromatography data.
+     * Note: this method may need to read data from disk, therefore it may be
+     * quite slow.
      * 
-     * @param chromData
-     */
-    void setChromatographyInfo(@Nullable ChromatographyInfo chromData);
-
-    /**
-     * Returns the scanning range of the instrument. Note that this value is
-     * different from that returned by getMzRange() from the MassSpectrum
-     * interface.
-     *
-     * getMzRange() returns the range of the actual data points (lowest and
-     * highest m/z)
-     * 
-     * getScanningRange() returns the instrument scanning range that was
-     * configured in the experiment setup.
-     * 
-     * @return The scanning m/z range of the instrument
-     */
-    @Nullable
-    Range<Double> getScanningRange();
-
-    /**
-     * Updates the instrument scanning m/z range.
-     * 
-     * @param newScanRange
-     *            New scanning range.
-     */
-    void setScanningRange(@Nullable Range<Double> newScanRange);
-
-    /**
-     * Returns the polarity of this scan. If unknown, PolarityType.UNKNOWN is
-     * returned.
-     * 
-     * @return Polarity of this scan.
+     * @return data points (rt and intensity pairs) of this chromatogram
      */
     @Nonnull
-    PolarityType getPolarity();
+    ChromatogramDataPointList getDataPoints();
 
     /**
-     * Updates the polarity of this scan.
+     * Loads the data points of this chromatogram into the given DataPointList. If
+     * the DataPointList is not empty, it is cleared first. This method allows
+     * the internal arrays of the DataPointList to be reused for loading
+     * multiple spectra.
      * 
-     * @param newPolarity
-     *            New scan polarity.
-     */
-    void setPolarity(@Nonnull PolarityType newPolarity);
-
-    /**
-     * Returns the fragmentation parameters of ion source-induced fragmentation,
-     * or null if no such information is known.
+     * Note: this method may need to read data from disk, therefore it may be
+     * quite slow.
      * 
-     * @return Fragmentation info of ion source-induced fragmentation, or null.
+     * @param list
+     *            DataPointList into which the data points should be loaded
      */
-    @Nullable
-    FragmentationInfo getSourceInducedFragmentation();
+    void getDataPoints(@Nonnull ChromatogramDataPointList list);
 
     /**
-     * Updates the fragmentation parameters of ion source-induced fragmentation.
-     * 
-     * @param newFragmentationInfo
-     *            New fragmentation parameters.
-     */
-    void setSourceInducedFragmentation(
-            @Nullable FragmentationInfo newFragmentationInfo);
-
-    /**
-     * Returns a list of isolations performed for this scan. These isolations
-     * may also include fragmentations (tandem MS).
+     * Returns a list of isolations performed for this chromatogram. These
+     * isolations may also include fragmentations (tandem MS).
      * 
      * @return A mutable list of isolations. New isolation items can be added to
      *         this list.
      */
     @Nonnull
     List<IsolationInfo> getIsolations();
+
+    /**
+     * Returns the separation type used for separation of molecules.
+     * 
+     * @return the seperation type. Returns {@link SeparationType#UNKNOWN} for
+     *         unknown separations.
+     */
+    SeparationType getSeparationType();
+
+    /**
+     * Sets the separation type used for separation of molecules.
+     * 
+     * @param separationType
+     *            New seperation type.
+     */
+    void setSeparationType(SeparationType separationType);
 
     /**
      * Returns a deep clone of this object.

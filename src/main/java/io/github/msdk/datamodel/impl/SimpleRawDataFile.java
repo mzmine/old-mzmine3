@@ -70,18 +70,6 @@ class SimpleRawDataFile implements RawDataFile {
     }
 
     @Override
-    public void addScan(@Nonnull MsScan scan) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void removeScan(@Nonnull MsScan scan) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public @Nonnull List<MsScan> getScans() {
         // TODO Auto-generated method stub
         return Lists.newArrayList();
@@ -108,12 +96,6 @@ class SimpleRawDataFile implements RawDataFile {
     }
 
     @Override
-    public int getNumberOfScans() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
-    @Override
     @Nonnull
     public List<MsScan> getScans(MsFunction function) {
         // TODO Auto-generated method stub
@@ -134,6 +116,12 @@ class SimpleRawDataFile implements RawDataFile {
             @Nonnull Range<ChromatographyInfo> chromatographyRange) {
         // TODO Auto-generated method stub
         return new ArrayList<MsScan>();
+    }
+
+    @Override
+    public List<MsScan> getChromatograms() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     @Override
