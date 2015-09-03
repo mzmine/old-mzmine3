@@ -24,9 +24,7 @@ import com.google.common.collect.Range;
 
 /**
  * Raw data file, typically obtained by loading data from one of the supported
- * file formats. A raw data file is a collection of scans (MsScan). In MSDK,
- * each raw data file also provides storage space in a temporary file. This
- * storage is used to keep the data points values.
+ * file formats. A raw data file is a collection of scans (MsScan).
  * 
  * @see MsScan
  */
@@ -89,22 +87,6 @@ public interface RawDataFile {
      */
     @Nonnull
     List<MsFunction> getMsFunctions();
-
-    /**
-     * Adds a new scan to this file.
-     * 
-     * @param scan
-     *            Scan to add.
-     */
-    void addScan(@Nonnull MsScan scan);
-
-    /**
-     * Removes a scan from this file.
-     * 
-     * @param scan
-     *            Scan to remove.
-     */
-    void removeScan(@Nonnull MsScan scan);
 
     /**
      * Returns the total number of scans in this file.
