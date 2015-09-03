@@ -18,6 +18,7 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.rawdata.RawDataFileType;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,6 +55,18 @@ class SimpleRawDataFile implements RawDataFile {
     public void setName(@Nonnull String name) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String getRawDataFileType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void setRawDataFileType(@Nonnull RawDataFileType rawDataFileType) {
+        // TODO Auto-generated method stub
+        
     }
 
     @Override

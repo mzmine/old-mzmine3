@@ -55,7 +55,7 @@ public interface MassSpectrum {
      * @return data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    DataPointList getDataPoints();
+    SpectrumDataPointList getDataPoints();
 
     /**
      * Loads the data points of this spectrum into the given DataPointList. If
@@ -69,7 +69,7 @@ public interface MassSpectrum {
      * @param list
      *            DataPointList into which the data points should be loaded
      */
-    void getDataPoints(@Nonnull DataPointList list);
+    void getDataPoints(@Nonnull SpectrumDataPointList list);
 
     /**
      * Returns data points in given m/z range. Importantly, a new instance of
@@ -83,7 +83,7 @@ public interface MassSpectrum {
      * @return selected data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    DataPointList getDataPointsByMz(@Nonnull Range<Double> mzRange);
+    SpectrumDataPointList getDataPointsByMz(@Nonnull Range<Double> mzRange);
 
     /**
      * Returns data points in given intensity range. Importantly, a new instance
@@ -98,7 +98,7 @@ public interface MassSpectrum {
      * @return selected data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    DataPointList getDataPointsByIntensity(
+    SpectrumDataPointList getDataPointsByIntensity(
             @Nonnull Range<Float> intensityRange);
 
     /**
@@ -115,7 +115,7 @@ public interface MassSpectrum {
      * @return selected data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    DataPointList getDataPointsByMzAndIntensity(@Nonnull Range<Double> mzRange,
+    SpectrumDataPointList getDataPointsByMzAndIntensity(@Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange);
 
     /**
@@ -130,7 +130,7 @@ public interface MassSpectrum {
      * @param newDataPoints
      *            new data points
      */
-    void setDataPoints(@Nonnull DataPointList newDataPoints);
+    void setDataPoints(@Nonnull SpectrumDataPointList newDataPoints);
 
     /**
      * Returns the m/z range of this mass spectrum (minimum and maximum m/z
@@ -149,7 +149,7 @@ public interface MassSpectrum {
      * @return highest data point, or null
      */
     @Nullable
-    DataPoint getHighestDataPoint();
+    SpectrumDataPoint getHighestDataPoint();
 
     /**
      * Returns the sum of intensities of all data points (total ion current or

@@ -14,7 +14,7 @@
 
 package io.github.msdk.datamodel.datapointstore;
 
-import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
 
 import javax.annotation.Nonnull;
 
@@ -37,7 +37,7 @@ public interface DataPointStore {
      * @return Storage ID for the newly stored data.
      */
     @Nonnull
-    Object storeDataPoints(@Nonnull DataPointList dataPoints);
+    Object storeDataPoints(@Nonnull SpectrumDataPointList dataPoints);
 
     /**
      * Reads the data points associated with given ID. Returns a newly created
@@ -51,7 +51,7 @@ public interface DataPointStore {
      * 
      */
     @Nonnull
-    DataPointList readDataPoints(@Nonnull Object id);
+    SpectrumDataPointList readDataPoints(@Nonnull Object id);
 
     /**
      * Reads the data points associated with given ID into a given
@@ -65,7 +65,7 @@ public interface DataPointStore {
      * @throws IllegalIllegalArgumentException
      *             If the given id is not present in this store.
      */
-    void readDataPoints(@Nonnull Object id, @Nonnull DataPointList list);
+    void readDataPoints(@Nonnull Object id, @Nonnull SpectrumDataPointList list);
 
     /**
      * Discards data points stored under given ID.

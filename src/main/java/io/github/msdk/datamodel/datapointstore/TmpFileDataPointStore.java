@@ -18,7 +18,7 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,7 +95,7 @@ class TmpFileDataPointStore implements DataPointStore {
      */
     @Override
     synchronized public @Nonnull Integer storeDataPoints(
-            @Nonnull DataPointList dataPoints) {
+            @Nonnull SpectrumDataPointList dataPoints) {
 
         if (byteBuffer == null)
             throw new IllegalStateException("This object has been disposed");
@@ -146,7 +146,7 @@ class TmpFileDataPointStore implements DataPointStore {
      * Reads the data points associated with given ID.
      */
     @Override
-    synchronized public @Nonnull DataPointList readDataPoints(
+    synchronized public @Nonnull SpectrumDataPointList readDataPoints(
             @Nonnull Object ID) {
 
         if (byteBuffer == null)
@@ -159,7 +159,7 @@ class TmpFileDataPointStore implements DataPointStore {
         final Integer numOfDataPoints = dataPointsLengths.get(ID);
 
         // Create a new DataPointList
-        final DataPointList newList = MSDKObjectBuilder
+        final SpectrumDataPointList newList = MSDKObjectBuilder
                 .getDataPointList(numOfDataPoints);
 
         // Read the data points into the new list
@@ -173,7 +173,7 @@ class TmpFileDataPointStore implements DataPointStore {
      */
     @Override
     synchronized public void readDataPoints(@Nonnull Object ID,
-            @Nonnull DataPointList list) {
+            @Nonnull SpectrumDataPointList list) {
 
         if (byteBuffer == null)
             throw new IllegalStateException("This object has been disposed");

@@ -18,7 +18,7 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPoint;
 import io.github.msdk.datamodel.rawdata.MassSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -385,7 +385,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
         int arrayLength = massValueArray.getShape()[0];
 
-        DataPoint dataPoints[] = new DataPoint[arrayLength];
+        SpectrumDataPoint dataPoints[] = new SpectrumDataPoint[arrayLength];
 
         for (int j = 0; j < arrayLength; j++) {
             Index massIndex0 = massValuesIndex.set0(j);

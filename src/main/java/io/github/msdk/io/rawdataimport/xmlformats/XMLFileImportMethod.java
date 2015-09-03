@@ -19,7 +19,7 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MassSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -144,7 +144,7 @@ public class XMLFileImportMethod implements MSDKMethod<RawDataFile> {
             ChromatographyInfo chromData = extractChromatographyData(spectrum);
 
             // Store the scan data points
-            DataPointList dataPoints = extractDataPoints(spectrum);
+            SpectrumDataPointList dataPoints = extractDataPoints(spectrum);
             scan.setDataPoints(dataPoints);
 
             // Auto-detect whether this scan is centroided
@@ -257,9 +257,9 @@ public class XMLFileImportMethod implements MSDKMethod<RawDataFile> {
         return null;
     }
 
-    private DataPointList extractDataPoints(Spectrum spectrum) {
+    private SpectrumDataPointList extractDataPoints(Spectrum spectrum) {
         Map<Double, Double> jmzreaderPeakList = spectrum.getPeakList();
-        DataPointList dataPoints = MSDKObjectBuilder
+        SpectrumDataPointList dataPoints = MSDKObjectBuilder
                 .getDataPointList(jmzreaderPeakList.size());
 
         for (Double mz : jmzreaderPeakList.keySet()) {

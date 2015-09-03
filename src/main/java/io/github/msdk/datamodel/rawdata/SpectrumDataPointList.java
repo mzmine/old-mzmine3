@@ -42,7 +42,7 @@ import com.google.common.collect.Range;
  * 
  * This data structure is not thread-safe.
  */
-public interface DataPointList extends List<DataPoint> {
+public interface SpectrumDataPointList extends List<SpectrumDataPoint> {
 
     /**
      * Returns the current m/z buffer array. The size of the array might be
@@ -138,7 +138,7 @@ public interface DataPointList extends List<DataPoint> {
      * @param list
      *            source list to copy from.
      */
-    void copyFrom(@Nonnull DataPointList list);
+    void copyFrom(@Nonnull SpectrumDataPointList list);
 
     /**
      * Copies the contents of this data point list into another list. The
@@ -148,7 +148,7 @@ public interface DataPointList extends List<DataPoint> {
      * @param list
      *            target list to copy to.
      */
-    void copyTo(@Nonnull DataPointList list);
+    void copyTo(@Nonnull SpectrumDataPointList list);
 
     /**
      * Creates a new DataPointList that contains only those data points that fit
@@ -160,7 +160,7 @@ public interface DataPointList extends List<DataPoint> {
      *            intensity range to select
      * @return new DataPointList
      */
-    DataPointList selectDataPoints(@Nonnull Range<Double> mzRange,
+    SpectrumDataPointList selectDataPoints(@Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange);
 
     /**
@@ -179,7 +179,7 @@ public interface DataPointList extends List<DataPoint> {
      * @return highest data point, or null
      */
     @Nullable
-    DataPoint getHighestDataPoint();
+    SpectrumDataPoint getHighestDataPoint();
 
     /**
      * Returns the sum of intensities of all data points (total ion current or

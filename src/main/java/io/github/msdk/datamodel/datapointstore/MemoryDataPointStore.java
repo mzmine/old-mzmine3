@@ -16,7 +16,7 @@ package io.github.msdk.datamodel.datapointstore;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
 
 import java.util.HashMap;
 
@@ -37,7 +37,7 @@ class MemoryDataPointStore implements DataPointStore {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private HashMap<Object, DataPointList> dataPointLists = new HashMap<>();
+    private HashMap<Object, SpectrumDataPointList> dataPointLists = new HashMap<>();
 
     private int lastStorageId = 0;
 
@@ -48,13 +48,13 @@ class MemoryDataPointStore implements DataPointStore {
      */
     @Override
     synchronized public @Nonnull Integer storeDataPoints(
-            @Nonnull DataPointList dataPoints) {
+            @Nonnull SpectrumDataPointList dataPoints) {
 
         if (dataPointLists == null)
             throw new IllegalStateException("This object has been disposed");
 
         // Clone the given list for storage
-        final DataPointList newList = MSDKObjectBuilder
+        final SpectrumDataPointList newList = MSDKObjectBuilder
                 .getDataPointList(dataPoints);
 
         // Increase the storage ID
@@ -74,7 +74,7 @@ class MemoryDataPointStore implements DataPointStore {
      * Reads the data points associated with given ID.
      */
     @Override
-    synchronized public @Nonnull DataPointList readDataPoints(
+    synchronized public @Nonnull SpectrumDataPointList readDataPoints(
             @Nonnull Object ID) {
 
         if (dataPointLists == null)
@@ -85,10 +85,10 @@ class MemoryDataPointStore implements DataPointStore {
                     "ID " + ID + " not found in storage");
 
         // Get the stored DataPointList
-        final DataPointList storedList = dataPointLists.get(ID);
+        final SpectrumDataPointList storedList = dataPointLists.get(ID);
 
         // Clone the stored DataPointList
-        final DataPointList newList = MSDKObjectBuilder
+        final SpectrumDataPointList newList = MSDKObjectBuilder
                 .getDataPointList(storedList);
 
         return newList;
@@ -99,7 +99,7 @@ class MemoryDataPointStore implements DataPointStore {
      */
     @Override
     synchronized public void readDataPoints(@Nonnull Object ID,
-            @Nonnull DataPointList list) {
+            @Nonnull SpectrumDataPointList list) {
 
         if (dataPointLists == null)
             throw new IllegalStateException("This object has been disposed");
@@ -109,7 +109,7 @@ class MemoryDataPointStore implements DataPointStore {
                     "ID " + ID + " not found in storage");
 
         // Get the stored DataPointList
-        final DataPointList storedList = dataPointLists.get(ID);
+        final SpectrumDataPointList storedList = dataPointLists.get(ID);
 
         // Copy data
         list.copyFrom(storedList);

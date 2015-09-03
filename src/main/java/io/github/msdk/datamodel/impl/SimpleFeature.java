@@ -19,7 +19,7 @@ import io.github.msdk.datamodel.peaklists.FeatureShape;
 import io.github.msdk.datamodel.peaklists.IsotopePattern;
 import io.github.msdk.datamodel.peaklists.PeakListRow;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPoint;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 import javax.annotation.Nonnull;
@@ -37,7 +37,7 @@ class SimpleFeature implements Feature {
     // Scan numbers
     private int scanNumbers[];
 
-    private DataPoint dataPointsPerScan[];
+    private SpectrumDataPoint dataPointsPerScan[];
 
     // Peak detection method
     private String peakDetectionMethod;
@@ -71,7 +71,7 @@ class SimpleFeature implements Feature {
      * 
      */
     SimpleFeature(RawDataFile dataFile, double MZ, double RT, double height,
-            double area, int[] scanNumbers, DataPoint[] dataPointsPerScan,
+            double area, int[] scanNumbers, SpectrumDataPoint[] dataPointsPerScan,
             String peakDetectionMethod, int representativeScan,
             int fragmentScanNumber, Range<Double> rtRange,
             Range<Double> mzRange, Range<Double> intensityRange) {

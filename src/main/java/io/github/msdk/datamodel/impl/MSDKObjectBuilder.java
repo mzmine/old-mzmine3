@@ -16,8 +16,8 @@ package io.github.msdk.datamodel.impl;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.DataPoint;
-import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPoint;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -53,7 +53,7 @@ public class MSDKObjectBuilder {
      *            intensity value
      * @return new DataPoint
      */
-    public static final @Nonnull DataPoint getDataPoint(double mz,
+    public static final @Nonnull SpectrumDataPoint getDataPoint(double mz,
             float intensity) {
         return new SimpleDataPoint(mz, intensity);
     }
@@ -165,7 +165,7 @@ public class MSDKObjectBuilder {
      * 
      * @return new DataPointList
      */
-    public static final @Nonnull DataPointList getDataPointList() {
+    public static final @Nonnull SpectrumDataPointList getDataPointList() {
         return new DataPointArrayList(100);
     }
 
@@ -177,7 +177,7 @@ public class MSDKObjectBuilder {
      *            Initial capacity of the list
      * @return new DataPointList
      */
-    public static final @Nonnull DataPointList getDataPointList(
+    public static final @Nonnull SpectrumDataPointList getDataPointList(
             @Nonnull Integer capacity) {
         return new DataPointArrayList(capacity);
     }
@@ -190,8 +190,8 @@ public class MSDKObjectBuilder {
      *            source DataPointList
      * @return cloned DataPointList
      */
-    public static final @Nonnull DataPointList getDataPointList(
-            @Nonnull DataPointList sourceList) {
+    public static final @Nonnull SpectrumDataPointList getDataPointList(
+            @Nonnull SpectrumDataPointList sourceList) {
         return getDataPointList(sourceList, sourceList.size());
     }
 
@@ -207,8 +207,8 @@ public class MSDKObjectBuilder {
      * @throws IllegalArgumentException
      *             if the initial capacity < size of the sourceList
      */
-    public static final @Nonnull DataPointList getDataPointList(
-            @Nonnull DataPointList sourceList, @Nonnull Integer capacity) {
+    public static final @Nonnull SpectrumDataPointList getDataPointList(
+            @Nonnull SpectrumDataPointList sourceList, @Nonnull Integer capacity) {
         return new DataPointArrayList(sourceList, capacity);
     }
 
@@ -225,7 +225,7 @@ public class MSDKObjectBuilder {
      * @throws IllegalArgumentException
      *             if the initial array length < size
      */
-    public static final @Nonnull DataPointList getDataPointList(
+    public static final @Nonnull SpectrumDataPointList getDataPointList(
             @Nonnull double mzBuffer[], @Nonnull float intensityBuffer[],
             int size) {
         return new DataPointArrayList(mzBuffer, intensityBuffer, size);

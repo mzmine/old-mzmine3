@@ -15,8 +15,8 @@
 package io.github.msdk.datamodel.impl;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
-import io.github.msdk.datamodel.rawdata.DataPoint;
-import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPoint;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MassSpectrum;
 import io.github.msdk.datamodel.rawdata.MassSpectrumType;
 
@@ -37,7 +37,7 @@ abstract class AbstractSpectrum implements MassSpectrum {
     private Object dataStoreId = null;
 
     private @Nullable Range<Double> mzRange;
-    private @Nullable DataPoint highestDataPoint;
+    private @Nullable SpectrumDataPoint highestDataPoint;
     private @Nonnull Float totalIonCurrent;
 
     private @Nonnull MassSpectrumType spectrumType;
@@ -50,42 +50,42 @@ abstract class AbstractSpectrum implements MassSpectrum {
     }
 
     @Override
-    public @Nonnull DataPointList getDataPoints() {
+    public @Nonnull SpectrumDataPointList getDataPoints() {
         Preconditions.checkNotNull(dataStoreId);
-        DataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
+        SpectrumDataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
         return storedData;
     }
 
     @Override
-    public void getDataPoints(@Nonnull DataPointList list) {
+    public void getDataPoints(@Nonnull SpectrumDataPointList list) {
         Preconditions.checkNotNull(dataStoreId);
         dataPointStore.readDataPoints(dataStoreId, list);
     }
 
     @Override
     @Nonnull
-    public DataPointList getDataPointsByMz(@Nonnull Range<Double> mzRange) {
+    public SpectrumDataPointList getDataPointsByMz(@Nonnull Range<Double> mzRange) {
         Preconditions.checkNotNull(dataStoreId);
-        DataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
+        SpectrumDataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
         final Range<Float> all = Range.all();
         return storedData.selectDataPoints(mzRange, all);
     }
 
     @Nonnull
-    public DataPointList getDataPointsByIntensity(
+    public SpectrumDataPointList getDataPointsByIntensity(
             @Nonnull Range<Float> intensityRange) {
         Preconditions.checkNotNull(dataStoreId);
-        DataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
+        SpectrumDataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
         final Range<Double> all = Range.all();
         return storedData.selectDataPoints(all, intensityRange);
     }
 
     @Nonnull
-    public DataPointList getDataPointsByMzAndIntensity(
+    public SpectrumDataPointList getDataPointsByMzAndIntensity(
             @Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange) {
         Preconditions.checkNotNull(dataStoreId);
-        DataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
+        SpectrumDataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
         return storedData.selectDataPoints(mzRange, intensityRange);
     }
 
@@ -102,7 +102,7 @@ abstract class AbstractSpectrum implements MassSpectrum {
      *            New data points
      */
     synchronized public void setDataPoints(
-            @Nonnull DataPointList newDataPoints) {
+            @Nonnull SpectrumDataPointList newDataPoints) {
         if (dataStoreId != null)
             dataPointStore.removeDataPoints(dataStoreId);
         dataStoreId = dataPointStore.storeDataPoints(newDataPoints);
@@ -141,7 +141,7 @@ abstract class AbstractSpectrum implements MassSpectrum {
 
     @Override
     @Nullable
-    public DataPoint getHighestDataPoint() {
+    public SpectrumDataPoint getHighestDataPoint() {
         return highestDataPoint;
     }
 

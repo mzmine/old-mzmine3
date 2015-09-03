@@ -15,7 +15,7 @@
 package io.github.msdk.datamodel.peaklists;
 
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.DataPoint;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPoint;
 import io.github.msdk.datamodel.rawdata.MsScan;
 
 import javax.annotation.Nonnull;
@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 /**
  * 
  */
-public interface FeatureDataPoint extends DataPoint {
+public interface FeatureDataPoint extends SpectrumDataPoint {
 
     /**
      * 

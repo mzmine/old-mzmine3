@@ -33,8 +33,8 @@ import com.google.common.collect.Range;
 public interface RawDataFile {
 
     /**
-     * Returns the name of this data file. This can be any descriptive name, not
-     * necessarily the original file name.
+     * Returns the name of this raw data file. This can be any descriptive name,
+     * not necessarily the original file name.
      * 
      * @return Raw data file name
      */
@@ -50,8 +50,8 @@ public interface RawDataFile {
     void setName(@Nonnull String name);
 
     /**
-     * Returns the original filename where the file was loaded from, or null if
-     * this file was created by MSDK.
+     * Returns the original file name and path where the file was loaded from,
+     * or null if this file was created by MSDK.
      * 
      * @return Original filename.
      */
@@ -65,6 +65,22 @@ public interface RawDataFile {
      *            New original filename.
      */
     void setOriginalFile(@Nullable File newOriginalFile);
+
+    /**
+     * Returns the file type of this raw data file.
+     * 
+     * @return Raw data file type
+     */
+    @Nonnull
+    String getRawDataFileType();
+
+    /**
+     * Updates the file type of this raw data file.
+     * 
+     * @param RawDataFileType
+     *            New file type
+     */
+    void setRawDataFileType(@Nonnull RawDataFileType rawDataFileType);
 
     /**
      * Returns all MS functions found in this raw data file.

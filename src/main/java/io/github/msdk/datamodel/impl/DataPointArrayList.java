@@ -14,8 +14,8 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.rawdata.DataPoint;
-import io.github.msdk.datamodel.rawdata.DataPointList;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPoint;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
 
 import java.util.AbstractList;
 
@@ -30,8 +30,8 @@ import com.google.common.collect.Range;
  * 
  * Important: this class is not thread-safe.
  */
-class DataPointArrayList extends AbstractList<DataPoint>
-        implements DataPointList {
+class DataPointArrayList extends AbstractList<SpectrumDataPoint>
+        implements SpectrumDataPointList {
 
     /**
      * Array for m/z values. Its length defines the capacity of this list.
@@ -78,7 +78,7 @@ class DataPointArrayList extends AbstractList<DataPoint>
      * @throws IllegalArgumentException
      *             if the initial capacity < size of the sourceList
      */
-    DataPointArrayList(@Nonnull DataPointList sourceList,
+    DataPointArrayList(@Nonnull SpectrumDataPointList sourceList,
             @Nonnull Integer initialCapacity) {
 
         if (initialCapacity < sourceList.size()) {
@@ -177,7 +177,7 @@ class DataPointArrayList extends AbstractList<DataPoint>
      * Copy data from another DataPointList
      */
     @Override
-    public void copyFrom(@Nonnull DataPointList list) {
+    public void copyFrom(@Nonnull SpectrumDataPointList list) {
         if (mzBuffer.length < list.size()) {
             mzBuffer = new double[list.size()];
             intensityBuffer = new float[list.size()];
@@ -197,7 +197,7 @@ class DataPointArrayList extends AbstractList<DataPoint>
      * Copy data to another DataPointList
      */
     @Override
-    public void copyTo(@Nonnull DataPointList list) {
+    public void copyTo(@Nonnull SpectrumDataPointList list) {
         double targetMzBuffer[] = list.getMzBuffer();
         if (targetMzBuffer.length < size)
             targetMzBuffer = new double[size];
@@ -232,14 +232,14 @@ class DataPointArrayList extends AbstractList<DataPoint>
      * AbstractList method implementation
      */
     @Override
-    public void add(int index, DataPoint dp) {
+    public void add(int index, SpectrumDataPoint dp) {
         this.add(index, dp.getMz(), dp.getIntensity());
     }
 
     /**
      * Insert into the right position
      */
-    public boolean add(DataPoint newDataPoint) {
+    public boolean add(SpectrumDataPoint newDataPoint) {
         this.add(newDataPoint.getMz(), newDataPoint.getIntensity());
         return true;
     }
@@ -305,12 +305,12 @@ class DataPointArrayList extends AbstractList<DataPoint>
      * 
      */
     @Override
-    public DataPoint remove(int index) {
+    public SpectrumDataPoint remove(int index) {
 
         if (index < 0 || index >= size)
             throw new IndexOutOfBoundsException();
 
-        DataPoint current = get(index);
+        SpectrumDataPoint current = get(index);
 
         if (index < size - 1) {
             System.arraycopy(mzBuffer, index + 1, mzBuffer, index,
@@ -329,7 +329,7 @@ class DataPointArrayList extends AbstractList<DataPoint>
      * AbstractList method implementation
      */
     @Override
-    public DataPoint get(int index) {
+    public SpectrumDataPoint get(int index) {
 
         if (index < 0 || index >= size)
             throw new IndexOutOfBoundsException();
@@ -342,7 +342,7 @@ class DataPointArrayList extends AbstractList<DataPoint>
      * AbstractList method implementation
      */
     @Override
-    public DataPoint set(int index, DataPoint dp) {
+    public SpectrumDataPoint set(int index, SpectrumDataPoint dp) {
 
         if (index < 0 || index >= size)
             throw new IndexOutOfBoundsException();
@@ -362,7 +362,7 @@ class DataPointArrayList extends AbstractList<DataPoint>
                     "Setting the data point at this position would break the m/z ordering of the data points");
         }
 
-        final DataPoint current = get(index);
+        final SpectrumDataPoint current = get(index);
 
         mzBuffer[index] = dp.getMz();
         intensityBuffer[index] = dp.getIntensity();
@@ -379,11 +379,11 @@ class DataPointArrayList extends AbstractList<DataPoint>
     public boolean equals(Object o) {
 
         // o must be a non-null DataPointList
-        if ((o == null) || (!(o instanceof DataPointList)))
+        if ((o == null) || (!(o instanceof SpectrumDataPointList)))
             return false;
 
         // Cast o to DataPointlist
-        DataPointList otherList = (DataPointList) o;
+        SpectrumDataPointList otherList = (SpectrumDataPointList) o;
 
         // Size must be equal
         if (otherList.size() != size)
@@ -439,7 +439,7 @@ class DataPointArrayList extends AbstractList<DataPoint>
 
     @Override
     @Nullable
-    public DataPoint getHighestDataPoint() {
+    public SpectrumDataPoint getHighestDataPoint() {
         if (size == 0)
             return null;
         int maxIndex = 0;
@@ -447,7 +447,7 @@ class DataPointArrayList extends AbstractList<DataPoint>
             if (intensityBuffer[i] > intensityBuffer[maxIndex])
                 maxIndex = i;
         }
-        final DataPoint newDP = MSDKObjectBuilder
+        final SpectrumDataPoint newDP = MSDKObjectBuilder
                 .getDataPoint(mzBuffer[maxIndex], intensityBuffer[maxIndex]);
         return newDP;
     }
@@ -463,10 +463,10 @@ class DataPointArrayList extends AbstractList<DataPoint>
     }
 
     @Override
-    public DataPointList selectDataPoints(@Nonnull Range<Double> mzRange,
+    public SpectrumDataPointList selectDataPoints(@Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange) {
 
-        final DataPointList newList = MSDKObjectBuilder.getDataPointList();
+        final SpectrumDataPointList newList = MSDKObjectBuilder.getDataPointList();
 
         for (int i = 0; i < size; i++) {
             if (mzRange.contains(mzBuffer[i])

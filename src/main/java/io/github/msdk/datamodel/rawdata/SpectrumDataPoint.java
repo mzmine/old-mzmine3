@@ -23,7 +23,7 @@ import javax.annotation.concurrent.Immutable;
  * reference and safely used by multiple threads.
  */
 @Immutable
-public interface DataPoint {
+public interface SpectrumDataPoint {
 
     /**
      * Returns the m/z value of this data point.
