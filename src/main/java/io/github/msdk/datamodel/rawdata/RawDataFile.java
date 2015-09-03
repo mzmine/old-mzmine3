@@ -51,7 +51,7 @@ public interface RawDataFile {
      * Returns the original file name and path where the file was loaded from,
      * or null if this file was created by MSDK.
      * 
-     * @return Original filename.
+     * @return Original filename and path.
      */
     @Nullable
     File getOriginalFile();

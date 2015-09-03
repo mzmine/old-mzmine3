@@ -39,18 +39,30 @@ class SimplePeakListRow implements PeakListRow {
         return 0;
     }
 
-    @Override
-    public int getNumberOfColumns() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
-
     public <DataType> List<PeakListColumn<DataType>> getColumns() {
         // TODO Auto-generated method stub
         return null;
     }
 
     public <DataType> DataType getData(PeakListColumn<DataType> column) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public int getParentId() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public int getNumberOfFeatures() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public <DataType> List<PeakListColumn<DataType>> getFeatures() {
         // TODO Auto-generated method stub
         return null;
     }

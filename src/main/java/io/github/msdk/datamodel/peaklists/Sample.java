@@ -14,6 +14,8 @@
 
 package io.github.msdk.datamodel.peaklists;
 
+import java.io.File;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -43,5 +45,13 @@ public interface Sample {
      */
     @Nullable RawDataFile getRawDataFile();
 
+    /**
+     * Returns the original file name and path where the file was loaded from,
+     * or null if this file was created by MSDK.
+     * 
+     * @return Original filename and path.
+     */
+    @Nullable
+    File getOriginalFile();
 
 }

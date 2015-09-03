@@ -39,10 +39,38 @@ public interface PeakListColumn<DataType> {
     void setName(String name);
 
     /**
+     * Returns an information about whether or not the column should be displayed
+     * in a table.
+     * 
+     * @return True or False
+     */
+    boolean getIsDisplayable();
+
+    /**
+     * Change the displayable state of this column.
+     */
+    void setIsDisplayable(boolean displayable);
+
+    /**
      * @return
      */
     @Nonnull
     Class<DataType> getDataTypeClass();
+
+    /**
+     * Returns the value for the column
+     * 
+     * @return Class<DataType>
+     */
+    Class<DataType> getValue();
+    
+    /**
+     * Updates the value of the column
+     * 
+     * @param Class<DataType> data
+     *            Data to be stored in column
+     */
+    void setValue(Class<DataType> data);
 
     /**
      * 

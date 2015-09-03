@@ -34,22 +34,27 @@ public interface PeakListRow {
     PeakList getParentPeakList();
 
     /**
-     * Returns ID of this row
+     * Return ID of this row
      */
     int getId();
 
     /**
-     * Returns number of peaks assigned to this row
+     * Return parent ID of this row
      */
-    int getNumberOfColumns();
+    int getParentId();
 
     /**
-     * Return peaks assigned to this row
+     * Return number of features assigned to this row
      */
-    <DataType> List<PeakListColumn<DataType>> getColumns();
+    int getNumberOfFeatures();
 
     /**
-     * 
+     * Return features assigned to this row
+     */
+    <DataType> List<PeakListColumn<DataType>> getFeatures();
+
+    /**
+     * Return data assigned to this row
      */
     <DataType> DataType getData(PeakListColumn<DataType> column);
 

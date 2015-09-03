@@ -19,7 +19,7 @@ import java.util.List;
 import io.github.msdk.datamodel.peaklists.PeakList;
 import io.github.msdk.datamodel.peaklists.PeakListColumn;
 import io.github.msdk.datamodel.peaklists.PeakListRow;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.peaklists.Sample;
 
 /**
  * Simple implementation of the PeakList interface.
@@ -78,6 +78,12 @@ class SimplePeakList implements PeakList {
     public void removeColumn(PeakListColumn<?> col) {
         // TODO Auto-generated method stub
         
+    }
+
+    @Override
+    public List<Sample> getSamples() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

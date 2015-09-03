@@ -37,7 +37,6 @@ public interface PeakList {
      */
     void setName(@Nonnull String name);
 
-
     /**
      * Returns an immutable list of rows
      */
@@ -53,7 +52,7 @@ public interface PeakList {
      * 
      */
     void removeRow(@Nonnull PeakListRow row);
-    
+
     /**
      * Returns an immutable list of columns
      */
@@ -69,7 +68,11 @@ public interface PeakList {
      * 
      */
     void removeColumn(@Nonnull PeakListColumn<?> col);
-    
+
+    /**
+     * Returns an immutable list of samples
+     */
+    @Nonnull List<Sample> getSamples();
 
     /**
      * Remove all data associated to this peak list from the disk.
