@@ -14,8 +14,6 @@
 
 package io.github.msdk.datamodel.rawdata;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -44,7 +42,7 @@ import io.github.msdk.datamodel.datapointstore.DataPointList;
  * 
  * This data structure is not thread-safe.
  */
-public interface SpectrumDataPointList extends DataPointList, List<SpectrumDataPoint> {
+public interface SpectrumDataPointList extends DataPointList {
 
     /**
      * Returns the current m/z buffer array. The size of the array might be
@@ -105,34 +103,6 @@ public interface SpectrumDataPointList extends DataPointList, List<SpectrumDataP
     void add(double newMz, float newIntensity);
 
     /**
-     * Add a new data point into a specified position of the list. If the
-     * internal arrays are full, they are replaced with new arrays of twice the
-     * length.
-     * 
-     * @param index
-     *            index at which the specified data point is to be inserted
-     * @param newMz
-     *            m/z value of the new data point
-     * @param newIntensity
-     *            intensity value of the new data point
-     */
-    void add(int index, double newMz, float newIntensity);
-
-    /**
-     * Updates the size of the list, assuming the m/z and intensity arrays have
-     * already been updated accordingly. This method also checks whether the m/z
-     * array is sorted in ascending order.
-     * 
-     * @param newSize
-     *            new size of the list. Must be <= length of the m/z array
-     * @throws IllegalArgumentException
-     *             if the size is larger than the length of the m/z array
-     * @throws IllegalStateException
-     *             if the m/z array is not sorted in ascending order
-     */
-    void setSize(int newSize);
-
-    /**
      * Copies the contents of another data point list into this list. The
      * capacity of this list might stay the same or it might change, depending
      * on needs.
@@ -141,16 +111,6 @@ public interface SpectrumDataPointList extends DataPointList, List<SpectrumDataP
      *            source list to copy from.
      */
     void copyFrom(@Nonnull SpectrumDataPointList list);
-
-    /**
-     * Copies the contents of this data point list into another list. The
-     * capacity of the target list might stay the same or it might change,
-     * depending on needs.
-     * 
-     * @param list
-     *            target list to copy to.
-     */
-    void copyTo(@Nonnull SpectrumDataPointList list);
 
     /**
      * Creates a new DataPointList that contains only those data points that fit
@@ -175,17 +135,17 @@ public interface SpectrumDataPointList extends DataPointList, List<SpectrumDataP
     Range<Double> getMzRange();
 
     /**
-     * Returns the top intensity data point, also called "base peak". May return
+     * Returns the index of the top intensity data point, also called "base peak". May return
      * null if there are no data points in this spectrum.
      * 
      * @return highest data point, or null
      */
     @Nullable
-    SpectrumDataPoint getHighestDataPoint();
+    Integer getHighestDataPointIndex();
 
     /**
      * Returns the sum of intensities of all data points (total ion current or
-     * TIC).
+     * TIC). Returns 0 if there are no data points.
      * 
      * @return total ion current
      */

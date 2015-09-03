@@ -12,9 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.rawdata;
-
-import java.util.List;
+package io.github.msdk.datamodel.peaklists;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,6 +20,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.datapointstore.DataPointList;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * This interface provides a convenient data structure for storing large amount
@@ -44,7 +43,7 @@ import io.github.msdk.datamodel.datapointstore.DataPointList;
  * 
  * This data structure is not thread-safe.
  */
-public interface ChromatogramDataPointList extends DataPointList {
+public interface FeatureDataPointList extends DataPointList {
 
     /**
      * Returns the current rt buffer array. The size of the array might be
@@ -57,7 +56,7 @@ public interface ChromatogramDataPointList extends DataPointList {
      * @return current rt buffer
      */
     @Nonnull
-    float[] getRtBuffer();
+    ChromatographyInfo[] getRtBuffer();
 
     /**
      * Returns the current intensity buffer array. The size of the array might
@@ -71,6 +70,9 @@ public interface ChromatogramDataPointList extends DataPointList {
      */
     @Nonnull
     float[] getIntensityBuffer();
+    
+    @Nonnull
+    Integer[] getScanNumbers();
 
     /**
      * Sets the internal buffers to given arrays. The arrays will be referenced
@@ -89,7 +91,7 @@ public interface ChromatogramDataPointList extends DataPointList {
      * @throws IllegalStateException
      *             if the rt array is not sorted in ascending order
      */
-    void setBuffers(@Nonnull float[] rtBuffer,
+    void setBuffers(@Nonnull double[] rtBuffer,
             @Nonnull float[] intensityBuffer, int newSize);
 
     /**
@@ -102,7 +104,7 @@ public interface ChromatogramDataPointList extends DataPointList {
      * @param newIntensity
      *            intensity value of the new data point
      */
-    void add(float newRt, float newIntensity);
+    void add(double newRt, float newIntensity);
 
     /**
      * Copies the contents of another data point list into this list. The
@@ -112,7 +114,7 @@ public interface ChromatogramDataPointList extends DataPointList {
      * @param list
      *            source list to copy from.
      */
-    void copyFrom(@Nonnull ChromatogramDataPointList list);
+    void copyFrom(@Nonnull FeatureDataPointList list);
 
     /**
      * Creates a new DataPointList that contains only those data points that fit
@@ -124,7 +126,7 @@ public interface ChromatogramDataPointList extends DataPointList {
      *            intensity range to select
      * @return new DataPointList
      */
-    ChromatogramDataPointList selectDataPoints(@Nonnull Range<Double> rtRange,
+    FeatureDataPointList selectDataPoints(@Nonnull Range<Double> rtRange,
             @Nonnull Range<Float> intensityRange);
 
     /**
