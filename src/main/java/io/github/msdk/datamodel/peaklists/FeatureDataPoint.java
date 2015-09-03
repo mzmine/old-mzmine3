@@ -35,13 +35,6 @@ public interface FeatureDataPoint extends SpectrumDataPoint {
      * @return
      */
     @Nullable
-    MsScan getScan();
-
-    /**
-     * 
-     * @return
-     */
-    @Nonnull
     Integer getScanNumber();
 
     /**
@@ -49,6 +42,6 @@ public interface FeatureDataPoint extends SpectrumDataPoint {
      * @return
      */
     @Nullable
-    ChromatographyInfo getChromatographyData();
+    ChromatographyInfo getChromatographyInfo();
 
 }

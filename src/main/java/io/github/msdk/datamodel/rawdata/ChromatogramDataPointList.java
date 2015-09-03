@@ -21,6 +21,8 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
+import io.github.msdk.datamodel.datapointstore.DataPointList;
+
 /**
  * This interface provides a convenient data structure for storing large amount
  * of data points in memory. Internally, it is implemented by two arrays, one
@@ -42,7 +44,7 @@ import com.google.common.collect.Range;
  * 
  * This data structure is not thread-safe.
  */
-public interface ChromatogramDataPointList extends List<ChromatogramDataPoint> {
+public interface ChromatogramDataPointList extends DataPointList, List<ChromatogramDataPoint> {
 
     /**
      * Returns the current rt buffer array. The size of the array might be

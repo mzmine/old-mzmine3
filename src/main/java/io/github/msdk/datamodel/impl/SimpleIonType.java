@@ -14,7 +14,7 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.peaklists.IonType;
+import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 
 /**

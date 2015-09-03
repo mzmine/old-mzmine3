@@ -1,23 +1,18 @@
-/*
- * Copyright 2006-2015 The MZmine 3 Development Team
- * 
- * This file is part of MZmine 2.
- * 
- * MZmine 2 is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
- * 
- * MZmine 2 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * MZmine 2; if not, write to the Free Software Foundation, Inc., 51 Franklin St,
- * Fifth Floor, Boston, MA 02110-1301 USA
+/* 
+ * (C) Copyright 2015 by MSDK Development Team
+ *
+ * This software is dual-licensed under either
+ *
+ * (a) the terms of the GNU Lesser General Public License version 2.1
+ * as published by the Free Software Foundation
+ *
+ * or (per the licensee's choosing)
+ *
+ * (b) the terms of the Eclipse Public License v1.0 as published by
+ * the Eclipse Foundation.
  */
 
-package io.github.mzmine.datamodel;
+package io.github.msdk.datamodel.ionannotations;
 
 import java.net.URL;
 
@@ -30,7 +25,7 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
  * Annotation of a detected feature with a chemical structure, formula, or
  * textual description.
  */
-public interface PeakListRowAnnotation {
+public interface IonAnnotation {
 
     /**
      * @return Chemical structure of this annotation.
@@ -56,6 +51,19 @@ public interface PeakListRowAnnotation {
      * [C34H58N5O35P3]2-.
      */
     void setFormula(@Nullable IMolecularFormula formula);
+
+    /**
+     * @return Expected m/z value of this annotation.
+     */
+    @Nullable
+    Double getExpectedMz();
+
+	/**
+	 * Sets the expected m/z value to this annotation. The expected m/z value
+	 * can be the calculated value based on the chemical formula or a value
+	 * from a database.
+	 */
+    void setExpectedMz(@Nullable Double expectedMz);
 
     /**
      * @return Textual description of this annotation.

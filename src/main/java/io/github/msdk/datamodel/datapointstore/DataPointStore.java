@@ -51,7 +51,7 @@ public interface DataPointStore {
      * 
      */
     @Nonnull
-    SpectrumDataPointList readDataPoints(@Nonnull Object id);
+    DataPointList readDataPoints(@Nonnull Object id);
 
     /**
      * Reads the data points associated with given ID into a given
@@ -65,7 +65,7 @@ public interface DataPointStore {
      * @throws IllegalIllegalArgumentException
      *             If the given id is not present in this store.
      */
-    void readDataPoints(@Nonnull Object id, @Nonnull SpectrumDataPointList list);
+    void readDataPoints(@Nonnull Object id, @Nonnull DataPointList list);
 
     /**
      * Discards data points stored under given ID.

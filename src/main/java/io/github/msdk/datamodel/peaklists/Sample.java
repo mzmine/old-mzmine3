@@ -14,6 +14,11 @@
 
 package io.github.msdk.datamodel.peaklists;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import io.github.msdk.datamodel.rawdata.RawDataFile;
+
 /* 
  * WARNING: the interfaces in this package are still under construction
  */
@@ -26,11 +31,17 @@ public interface Sample {
     /**
      * @return Short descriptive name
      */
-    String getName();
+    @Nonnull String getName();
 
     /**
      * Change the name
      */
-    void setName(String name);
+    void setName(@Nonnull String name);
+    
+    /**
+     * Returns a raw data file
+     */
+    @Nullable RawDataFile getRawDataFile();
+
 
 }

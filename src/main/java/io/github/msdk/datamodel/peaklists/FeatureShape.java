@@ -14,15 +14,13 @@
 
 package io.github.msdk.datamodel.peaklists;
 
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
-
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
+
+import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /* 
  * WARNING: the interfaces in this package are still under construction
@@ -67,7 +65,7 @@ public interface FeatureShape {
      * points forming the m/z signal).
      */
     @Nonnull
-    List<FeatureDataPoint> getDataPoints();
+    FeatureDataPointList getDataPoints();
 
     /**
      * Returns the retention time range of all raw data points used to detect

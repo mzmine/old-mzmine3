@@ -14,10 +14,12 @@
 
 package io.github.msdk.datamodel.peaklists;
 
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.openscience.cdk.formula.IsotopePattern;
+
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /* 
  * WARNING: the interfaces in this package are still under construction

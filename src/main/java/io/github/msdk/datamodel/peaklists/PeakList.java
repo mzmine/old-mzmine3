@@ -14,73 +14,62 @@
 
 package io.github.msdk.datamodel.peaklists;
 
-import io.github.msdk.datamodel.rawdata.RawDataFile;
-
 import java.util.List;
+
+import javax.annotation.Nonnull;
 
 /* 
  * WARNING: the interfaces in this package are still under construction
  */
 
 /**
- * 
+ * This data structure is not thread-safe.
  */
 public interface PeakList {
 
     /**
      * @return Short descriptive name for the peak list
      */
-    String getName();
+    @Nonnull String getName();
 
     /**
      * Change the name of this peak list
      */
-    void setName(String name);
+    void setName(@Nonnull String name);
+
 
     /**
-     * Returns number of raw data files participating in the peak list
+     * Returns an immutable list of rows
      */
-    int getNumberOfRawDataFiles();
-
-    /**
-     * Returns all raw data files participating in the peak list
-     */
-    List<RawDataFile> getRawDataFiles();
-
-    /**
-     * Returns true if this peak list contains given file
-     */
-    boolean hasRawDataFile(RawDataFile file);
-
-    /**
-     * Returns a raw data file
-     * 
-     * @param position
-     *            Position of the raw data file in the matrix (running numbering
-     *            from left 0,1,2,...)
-     */
-    RawDataFile getRawDataFile(int position);
-
-    /**
-     * Returns number of rows in the alignment result
-     */
-    int getNumberOfRows();
-
-    /**
-     * Returns all peak list rows
-     */
-    List<PeakListRow> getRows();
+    @Nonnull List<PeakListRow> getRows();
 
     /**
      * Add a new row to the peak list
      */
-    void addRow(PeakListRow row);
+    void addRow(@Nonnull PeakListRow row);
 
     /**
      * Removes a row from this peak list
      * 
      */
-    void removeRow(PeakListRow row);
+    void removeRow(@Nonnull PeakListRow row);
+    
+    /**
+     * Returns an immutable list of columns
+     */
+    @Nonnull List<PeakListColumn<?>> getColumns();
+
+    /**
+     * Add a new column to the peak list
+     */
+    void addColumn(@Nonnull PeakListColumn<?> col);
+
+    /**
+     * Removes a column from this peak list
+     * 
+     */
+    void removeColumn(@Nonnull PeakListColumn<?> col);
+    
 
     /**
      * Remove all data associated to this peak list from the disk.

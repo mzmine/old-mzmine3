@@ -31,7 +31,7 @@ public interface ChromatogramDataPoint {
      * @return Data point rt
      */
     @Nonnull
-    Double getRt();
+    Float getRt();
 
     /**
      * Returns the intensity value of this data point.

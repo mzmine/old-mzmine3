@@ -14,18 +14,19 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.peaklists.Feature;
-import io.github.msdk.datamodel.peaklists.FeatureShape;
-import io.github.msdk.datamodel.peaklists.IsotopePattern;
-import io.github.msdk.datamodel.peaklists.PeakListRow;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.SpectrumDataPoint;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.openscience.cdk.formula.IsotopePattern;
+
 import com.google.common.collect.Range;
+
+import io.github.msdk.datamodel.peaklists.Feature;
+import io.github.msdk.datamodel.peaklists.FeatureShape;
+import io.github.msdk.datamodel.peaklists.PeakListRow;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPoint;
 
 /**
  * This class is a simple implementation of the peak interface.

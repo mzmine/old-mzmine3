@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.peaklists;
+package io.github.msdk.datamodel.ionannotations;
 
 import io.github.msdk.datamodel.rawdata.PolarityType;
 
