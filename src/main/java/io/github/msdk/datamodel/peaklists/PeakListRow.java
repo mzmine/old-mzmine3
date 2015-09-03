@@ -44,6 +44,16 @@ public interface PeakListRow {
     int getParentId();
 
     /**
+     * Return m/z of this row
+     */
+    int getMz();
+
+    /**
+     * Return RT of this row
+     */
+    int getRt();
+
+    /**
      * Return number of features assigned to this row
      */
     int getNumberOfFeatures();
