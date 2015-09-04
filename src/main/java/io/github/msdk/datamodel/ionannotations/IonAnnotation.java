@@ -36,7 +36,7 @@ public interface IonAnnotation {
     /**
      * Sets a new chemical structure to this annotation.
      */
-    void setChemicalStructure(@Nullable IAtomContainer structure);
+    void setChemicalStructure(@Nullable IAtomContainer chemicalStructure);
 
     /**
      * @return Chemical formula of this annotation.
@@ -51,6 +51,17 @@ public interface IonAnnotation {
      * [C34H58N5O35P3]2-.
      */
     void setFormula(@Nullable IMolecularFormula formula);
+
+    /**
+     * @return Ionization type for this annotation.
+     */
+    @Nullable
+    IonType getIonType();
+
+    /**
+     * Sets a new ionization type to this annotation.
+     */
+    void setIonType(@Nullable IonType ionType);
 
     /**
      * @return Expected m/z value of this annotation.
@@ -85,7 +96,7 @@ public interface IonAnnotation {
     /**
      * Sets a new identification method to this annotation.
      */
-    void setIdentificationMethod(@Nullable String idMethod);
+    void setIdentificationMethod(@Nullable String identificationMethod);
 
     /**
      * @return ID in a database, if this annotation comes from a database.
@@ -96,7 +107,7 @@ public interface IonAnnotation {
     /**
      * Sets a new identification method to this annotation.
      */
-    void setDataBaseId(@Nullable String dbId);
+    void setDataBaseId(@Nullable String dataBaseId);
 
     /**
      * @return Accession URL for a database, if this annotation comes from a

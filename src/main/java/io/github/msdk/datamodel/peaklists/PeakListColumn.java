@@ -27,18 +27,17 @@ public interface PeakListColumn<DataType> {
     /**
      * @return Short descriptive name for the peak list column
      */
-    String getName();
+    @Nonnull String getName();
 
     /**
      * Change the name of this peak list column
      */
-    void setName(String name);
+    void setName(@Nonnull String name);
 
     /**
      * @return
      */
-    @Nonnull
-    Class<DataType> getDataTypeClass();
+    @Nonnull Class<DataType> getDataTypeClass();
 
     /**
      * Returns the sample associated with this column, or null if no sample is associated.

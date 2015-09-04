@@ -32,7 +32,7 @@ class SimpleSample implements Sample {
     private File originalFile;
 
     SimpleSample(@Nonnull String name) {
-        setName(name);
+        this.name = name;
     }
 
     @Override

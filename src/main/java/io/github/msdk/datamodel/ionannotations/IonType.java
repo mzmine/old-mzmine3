@@ -16,30 +16,41 @@ package io.github.msdk.datamodel.ionannotations;
 
 import io.github.msdk.datamodel.rawdata.PolarityType;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-/* 
- * WARNING: the interfaces in this package are still under construction
- */
-
 /**
- * 
- *
+ * Annotation of ionization type
  */
 @Immutable
 public interface IonType {
 
     /**
-     * @return Name of ionization type, such as [M+2H]2+
+     * @return Name of ionization type, such as [M+2H]2+.
      */
-    int getName();
+    @Nonnull
+    String getName();
 
+    /**
+     * @return Polarity of ionization. See #PolarityType.java for values.
+     */
+    @Nonnull
     PolarityType getPolarity();
 
+    /**
+     * @return Number of molecules in this ion.
+     */
     int getNumberOfMolecules();
 
+    /**
+     * @return  Chemical formula for adduct.
+     */
+    @Nonnull
     String getAdductFormula();
 
-    String getCharge();
+    /**
+     * @return  Charge of ion.
+     */
+    int getCharge();
 
 }

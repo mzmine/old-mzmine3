@@ -31,7 +31,7 @@ class SimplePeakListColumn<DataType> implements PeakListColumn<DataType> {
 
     SimplePeakListColumn(@Nonnull String name, @Nonnull Class<DataType> dataTypeClass,
             @Nullable SimpleSample simpleSample) {
-        setName(name);
+        this.name = name;
         this.dataTypeClass = dataTypeClass;
         this.simpleSample = simpleSample;
     }
@@ -47,7 +47,7 @@ class SimplePeakListColumn<DataType> implements PeakListColumn<DataType> {
     }
 
     @Override
-    public Class<DataType> getDataTypeClass() {
+    public @Nonnull Class<DataType> getDataTypeClass() {
         return dataTypeClass;
     }
 

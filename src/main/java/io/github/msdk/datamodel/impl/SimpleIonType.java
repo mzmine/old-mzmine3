@@ -14,42 +14,57 @@
 
 package io.github.msdk.datamodel.impl;
 
+import javax.annotation.Nonnull;
+
 import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 
 /**
- *
+ * Implementation of IonType
  */
 class SimpleIonType implements IonType {
 
-    @Override
-    public int getName() {
-        // TODO Auto-generated method stub
-        return 0;
+    private @Nonnull String name;
+    private @Nonnull PolarityType polarity;
+    private int numberOfMolecules;
+    private @Nonnull String adductFormula;
+    private int charge;
+
+    SimpleIonType(@Nonnull String name, @Nonnull PolarityType polarity, 
+            int numberOfMolecules, @Nonnull String adductFormula, int charge) {
+        this.name = name;
+        this.polarity = polarity;
+        this.numberOfMolecules = numberOfMolecules;
+        this.adductFormula = adductFormula;
+        this.charge = charge;
     }
 
     @Override
+    @Nonnull
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    @Nonnull
     public PolarityType getPolarity() {
-        // TODO Auto-generated method stub
-        return null;
+        return polarity;
     }
 
     @Override
     public int getNumberOfMolecules() {
-        // TODO Auto-generated method stub
-        return 0;
+        return numberOfMolecules;
     }
 
     @Override
+    @Nonnull
     public String getAdductFormula() {
-        // TODO Auto-generated method stub
-        return null;
+        return adductFormula;
     }
 
     @Override
-    public String getCharge() {
-        // TODO Auto-generated method stub
-        return null;
+    public int getCharge() {
+        return charge;
     }
 
 }

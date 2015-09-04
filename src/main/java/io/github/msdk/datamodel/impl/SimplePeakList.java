@@ -38,8 +38,8 @@ class SimplePeakList implements PeakList {
     private @Nullable ArrayList<PeakListRow> peakListRows;
     private @Nullable ArrayList<PeakListColumn<?>> peakListColumns;
 
-    SimplePeakList(@Nonnull String name, DataPointStore dataPointStore) {
-        setName(name);
+    SimplePeakList(@Nonnull String name, @Nonnull DataPointStore dataPointStore) {
+        this.name = name;
         this.dataPointStore = dataPointStore;
         peakListRows = new ArrayList<PeakListRow>();
         peakListColumns = new ArrayList<PeakListColumn<?>>();
@@ -55,49 +55,52 @@ class SimplePeakList implements PeakList {
         this.name = name;
     }
 
+    @SuppressWarnings("null")
     @Override
-    public List<PeakListRow> getRows() {
+    public @Nonnull List<PeakListRow> getRows() {
         List<PeakListRow> peakListRowCopy = ImmutableList.copyOf(peakListRows);
         return peakListRowCopy;
     }
 
     @Override
-    public void addRow(PeakListRow row) {
+    public void addRow(@Nonnull PeakListRow row) {
         synchronized (peakListRows) {
             peakListRows.add(row);
         }
     }
 
     @Override
-    public void removeRow(PeakListRow row) {
+    public void removeRow(@Nonnull PeakListRow row) {
         synchronized (peakListRows) {
             peakListRows.remove(row);
         }
     }
 
+    @SuppressWarnings("null")
     @Override
-    public List<PeakListColumn<?>> getColumns() {
+    public @Nonnull List<PeakListColumn<?>> getColumns() {
         List<PeakListColumn<?>> peakListColumnsCopy = ImmutableList
                 .copyOf(peakListColumns);
         return peakListColumnsCopy;
     }
 
     @Override
-    public void addColumn(PeakListColumn<?> col) {
+    public void addColumn(@Nonnull PeakListColumn<?> col) {
         synchronized (peakListColumns) {
             peakListColumns.add(col);
         }
     }
 
     @Override
-    public void removeColumn(PeakListColumn<?> col) {
+    public void removeColumn(@Nonnull PeakListColumn<?> col) {
         synchronized (peakListColumns) {
             peakListColumns.remove(col);
         }
     }
 
+    @SuppressWarnings("null")
     @Override
-    public List<Sample> getSamples() {
+    public @Nonnull List<Sample> getSamples() {
         ArrayList<Sample> sampleList = new ArrayList<Sample>();
         synchronized (peakListColumns) {
             for (PeakListColumn<?> col : peakListColumns) {

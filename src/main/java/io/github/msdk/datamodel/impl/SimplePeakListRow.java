@@ -28,7 +28,7 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
  */
 class SimplePeakListRow implements PeakListRow {
 
-    private @Nonnull int rowId;
+    private int rowId;
     private @Nonnull PeakList peaklist;
     private @Nonnull Hashtable<PeakListColumn<?>, Object> rowData;
 
@@ -39,12 +39,12 @@ class SimplePeakListRow implements PeakListRow {
     }
 
     @Override
-    public PeakList getPeakList() {
+    public @Nonnull PeakList getPeakList() {
         return peaklist;
     }
 
     @Override
-    public Integer getId() {
+    public @Nonnull Integer getId() {
         return rowId;
     }
 
@@ -60,13 +60,13 @@ class SimplePeakListRow implements PeakListRow {
 
     @Override
     public <DataType> void setData(PeakListColumn<DataType> column,
-            DataType data) {
+            @Nonnull DataType data) {
         rowData.put(column, data);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <DataType> DataType getData(PeakListColumn<DataType> column) {
+    public <DataType> DataType getData(@Nonnull PeakListColumn<DataType> column) {
         return (DataType) rowData.get(column);
     }
 
