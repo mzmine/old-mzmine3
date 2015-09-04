@@ -219,4 +219,8 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
         return null;
     }
 
+    @Override
+    public void clear() {
+        this.size = 0;
+    }
 }

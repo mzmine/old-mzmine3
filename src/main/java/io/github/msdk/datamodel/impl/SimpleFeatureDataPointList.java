@@ -222,5 +222,10 @@ class SimpleFeatureDataPointList implements FeatureDataPointList {
         // TODO Auto-generated method stub
         return null;
     }
+    
+    @Override
+    public void clear() {
+        this.size = 0;
+    }
 
 }

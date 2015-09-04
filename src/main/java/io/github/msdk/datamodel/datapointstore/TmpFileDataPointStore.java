@@ -30,8 +30,11 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKRuntimeException;
+import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.peaklists.FeatureDataPointList;
 import io.github.msdk.datamodel.rawdata.ChromatogramDataPointList;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
 
 /**
@@ -142,6 +145,113 @@ class TmpFileDataPointStore implements DataPointStore {
 
     }
 
+    @Override
+    synchronized public @Nonnull Integer storeDataPoints(
+            @Nonnull ChromatogramDataPointList dataPoints) {
+
+        if (byteBuffer == null)
+            throw new IllegalStateException("This object has been disposed");
+
+        try {
+            final long currentOffset = tmpDataFile.length();
+
+            final int numOfDataPoints = dataPoints.getSize();
+
+            // Calculate minimum necessary size of the byte buffer
+            final int numOfBytes = numOfDataPoints * (Float.SIZE / 8);
+
+            // Make sure we have enough space in the byte buffer
+            if (byteBuffer.capacity() < numOfBytes) {
+                byteBuffer = ByteBuffer.allocate(numOfBytes * 2);
+            } else {
+                byteBuffer.clear();
+            }
+
+            FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
+            fltBuffer.put(dataPoints.getRtBuffer(), 0, numOfDataPoints);
+            tmpDataFile.write(byteBuffer.array(), 0, numOfBytes);
+
+            fltBuffer = byteBuffer.asFloatBuffer();
+            fltBuffer.put(dataPoints.getIntensityBuffer(), 0, numOfDataPoints);
+            tmpDataFile.write(byteBuffer.array(), 0, numOfBytes);
+
+            // Increase the storage ID
+            lastStorageId++;
+
+            // Save the reference to the new items
+            dataPointsOffsets.put(lastStorageId, currentOffset);
+            dataPointsLengths.put(lastStorageId, numOfDataPoints);
+
+        } catch (IOException e) {
+            throw new MSDKRuntimeException(e);
+        }
+
+        return lastStorageId;
+
+    }
+
+    @Override
+    synchronized public @Nonnull Integer storeDataPoints(
+            @Nonnull FeatureDataPointList dataPoints) {
+
+        if (byteBuffer == null)
+            throw new IllegalStateException("This object has been disposed");
+
+        try {
+            final long currentOffset = tmpDataFile.length();
+
+            final int numOfDataPoints = dataPoints.getSize();
+
+            // Calculate minimum necessary size of the byte buffer
+            int numOfBytes = numOfDataPoints * (Float.SIZE / 8) * 3;
+
+            // Make sure we have enough space in the byte buffer
+            if (byteBuffer.capacity() < numOfBytes) {
+                byteBuffer = ByteBuffer.allocate(numOfBytes * 2);
+            } else {
+                byteBuffer.clear();
+            }
+
+            final ChromatographyInfo retentionTimes[] = dataPoints
+                    .getRtBuffer();
+
+            FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
+            Float f;
+            for (ChromatographyInfo ch : retentionTimes) {
+                f = ch.getRetentionTime();
+                if (f == null)
+                    f = Float.NaN;
+                fltBuffer.put(f);
+                f = ch.getSecondaryRetentionTime();
+                if (f == null)
+                    f = Float.NaN;
+                fltBuffer.put(f);
+                f = ch.getIonDriftTime();
+                if (f == null)
+                    f = Float.NaN;
+                fltBuffer.put(f);
+            }
+            tmpDataFile.write(byteBuffer.array(), 0, numOfBytes);
+
+            fltBuffer = byteBuffer.asFloatBuffer();
+            fltBuffer.put(dataPoints.getIntensityBuffer(), 0, numOfDataPoints);
+            tmpDataFile.write(byteBuffer.array(), 0, numOfBytes);
+
+            // Increase the storage ID
+            lastStorageId++;
+
+            // Save the reference to the new items
+            dataPointsOffsets.put(lastStorageId, currentOffset);
+            dataPointsLengths.put(lastStorageId, numOfDataPoints);
+
+        } catch (IOException e) {
+            throw new MSDKRuntimeException(e);
+        }
+
+        return lastStorageId;
+
+    }
+
     /**
      * Reads the data points associated with given ID.
      */
@@ -200,6 +310,128 @@ class TmpFileDataPointStore implements DataPointStore {
 
     }
 
+    @Override
+    public synchronized void readDataPoints(@Nonnull Object ID,
+            @Nonnull ChromatogramDataPointList list) {
+
+        if (byteBuffer == null)
+            throw new IllegalStateException("This object has been disposed");
+
+        if (!dataPointsLengths.containsKey(ID))
+            throw new IllegalArgumentException("ID " + ID
+                    + " not found in storage file " + tmpDataFileName);
+
+        // Get file offset and number of data points
+        final long offset = dataPointsOffsets.get(ID);
+        final int numOfDataPoints = dataPointsLengths.get(ID);
+
+        // Calculate minimum necessary size of the byte buffer
+        final int numOfBytes = numOfDataPoints * (Float.SIZE / 8);
+
+        // Make sure we have enough space in the byte buffer
+        if (byteBuffer.capacity() < numOfBytes) {
+            byteBuffer = ByteBuffer.allocate(numOfBytes * 2);
+        } else {
+            byteBuffer.clear();
+        }
+
+        try {
+
+            // Read m/z values
+            tmpDataFile.seek(offset);
+            tmpDataFile.read(byteBuffer.array(), 0, numOfBytes);
+
+            FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
+            float rtValues[] = list.getRtBuffer();
+            if (rtValues.length < numOfDataPoints)
+                rtValues = new float[numOfDataPoints];
+            fltBuffer.get(rtValues, 0, numOfDataPoints);
+
+            // Read intensity values
+            tmpDataFile.read(byteBuffer.array(), 0, numOfBytes);
+            fltBuffer = byteBuffer.asFloatBuffer();
+            float intensityValues[] = list.getIntensityBuffer();
+            if (intensityValues.length < numOfDataPoints)
+                intensityValues = new float[numOfDataPoints];
+            fltBuffer.get(intensityValues, 0, numOfDataPoints);
+
+            // Update list
+            list.setBuffers(rtValues, intensityValues, numOfDataPoints);
+
+        } catch (IOException e) {
+            throw new MSDKRuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public void readDataPoints(@Nonnull Object ID,
+            @Nonnull FeatureDataPointList list) {
+
+        if (byteBuffer == null)
+            throw new IllegalStateException("This object has been disposed");
+
+        if (!dataPointsLengths.containsKey(ID))
+            throw new IllegalArgumentException("ID " + ID
+                    + " not found in storage file " + tmpDataFileName);
+
+        // Get file offset and number of data points
+        final long offset = dataPointsOffsets.get(ID);
+        final int numOfDataPoints = dataPointsLengths.get(ID);
+
+        // Calculate minimum necessary size of the byte buffer
+        int numOfBytes = numOfDataPoints * (Float.SIZE / 8) * 3;
+
+        // Make sure we have enough space in the byte buffer
+        if (byteBuffer.capacity() < numOfBytes) {
+            byteBuffer = ByteBuffer.allocate(numOfBytes * 2);
+        } else {
+            byteBuffer.clear();
+        }
+
+        try {
+
+            // Read m/z values
+            tmpDataFile.seek(offset);
+            tmpDataFile.read(byteBuffer.array(), 0, numOfBytes);
+
+            FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
+            ChromatographyInfo rtValues[] = list.getRtBuffer();
+            if (rtValues.length < numOfDataPoints)
+                rtValues = new ChromatographyInfo[numOfDataPoints];
+
+            for (int i = 0; i < numOfDataPoints; i++) {
+                Float rt = fltBuffer.get();
+                if (rt == Float.NaN)
+                    rt = null;
+                Float srt = fltBuffer.get();
+                if (srt == Float.NaN)
+                    srt = null;
+                Float idt = fltBuffer.get();
+                if (idt == Float.NaN)
+                    idt = null;
+                rtValues[i] = MSDKObjectBuilder.getChromatographyInfo2D(
+                        SeparationType.UNKNOWN, rt, srt);
+            }
+
+            // Read intensity values
+            numOfBytes = numOfDataPoints * (Float.SIZE / 8);
+            tmpDataFile.read(byteBuffer.array(), 0, numOfBytes);
+            fltBuffer = byteBuffer.asFloatBuffer();
+            float intensityValues[] = list.getIntensityBuffer();
+            if (intensityValues.length < numOfDataPoints)
+                intensityValues = new float[numOfDataPoints];
+            fltBuffer.get(intensityValues, 0, numOfDataPoints);
+
+            // Update list
+            list.setBuffers(rtValues, intensityValues, numOfDataPoints);
+
+        } catch (IOException e) {
+            throw new MSDKRuntimeException(e);
+        }
+
+    }
+
     /**
      * Remove data associated with given storage ID. We do not attempt to remove
      * the data from disk, simply remove the reference to it.
@@ -244,29 +476,5 @@ class TmpFileDataPointStore implements DataPointStore {
     @Override
     protected void finalize() {
         dispose();
-    }
-
-    @Override
-    public Object storeDataPoints(ChromatogramDataPointList dataPoints) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public Object storeDataPoints(FeatureDataPointList dataPoints) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void readDataPoints(Object id, ChromatogramDataPointList list) {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void readDataPoints(Object id, FeatureDataPointList list) {
-        // TODO Auto-generated method stub
-        
     }
 }

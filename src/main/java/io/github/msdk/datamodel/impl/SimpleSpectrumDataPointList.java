@@ -268,4 +268,9 @@ class SimpleSpectrumDataPointList implements SpectrumDataPointList {
         return newList;
     }
 
+    @Override
+    public void clear() {
+        this.size = 0;
+    }
+
 }

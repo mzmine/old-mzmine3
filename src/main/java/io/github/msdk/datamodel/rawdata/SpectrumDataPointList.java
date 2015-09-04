@@ -74,6 +74,8 @@ public interface SpectrumDataPointList {
      */
     int getSize();
     
+    void clear();
+    
     /**
      * Sets the internal buffers to given arrays. The arrays will be referenced
      * directly without cloning. The m/z buffer contents must be sorted in
