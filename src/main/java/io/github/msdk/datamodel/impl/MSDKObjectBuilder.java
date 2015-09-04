@@ -15,6 +15,7 @@
 package io.github.msdk.datamodel.impl;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.peaklists.PeakListColumn;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.SpectrumDataPoint;
 import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
@@ -208,7 +209,8 @@ public class MSDKObjectBuilder {
      *             if the initial capacity < size of the sourceList
      */
     public static final @Nonnull SpectrumDataPointList getDataPointList(
-            @Nonnull SpectrumDataPointList sourceList, @Nonnull Integer capacity) {
+            @Nonnull SpectrumDataPointList sourceList,
+            @Nonnull Integer capacity) {
         return new DataPointArrayList(sourceList, capacity);
     }
 
@@ -229,6 +231,19 @@ public class MSDKObjectBuilder {
             @Nonnull double mzBuffer[], @Nonnull float intensityBuffer[],
             int size) {
         return new DataPointArrayList(mzBuffer, intensityBuffer, size);
+    }
+
+    public static @Nonnull <DataType> PeakListColumn<DataType> getPeakListColumn(
+            Class<DataType> dataTypeClass) {
+
+    }
+
+    public static @Nonnull PeakListColumn<Double> getMzPeakListColumn() {
+
+    }
+
+    public static @Nonnull PeakListColumn<Integer> getIdPeakListColumn() {
+
     }
 
 }
