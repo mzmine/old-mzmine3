@@ -74,6 +74,15 @@ public interface ChromatogramDataPointList {
      */
     int getSize();
     
+    /**
+     * 
+     * @param newSize
+     */
+    void setSize(int newSize);
+
+    /**
+     * 
+     */
     void clear();
     
     /**

@@ -102,6 +102,14 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     public int getSize() {
         return size;
     }
+    
+    /**
+     * 
+     * @param newSize
+     */
+    public void setSize(int newSize) {
+        this.size = newSize;
+    }
 
     /**
      * Insert into the right position
@@ -182,7 +190,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     }
 
     @Override
-    public float[] getRtBuffer() {
+    public @Nonnull float[] getRtBuffer() {
         // TODO Auto-generated method stub
         return null;
     }

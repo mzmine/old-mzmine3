@@ -19,6 +19,7 @@ import org.junit.experimental.theories.DataPoint;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
 
 /**
  * Tests for DataPointStores
@@ -31,7 +32,7 @@ public class DataPointStoreTest {
         final Object storageIds[] = new Object[numOfGeneratedLists];
 
         for (int i = 0; i < numOfGeneratedLists; i++) {
-            DataPointList dataPoints = generateDataPoints(i);
+            SpectrumDataPointList dataPoints = generateSpectrumDataPoints(i);
             storageIds[i] = store.storeDataPoints(dataPoints);
         }
 
@@ -103,9 +104,9 @@ public class DataPointStoreTest {
      * 
      * Their intensity is always equal to m/z * 2.
      */
-    public static DataPointList generateDataPoints(int count) {
+    public static SpectrumDataPointList generateSpectrumDataPoints(int count) {
 
-        final DataPointList list = MSDKObjectBuilder.getDataPointList(count);
+        final SpectrumDataPointList list = MSDKObjectBuilder.getSpectrumDataPointList();
         final double mzValues[] = list.getMzBuffer();
         final float intensityValues[] = list.getIntensityBuffer();
 

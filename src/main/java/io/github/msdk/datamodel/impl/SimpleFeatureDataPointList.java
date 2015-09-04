@@ -104,6 +104,15 @@ class SimpleFeatureDataPointList implements FeatureDataPointList {
     public int getSize() {
         return size;
     }
+    
+    /**
+     * 
+     * @param newSize
+     */
+    public void setSize(int newSize) {
+        this.size = newSize;
+    }
+    
 
     /**
      * Insert into the right position
@@ -186,7 +195,7 @@ class SimpleFeatureDataPointList implements FeatureDataPointList {
 
 
     @Override
-    public ChromatographyInfo[] getRtBuffer() {
+    public @Nonnull ChromatographyInfo[] getRtBuffer() {
         // TODO Auto-generated method stub
         return null;
     }

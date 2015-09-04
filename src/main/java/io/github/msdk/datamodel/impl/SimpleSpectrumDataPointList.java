@@ -162,6 +162,15 @@ class SimpleSpectrumDataPointList implements SpectrumDataPointList {
     public int getSize() {
         return size;
     }
+    
+    /**
+     * 
+     * @param newSize
+     */
+    public void setSize(int newSize) {
+        this.size = newSize;
+    }
+
 
     /**
      * Insert into the right position
