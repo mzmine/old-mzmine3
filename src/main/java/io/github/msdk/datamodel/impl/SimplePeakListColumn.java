@@ -14,54 +14,36 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.peaklists.PeakList;
 import io.github.msdk.datamodel.peaklists.PeakListColumn;
-import io.github.msdk.datamodel.peaklists.PeakListRow;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
+import io.github.msdk.datamodel.peaklists.Sample;
 
 /**
  * Implementation of PeakListRow
  */
-class SimplePeakListRow implements PeakListRow {
+class SimplePeakListColumn<DataType> implements PeakListColumn<DataType> {
 
     @Override
-    public PeakList getPeakList() {
+    public String getName() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Integer getId() {
+    public void setName(String name) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public Class getDataTypeClass() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public Double getMz() {
+    public Sample getSample() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
-    public ChromatographyInfo getChromatographyInfo() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public <DataType> DataType getData(PeakListColumn<DataType> column) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public <DataType> void setData(PeakListColumn<DataType> column,
-            DataType data) {
-        // TODO Auto-generated method stub
-        
-    }
 }

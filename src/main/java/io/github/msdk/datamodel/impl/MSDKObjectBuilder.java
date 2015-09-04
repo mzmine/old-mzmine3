@@ -14,16 +14,6 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
-import io.github.msdk.datamodel.peaklists.PeakListColumn;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.SpectrumDataPoint;
-import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
-import io.github.msdk.datamodel.rawdata.MsFunction;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
-
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -31,6 +21,15 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.peaklists.PeakListColumn;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.MsFunction;
+import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.rawdata.SeparationType;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
 
 /**
  * Object builder
@@ -54,9 +53,9 @@ public class MSDKObjectBuilder {
      *            intensity value
      * @return new DataPoint
      */
-    public static final @Nonnull SpectrumDataPoint getDataPoint(double mz,
+    public static final @Nonnull SpectrumDataPointList getDataPoint(double mz,
             float intensity) {
-        return new SimpleDataPoint(mz, intensity);
+        return new SimpleDataPointList(mz, intensity);
     }
 
     /**
@@ -235,15 +234,18 @@ public class MSDKObjectBuilder {
 
     public static @Nonnull <DataType> PeakListColumn<DataType> getPeakListColumn(
             Class<DataType> dataTypeClass) {
-
+        // TODO 
+        return null;
     }
 
     public static @Nonnull PeakListColumn<Double> getMzPeakListColumn() {
-
+        // TODO
+        return null;
     }
 
     public static @Nonnull PeakListColumn<Integer> getIdPeakListColumn() {
-
+        // TODO 
+        return null;
     }
 
 }
