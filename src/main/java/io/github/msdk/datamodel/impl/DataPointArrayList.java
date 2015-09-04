@@ -14,9 +14,6 @@
 
 package io.github.msdk.datamodel.impl;
 
-import io.github.msdk.datamodel.rawdata.SpectrumDataPoint;
-import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
-
 import java.util.AbstractList;
 
 import javax.annotation.Nonnull;
@@ -25,12 +22,14 @@ import javax.annotation.Nullable;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
+import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
+
 /**
  * Basic implementation of DataPointList.
  * 
  * Important: this class is not thread-safe.
  */
-class DataPointArrayList extends AbstractList<SpectrumDataPoint>
+class DataPointArrayList extends AbstractList<SpectrumDataPointList>
         implements SpectrumDataPointList {
 
     /**
@@ -475,5 +474,23 @@ class DataPointArrayList extends AbstractList<SpectrumDataPoint>
         }
 
         return newList;
+    }
+
+    @Override
+    public SpectrumDataPointList get(int arg0) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public SpectrumDataPointList remove(int arg0) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Integer getHighestDataPointIndex() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

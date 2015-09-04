@@ -47,7 +47,7 @@ public interface Sample {
     /**
      * Sets the raw data file reference.
      */
-    void setRawDataFile(@Nullable RawDataFile dataFile);
+    void setRawDataFile(@Nullable RawDataFile rawDataFile);
 
     /**
      * Returns the original file name and path where the file was loaded from,
