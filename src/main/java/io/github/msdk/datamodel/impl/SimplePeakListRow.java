@@ -14,54 +14,60 @@
 
 package io.github.msdk.datamodel.impl;
 
+import java.util.Hashtable;
+
+import javax.annotation.Nonnull;
+
 import io.github.msdk.datamodel.peaklists.PeakList;
 import io.github.msdk.datamodel.peaklists.PeakListColumn;
 import io.github.msdk.datamodel.peaklists.PeakListRow;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
 
 /**
  * Implementation of PeakListRow
  */
 class SimplePeakListRow implements PeakListRow {
 
+    private @Nonnull int rowId;
+    private @Nonnull PeakList peaklist;
+    private @Nonnull Hashtable<PeakListColumn<?>, Object> rowData;
+
+    SimplePeakListRow(@Nonnull PeakList peaklist, int rowId) {
+        this.peaklist = peaklist;
+        this.rowId = rowId;
+        rowData = new Hashtable<>();
+    }
+
     @Override
     public PeakList getPeakList() {
-        // TODO Auto-generated method stub
-        return null;
+        return peaklist;
     }
 
     @Override
     public Integer getId() {
-        // TODO Auto-generated method stub
-        return null;
+        return rowId;
     }
 
     @Override
     public Double getMz() {
-        // TODO Auto-generated method stub
-        return null;
+        return getData(MSDKObjectBuilder.getMzPeakListColumn());
     }
 
     @Override
     public ChromatographyInfo getChromatographyInfo() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public <DataType> DataType getData(PeakListColumn<DataType> column) {
-        // TODO Auto-generated method stub
-        return null;
+        return getData(MSDKObjectBuilder.getChromatographyInfoPeakListColumn());
     }
 
     @Override
     public <DataType> void setData(PeakListColumn<DataType> column,
             DataType data) {
-        // TODO Auto-generated method stub
-        
+        rowData.put(column, data);
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <DataType> DataType getData(PeakListColumn<DataType> column) {
+        return (DataType) rowData.get(column);
+    }
+
 }

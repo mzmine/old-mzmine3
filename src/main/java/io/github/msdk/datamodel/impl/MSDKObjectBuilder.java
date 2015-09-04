@@ -163,7 +163,7 @@ public class MSDKObjectBuilder {
      * @return new DataPointList
      */
     public static final @Nonnull FeatureDataPointList getFeatureDataPointList() {
-        return new SimpleSpectrumDataPointList();
+        return new SimpleFeatureDataPointList();
     }
 
     /**
@@ -175,7 +175,7 @@ public class MSDKObjectBuilder {
      * @return new DataPointList
      */
     public static final @Nonnull ChromatogramDataPointList getChromatogramDataPointList() {
-        return new SimpleSpectrumDataPointList();
+        return new SimpleChromatogramDataPointList();
     }
 
     public static @Nonnull <DataType> PeakListColumn<DataType> getPeakListColumn(
@@ -185,6 +185,11 @@ public class MSDKObjectBuilder {
     }
 
     public static @Nonnull PeakListColumn<Double> getMzPeakListColumn() {
+        // TODO
+        return null;
+    }
+
+    public static @Nonnull PeakListColumn<ChromatographyInfo> getChromatographyInfoPeakListColumn() {
         // TODO
         return null;
     }
