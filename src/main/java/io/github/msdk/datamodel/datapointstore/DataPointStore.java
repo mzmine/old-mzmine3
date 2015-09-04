@@ -14,9 +14,11 @@
 
 package io.github.msdk.datamodel.datapointstore;
 
-import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
-
 import javax.annotation.Nonnull;
+
+import io.github.msdk.datamodel.peaklists.FeatureDataPointList;
+import io.github.msdk.datamodel.rawdata.ChromatogramDataPointList;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
 
 /**
  * Represents a storage mechanism for data points represented by DataPointList.
@@ -39,20 +41,12 @@ public interface DataPointStore {
     @Nonnull
     Object storeDataPoints(@Nonnull SpectrumDataPointList dataPoints);
 
-    /**
-     * Reads the data points associated with given ID. Returns a newly created
-     * DataPointList.
-     * 
-     * @param id
-     *            Storage id obtained by storeDataPoints()
-     * @return New DataPointList
-     * @throws IllegalIllegalArgumentException
-     *             If the given id is not present in this store.
-     * 
-     */
     @Nonnull
-    DataPointList readDataPoints(@Nonnull Object id);
-
+    Object storeDataPoints(@Nonnull ChromatogramDataPointList dataPoints);
+    
+    @Nonnull
+    Object storeDataPoints(@Nonnull FeatureDataPointList dataPoints);
+    
     /**
      * Reads the data points associated with given ID into a given
      * DataPointList. If the data point list does not have enough space, it is
@@ -65,7 +59,11 @@ public interface DataPointStore {
      * @throws IllegalIllegalArgumentException
      *             If the given id is not present in this store.
      */
-    void readDataPoints(@Nonnull Object id, @Nonnull DataPointList list);
+    void readDataPoints(@Nonnull Object id, @Nonnull SpectrumDataPointList list);
+    
+    void readDataPoints(@Nonnull Object id, @Nonnull ChromatogramDataPointList list);
+    
+    void readDataPoints(@Nonnull Object id, @Nonnull FeatureDataPointList list);
 
     /**
      * Discards data points stored under given ID.

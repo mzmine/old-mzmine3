@@ -35,9 +35,7 @@ import org.slf4j.LoggerFactory;
  */
 class MemoryDataPointStore implements DataPointStore {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private HashMap<Object, SpectrumDataPointList> dataPointLists = new HashMap<>();
+    private HashMap<Object, Object> storageMap = new HashMap<>();
 
     private int lastStorageId = 0;
 
@@ -47,34 +45,40 @@ class MemoryDataPointStore implements DataPointStore {
      * @return Storage ID for the newly stored data.
      */
     @Override
-    synchronized public @Nonnull Integer storeDataPoints(
+    public @Nonnull Integer storeDataPoints(
             @Nonnull SpectrumDataPointList dataPoints) {
+        // Clone the given list for storage
+        final SpectrumDataPointList newList = MSDKObjectBuilder
+                .getDataPointList(dataPoints);     
+        return storeObject(newList);
+    }
 
-        if (dataPointLists == null)
+    private @Nonnull Integer storeObject(
+            @Nonnull Object obj) {
+
+        if (storageMap == null)
             throw new IllegalStateException("This object has been disposed");
 
         // Clone the given list for storage
         final SpectrumDataPointList newList = MSDKObjectBuilder
                 .getDataPointList(dataPoints);
 
-        // Increase the storage ID
-        lastStorageId++;
-
-        logger.debug("Storing " + dataPoints.size() + " data points under id "
-                + lastStorageId);
 
         // Save the reference to the new list
-        dataPointLists.put(lastStorageId, newList);
+        synchronized (storageMap) {
+            // Increase the storage ID
+            lastStorageId++;
+            storageMap.put(lastStorageId, newList);
+        }
 
         return lastStorageId;
-
+        
     }
 
     /**
      * Reads the data points associated with given ID.
      */
-    @Override
-    synchronized public @Nonnull SpectrumDataPointList readDataPoints(
+    @Override synchronized public @Nonnull SpectrumDataPointList readDataPoints(
             @Nonnull Object ID) {
 
         if (dataPointLists == null)
@@ -101,15 +105,15 @@ class MemoryDataPointStore implements DataPointStore {
     synchronized public void readDataPoints(@Nonnull Object ID,
             @Nonnull SpectrumDataPointList list) {
 
-        if (dataPointLists == null)
+        if (storageMap == null)
             throw new IllegalStateException("This object has been disposed");
 
-        if (!dataPointLists.containsKey(ID))
+        if (!storageMap.containsKey(ID))
             throw new IllegalArgumentException(
                     "ID " + ID + " not found in storage");
 
         // Get the stored DataPointList
-        final SpectrumDataPointList storedList = dataPointLists.get(ID);
+        final SpectrumDataPointList storedList = storageMap.get(ID);
 
         // Copy data
         list.copyFrom(storedList);
@@ -122,15 +126,15 @@ class MemoryDataPointStore implements DataPointStore {
     @Override
     synchronized public void removeDataPoints(@Nonnull Object ID) {
 
-        if (dataPointLists == null)
+        if (storageMap == null)
             throw new IllegalStateException("This object has been disposed");
 
-        dataPointLists.remove(ID);
+        storageMap.remove(ID);
     }
 
     @Override
     synchronized public void dispose() {
-        dataPointLists = null;
+        storageMap = null;
     }
 
 }

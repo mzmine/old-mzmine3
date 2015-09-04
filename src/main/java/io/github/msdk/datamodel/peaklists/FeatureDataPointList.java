@@ -19,7 +19,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.datapointstore.DataPointList;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
@@ -34,16 +33,16 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
  * always preferred, as iteration via the List interface has to create a new
  * DataPoint instance for each visited data point.
  * 
- * DataPointList methods always keep the data points sorted in the rt order,
- * and this requirement must be maintained when the internal rt and intensity
- * arrays are modified directly.
+ * DataPointList methods always keep the data points sorted in the rt order, and
+ * this requirement must be maintained when the internal rt and intensity arrays
+ * are modified directly.
  * 
  * The equals() method compares the contents of the two data point lists, and
  * ignores their internal array sizes (capacities).
  * 
  * This data structure is not thread-safe.
  */
-public interface FeatureDataPointList extends DataPointList {
+public interface FeatureDataPointList {
 
     /**
      * Returns the current rt buffer array. The size of the array might be
@@ -70,9 +69,12 @@ public interface FeatureDataPointList extends DataPointList {
      */
     @Nonnull
     float[] getIntensityBuffer();
-    
-    @Nonnull
-    Integer[] getScanNumbers();
+
+    /**
+     * 
+     * @return
+     */
+    int getSize();
 
     /**
      * Sets the internal buffers to given arrays. The arrays will be referenced
@@ -91,7 +93,7 @@ public interface FeatureDataPointList extends DataPointList {
      * @throws IllegalStateException
      *             if the rt array is not sorted in ascending order
      */
-    void setBuffers(@Nonnull double[] rtBuffer,
+    void setBuffers(@Nonnull ChromatographyInfo[] rtBuffer,
             @Nonnull float[] intensityBuffer, int newSize);
 
     /**
@@ -104,7 +106,7 @@ public interface FeatureDataPointList extends DataPointList {
      * @param newIntensity
      *            intensity value of the new data point
      */
-    void add(double newRt, float newIntensity);
+    void add(ChromatographyInfo newRt, float newIntensity);
 
     /**
      * Copies the contents of another data point list into this list. The
@@ -126,16 +128,17 @@ public interface FeatureDataPointList extends DataPointList {
      *            intensity range to select
      * @return new DataPointList
      */
-    FeatureDataPointList selectDataPoints(@Nonnull Range<Double> rtRange,
+    FeatureDataPointList selectDataPoints(
+            @Nonnull Range<Float> rtRange,
             @Nonnull Range<Float> intensityRange);
 
     /**
-     * Returns the range of rt values in this DataPointList, or null if the
-     * list is empty.
+     * Returns the range of rt values in this DataPointList, or null if the list
+     * is empty.
      * 
      * @return range of rt values in this DataPointList, or null
      */
     @Nullable
-    Range<Double> getRtRange();
+    Range<Float> getRtRange();
 
 }

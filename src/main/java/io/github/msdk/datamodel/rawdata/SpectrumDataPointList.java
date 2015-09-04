@@ -19,8 +19,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.datapointstore.DataPointList;
-
 /**
  * This interface provides a convenient data structure for storing large amount
  * of MS data points in memory. Internally, it is implemented by two arrays, one
@@ -42,7 +40,7 @@ import io.github.msdk.datamodel.datapointstore.DataPointList;
  * 
  * This data structure is not thread-safe.
  */
-public interface SpectrumDataPointList extends DataPointList {
+public interface SpectrumDataPointList {
 
     /**
      * Returns the current m/z buffer array. The size of the array might be
@@ -71,6 +69,12 @@ public interface SpectrumDataPointList extends DataPointList {
     float[] getIntensityBuffer();
 
     /**
+     * 
+     * @return
+     */
+    int getSize();
+    
+    /**
      * Sets the internal buffers to given arrays. The arrays will be referenced
      * directly without cloning. The m/z buffer contents must be sorted in
      * ascending order.
@@ -89,6 +93,8 @@ public interface SpectrumDataPointList extends DataPointList {
      */
     void setBuffers(@Nonnull double[] mzBuffer,
             @Nonnull float[] intensityBuffer, int newSize);
+    
+
 
     /**
      * Add a new data point into the right position of the list, maintaining the
@@ -133,15 +139,6 @@ public interface SpectrumDataPointList extends DataPointList {
      */
     @Nullable
     Range<Double> getMzRange();
-
-    /**
-     * Returns the index of the top intensity data point, also called "base peak". May return
-     * null if there are no data points in this spectrum.
-     * 
-     * @return highest data point, or null
-     */
-    @Nullable
-    Integer getHighestDataPointIndex();
 
     /**
      * Returns the sum of intensities of all data points (total ion current or
