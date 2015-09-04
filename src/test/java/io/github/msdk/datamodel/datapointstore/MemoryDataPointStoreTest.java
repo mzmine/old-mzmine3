@@ -12,11 +12,12 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datapointstore;
+package io.github.msdk.datamodel.datapointstore;
 
 import org.junit.Test;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 
 /**
  * Tests for MemoryDataPointStore
@@ -26,15 +27,15 @@ public class MemoryDataPointStoreTest {
     @Test
     public void testStoreReadDataPoints() {
 
-        DataPointStore store = MSDKDataStore.getMemoryDataStore();
-        DataPointStoreTest.testStoreReadDataPoints(store);
+        DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
+        DataPointStoreTest.testStoreAndRetrieveReadDataPoints(store);
 
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testRemoveDataPoints() {
 
-        DataPointStore store = MSDKDataStore.getMemoryDataStore();
+        DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
         DataPointStoreTest.testRemoveDataPoints(store);
 
     }
@@ -42,7 +43,7 @@ public class MemoryDataPointStoreTest {
     @Test(expected = IllegalStateException.class)
     public void testDispose() {
 
-        DataPointStore store = MSDKDataStore.getMemoryDataStore();
+        DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
         DataPointStoreTest.testDispose(store);
 
     }

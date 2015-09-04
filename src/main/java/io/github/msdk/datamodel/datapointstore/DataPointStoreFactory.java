@@ -24,7 +24,7 @@ import javax.annotation.Nonnull;
  */
 public class DataPointStoreFactory {
 
-    private static final MemoryDataPointStore memoryDataStore = new MemoryDataPointStore();
+    private static final @Nonnull MemoryDataPointStore memoryDataStore = new MemoryDataPointStore();
 
     public static final @Nonnull DataPointStore getMemoryDataStore() {
         return memoryDataStore;

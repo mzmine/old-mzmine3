@@ -12,12 +12,13 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datapointstore;
+package io.github.msdk.datamodel.datapointstore;
 
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 
 /**
  * Tests for TmpFileDataPointStore
@@ -27,15 +28,15 @@ public class TmpFileDataPointStoreTest {
     @Test
     public void testStoreReadDataPoints() throws MSDKException {
 
-        DataPointStore store = MSDKDataStore.getTmpFileDataPointStore();
-        DataPointStoreTest.testStoreReadDataPoints(store);
+        DataPointStore store = DataPointStoreFactory.getTmpFileDataPointStore();
+        DataPointStoreTest.testStoreAndRetrieveReadDataPoints(store);
 
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testRemoveDataPoints() throws MSDKException {
 
-        DataPointStore store = MSDKDataStore.getTmpFileDataPointStore();
+        DataPointStore store = DataPointStoreFactory.getTmpFileDataPointStore();
         DataPointStoreTest.testRemoveDataPoints(store);
 
     }
@@ -43,7 +44,7 @@ public class TmpFileDataPointStoreTest {
     @Test(expected = IllegalStateException.class)
     public void testDispose() throws MSDKException {
 
-        DataPointStore store = MSDKDataStore.getTmpFileDataPointStore();
+        DataPointStore store = DataPointStoreFactory.getTmpFileDataPointStore();
         DataPointStoreTest.testDispose(store);
 
     }

@@ -130,7 +130,7 @@ class MemoryDataPointStore implements DataPointStore {
             throw new IllegalStateException("This object has been disposed");
 
         if (!storageMap.containsKey(ID))
-            throw new MSDKRuntimeException(
+            throw new IllegalArgumentException(
                     "ID " + ID + " not found in storage");
 
         // Get the stored DataPointList
@@ -156,7 +156,7 @@ class MemoryDataPointStore implements DataPointStore {
             throw new IllegalStateException("This object has been disposed");
 
         if (!storageMap.containsKey(ID))
-            throw new MSDKRuntimeException(
+            throw new IllegalArgumentException(
                     "ID " + ID + " not found in storage");
 
         // Get the stored DataPointList
@@ -182,7 +182,7 @@ class MemoryDataPointStore implements DataPointStore {
             throw new IllegalStateException("This object has been disposed");
 
         if (!storageMap.containsKey(ID))
-            throw new MSDKRuntimeException(
+            throw new IllegalArgumentException(
                     "ID " + ID + " not found in storage");
 
         // Get the stored DataPointList

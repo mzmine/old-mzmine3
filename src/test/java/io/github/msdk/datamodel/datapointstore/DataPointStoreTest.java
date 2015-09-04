@@ -12,10 +12,9 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datapointstore;
+package io.github.msdk.datamodel.datapointstore;
 
 import org.junit.Assert;
-import org.junit.experimental.theories.DataPoint;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
@@ -26,7 +25,8 @@ import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
  */
 public class DataPointStoreTest {
 
-    public static void testStoreReadDataPoints(DataPointStore store) {
+    @SuppressWarnings("null")
+    public static void testStoreAndRetrieveReadDataPoints(DataPointStore store) {
 
         final int numOfGeneratedLists = 3; // TODO
         final Object storageIds[] = new Object[numOfGeneratedLists];
@@ -36,54 +36,53 @@ public class DataPointStoreTest {
             storageIds[i] = store.storeDataPoints(dataPoints);
         }
 
-        DataPointList tmpList = MSDKObjectBuilder.getDataPointList();
+        SpectrumDataPointList retrievedDataPoints = MSDKObjectBuilder.getSpectrumDataPointList();
 
         for (int i = 0; i < numOfGeneratedLists; i++) {
 
-            // Retrieve method 1
-            DataPointList retrievedDataPoints = store
-                    .readDataPoints(storageIds[i]);
-
-            // Retrieve method 2
-            store.readDataPoints(storageIds[i], tmpList);
-
-            // Assert that retrieved lists are equal
-            Assert.assertEquals(retrievedDataPoints, tmpList);
+            // Retrieve
+            store.readDataPoints(storageIds[i], retrievedDataPoints);
 
             // Check if the size of the retrieved list matches the initially
             // stored size
-            Assert.assertEquals(i, retrievedDataPoints.size());
+            Assert.assertEquals(i, retrievedDataPoints.getSize());
+            
+            // Check if the retrieved list matches the initially
+            // generated data
+            Assert.assertEquals(generateSpectrumDataPoints(i), retrievedDataPoints);
 
             if (i > 0) {
                 // Check if the intensity value of the last data point matches
                 // the specification of generateDataPoints()
-                DataPoint lastDp = retrievedDataPoints.get(i - 1);
-                Assert.assertEquals((double) i * 2, lastDp.getIntensity(),
+                float intensities[] = retrievedDataPoints.getIntensityBuffer();
+                Assert.assertEquals((float) i * 2, intensities[i-1],
                         0.00001);
             }
         }
 
     }
 
+    @SuppressWarnings("null")
     public static void testRemoveDataPoints(DataPointStore store) {
 
-        DataPointList dataPoints = generateDataPoints(1000);
+        SpectrumDataPointList dataPoints = generateSpectrumDataPoints(1000);
         Object storageId = store.storeDataPoints(dataPoints);
 
         store.removeDataPoints(storageId);
 
-        store.readDataPoints(storageId);
+        store.readDataPoints(storageId, dataPoints);
 
     }
 
+    @SuppressWarnings("null")
     public static void testDispose(DataPointStore store) {
 
-        DataPointList dataPoints = generateDataPoints(1000);
+        SpectrumDataPointList dataPoints = generateSpectrumDataPoints(1000);
         Object storageId = store.storeDataPoints(dataPoints);
 
         store.dispose();
 
-        store.readDataPoints(storageId);
+        store.readDataPoints(storageId, dataPoints);
 
     }
 
@@ -107,15 +106,15 @@ public class DataPointStoreTest {
     public static SpectrumDataPointList generateSpectrumDataPoints(int count) {
 
         final SpectrumDataPointList list = MSDKObjectBuilder.getSpectrumDataPointList();
-        final double mzValues[] = list.getMzBuffer();
-        final float intensityValues[] = list.getIntensityBuffer();
+        final double mzValues[] = new double[count];
+        final float intensityValues[] = new float[count];
 
         for (int i = 0; i < count; i++) {
             mzValues[i] = (double) count / (double) (count - i);
             intensityValues[i] = (float) mzValues[i] * 2;
         }
 
-        list.setSize(count);
+        list.setBuffers(mzValues, intensityValues, count);
 
         return list;
     }

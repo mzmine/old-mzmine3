@@ -18,9 +18,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datapointstore.DataPointStore;
-import io.github.msdk.datapointstore.MSDKDataStore;
 
 import java.io.File;
 
@@ -28,6 +25,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 public class RawDataimportTest {
 
@@ -123,7 +124,7 @@ public class RawDataimportTest {
 
         logger.info("Checking import of file " + inputFile.getName());
 
-        DataPointStore dataStore = MSDKDataStore.getTmpFileDataPointStore();
+        DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataPointStore();
 
         RawDataFileImportMethod importer = new RawDataFileImportMethod(
                 inputFile, dataStore);
