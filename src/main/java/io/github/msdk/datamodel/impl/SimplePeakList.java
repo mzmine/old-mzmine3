@@ -14,76 +14,104 @@
 
 package io.github.msdk.datamodel.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
+import com.google.common.collect.ImmutableList;
+import com.sun.istack.Nullable;
+
+import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.peaklists.PeakList;
 import io.github.msdk.datamodel.peaklists.PeakListColumn;
 import io.github.msdk.datamodel.peaklists.PeakListRow;
 import io.github.msdk.datamodel.peaklists.Sample;
 
 /**
- * Simple implementation of the PeakList interface.
+ * Implementation of the PeakList interface.
  */
 class SimplePeakList implements PeakList {
 
-    @Override
-    public String getName() {
-        // TODO Auto-generated method stub
-        return null;
+    private @Nonnull String name;
+    private @Nonnull DataPointStore dataPointStore;
+    private @Nullable ArrayList<PeakListRow> peakListRows;
+    private @Nullable ArrayList<PeakListColumn<?>> peakListColumns;
+
+    SimplePeakList(@Nonnull String name, DataPointStore dataPointStore) {
+        setName(name);
+        this.dataPointStore = dataPointStore;
+        peakListRows = new ArrayList<PeakListRow>();
+        peakListColumns = new ArrayList<PeakListColumn<?>>();
     }
 
     @Override
-    public void setName(String name) {
-        // TODO Auto-generated method stub
+    public @Nonnull String getName() {
+        return name;
+    }
 
+    @Override
+    public void setName(@Nonnull String name) {
+        this.name = name;
     }
 
     @Override
     public List<PeakListRow> getRows() {
-        // TODO Auto-generated method stub
-        return null;
+        List<PeakListRow> peakListRowCopy = ImmutableList.copyOf(peakListRows);
+        return peakListRowCopy;
     }
 
     @Override
     public void addRow(PeakListRow row) {
-        // TODO Auto-generated method stub
-
+        synchronized (peakListRows) {
+            peakListRows.add(row);
+        }
     }
 
     @Override
     public void removeRow(PeakListRow row) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void dispose() {
-        // TODO Auto-generated method stub
-
+        synchronized (peakListRows) {
+            peakListRows.remove(row);
+        }
     }
 
     @Override
     public List<PeakListColumn<?>> getColumns() {
-        // TODO Auto-generated method stub
-        return null;
+        List<PeakListColumn<?>> peakListColumnsCopy = ImmutableList
+                .copyOf(peakListColumns);
+        return peakListColumnsCopy;
     }
 
     @Override
     public void addColumn(PeakListColumn<?> col) {
-        // TODO Auto-generated method stub
-        
+        synchronized (peakListColumns) {
+            peakListColumns.add(col);
+        }
     }
 
     @Override
     public void removeColumn(PeakListColumn<?> col) {
-        // TODO Auto-generated method stub
-        
+        synchronized (peakListColumns) {
+            peakListColumns.remove(col);
+        }
     }
 
     @Override
     public List<Sample> getSamples() {
-        // TODO Auto-generated method stub
-        return null;
+        ArrayList<Sample> sampleList = new ArrayList<Sample>();
+        synchronized (peakListColumns) {
+            for (PeakListColumn<?> col : peakListColumns) {
+                Sample s = col.getSample();
+                if (s != null)
+                    sampleList.add(s);
+            }
+        }
+        return ImmutableList.copyOf(sampleList);
+    }
+
+    @Override
+    public void dispose() {
+        dataPointStore.dispose();
     }
 
 }

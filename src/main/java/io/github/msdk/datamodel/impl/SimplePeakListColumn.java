@@ -14,36 +14,46 @@
 
 package io.github.msdk.datamodel.impl;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import io.github.msdk.datamodel.peaklists.PeakListColumn;
 import io.github.msdk.datamodel.peaklists.Sample;
 
 /**
- * Implementation of PeakListRow
+ * Implementation of PeakListColumn
  */
 class SimplePeakListColumn<DataType> implements PeakListColumn<DataType> {
 
-    @Override
-    public String getName() {
-        // TODO Auto-generated method stub
-        return null;
+    private @Nonnull String name;
+    private @Nonnull Class<DataType> dataTypeClass;
+    private @Nullable SimpleSample simpleSample;
+
+    SimplePeakListColumn(@Nonnull String name, @Nonnull Class<DataType> dataTypeClass,
+            @Nullable SimpleSample simpleSample) {
+        setName(name);
+        this.dataTypeClass = dataTypeClass;
+        this.simpleSample = simpleSample;
     }
 
     @Override
-    public void setName(String name) {
-        // TODO Auto-generated method stub
-
+    public @Nonnull String getName() {
+        return name;
     }
 
     @Override
-    public Class getDataTypeClass() {
-        // TODO Auto-generated method stub
-        return null;
+    public void setName(@Nonnull String name) {
+        this.name = name;
+    }
+
+    @Override
+    public Class<DataType> getDataTypeClass() {
+        return dataTypeClass;
     }
 
     @Override
     public Sample getSample() {
-        // TODO Auto-generated method stub
-        return null;
+        return simpleSample;
     }
 
 }
