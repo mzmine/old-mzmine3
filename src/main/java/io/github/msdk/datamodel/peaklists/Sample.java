@@ -21,10 +21,6 @@ import javax.annotation.Nullable;
 
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
-/* 
- * WARNING: the interfaces in this package are still under construction
- */
-
 /**
  * 
  */
@@ -33,17 +29,25 @@ public interface Sample {
     /**
      * @return Short descriptive name
      */
-    @Nonnull String getName();
+    @Nonnull
+    String getName();
 
     /**
      * Change the name
      */
     void setName(@Nonnull String name);
-    
+
     /**
-     * Returns a raw data file
+     * Returns a raw data file or null if this sample has no associated raw
+     * data.
      */
-    @Nullable RawDataFile getRawDataFile();
+    @Nullable
+    RawDataFile getRawDataFile();
+
+    /**
+     * Sets the raw data file reference.
+     */
+    void setRawDataFile(@Nullable RawDataFile dataFile);
 
     /**
      * Returns the original file name and path where the file was loaded from,
@@ -53,5 +57,10 @@ public interface Sample {
      */
     @Nullable
     File getOriginalFile();
+
+    /**
+     * Sets the original file
+     */
+    void setOriginalFile(@Nullable File originalFile);
 
 }

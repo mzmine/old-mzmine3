@@ -14,13 +14,10 @@
 
 package io.github.msdk.datamodel.peaklists;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-/* 
- * WARNING: the interfaces in this package are still under construction
- */
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * 
@@ -28,44 +25,41 @@ import javax.annotation.Nonnull;
 public interface PeakListRow {
 
     /**
-     * @return
+     * Returns the peak list where this peak list row belongs. Each peak list
+     * row is assigned to exactly one peak list.
      */
     @Nonnull
-    PeakList getParentPeakList();
+    PeakList getPeakList();
 
     /**
-     * Return ID of this row
+     * Shortcut to return the ID column value of this row
      */
-    int getId();
+    @Nonnull
+    Integer getId();
 
     /**
-     * Return parent ID of this row
+     * Shortcut to return the m/z column value of this row
      */
-    int getParentId();
+    @Nullable
+    Double getMz();
 
     /**
-     * Return m/z of this row
+     * Shortcut to return the chromatography info (=retention time etc.) column
+     * value of this row
      */
-    int getMz();
-
-    /**
-     * Return RT of this row
-     */
-    int getRt();
-
-    /**
-     * Return number of features assigned to this row
-     */
-    int getNumberOfFeatures();
-
-    /**
-     * Return features assigned to this row
-     */
-    <DataType> List<PeakListColumn<DataType>> getFeatures();
+    @Nullable
+    ChromatographyInfo getChromatographyInfo();
 
     /**
      * Return data assigned to this row
      */
-    <DataType> DataType getData(PeakListColumn<DataType> column);
+    @Nullable
+    <DataType> DataType getData(@Nonnull PeakListColumn<DataType> column);
+
+    /**
+     * Return data assigned to this row
+     */
+    <DataType> void setData(PeakListColumn<DataType> column,
+            @Nonnull DataType data);
 
 }

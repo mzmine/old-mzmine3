@@ -15,11 +15,7 @@
 package io.github.msdk.datamodel.peaklists;
 
 import javax.annotation.Nonnull;
-import javax.swing.table.TableCellRenderer;
-
-/* 
- * WARNING: the interfaces in this package are still under construction
- */
+import javax.annotation.Nullable;
 
 /**
  * 
@@ -45,18 +41,8 @@ public interface PeakListColumn<DataType> {
     Class<DataType> getDataTypeClass();
 
     /**
-     * Returns the value for the column
-     * 
-     * @return Class<DataType>
+     * Returns the sample associated with this column, or null if no sample is associated.
      */
-    Class<DataType> getValue();
-
-    /**
-     * Updates the value of the column
-     * 
-     * @param Class<DataType> data
-     *            Data to be stored in column
-     */
-    void setValue(Class<DataType> data);
-
+    @Nullable Sample getSample();
+    
 }

@@ -14,8 +14,6 @@
 
 package io.github.msdk.datamodel.rawdata;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -124,7 +122,7 @@ public interface ChromatogramDataPointList extends DataPointList {
      *            intensity range to select
      * @return new DataPointList
      */
-    ChromatogramDataPointList selectDataPoints(@Nonnull Range<Double> rtRange,
+    ChromatogramDataPointList selectDataPoints(@Nonnull Range<Float> rtRange,
             @Nonnull Range<Float> intensityRange);
 
     /**
@@ -134,6 +132,6 @@ public interface ChromatogramDataPointList extends DataPointList {
      * @return range of rt values in this DataPointList, or null
      */
     @Nullable
-    Range<Double> getRtRange();
+    Range<Float> getRtRange();
 
 }

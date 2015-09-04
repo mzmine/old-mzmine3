@@ -18,10 +18,6 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-/* 
- * WARNING: the interfaces in this package are still under construction
- */
-
 /**
  * This data structure is not thread-safe.
  */
@@ -30,7 +26,8 @@ public interface PeakList {
     /**
      * @return Short descriptive name for the peak list
      */
-    @Nonnull String getName();
+    @Nonnull
+    String getName();
 
     /**
      * Change the name of this peak list
@@ -38,25 +35,10 @@ public interface PeakList {
     void setName(@Nonnull String name);
 
     /**
-     * Returns an immutable list of rows
-     */
-    @Nonnull List<PeakListRow> getRows();
-
-    /**
-     * Add a new row to the peak list
-     */
-    void addRow(@Nonnull PeakListRow row);
-
-    /**
-     * Removes a row from this peak list
-     * 
-     */
-    void removeRow(@Nonnull PeakListRow row);
-
-    /**
      * Returns an immutable list of columns
      */
-    @Nonnull List<PeakListColumn<?>> getColumns();
+    @Nonnull
+    List<PeakListColumn<?>> getColumns();
 
     /**
      * Add a new column to the peak list
@@ -70,9 +52,27 @@ public interface PeakList {
     void removeColumn(@Nonnull PeakListColumn<?> col);
 
     /**
-     * Returns an immutable list of samples
+     * Returns an immutable list of rows
      */
-    @Nonnull List<Sample> getSamples();
+    @Nonnull
+    List<PeakListRow> getRows();
+
+    /**
+     * Add a new row to the peak list
+     */
+    void addRow(@Nonnull PeakListRow row);
+
+    /**
+     * Removes a row from this peak list
+     * 
+     */
+    void removeRow(@Nonnull PeakListRow row);
+
+    /**
+     * Shortcut to return an immutable list of samples found in this peak list.
+     */
+    @Nonnull
+    List<Sample> getSamples();
 
     /**
      * Remove all data associated to this peak list from the disk.
