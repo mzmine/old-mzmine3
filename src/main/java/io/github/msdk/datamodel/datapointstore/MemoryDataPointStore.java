@@ -14,16 +14,15 @@
 
 package io.github.msdk.datamodel.datapointstore;
 
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
-
 import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.github.msdk.MSDKRuntimeException;
+import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.peaklists.FeatureDataPointList;
+import io.github.msdk.datamodel.rawdata.ChromatogramDataPointList;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
 
 /**
  * A DataPointStore implementation that stores the data points in memory. Use
@@ -47,22 +46,14 @@ class MemoryDataPointStore implements DataPointStore {
     @Override
     public @Nonnull Integer storeDataPoints(
             @Nonnull SpectrumDataPointList dataPoints) {
-        // Clone the given list for storage
-        final SpectrumDataPointList newList = MSDKObjectBuilder
-                .getDataPointList(dataPoints);     
-        return storeObject(newList);
-    }
-
-    private @Nonnull Integer storeObject(
-            @Nonnull Object obj) {
 
         if (storageMap == null)
             throw new IllegalStateException("This object has been disposed");
 
         // Clone the given list for storage
         final SpectrumDataPointList newList = MSDKObjectBuilder
-                .getDataPointList(dataPoints);
-
+                .getSpectrumDataPointList();
+        newList.copyFrom(dataPoints);
 
         // Save the reference to the new list
         synchronized (storageMap) {
@@ -72,30 +63,60 @@ class MemoryDataPointStore implements DataPointStore {
         }
 
         return lastStorageId;
-        
     }
 
     /**
-     * Reads the data points associated with given ID.
+     * Stores new array of data points.
+     * 
+     * @return Storage ID for the newly stored data.
      */
-    @Override synchronized public @Nonnull SpectrumDataPointList readDataPoints(
-            @Nonnull Object ID) {
+    @Override
+    public @Nonnull Integer storeDataPoints(
+            @Nonnull ChromatogramDataPointList dataPoints) {
 
-        if (dataPointLists == null)
+        if (storageMap == null)
             throw new IllegalStateException("This object has been disposed");
 
-        if (!dataPointLists.containsKey(ID))
-            throw new IllegalArgumentException(
-                    "ID " + ID + " not found in storage");
+        // Clone the given list for storage
+        final ChromatogramDataPointList newList = MSDKObjectBuilder
+                .getChromatogramDataPointList();
+        newList.copyFrom(dataPoints);
 
-        // Get the stored DataPointList
-        final SpectrumDataPointList storedList = dataPointLists.get(ID);
+        // Save the reference to the new list
+        synchronized (storageMap) {
+            // Increase the storage ID
+            lastStorageId++;
+            storageMap.put(lastStorageId, newList);
+        }
 
-        // Clone the stored DataPointList
-        final SpectrumDataPointList newList = MSDKObjectBuilder
-                .getDataPointList(storedList);
+        return lastStorageId;
+    }
 
-        return newList;
+    /**
+     * Stores new array of data points.
+     * 
+     * @return Storage ID for the newly stored data.
+     */
+    @Override
+    public @Nonnull Integer storeDataPoints(
+            @Nonnull FeatureDataPointList dataPoints) {
+
+        if (storageMap == null)
+            throw new IllegalStateException("This object has been disposed");
+
+        // Clone the given list for storage
+        final FeatureDataPointList newList = MSDKObjectBuilder
+                .getFeatureDataPointList();
+        newList.copyFrom(dataPoints);
+
+        // Save the reference to the new list
+        synchronized (storageMap) {
+            // Increase the storage ID
+            lastStorageId++;
+            storageMap.put(lastStorageId, newList);
+        }
+
+        return lastStorageId;
     }
 
     /**
@@ -109,11 +130,67 @@ class MemoryDataPointStore implements DataPointStore {
             throw new IllegalStateException("This object has been disposed");
 
         if (!storageMap.containsKey(ID))
-            throw new IllegalArgumentException(
+            throw new MSDKRuntimeException(
                     "ID " + ID + " not found in storage");
 
         // Get the stored DataPointList
-        final SpectrumDataPointList storedList = storageMap.get(ID);
+        final Object storedObject = storageMap.get(ID);
+        if (!(storedObject instanceof SpectrumDataPointList))
+            throw new MSDKRuntimeException(
+                    "Object stored under ID " + ID + " is not of correct type");
+        final SpectrumDataPointList storedList = (SpectrumDataPointList) storedObject;
+
+        // Copy data
+        list.copyFrom(storedList);
+
+    }
+
+    /**
+     * Reads the data points associated with given ID.
+     */
+    @Override
+    synchronized public void readDataPoints(@Nonnull Object ID,
+            @Nonnull ChromatogramDataPointList list) {
+
+        if (storageMap == null)
+            throw new IllegalStateException("This object has been disposed");
+
+        if (!storageMap.containsKey(ID))
+            throw new MSDKRuntimeException(
+                    "ID " + ID + " not found in storage");
+
+        // Get the stored DataPointList
+        final Object storedObject = storageMap.get(ID);
+        if (!(storedObject instanceof ChromatogramDataPointList))
+            throw new MSDKRuntimeException(
+                    "Object stored under ID " + ID + " is not of correct type");
+        final ChromatogramDataPointList storedList = (ChromatogramDataPointList) storedObject;
+
+        // Copy data
+        list.copyFrom(storedList);
+
+    }
+
+    /**
+     * Reads the data points associated with given ID.
+     */
+    @Override
+    synchronized public void readDataPoints(@Nonnull Object ID,
+            @Nonnull FeatureDataPointList list) {
+
+        if (storageMap == null)
+            throw new IllegalStateException("This object has been disposed");
+
+        if (!storageMap.containsKey(ID))
+            throw new MSDKRuntimeException(
+                    "ID " + ID + " not found in storage");
+
+        // Get the stored DataPointList
+        final Object storedObject = storageMap.get(ID);
+        if (!(storedObject instanceof FeatureDataPointList))
+            throw new MSDKRuntimeException(
+                    "Object stored under ID " + ID + " is not of correct type");
+        final FeatureDataPointList storedList = (FeatureDataPointList) storedObject;
 
         // Copy data
         list.copyFrom(storedList);

@@ -14,12 +14,6 @@
 
 package io.github.msdk.datamodel.datapointstore;
 
-import io.github.msdk.MSDKException;
-import io.github.msdk.MSDKRuntimeException;
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -33,6 +27,12 @@ import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import io.github.msdk.MSDKException;
+import io.github.msdk.MSDKRuntimeException;
+import io.github.msdk.datamodel.peaklists.FeatureDataPointList;
+import io.github.msdk.datamodel.rawdata.ChromatogramDataPointList;
+import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
 
 /**
  * A DataPointStore implementation that stores the data points in a temporary
@@ -103,7 +103,7 @@ class TmpFileDataPointStore implements DataPointStore {
         try {
             final long currentOffset = tmpDataFile.length();
 
-            final int numOfDataPoints = dataPoints.size();
+            final int numOfDataPoints = dataPoints.getSize();
 
             // Calculate minimum necessary size of the byte buffer
             int numOfBytes = numOfDataPoints * (Double.SIZE / 8);
@@ -140,32 +140,6 @@ class TmpFileDataPointStore implements DataPointStore {
 
         return lastStorageId;
 
-    }
-
-    /**
-     * Reads the data points associated with given ID.
-     */
-    @Override
-    synchronized public @Nonnull SpectrumDataPointList readDataPoints(
-            @Nonnull Object ID) {
-
-        if (byteBuffer == null)
-            throw new IllegalStateException("This object has been disposed");
-
-        if (!dataPointsLengths.containsKey(ID))
-            throw new IllegalArgumentException("ID " + ID
-                    + " not found in storage file " + tmpDataFileName);
-
-        final Integer numOfDataPoints = dataPointsLengths.get(ID);
-
-        // Create a new DataPointList
-        final SpectrumDataPointList newList = MSDKObjectBuilder
-                .getDataPointList(numOfDataPoints);
-
-        // Read the data points into the new list
-        readDataPoints(ID, newList);
-
-        return newList;
     }
 
     /**
@@ -270,5 +244,29 @@ class TmpFileDataPointStore implements DataPointStore {
     @Override
     protected void finalize() {
         dispose();
+    }
+
+    @Override
+    public Object storeDataPoints(ChromatogramDataPointList dataPoints) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Object storeDataPoints(FeatureDataPointList dataPoints) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void readDataPoints(Object id, ChromatogramDataPointList list) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void readDataPoints(Object id, FeatureDataPointList list) {
+        // TODO Auto-generated method stub
+        
     }
 }

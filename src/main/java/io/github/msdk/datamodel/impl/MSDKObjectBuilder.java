@@ -23,7 +23,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.peaklists.FeatureDataPointList;
 import io.github.msdk.datamodel.peaklists.PeakListColumn;
+import io.github.msdk.datamodel.rawdata.ChromatogramDataPointList;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -44,21 +46,7 @@ public class MSDKObjectBuilder {
      */
     private static final List<WeakReference<MsFunction>> msFunctions = new LinkedList<>();
 
-    /**
-     * Creates a new DataPoint instance.
-     * 
-     * @param mz
-     *            m/z value
-     * @param intensity
-     *            intensity value
-     * @return new DataPoint
-     */
-    public static final @Nonnull SpectrumDataPointList getDataPoint(double mz,
-            float intensity) {
-        return new SimpleDataPointList(mz, intensity);
-    }
-
-    /**
+   /**
      * Creates a new MsFunction reference.
      * 
      * @param name
@@ -160,13 +148,22 @@ public class MSDKObjectBuilder {
     }
 
     /**
+     * Creates a new SpectrumDataPointList instance with no data points
+     * 
+     * @return new DataPointList
+     */
+    public static final @Nonnull SpectrumDataPointList getSpectrumDataPointList() {
+        return new SimpleSpectrumDataPointList();
+    }
+
+    /**
      * Creates a new DataPointList instance with no data points and initial
      * capacity of 100.
      * 
      * @return new DataPointList
      */
-    public static final @Nonnull SpectrumDataPointList getDataPointList() {
-        return new DataPointArrayList(100);
+    public static final @Nonnull FeatureDataPointList getFeatureDataPointList() {
+        return new SimpleSpectrumDataPointList();
     }
 
     /**
@@ -177,64 +174,13 @@ public class MSDKObjectBuilder {
      *            Initial capacity of the list
      * @return new DataPointList
      */
-    public static final @Nonnull SpectrumDataPointList getDataPointList(
-            @Nonnull Integer capacity) {
-        return new DataPointArrayList(capacity);
-    }
-
-    /**
-     * Creates a clone of a given DataPointList, with a capacity set to the
-     * current size of the source list.
-     * 
-     * @param sourceList
-     *            source DataPointList
-     * @return cloned DataPointList
-     */
-    public static final @Nonnull SpectrumDataPointList getDataPointList(
-            @Nonnull SpectrumDataPointList sourceList) {
-        return getDataPointList(sourceList, sourceList.size());
-    }
-
-    /**
-     * Creates a clone of a given DataPointList, with a given capacity.
-     * 
-     * @param sourceList
-     *            source DataPointList that
-     * @param capacity
-     *            initial capacity of the list; must be equal or higher than
-     *            sourceList.size()
-     * @return cloned DataPointList
-     * @throws IllegalArgumentException
-     *             if the initial capacity < size of the sourceList
-     */
-    public static final @Nonnull SpectrumDataPointList getDataPointList(
-            @Nonnull SpectrumDataPointList sourceList,
-            @Nonnull Integer capacity) {
-        return new DataPointArrayList(sourceList, capacity);
-    }
-
-    /**
-     * Creates a new data point list backed by given arrays. Arrays are
-     * referenced, not cloned.
-     * 
-     * @param mzBuffer
-     *            array of m/z values
-     * @param intensityBuffer
-     *            array of intensity values
-     * @param size
-     *            size of the list, must be <= length of both arrays
-     * @throws IllegalArgumentException
-     *             if the initial array length < size
-     */
-    public static final @Nonnull SpectrumDataPointList getDataPointList(
-            @Nonnull double mzBuffer[], @Nonnull float intensityBuffer[],
-            int size) {
-        return new DataPointArrayList(mzBuffer, intensityBuffer, size);
+    public static final @Nonnull ChromatogramDataPointList getChromatogramDataPointList() {
+        return new SimpleSpectrumDataPointList();
     }
 
     public static @Nonnull <DataType> PeakListColumn<DataType> getPeakListColumn(
             Class<DataType> dataTypeClass) {
-        // TODO 
+        // TODO
         return null;
     }
 
@@ -244,7 +190,7 @@ public class MSDKObjectBuilder {
     }
 
     public static @Nonnull PeakListColumn<Integer> getIdPeakListColumn() {
-        // TODO 
+        // TODO
         return null;
     }
 
