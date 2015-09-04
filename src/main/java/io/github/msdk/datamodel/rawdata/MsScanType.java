@@ -41,6 +41,17 @@ public enum MsScanType {
     SIM,
 
     /**
+     * Multiple Reaction Monitoring (MRM) or Selected Reaction Monitoring (SRM)
+     * scan.
+     */
+    MRM_SRM,
+
+    /**
+     * Data Independent Acquisition (DIA) scan.
+     */    
+    DIA,
+
+    /**
      * Unknown MS scan type.
      */
     UNKNOWN;

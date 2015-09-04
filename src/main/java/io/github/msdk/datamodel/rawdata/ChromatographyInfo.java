@@ -23,7 +23,7 @@ import javax.annotation.concurrent.Immutable;
  * reference and safely used by multiple threads. This interface also extends
  * Comparable, so we can use the Range class to define ranges of retention times
  * etc. The comparator method should compare two instances by retention time,
- * secondary retention time, and drift time in this order.
+ * secondary retention time, and ion drift time in this order.
  */
 @Immutable
 public interface ChromatographyInfo extends Comparable<ChromatographyInfo> {

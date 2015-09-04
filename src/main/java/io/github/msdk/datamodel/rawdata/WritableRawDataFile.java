@@ -39,4 +39,20 @@ public interface WritableRawDataFile extends RawDataFile {
      */
     void removeScan(@Nonnull MsScan scan);
 
+    /**
+     * Adds a new chromatogram to this file.
+     * 
+     * @param scan
+     *            Scan to add.
+     */
+    void addChromatogram(@Nonnull Chromatogram chromatogram);
+
+    /**
+     * Removes a chromatogram from this file.
+     * 
+     * @param scan
+     *            Scan to remove.
+     */
+    void removeChromatogram(@Nonnull Chromatogram chromatogram);
+
 }

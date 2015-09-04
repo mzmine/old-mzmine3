@@ -70,7 +70,7 @@ public interface RawDataFile {
      * @return Raw data file type
      */
     @Nonnull
-    String getRawDataFileType();
+    RawDataFileType getRawDataFileType();
 
     /**
      * Updates the file type of this raw data file.
@@ -143,7 +143,7 @@ public interface RawDataFile {
      * @return A list of all chromatograms.
      */
     @Nonnull
-    List<MsScan> getChromatograms();
+    List<Chromatogram> getChromatograms();
 
     /**
      * Remove all data associated with this file from the disk. After this

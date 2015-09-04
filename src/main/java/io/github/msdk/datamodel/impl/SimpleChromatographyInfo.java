@@ -31,39 +31,44 @@ class SimpleChromatographyInfo implements ChromatographyInfo {
         this.separationType = separationType;
     }
 
-    /**
-     * @return the retentionTime
-     */
     @Override
     public Float getRetentionTime() {
         return retentionTime;
     }
 
-    /**
-     * @return the secondaryRetentionTime
-     */
     @Override
     public Float getSecondaryRetentionTime() {
         return secondaryRetentionTime;
     }
 
-    /**
-     * @return the ionDriftTime
-     */
     @Override
     public Float getIonDriftTime() {
         return ionDriftTime;
     }
 
     @Override
-    public int compareTo(ChromatographyInfo o) {
-        // TODO Auto-generated method stub
-        return 0;
+    public SeparationType getSeparationType() {
+        return separationType;
     }
 
     @Override
-    public SeparationType getSeparationType() {
-        return separationType;
+    public int compareTo(ChromatographyInfo o) {
+        int returnValue;
+
+        // 1. Compare retention time
+        returnValue = this.retentionTime.compareTo(o.getRetentionTime());
+
+        // 2. Compare secondary retention time
+        if (returnValue == 0) {
+            returnValue = this.secondaryRetentionTime.compareTo(o.getSecondaryRetentionTime());
+        }
+
+        // 3. Compare ion drift time
+        if (returnValue == 0) {
+            returnValue = this.ionDriftTime.compareTo(o.getIonDriftTime());
+        }
+
+        return returnValue;
     }
 
 }

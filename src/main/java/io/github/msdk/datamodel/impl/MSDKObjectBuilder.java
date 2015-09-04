@@ -104,7 +104,7 @@ public class MSDKObjectBuilder {
     }
 
     public static final @Nonnull RawDataFile getRawDataFile() {
-        return new SimpleRawDataFile();
+        return new SimpleWritableRawDataFile();
     }
 
     public static final @Nonnull MsScan getMsScan(
