@@ -104,8 +104,6 @@ public interface MsSpectrumDataPointList {
      */
     void setBuffers(@Nonnull double[] mzBuffer,
             @Nonnull float[] intensityBuffer, int newSize);
-    
-
 
     /**
      * Add a new data point into the right position of the list, maintaining the
@@ -139,6 +137,7 @@ public interface MsSpectrumDataPointList {
      *            intensity range to select
      * @return new DataPointList
      */
+    @Nonnull
     MsSpectrumDataPointList selectDataPoints(@Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange);
 
