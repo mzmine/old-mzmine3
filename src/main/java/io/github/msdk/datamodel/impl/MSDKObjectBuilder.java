@@ -22,7 +22,11 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Preconditions;
+
+import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
+import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.peaklists.FeatureDataPointList;
@@ -46,7 +50,7 @@ public class MSDKObjectBuilder {
      */
     private static final List<WeakReference<MsFunction>> msFunctions = new LinkedList<>();
 
-   /**
+    /**
      * Creates a new MsFunction reference.
      * 
      * @param name
@@ -111,6 +115,15 @@ public class MSDKObjectBuilder {
             @Nonnull DataPointStore dataPointStore, @Nonnull Integer scanNumber,
             @Nonnull MsFunction msFunction) {
         return new SimpleMsScan(dataPointStore, scanNumber, msFunction);
+    }
+
+    public static final @Nonnull Chromatogram getChromatogram(
+            @Nonnull DataPointStore dataPointStore,
+            @Nonnull Integer chromatogramNumber,
+            @Nonnull ChromatogramType chromatogramType,
+            @Nonnull SeparationType separationType) {
+        return new SimpleChromatogram(dataPointStore, chromatogramNumber,
+                chromatogramType, separationType);
     }
 
     public static final @Nonnull ChromatographyInfo getChromatographyInfo1D(

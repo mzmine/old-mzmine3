@@ -72,8 +72,7 @@ public interface MsSpectrum {
      *            range of intensity values to select
      * @return selected data points (m/z and intensity pairs) of this spectrum
      */
-    @Nonnull
-    MsSpectrumDataPointList getDataPointsByMzAndIntensity(
+    void getDataPointsByMzAndIntensity(
             @Nonnull MsSpectrumDataPointList dataPointList,
             @Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange);

@@ -158,25 +158,6 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
     }
 
     @Override
-    public @Nonnull MsScan clone(@Nonnull DataPointStore newStore) {
-        Preconditions.checkNotNull(newStore);
-        MsScan newScan = MSDKObjectBuilder.getMsScan(newStore, scanNumber,
-                msFunction);
-        final RawDataFile rawDataFile2 = dataFile;
-        if (rawDataFile2 != null) {
-            newScan.setRawDataFile(rawDataFile2);
-        }
-        newScan.setPolarity(polarity);
-        newScan.setMsScanType(msScanType);
-        newScan.setScanningRange(scanningRange);
-        newScan.setChromatographyInfo(chromInfo);
-        newScan.setSourceInducedFragmentation(sourceInducedFragInfo);
-        newScan.getIsolations().addAll(isolations);
-        newScan.setDataPoints(getDataPoints());
-        return newScan;
-    }
-
-    @Override
     public String toString() {
         StringBuffer buf = new StringBuffer();
         buf.append("Scan ");

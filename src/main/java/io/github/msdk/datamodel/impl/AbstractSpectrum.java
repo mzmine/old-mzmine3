@@ -14,8 +14,6 @@
 
 package io.github.msdk.datamodel.impl;
 
-import java.util.ArrayList;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -51,56 +49,27 @@ abstract class AbstractSpectrum implements MsSpectrum {
     }
 
     @Override
-    public @Nonnull MsSpectrumDataPointList getDataPoints() {
-        final Object dataStoreIdCopy = dataStoreId;
-        if (dataStoreIdCopy == null)
-            throw (new MSDKRuntimeException("Missing data store ID")); 
-        Preconditions.checkNotNull(dataPointStore);
-        MsSpectrumDataPointList dataPointList = new SimpleMSSpectrumDataPointList();
-        dataPointStore.readDataPoints(dataStoreIdCopy, dataPointList);
-        return dataPointList;
-    }
-
-    @Override
     public void getDataPoints(@Nonnull MsSpectrumDataPointList dataPointList) {
         final Object dataStoreIdCopy = dataStoreId;
         if (dataStoreIdCopy == null)
-            throw (new MSDKRuntimeException("Missing data store ID")); 
+            throw (new MSDKRuntimeException("Missing data store ID"));
+        Preconditions.checkNotNull(dataPointStore);
         Preconditions.checkNotNull(dataPointList);
         dataPointStore.readDataPoints(dataStoreIdCopy, dataPointList);
     }
 
-    @SuppressWarnings("null")
-    @Override
-    @Nonnull
-    public MsSpectrumDataPointList getDataPointsByMz(
-            @Nonnull Range<Double> mzRange) {
-        final Object dataStoreIdCopy = dataStoreId;
-        if (dataStoreIdCopy == null)
-            throw (new MSDKRuntimeException("Missing data store ID")); 
-        Preconditions.checkNotNull(dataPointStore);
-        final MsSpectrumDataPointList dataPointList = new SimpleMSSpectrumDataPointList();
-        dataPointStore.readDataPoints(dataStoreIdCopy, dataPointList);
-        final Range<Float> all = Range.all();
-        return dataPointList.selectDataPoints(mzRange, all);
-    }
-
-    @Nonnull
-    public MsSpectrumDataPointList getDataPointsByIntensity(
-            @Nonnull Range<Float> intensityRange) {
-        Preconditions.checkNotNull(dataStoreId);
-        MsSpectrumDataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
-        final Range<Double> all = Range.all();
-        return storedData.selectDataPoints(all, intensityRange);
-    }
-
-    @Nonnull
-    public MsSpectrumDataPointList getDataPointsByMzAndIntensity(
+    public void getDataPointsByMzAndIntensity(
+            @Nonnull MsSpectrumDataPointList dataPointList,
             @Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange) {
-        Preconditions.checkNotNull(dataStoreId);
-        MsSpectrumDataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
-        return storedData.selectDataPoints(mzRange, intensityRange);
+        final Object dataStoreIdCopy = dataStoreId;
+        if (dataStoreIdCopy == null)
+            throw (new MSDKRuntimeException("Missing data store ID"));
+        final MsSpectrumDataPointList orgDataPointList = MSDKObjectBuilder
+                .getSpectrumDataPointList();
+        dataPointStore.readDataPoints(dataStoreIdCopy, orgDataPointList);
+        dataPointList.copyFrom(
+                orgDataPointList.selectDataPoints(mzRange, intensityRange));
     }
 
     synchronized public void setDataPoints(
@@ -116,7 +85,8 @@ abstract class AbstractSpectrum implements MsSpectrum {
     }
 
     @Override
-    public @Nonnull MsSpectrumType getSpectrumType() {
+    @Nonnull
+    public MsSpectrumType getSpectrumType() {
         return spectrumType;
     }
 

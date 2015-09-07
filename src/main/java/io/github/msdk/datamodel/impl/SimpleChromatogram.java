@@ -14,17 +14,20 @@
 
 package io.github.msdk.datamodel.impl;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Preconditions;
+
+import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 
@@ -33,83 +36,117 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
  */
 class SimpleChromatogram implements Chromatogram {
 
-    @Override
-    @Nullable
-    public RawDataFile getRawDataFile() {
-        // TODO Auto-generated method stub
-        return null;
+    private @Nonnull DataPointStore dataPointStore;
+    private @Nullable RawDataFile dataFile;
+    private @Nonnull Integer chromatogramNumber;
+    private @Nonnull ChromatogramType chromatogramType;
+    private @Nonnull SeparationType separationType;
+    private Object dataStoreId = null;
+
+    private final @Nonnull List<IsolationInfo> isolations = new LinkedList<>();
+
+    public SimpleChromatogram(@Nonnull DataPointStore dataPointStore,
+            @Nonnull Integer chromatogramNumber,
+            @Nonnull ChromatogramType chromatogramType,
+            @Nonnull SeparationType separationType) {
+        Preconditions.checkNotNull(chromatogramNumber);
+        this.dataPointStore = dataPointStore;
+        this.chromatogramNumber = chromatogramNumber;
+        this.chromatogramType = chromatogramType;
+        this.separationType = separationType;
     }
 
     @Override
-    public void setRawDataFile(@Nonnull RawDataFile newDataFile) {
-        // TODO Auto-generated method stub
-        
+    @Nullable
+    public RawDataFile getRawDataFile() {
+        return dataFile;
+    }
+
+    @Override
+    public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
+        this.dataFile = newRawDataFile;
     }
 
     @Override
     @Nonnull
     public Integer getChromatogramNumber() {
-        // TODO Auto-generated method stub
-        return null;
+        return chromatogramNumber;
     }
 
     @Override
     public void setChromatogramNumber(@Nonnull Integer chromatogramNumber) {
-        // TODO Auto-generated method stub
-        
+        this.chromatogramNumber = chromatogramNumber;
     }
 
     @Override
     @Nonnull
-    public MsScanType getChromatogramType() {
-        // TODO Auto-generated method stub
-        return null;
+    public ChromatogramType getChromatogramType() {
+        return chromatogramType;
     }
 
     @Override
     public void setChromatogramType(
             @Nonnull ChromatogramType newChromatogramType) {
-        // TODO Auto-generated method stub
-        
+        this.chromatogramType = newChromatogramType;
     }
 
     @Override
-    @Nonnull
-    public ChromatogramDataPointList getDataPoints() {
-        // TODO Auto-generated method stub
-        return null;
+    public void getDataPoints(
+            @Nonnull ChromatogramDataPointList dataPointList) {
+        final Object dataStoreIdCopy = dataStoreId;
+        if (dataStoreIdCopy == null)
+            throw (new MSDKRuntimeException("Missing data store ID"));
+        Preconditions.checkNotNull(dataPointStore);
+        Preconditions.checkNotNull(dataPointList);
+        dataPointStore.readDataPoints(dataStoreIdCopy, dataPointList);
     }
 
-    @Override
-    public void getDataPoints(@Nonnull ChromatogramDataPointList list) {
-        // TODO Auto-generated method stub
-        
+    synchronized public void setDataPoints(
+            @Nonnull ChromatogramDataPointList newDataPoints) {
+        final Object dataStoreIdCopy = dataStoreId;
+        Preconditions.checkNotNull(dataStoreIdCopy);
+        Preconditions.checkNotNull(newDataPoints);
+        if (dataStoreIdCopy != null)
+            dataPointStore.removeDataPoints(dataStoreIdCopy);
+        dataStoreId = dataPointStore.storeDataPoints(newDataPoints);
     }
 
     @Override
     @Nonnull
     public List<IsolationInfo> getIsolations() {
-        // TODO Auto-generated method stub
-        return null;
+        return isolations;
     }
 
     @Override
+    @Nonnull
     public SeparationType getSeparationType() {
-        // TODO Auto-generated method stub
-        return null;
+        return separationType;
     }
 
     @Override
-    public void setSeparationType(SeparationType separationType) {
-        // TODO Auto-generated method stub
-        
+    public void setSeparationType(@Nonnull SeparationType separationType) {
+        this.separationType = separationType;
     }
 
     @Override
     @Nonnull
     public Chromatogram clone(@Nonnull DataPointStore newStore) {
-        // TODO Auto-generated method stub
-        return null;
+        Preconditions.checkNotNull(newStore);
+        Chromatogram newChromatogram = MSDKObjectBuilder.getChromatogram(
+                newStore, getChromatogramNumber(), getChromatogramType(),
+                getSeparationType());
+
+        final ChromatogramDataPointList dataPointList = MSDKObjectBuilder
+                .getChromatogramDataPointList();
+        getDataPoints(dataPointList);
+
+        final RawDataFile rawDataFile2 = getRawDataFile();
+        if (rawDataFile2 != null) {
+            newChromatogram.setRawDataFile(rawDataFile2);
+        }
+        newChromatogram.getIsolations().addAll(getIsolations());
+        newChromatogram.setDataPoints(dataPointList);
+        return newChromatogram;
     }
 
 }

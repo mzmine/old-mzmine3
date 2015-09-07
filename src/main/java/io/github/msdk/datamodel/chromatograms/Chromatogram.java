@@ -20,8 +20,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
-import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 
@@ -60,7 +60,7 @@ public interface Chromatogram extends Cloneable {
      * @throws IllegalOperationException
      *             If the reference to the raw data file has already been set.
      */
-    void setRawDataFile(@Nonnull RawDataFile newDataFile);
+    void setRawDataFile(@Nonnull RawDataFile newRawDataFile);
 
     /**
      * Returns the number of this chromatogram, represented by an integer,
@@ -89,7 +89,7 @@ public interface Chromatogram extends Cloneable {
      * @return Chromatogram type
      */
     @Nonnull
-    MsScanType getChromatogramType();
+    ChromatogramType getChromatogramType();
 
     /**
      * Updates the chromatogram type.
@@ -98,18 +98,6 @@ public interface Chromatogram extends Cloneable {
      *            New chromatogram type.
      */
     void setChromatogramType(@Nonnull ChromatogramType newChromatogramType);
-
-    /**
-     * Returns data points of this chromatogram. Importantly, a new instance of
-     * DataPointList is created by each call to this method.
-     * 
-     * Note: this method may need to read data from disk, therefore it may be
-     * quite slow.
-     * 
-     * @return data points (rt and intensity pairs) of this chromatogram
-     */
-    @Nonnull
-    ChromatogramDataPointList getDataPoints();
 
     /**
      * Loads the data points of this chromatogram into the given DataPointList.
@@ -123,7 +111,22 @@ public interface Chromatogram extends Cloneable {
      * @param list
      *            DataPointList into which the data points should be loaded
      */
-    void getDataPoints(@Nonnull ChromatogramDataPointList list);
+    void getDataPoints(@Nonnull ChromatogramDataPointList dataPointList);
+
+
+    /**
+     * Updates the data points of this chromatogram. If this Chromatogram has
+     * been added to a raw data file or a peak list, the data points will be
+     * immediately stored in a temporary file. Therefore, the DataPointList in
+     * the parameter can be reused for other purposes.
+     * 
+     * Note: this method may need to write data to disk, therefore it may be
+     * quite slow.
+     * 
+     * @param newDataPoints
+     *            new data points
+     */
+    void setDataPoints(@Nonnull ChromatogramDataPointList newDataPoints);
 
     /**
      * Returns a list of isolations performed for this chromatogram. These
@@ -141,6 +144,7 @@ public interface Chromatogram extends Cloneable {
      * @return the seperation type. Returns {@link SeparationType#UNKNOWN} for
      *         unknown separations.
      */
+    @Nonnull
     SeparationType getSeparationType();
 
     /**
@@ -149,7 +153,7 @@ public interface Chromatogram extends Cloneable {
      * @param separationType
      *            New seperation type.
      */
-    void setSeparationType(SeparationType separationType);
+    void setSeparationType(@Nonnull SeparationType separationType);
 
     /**
      * Returns a deep clone of this object.

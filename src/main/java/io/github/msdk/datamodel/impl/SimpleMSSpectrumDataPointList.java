@@ -261,6 +261,7 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
     }
 
     @Override
+    @Nonnull
     public MsSpectrumDataPointList selectDataPoints(
             @Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange) {
@@ -280,6 +281,11 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
     @Override
     public void clear() {
         this.size = 0;
+    }
+
+    @Override
+    public void allocate(int newSize) {
+        // TODO Auto-generated method stub
     }
 
 }
