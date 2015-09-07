@@ -16,9 +16,9 @@ package io.github.msdk.datamodel.impl;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.SpectrumDataPoint;
-import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
-import io.github.msdk.datamodel.rawdata.MassSpectrum;
-import io.github.msdk.datamodel.rawdata.MassSpectrumType;
+import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
+import io.github.msdk.datamodel.rawdata.MsSpectrum;
+import io.github.msdk.datamodel.rawdata.MsSpectrumType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,7 +30,7 @@ import com.google.common.collect.Range;
  * Simple implementation of the MassSpectrum interface, which stores its data in
  * a data point store.
  */
-abstract class AbstractSpectrum implements MassSpectrum {
+abstract class AbstractSpectrum implements MsSpectrum {
 
     private final @Nonnull DataPointStore dataPointStore;
 
@@ -40,52 +40,52 @@ abstract class AbstractSpectrum implements MassSpectrum {
     private @Nullable SpectrumDataPoint highestDataPoint;
     private @Nonnull Float totalIonCurrent;
 
-    private @Nonnull MassSpectrumType spectrumType;
+    private @Nonnull MsSpectrumType spectrumType;
 
     AbstractSpectrum(@Nonnull DataPointStore dataPointStore) {
         Preconditions.checkNotNull(dataPointStore);
         this.dataPointStore = dataPointStore;
         totalIonCurrent = 0f;
-        spectrumType = MassSpectrumType.CENTROIDED;
+        spectrumType = MsSpectrumType.CENTROIDED;
     }
 
     @Override
-    public @Nonnull SpectrumDataPointList getDataPoints() {
+    public @Nonnull MsSpectrumDataPointList getDataPoints() {
         Preconditions.checkNotNull(dataStoreId);
-        SpectrumDataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
+        MsSpectrumDataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
         return storedData;
     }
 
     @Override
-    public void getDataPoints(@Nonnull SpectrumDataPointList list) {
+    public void getDataPoints(@Nonnull MsSpectrumDataPointList list) {
         Preconditions.checkNotNull(dataStoreId);
         dataPointStore.readDataPoints(dataStoreId, list);
     }
 
     @Override
     @Nonnull
-    public SpectrumDataPointList getDataPointsByMz(@Nonnull Range<Double> mzRange) {
+    public MsSpectrumDataPointList getDataPointsByMz(@Nonnull Range<Double> mzRange) {
         Preconditions.checkNotNull(dataStoreId);
-        SpectrumDataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
+        MsSpectrumDataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
         final Range<Float> all = Range.all();
         return storedData.selectDataPoints(mzRange, all);
     }
 
     @Nonnull
-    public SpectrumDataPointList getDataPointsByIntensity(
+    public MsSpectrumDataPointList getDataPointsByIntensity(
             @Nonnull Range<Float> intensityRange) {
         Preconditions.checkNotNull(dataStoreId);
-        SpectrumDataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
+        MsSpectrumDataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
         final Range<Double> all = Range.all();
         return storedData.selectDataPoints(all, intensityRange);
     }
 
     @Nonnull
-    public SpectrumDataPointList getDataPointsByMzAndIntensity(
+    public MsSpectrumDataPointList getDataPointsByMzAndIntensity(
             @Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange) {
         Preconditions.checkNotNull(dataStoreId);
-        SpectrumDataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
+        MsSpectrumDataPointList storedData = dataPointStore.readDataPoints(dataStoreId);
         return storedData.selectDataPoints(mzRange, intensityRange);
     }
 
@@ -102,7 +102,7 @@ abstract class AbstractSpectrum implements MassSpectrum {
      *            New data points
      */
     synchronized public void setDataPoints(
-            @Nonnull SpectrumDataPointList newDataPoints) {
+            @Nonnull MsSpectrumDataPointList newDataPoints) {
         if (dataStoreId != null)
             dataPointStore.removeDataPoints(dataStoreId);
         dataStoreId = dataPointStore.storeDataPoints(newDataPoints);
@@ -111,12 +111,12 @@ abstract class AbstractSpectrum implements MassSpectrum {
     }
 
     @Override
-    public @Nonnull MassSpectrumType getSpectrumType() {
+    public @Nonnull MsSpectrumType getSpectrumType() {
         return spectrumType;
     }
 
     @Override
-    public void setSpectrumType(@Nonnull MassSpectrumType spectrumType) {
+    public void setSpectrumType(@Nonnull MsSpectrumType spectrumType) {
         this.spectrumType = spectrumType;
     }
 

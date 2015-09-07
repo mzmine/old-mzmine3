@@ -25,7 +25,7 @@ import com.google.common.collect.Range;
  * calculated isotope pattern, a predicted fragmentation spectrum of a molecule,
  * etc.
  */
-public interface MassSpectrum {
+public interface MsSpectrum {
 
     /**
      * Returns the type of this mass spectrum. For spectra that are loaded from
@@ -35,7 +35,7 @@ public interface MassSpectrum {
      * @return spectrum type (profile, centroided, thresholded)
      */
     @Nonnull
-    MassSpectrumType getSpectrumType();
+    MsSpectrumType getSpectrumType();
 
     /**
      * Updates the type of this mass spectrum.
@@ -43,7 +43,7 @@ public interface MassSpectrum {
      * @param spectrumType
      *            new spectrum type
      */
-    void setSpectrumType(@Nonnull MassSpectrumType spectrumType);
+    void setSpectrumType(@Nonnull MsSpectrumType spectrumType);
 
     /**
      * Returns data points of this spectrum. Importantly, a new instance of
@@ -55,7 +55,7 @@ public interface MassSpectrum {
      * @return data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    SpectrumDataPointList getDataPoints();
+    MsSpectrumDataPointList getDataPoints();
 
     /**
      * Loads the data points of this spectrum into the given DataPointList. If
@@ -69,7 +69,7 @@ public interface MassSpectrum {
      * @param list
      *            DataPointList into which the data points should be loaded
      */
-    void getDataPoints(@Nonnull SpectrumDataPointList list);
+    void getDataPoints(@Nonnull MsSpectrumDataPointList list);
 
     /**
      * Returns data points in given m/z range. Importantly, a new instance of
@@ -83,7 +83,7 @@ public interface MassSpectrum {
      * @return selected data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    SpectrumDataPointList getDataPointsByMz(@Nonnull Range<Double> mzRange);
+    MsSpectrumDataPointList getDataPointsByMz(@Nonnull Range<Double> mzRange);
 
     /**
      * Returns data points in given intensity range. Importantly, a new instance
@@ -98,7 +98,7 @@ public interface MassSpectrum {
      * @return selected data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    SpectrumDataPointList getDataPointsByIntensity(
+    MsSpectrumDataPointList getDataPointsByIntensity(
             @Nonnull Range<Float> intensityRange);
 
     /**
@@ -115,7 +115,7 @@ public interface MassSpectrum {
      * @return selected data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    SpectrumDataPointList getDataPointsByMzAndIntensity(@Nonnull Range<Double> mzRange,
+    MsSpectrumDataPointList getDataPointsByMzAndIntensity(@Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange);
 
     /**
@@ -130,7 +130,7 @@ public interface MassSpectrum {
      * @param newDataPoints
      *            new data points
      */
-    void setDataPoints(@Nonnull SpectrumDataPointList newDataPoints);
+    void setDataPoints(@Nonnull MsSpectrumDataPointList newDataPoints);
 
     /**
      * Returns the sum of intensities of all data points (total ion current or

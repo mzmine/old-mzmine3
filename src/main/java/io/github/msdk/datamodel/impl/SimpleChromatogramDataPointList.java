@@ -20,7 +20,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.rawdata.ChromatogramDataPointList;
-import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
+import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
 
 /**
  * Basic implementation of DataPointList.
@@ -131,11 +131,11 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     public boolean equals(Object o) {
 
         // o must be a non-null DataPointList
-        if ((o == null) || (!(o instanceof SpectrumDataPointList)))
+        if ((o == null) || (!(o instanceof MsSpectrumDataPointList)))
             return false;
 
         // Cast o to DataPointlist
-        SpectrumDataPointList otherList = (SpectrumDataPointList) o;
+        MsSpectrumDataPointList otherList = (MsSpectrumDataPointList) o;
 
         // Size must be equal
         if (otherList.getSize() != size)

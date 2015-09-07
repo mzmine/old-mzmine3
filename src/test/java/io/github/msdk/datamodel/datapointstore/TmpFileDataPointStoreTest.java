@@ -29,7 +29,7 @@ public class TmpFileDataPointStoreTest {
     public void testStoreReadDataPoints() throws MSDKException {
 
         DataPointStore store = DataPointStoreFactory.getTmpFileDataPointStore();
-        DataPointStoreTest.testStoreAndRetrieveReadDataPoints(store);
+        DataPointStoreTestUtils.testStoreAndRetrieveReadDataPoints(store);
 
     }
 
@@ -37,7 +37,7 @@ public class TmpFileDataPointStoreTest {
     public void testRemoveDataPoints() throws MSDKException {
 
         DataPointStore store = DataPointStoreFactory.getTmpFileDataPointStore();
-        DataPointStoreTest.testRemoveDataPoints(store);
+        DataPointStoreTestUtils.testRemoveDataPoints(store);
 
     }
 
@@ -45,7 +45,7 @@ public class TmpFileDataPointStoreTest {
     public void testDispose() throws MSDKException {
 
         DataPointStore store = DataPointStoreFactory.getTmpFileDataPointStore();
-        DataPointStoreTest.testDispose(store);
+        DataPointStoreTestUtils.testDispose(store);
 
     }
 

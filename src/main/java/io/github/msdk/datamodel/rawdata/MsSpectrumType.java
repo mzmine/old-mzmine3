@@ -20,7 +20,7 @@ package io.github.msdk.datamodel.rawdata;
  * Spectrometry Proteomics. Molecular & Cellular Proteomics, 11(12), 1612–1621.
  * doi:10.1074/mcp.R112.019695
  */
-public enum MassSpectrumType {
+public enum MsSpectrumType {
 
     /**
      * Profile (continuous) mass spectrum. Continuous stream of connected data

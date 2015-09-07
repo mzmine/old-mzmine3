@@ -14,7 +14,7 @@
 
 package io.github.msdk.identification;
 
-import io.github.msdk.datamodel.rawdata.MassSpectrum;
+import io.github.msdk.datamodel.rawdata.MsSpectrum;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,7 +37,7 @@ public interface Search {
      * @return
      */
     @Nullable
-    MassSpectrum findSpectrumById(long id) throws IOException;
+    MsSpectrum findSpectrumById(long id) throws IOException;
 
     /**
      * query by a specific property name and value
@@ -47,7 +47,7 @@ public interface Search {
      * @return
      */
     @Nonnull
-    Iterator<MassSpectrum> findSpectrumByProperty(String propertyName,
+    Iterator<MsSpectrum> findSpectrumByProperty(String propertyName,
             Serializable propertyValue) throws IOException;
 
     /**
@@ -58,6 +58,6 @@ public interface Search {
      * @return
      */
     @Nonnull
-    Iterator<MassSpectrum> findSimilarSpectra(MassSpectrum compare,
+    Iterator<MsSpectrum> findSimilarSpectra(MsSpectrum compare,
             Integer minSimilarity) throws IOException;
 }

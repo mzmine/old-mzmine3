@@ -28,11 +28,11 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.MassSpectrumType;
+import io.github.msdk.datamodel.rawdata.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
+import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
 import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionMethod;
 import ucar.ma2.Array;
 import ucar.ma2.Index;
@@ -402,7 +402,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
         SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
                 scan);
         detector.execute();
-        MassSpectrumType spectrumType = detector.getResult();
+        MsSpectrumType spectrumType = detector.getResult();
         scan.setSpectrumType(spectrumType);
 
         // TODO set correct separation type from global netCDF file attributes

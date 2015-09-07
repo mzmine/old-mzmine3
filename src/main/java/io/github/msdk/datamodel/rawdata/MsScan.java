@@ -34,7 +34,7 @@ import io.github.msdk.datamodel.datapointstore.DataPointStore;
  * belongs to that RawDataFile. When RawDataFile.dispose() is called, the data
  * points are discarded so the MsScan instance cannot be used anymore.
  */
-public interface MsScan extends MassSpectrum, Cloneable {
+public interface MsScan extends MsSpectrum, Cloneable {
 
     /**
      * Returns the raw data file that contains this scan. This might return null

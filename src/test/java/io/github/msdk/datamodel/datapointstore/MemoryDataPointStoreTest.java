@@ -28,7 +28,7 @@ public class MemoryDataPointStoreTest {
     public void testStoreReadDataPoints() {
 
         DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
-        DataPointStoreTest.testStoreAndRetrieveReadDataPoints(store);
+        DataPointStoreTestUtils.testStoreAndRetrieveReadDataPoints(store);
 
     }
 
@@ -36,7 +36,7 @@ public class MemoryDataPointStoreTest {
     public void testRemoveDataPoints() {
 
         DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
-        DataPointStoreTest.testRemoveDataPoints(store);
+        DataPointStoreTestUtils.testRemoveDataPoints(store);
 
     }
 
@@ -44,7 +44,7 @@ public class MemoryDataPointStoreTest {
     public void testDispose() {
 
         DataPointStore store = DataPointStoreFactory.getMemoryDataStore();
-        DataPointStoreTest.testDispose(store);
+        DataPointStoreTestUtils.testDispose(store);
 
     }
 

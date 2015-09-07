@@ -31,7 +31,7 @@ import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
+import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
 
 /**
  * Object builder
@@ -152,7 +152,7 @@ public class MSDKObjectBuilder {
      * 
      * @return new DataPointList
      */
-    public static final @Nonnull SpectrumDataPointList getSpectrumDataPointList() {
+    public static final @Nonnull MsSpectrumDataPointList getSpectrumDataPointList() {
         return new SimpleSpectrumDataPointList();
     }
 

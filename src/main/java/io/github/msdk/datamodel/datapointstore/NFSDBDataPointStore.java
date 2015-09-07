@@ -14,10 +14,19 @@
 
 package io.github.msdk.datamodel.datapointstore;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 
 import javax.annotation.Nonnull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.nfsdb.journal.factory.JournalFactory;
+
+import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.peaklists.FeatureDataPointList;
@@ -32,12 +41,33 @@ import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
  * The methods of this class are synchronized, therefore it can be safely used
  * by multiple threads.
  */
-class MemoryDataPointStore implements DataPointStore {
+class NFSDBDataPointStore implements DataPointStore {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    
     private HashMap<Object, Object> storageMap = new HashMap<>();
 
     private int lastStorageId = 0;
+    private final File tmpDataFileName;
+    
+    NFSDBDataPointStore() throws MSDKException {
 
+        try {
+            tmpDataFileName = Files.createTempDirectory("msdk_nfsdb").toFile();           
+
+            logger.debug("Initializing a new NFSDB journal factory in "
+                    + tmpDataFileName);
+
+            JournalFactory factory = new JournalFactory(tmpDataFileName);
+
+
+        } catch (IOException e) {
+            throw new MSDKException(e);
+        }
+
+    }
+
+    
     /**
      * Stores new array of data points.
      * 

@@ -16,9 +16,9 @@ package io.github.msdk.io.spectrumtypedetection;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
-import io.github.msdk.datamodel.rawdata.MassSpectrum;
-import io.github.msdk.datamodel.rawdata.MassSpectrumType;
+import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
+import io.github.msdk.datamodel.rawdata.MsSpectrum;
+import io.github.msdk.datamodel.rawdata.MsSpectrumType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,14 +32,14 @@ import javax.annotation.Nullable;
  * as described in the code comments.
  */
 public class SpectrumTypeDetectionMethod
-        implements MSDKMethod<MassSpectrumType> {
+        implements MSDKMethod<MsSpectrumType> {
 
-    private @Nonnull MassSpectrum inputSpectrum;
-    private @Nullable MassSpectrumType result = null;
+    private @Nonnull MsSpectrum inputSpectrum;
+    private @Nullable MsSpectrumType result = null;
     private Float finishedPercentage = null;
     private boolean canceled = false;
 
-    public SpectrumTypeDetectionMethod(@Nonnull MassSpectrum inputSpectrum) {
+    public SpectrumTypeDetectionMethod(@Nonnull MsSpectrum inputSpectrum) {
         this.inputSpectrum = inputSpectrum;
     }
 
@@ -49,15 +49,15 @@ public class SpectrumTypeDetectionMethod
     }
 
     @Override
-    public MassSpectrumType execute() throws MSDKException {
-        SpectrumDataPointList dataPoints = inputSpectrum.getDataPoints();
+    public MsSpectrumType execute() throws MSDKException {
+        MsSpectrumDataPointList dataPoints = inputSpectrum.getDataPoints();
         result = detectSpectrumType(dataPoints);
         finishedPercentage = 1f;
         return result;
     }
 
     @Override
-    public MassSpectrumType getResult() {
+    public MsSpectrumType getResult() {
         return result;
     }
 
@@ -66,12 +66,12 @@ public class SpectrumTypeDetectionMethod
         this.canceled = true;
     }
 
-    private MassSpectrumType detectSpectrumType(
-            @Nonnull SpectrumDataPointList dataPoints) {
+    private MsSpectrumType detectSpectrumType(
+            @Nonnull MsSpectrumDataPointList dataPoints) {
 
         // If the spectrum has less than 5 data points, it should be centroided.
         if (dataPoints.size() < 5)
-            return MassSpectrumType.CENTROIDED;
+            return MsSpectrumType.CENTROIDED;
 
         // Go through the data points and find the highest one
         float maxIntensity = 0f;
@@ -85,7 +85,7 @@ public class SpectrumTypeDetectionMethod
             // If the spectrum contains data points of zero intensity, it should
             // be in profile mode
             if (intensityValues[i] == 0.0) {
-                return MassSpectrumType.PROFILE;
+                return MsSpectrumType.PROFILE;
             }
 
             // Let's ignore the first and the last data point, because
@@ -135,7 +135,7 @@ public class SpectrumTypeDetectionMethod
             // and its neighbor. If not, the spectrum should be centroided.
             if ((currentMzDifference < 0.8 * topMzDifference)
                     || (currentMzDifference > 1.25 * topMzDifference)) {
-                return MassSpectrumType.CENTROIDED;
+                return MsSpectrumType.CENTROIDED;
             }
 
         }
@@ -156,7 +156,7 @@ public class SpectrumTypeDetectionMethod
                 .abs(mzValues[topDataPointIndex - 1]
                         - mzValues[topDataPointIndex + 1]);
         if (mzDifferenceTopThree > 0.1)
-            return MassSpectrumType.CENTROIDED;
+            return MsSpectrumType.CENTROIDED;
 
         // Finally, we check the data points on the left and on the right of the
         // top one. If the spectrum is continuous (thresholded), their intensity
@@ -170,7 +170,7 @@ public class SpectrumTypeDetectionMethod
                 + 1];
         if ((leftDataPointIntensity < thirdMaxIntensity)
                 || (rightDataPointIntensity < thirdMaxIntensity))
-            return MassSpectrumType.CENTROIDED;
+            return MsSpectrumType.CENTROIDED;
 
         // Check if canceled
         if (canceled)
@@ -178,7 +178,7 @@ public class SpectrumTypeDetectionMethod
 
         // If we could not find any sign that the spectrum is centroided, we
         // conclude it should be thresholded.
-        return MassSpectrumType.THRESHOLDED;
+        return MsSpectrumType.THRESHOLDED;
     }
 
 }

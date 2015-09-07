@@ -35,7 +35,7 @@ import io.github.msdk.datamodel.peaklists.FeatureDataPointList;
 import io.github.msdk.datamodel.rawdata.ChromatogramDataPointList;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
+import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
 
 /**
  * A DataPointStore implementation that stores the data points in a temporary
@@ -98,7 +98,7 @@ class TmpFileDataPointStore implements DataPointStore {
      */
     @Override
     synchronized public @Nonnull Integer storeDataPoints(
-            @Nonnull SpectrumDataPointList dataPoints) {
+            @Nonnull MsSpectrumDataPointList dataPoints) {
 
         if (byteBuffer == null)
             throw new IllegalStateException("This object has been disposed");
@@ -257,7 +257,7 @@ class TmpFileDataPointStore implements DataPointStore {
      */
     @Override
     synchronized public void readDataPoints(@Nonnull Object ID,
-            @Nonnull SpectrumDataPointList list) {
+            @Nonnull MsSpectrumDataPointList list) {
 
         if (byteBuffer == null)
             throw new IllegalStateException("This object has been disposed");

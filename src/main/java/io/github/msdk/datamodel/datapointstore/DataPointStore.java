@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 
 import io.github.msdk.datamodel.peaklists.FeatureDataPointList;
 import io.github.msdk.datamodel.rawdata.ChromatogramDataPointList;
-import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
+import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
 
 /**
  * Represents a storage mechanism for data points represented by DataPointList.
@@ -39,7 +39,7 @@ public interface DataPointStore {
      * @return Storage ID for the newly stored data.
      */
     @Nonnull
-    Object storeDataPoints(@Nonnull SpectrumDataPointList dataPoints);
+    Object storeDataPoints(@Nonnull MsSpectrumDataPointList dataPoints);
 
     @Nonnull
     Object storeDataPoints(@Nonnull ChromatogramDataPointList dataPoints);
@@ -59,7 +59,7 @@ public interface DataPointStore {
      * @throws IllegalIllegalArgumentException
      *             If the given id is not present in this store.
      */
-    void readDataPoints(@Nonnull Object id, @Nonnull SpectrumDataPointList list);
+    void readDataPoints(@Nonnull Object id, @Nonnull MsSpectrumDataPointList list);
     
     void readDataPoints(@Nonnull Object id, @Nonnull ChromatogramDataPointList list);
     

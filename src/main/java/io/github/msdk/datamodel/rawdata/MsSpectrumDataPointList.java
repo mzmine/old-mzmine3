@@ -40,7 +40,7 @@ import com.google.common.collect.Range;
  * 
  * This data structure is not thread-safe.
  */
-public interface SpectrumDataPointList {
+public interface MsSpectrumDataPointList {
 
     /**
      * Returns the current m/z buffer array. The size of the array might be
@@ -127,7 +127,7 @@ public interface SpectrumDataPointList {
      * @param list
      *            source list to copy from.
      */
-    void copyFrom(@Nonnull SpectrumDataPointList list);
+    void copyFrom(@Nonnull MsSpectrumDataPointList list);
 
     /**
      * Creates a new DataPointList that contains only those data points that fit
@@ -139,7 +139,7 @@ public interface SpectrumDataPointList {
      *            intensity range to select
      * @return new DataPointList
      */
-    SpectrumDataPointList selectDataPoints(@Nonnull Range<Double> mzRange,
+    MsSpectrumDataPointList selectDataPoints(@Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange);
 
     /**

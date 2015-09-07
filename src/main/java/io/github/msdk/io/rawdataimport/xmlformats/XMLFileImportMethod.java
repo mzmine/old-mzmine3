@@ -19,8 +19,8 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
-import io.github.msdk.datamodel.rawdata.MassSpectrumType;
+import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
+import io.github.msdk.datamodel.rawdata.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -144,14 +144,14 @@ public class XMLFileImportMethod implements MSDKMethod<RawDataFile> {
             ChromatographyInfo chromData = extractChromatographyData(spectrum);
 
             // Store the scan data points
-            SpectrumDataPointList dataPoints = extractDataPoints(spectrum);
+            MsSpectrumDataPointList dataPoints = extractDataPoints(spectrum);
             scan.setDataPoints(dataPoints);
 
             // Auto-detect whether this scan is centroided
             SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
                     scan);
             detector.execute();
-            MassSpectrumType spectrumType = detector.getResult();
+            MsSpectrumType spectrumType = detector.getResult();
             scan.setSpectrumType(spectrumType);
 
             // Add the scan to the final raw data file
@@ -257,9 +257,9 @@ public class XMLFileImportMethod implements MSDKMethod<RawDataFile> {
         return null;
     }
 
-    private SpectrumDataPointList extractDataPoints(Spectrum spectrum) {
+    private MsSpectrumDataPointList extractDataPoints(Spectrum spectrum) {
         Map<Double, Double> jmzreaderPeakList = spectrum.getPeakList();
-        SpectrumDataPointList dataPoints = MSDKObjectBuilder
+        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
                 .getDataPointList(jmzreaderPeakList.size());
 
         for (Double mz : jmzreaderPeakList.keySet()) {

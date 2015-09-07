@@ -167,7 +167,7 @@ public class XMLReadTask extends AbstractTask {
             scan.setDataPoints(dataPoints);
 
             // Auto-detect whether this scan is centroided
-            MassSpectrumType spectrumType = ScanUtils
+            MsSpectrumType spectrumType = ScanUtils
                     .detectSpectrumType(dataPoints);
             scan.setSpectrumType(spectrumType);
 

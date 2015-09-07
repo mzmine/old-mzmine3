@@ -16,7 +16,7 @@ package io.github.msdk.io.spectrumtypedetection;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.MSDKDataStore;
-import io.github.msdk.datamodel.rawdata.MassSpectrumType;
+import io.github.msdk.datamodel.rawdata.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.rawdataimport.RawDataFileImportMethod;
@@ -49,13 +49,13 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (File inputFile : inputFiles) {
 
-            MassSpectrumType expectedType;
+            MsSpectrumType expectedType;
             if (inputFile.getName().startsWith("centroided"))
-                expectedType = MassSpectrumType.CENTROIDED;
+                expectedType = MsSpectrumType.CENTROIDED;
             else if (inputFile.getName().startsWith("thresholded"))
-                expectedType = MassSpectrumType.THRESHOLDED;
+                expectedType = MsSpectrumType.THRESHOLDED;
             else if (inputFile.getName().startsWith("profile"))
-                expectedType = MassSpectrumType.PROFILE;
+                expectedType = MsSpectrumType.PROFILE;
             else {
                 throw new Exception(
                         "Cannot determine expected spectrum type of file "
@@ -78,7 +78,7 @@ public class SpectrumTypeDetectionMethodTest {
                 SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
                         scan);
                 detector.execute();
-                MassSpectrumType detectedType = detector.getResult();
+                MsSpectrumType detectedType = detector.getResult();
                 Assert.assertNotNull(detectedType);
 
                 Assert.assertEquals("Scan type wrongly detected for scan "

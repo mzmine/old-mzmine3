@@ -20,14 +20,14 @@ import javax.annotation.Nullable;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
+import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
 
 /**
  * Basic implementation of DataPointList.
  * 
  * Important: this class is not thread-safe.
  */
-class SimpleSpectrumDataPointList implements SpectrumDataPointList {
+class SimpleSpectrumDataPointList implements MsSpectrumDataPointList {
 
     /**
      * Array for m/z values. Its length defines the capacity of this list.
@@ -129,7 +129,7 @@ class SimpleSpectrumDataPointList implements SpectrumDataPointList {
      * Copy data from another DataPointList
      */
     @Override
-    public void copyFrom(@Nonnull SpectrumDataPointList list) {
+    public void copyFrom(@Nonnull MsSpectrumDataPointList list) {
         if (mzBuffer.length < list.getSize()) {
             mzBuffer = new double[list.getSize()];
             intensityBuffer = new float[list.getSize()];
@@ -192,11 +192,11 @@ class SimpleSpectrumDataPointList implements SpectrumDataPointList {
     public boolean equals(Object o) {
 
         // o must be a non-null DataPointList
-        if ((o == null) || (!(o instanceof SpectrumDataPointList)))
+        if ((o == null) || (!(o instanceof MsSpectrumDataPointList)))
             return false;
 
         // Cast o to DataPointlist
-        SpectrumDataPointList otherList = (SpectrumDataPointList) o;
+        MsSpectrumDataPointList otherList = (MsSpectrumDataPointList) o;
 
         // Size must be equal
         if (otherList.getSize() != size)
@@ -261,11 +261,11 @@ class SimpleSpectrumDataPointList implements SpectrumDataPointList {
     }
 
     @Override
-    public SpectrumDataPointList selectDataPoints(
+    public MsSpectrumDataPointList selectDataPoints(
             @Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange) {
 
-        final SpectrumDataPointList newList = MSDKObjectBuilder
+        final MsSpectrumDataPointList newList = MSDKObjectBuilder
                 .getSpectrumDataPointList();
 
         for (int i = 0; i < size; i++) {

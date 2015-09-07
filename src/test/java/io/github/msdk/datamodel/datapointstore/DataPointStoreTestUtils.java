@@ -18,12 +18,12 @@ import org.junit.Assert;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.rawdata.SpectrumDataPointList;
+import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
 
 /**
  * Tests for DataPointStores
  */
-public class DataPointStoreTest {
+public class DataPointStoreTestUtils {
 
     @SuppressWarnings("null")
     public static void testStoreAndRetrieveReadDataPoints(DataPointStore store) {
@@ -32,11 +32,11 @@ public class DataPointStoreTest {
         final Object storageIds[] = new Object[numOfGeneratedLists];
 
         for (int i = 0; i < numOfGeneratedLists; i++) {
-            SpectrumDataPointList dataPoints = generateSpectrumDataPoints(i);
+            MsSpectrumDataPointList dataPoints = generateSpectrumDataPoints(i);
             storageIds[i] = store.storeDataPoints(dataPoints);
         }
 
-        SpectrumDataPointList retrievedDataPoints = MSDKObjectBuilder.getSpectrumDataPointList();
+        MsSpectrumDataPointList retrievedDataPoints = MSDKObjectBuilder.getSpectrumDataPointList();
 
         for (int i = 0; i < numOfGeneratedLists; i++) {
 
@@ -65,7 +65,7 @@ public class DataPointStoreTest {
     @SuppressWarnings("null")
     public static void testRemoveDataPoints(DataPointStore store) {
 
-        SpectrumDataPointList dataPoints = generateSpectrumDataPoints(1000);
+        MsSpectrumDataPointList dataPoints = generateSpectrumDataPoints(1000);
         Object storageId = store.storeDataPoints(dataPoints);
 
         store.removeDataPoints(storageId);
@@ -77,7 +77,7 @@ public class DataPointStoreTest {
     @SuppressWarnings("null")
     public static void testDispose(DataPointStore store) {
 
-        SpectrumDataPointList dataPoints = generateSpectrumDataPoints(1000);
+        MsSpectrumDataPointList dataPoints = generateSpectrumDataPoints(1000);
         Object storageId = store.storeDataPoints(dataPoints);
 
         store.dispose();
@@ -103,9 +103,9 @@ public class DataPointStoreTest {
      * 
      * Their intensity is always equal to m/z * 2.
      */
-    public static SpectrumDataPointList generateSpectrumDataPoints(int count) {
+    public static MsSpectrumDataPointList generateSpectrumDataPoints(int count) {
 
-        final SpectrumDataPointList list = MSDKObjectBuilder.getSpectrumDataPointList();
+        final MsSpectrumDataPointList list = MSDKObjectBuilder.getSpectrumDataPointList();
         final double mzValues[] = new double[count];
         final float intensityValues[] = new float[count];
 

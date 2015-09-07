@@ -41,12 +41,12 @@ public class ScanUtils {
      * uses multiple checks for that purpose, as described in the code comments.
      */
     @TestMethod("testDetectSpectrumType")
-    public static MassSpectrumType detectSpectrumType(
+    public static MsSpectrumType detectSpectrumType(
             @Nonnull DataPoint[] dataPoints) {
 
         // If the spectrum has less than 5 data points, it should be centroided.
         if (dataPoints.length < 5)
-            return MassSpectrumType.CENTROIDED;
+            return MsSpectrumType.CENTROIDED;
 
         // Go through the data points and find the highest one
         double maxIntensity = 0.0;
@@ -56,7 +56,7 @@ public class ScanUtils {
             // If the spectrum contains data points of zero intensity, it should
             // be in profile mode
             if (dataPoints[i].getIntensity() == 0.0) {
-                return MassSpectrumType.PROFILE;
+                return MsSpectrumType.PROFILE;
             }
 
             // Let's ignore the first and the last data point, because
@@ -102,7 +102,7 @@ public class ScanUtils {
             // and its neighbor. If not, the spectrum should be centroided.
             if ((currentMzDifference < 0.8 * topMzDifference)
                     || (currentMzDifference > 1.25 * topMzDifference)) {
-                return MassSpectrumType.CENTROIDED;
+                return MsSpectrumType.CENTROIDED;
             }
 
         }
@@ -118,7 +118,7 @@ public class ScanUtils {
                 .abs(dataPoints[topDataPointIndex - 1].getMz()
                         - dataPoints[topDataPointIndex + 1].getMz());
         if (mzDifferenceTopThree > 0.1)
-            return MassSpectrumType.CENTROIDED;
+            return MsSpectrumType.CENTROIDED;
 
         // Finally, we check the data points on the left and on the right of the
         // top one. If the spectrum is continous (thresholded), their intensity
@@ -132,11 +132,11 @@ public class ScanUtils {
                 .getIntensity();
         if ((leftDataPointIntensity < thirdMaxIntensity)
                 || (rightDataPointIntensity < thirdMaxIntensity))
-            return MassSpectrumType.CENTROIDED;
+            return MsSpectrumType.CENTROIDED;
 
         // If we could not find any sign that the spectrum is centroided, we
         // conclude it should be thresholded.
-        return MassSpectrumType.THRESHOLDED;
+        return MsSpectrumType.THRESHOLDED;
 
     }
 

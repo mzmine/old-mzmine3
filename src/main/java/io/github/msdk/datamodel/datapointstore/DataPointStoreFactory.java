@@ -14,10 +14,9 @@
 
 package io.github.msdk.datamodel.datapointstore;
 
-import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
-
 import javax.annotation.Nonnull;
+
+import io.github.msdk.MSDKException;
 
 /**
  * Data store provider
@@ -33,6 +32,11 @@ public class DataPointStoreFactory {
     public static final @Nonnull DataPointStore getTmpFileDataPointStore()
             throws MSDKException {
         return new TmpFileDataPointStore();
+    }
+
+    public static final @Nonnull DataPointStore getNFSDBDataPointStore()
+            throws MSDKException {
+        return new NFSDBDataPointStore();
     }
 
 }
