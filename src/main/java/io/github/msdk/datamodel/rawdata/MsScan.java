@@ -58,7 +58,7 @@ public interface MsScan extends MsSpectrum, Cloneable {
      * @throws IllegalOperationException
      *             If the reference to the raw data file has already been set.
      */
-    void setRawDataFile(@Nonnull RawDataFile newDataFile);
+    void setRawDataFile(@Nonnull RawDataFile newRawDataFile);
 
     /**
      * Returns the number of this scan, represented by an integer, typically
@@ -110,7 +110,7 @@ public interface MsScan extends MsSpectrum, Cloneable {
      * @param newType
      *            New MS scan type.
      */
-    void setMsScanType(@Nonnull MsScanType newType);
+    void setMsScanType(@Nonnull MsScanType newMsScanType);
 
     /**
      * Returns the chromatography data (retention time, etc.) associated with
@@ -126,7 +126,7 @@ public interface MsScan extends MsSpectrum, Cloneable {
      * 
      * @param chromData
      */
-    void setChromatographyInfo(@Nullable ChromatographyInfo chromData);
+    void setChromatographyInfo(@Nullable ChromatographyInfo chromatographyInfo);
 
     /**
      * Returns the scanning range of the instrument. Note that this value is

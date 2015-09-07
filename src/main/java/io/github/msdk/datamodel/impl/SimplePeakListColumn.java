@@ -17,6 +17,8 @@ package io.github.msdk.datamodel.impl;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Preconditions;
+
 import io.github.msdk.datamodel.peaklists.PeakListColumn;
 import io.github.msdk.datamodel.peaklists.Sample;
 
@@ -31,6 +33,8 @@ class SimplePeakListColumn<DataType> implements PeakListColumn<DataType> {
 
     SimplePeakListColumn(@Nonnull String name, @Nonnull Class<DataType> dataTypeClass,
             @Nullable SimpleSample simpleSample) {
+        Preconditions.checkNotNull(name);
+        Preconditions.checkNotNull(dataTypeClass);
         this.name = name;
         this.dataTypeClass = dataTypeClass;
         this.simpleSample = simpleSample;
@@ -43,6 +47,7 @@ class SimplePeakListColumn<DataType> implements PeakListColumn<DataType> {
 
     @Override
     public void setName(@Nonnull String name) {
+        Preconditions.checkNotNull(name);
         this.name = name;
     }
 

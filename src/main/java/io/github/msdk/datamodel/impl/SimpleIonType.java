@@ -16,6 +16,8 @@ package io.github.msdk.datamodel.impl;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Preconditions;
+
 import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 
@@ -32,6 +34,9 @@ class SimpleIonType implements IonType {
 
     SimpleIonType(@Nonnull String name, @Nonnull PolarityType polarity, 
             int numberOfMolecules, @Nonnull String adductFormula, int charge) {
+        Preconditions.checkNotNull(name);
+        Preconditions.checkNotNull(polarity);
+        Preconditions.checkNotNull(adductFormula);
         this.name = name;
         this.polarity = polarity;
         this.numberOfMolecules = numberOfMolecules;

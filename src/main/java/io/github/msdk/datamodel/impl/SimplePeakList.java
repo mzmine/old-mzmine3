@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.sun.istack.Nullable;
 
@@ -39,6 +40,8 @@ class SimplePeakList implements PeakList {
     private @Nullable ArrayList<PeakListColumn<?>> peakListColumns;
 
     SimplePeakList(@Nonnull String name, @Nonnull DataPointStore dataPointStore) {
+        Preconditions.checkNotNull(name);
+        Preconditions.checkNotNull(dataPointStore);
         this.name = name;
         this.dataPointStore = dataPointStore;
         peakListRows = new ArrayList<PeakListRow>();
@@ -52,6 +55,7 @@ class SimplePeakList implements PeakList {
 
     @Override
     public void setName(@Nonnull String name) {
+        Preconditions.checkNotNull(name);
         this.name = name;
     }
 
@@ -64,6 +68,7 @@ class SimplePeakList implements PeakList {
 
     @Override
     public void addRow(@Nonnull PeakListRow row) {
+        Preconditions.checkNotNull( row);
         synchronized (peakListRows) {
             peakListRows.add(row);
         }
@@ -71,6 +76,7 @@ class SimplePeakList implements PeakList {
 
     @Override
     public void removeRow(@Nonnull PeakListRow row) {
+        Preconditions.checkNotNull( row);
         synchronized (peakListRows) {
             peakListRows.remove(row);
         }
@@ -86,6 +92,7 @@ class SimplePeakList implements PeakList {
 
     @Override
     public void addColumn(@Nonnull PeakListColumn<?> col) {
+        Preconditions.checkNotNull(col);
         synchronized (peakListColumns) {
             peakListColumns.add(col);
         }
@@ -93,6 +100,7 @@ class SimplePeakList implements PeakList {
 
     @Override
     public void removeColumn(@Nonnull PeakListColumn<?> col) {
+        Preconditions.checkNotNull(col);
         synchronized (peakListColumns) {
             peakListColumns.remove(col);
         }

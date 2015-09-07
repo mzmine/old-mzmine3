@@ -42,7 +42,7 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
     private @Nonnull Integer scanNumber;
     private @Nonnull MsFunction msFunction;
     private @Nonnull PolarityType polarity = PolarityType.UNKNOWN;
-    private @Nonnull MsScanType scanType = MsScanType.UNKNOWN;
+    private @Nonnull MsScanType msScanType = MsScanType.UNKNOWN;
     private @Nullable Range<Double> scanningRange;
     private @Nullable ChromatographyInfo chromInfo;
     private @Nullable FragmentationInfo sourceInducedFragInfo;
@@ -65,8 +65,8 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
     }
 
     @Override
-    public void setRawDataFile(@Nonnull RawDataFile newDataFile) {
-        this.dataFile = newDataFile;
+    public void setRawDataFile(@Nonnull RawDataFile newRawDataFile) {
+        this.dataFile = newRawDataFile;
     }
 
     @Override
@@ -119,13 +119,13 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
     @Override
     @Nonnull
     public MsScanType getMsScanType() {
-        return scanType;
+        return msScanType;
     }
 
     @Override
-    public void setMsScanType(@Nonnull MsScanType newType) {
-        Preconditions.checkNotNull(newType);
-        this.scanType = newType;
+    public void setMsScanType(@Nonnull MsScanType newMsScanType) {
+        Preconditions.checkNotNull(newMsScanType);
+        this.msScanType = newMsScanType;
     }
 
     @Override
@@ -135,8 +135,8 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
     }
 
     @Override
-    public void setChromatographyInfo(@Nullable ChromatographyInfo chromInfo) {
-        this.chromInfo = chromInfo;
+    public void setChromatographyInfo(@Nullable ChromatographyInfo chromatographyInfo) {
+        this.chromInfo = chromatographyInfo;
     }
 
     @Override
@@ -159,14 +159,15 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
 
     @Override
     public @Nonnull MsScan clone(@Nonnull DataPointStore newStore) {
+        Preconditions.checkNotNull(newStore);
         MsScan newScan = MSDKObjectBuilder.getMsScan(newStore, scanNumber,
                 msFunction);
-        final RawDataFile dataFile2 = dataFile;
-        if (dataFile2 != null) {
-            newScan.setRawDataFile(dataFile2);
+        final RawDataFile rawDataFile2 = dataFile;
+        if (rawDataFile2 != null) {
+            newScan.setRawDataFile(rawDataFile2);
         }
         newScan.setPolarity(polarity);
-        newScan.setMsScanType(scanType);
+        newScan.setMsScanType(msScanType);
         newScan.setScanningRange(scanningRange);
         newScan.setChromatographyInfo(chromInfo);
         newScan.setSourceInducedFragmentation(sourceInducedFragInfo);

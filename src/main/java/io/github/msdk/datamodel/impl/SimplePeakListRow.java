@@ -18,6 +18,8 @@ import java.util.Hashtable;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Preconditions;
+
 import io.github.msdk.datamodel.peaklists.PeakList;
 import io.github.msdk.datamodel.peaklists.PeakListColumn;
 import io.github.msdk.datamodel.peaklists.PeakListRow;
@@ -33,6 +35,7 @@ class SimplePeakListRow implements PeakListRow {
     private @Nonnull Hashtable<PeakListColumn<?>, Object> rowData;
 
     SimplePeakListRow(@Nonnull PeakList peaklist, int rowId) {
+        Preconditions.checkNotNull(peaklist);
         this.peaklist = peaklist;
         this.rowId = rowId;
         rowData = new Hashtable<>();
@@ -61,12 +64,15 @@ class SimplePeakListRow implements PeakListRow {
     @Override
     public <DataType> void setData(PeakListColumn<DataType> column,
             @Nonnull DataType data) {
+        Preconditions.checkNotNull(column);
+        Preconditions.checkNotNull(data);
         rowData.put(column, data);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public <DataType> DataType getData(@Nonnull PeakListColumn<DataType> column) {
+        Preconditions.checkNotNull(column);
         return (DataType) rowData.get(column);
     }
 

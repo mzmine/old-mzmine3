@@ -19,6 +19,8 @@ import java.io.File;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Preconditions;
+
 import io.github.msdk.datamodel.peaklists.Sample;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
@@ -32,6 +34,7 @@ class SimpleSample implements Sample {
     private File originalFile;
 
     SimpleSample(@Nonnull String name) {
+        Preconditions.checkNotNull(name);
         this.name = name;
     }
 
@@ -42,6 +45,7 @@ class SimpleSample implements Sample {
 
     @Override
     public void setName(@Nonnull String name) {
+        Preconditions.checkNotNull(name);
         this.name = name;
     }
 
