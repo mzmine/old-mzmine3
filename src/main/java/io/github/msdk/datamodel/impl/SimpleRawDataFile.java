@@ -27,13 +27,13 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFileType;
-import io.github.msdk.datamodel.rawdata.WritableRawDataFile;
 
 /**
  * Implementation of the RawDataFile interface.
  */
-class SimpleWritableRawDataFile implements WritableRawDataFile {
+class SimpleRawDataFile implements RawDataFile {
 
     private @Nonnull String rawDataFileName;
     private @Nullable File originalRawDataFile;
@@ -42,7 +42,7 @@ class SimpleWritableRawDataFile implements WritableRawDataFile {
     private @Nonnull ArrayList<Chromatogram> chromatograms;
     private @Nonnull DataPointStore dataPointStore;
 
-    SimpleWritableRawDataFile(@Nonnull String rawDataFileName,
+    SimpleRawDataFile(@Nonnull String rawDataFileName,
             @Nullable File originalRawDataFile,
             @Nonnull RawDataFileType rawDataFileType,
             @Nonnull DataPointStore dataPointStore) {

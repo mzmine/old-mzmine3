@@ -82,6 +82,22 @@ public interface RawDataFile {
     List<MsScan> getScans();
 
     /**
+     * Adds a new scan to this file.
+     * 
+     * @param scan
+     *            Scan to add.
+     */
+    void addScan(@Nonnull MsScan scan);
+
+    /**
+     * Removes a scan from this file.
+     * 
+     * @param scan
+     *            Scan to remove.
+     */
+    void removeScan(@Nonnull MsScan scan);
+
+    /**
      * Returns an immutable list of all chromatograms. The list can be safely
      * iterated over, as it cannot be modified by another thread.
      * 
@@ -89,6 +105,22 @@ public interface RawDataFile {
      */
     @Nonnull
     List<Chromatogram> getChromatograms();
+
+    /**
+     * Adds a new chromatogram to this file.
+     * 
+     * @param scan
+     *            Scan to add.
+     */
+    void addChromatogram(@Nonnull Chromatogram chromatogram);
+
+    /**
+     * Removes a chromatogram from this file.
+     * 
+     * @param scan
+     *            Scan to remove.
+     */
+    void removeChromatogram(@Nonnull Chromatogram chromatogram);
 
     /**
      * Remove all data associated with this file from the disk. After this

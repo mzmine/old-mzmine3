@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Range;
 
+<<<<<<< Upstream, based on origin/master
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
@@ -89,6 +90,86 @@ class XMLBasedMsScan implements MsScan {
             @Nonnull Range<Double> mzRange) {
         // TODO Auto-generated method stub
         return null;
+=======
+import io.github.msdk.MSDKException;
+import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
+import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.FragmentationInfo;
+import io.github.msdk.datamodel.rawdata.IsolationInfo;
+import io.github.msdk.datamodel.rawdata.MsFunction;
+import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.MsScanType;
+import io.github.msdk.datamodel.rawdata.PolarityType;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionMethod;
+import uk.ac.ebi.pride.tools.jmzreader.JMzReader;
+
+/**
+ * This class reads XML-based mass spec data formats (mzData, mzXML, and mzML)
+ * using the jmzreader library.
+ */
+class XMLBasedMsScan implements MsScan {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private final @Nonnull JMzReader jmzreader;
+    private final @Nonnull String spectrumId;
+
+    private MsSpectrumType spectrumType = null;
+    private Range<Double> mzRange= null;
+    
+    public XMLBasedMsScan(@Nonnull JMzReader jmzreader,
+            @Nonnull String spectrumId) {
+        this.jmzreader = jmzreader;
+        this.spectrumId = spectrumId;
+    }
+
+    @Override
+    @Nonnull
+    public MsSpectrumType getSpectrumType() {
+        // If we haven't done it yet, autodetect the type of this scan
+        if (spectrumType == null) {
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(this);
+            try { spectrumType= detector.execute(); 
+            
+            } catch (MSDKException e) {
+                e.printStackTrace();
+                // Fall back to centroided spectrum
+                spectrumType = MsSpectrumType.CENTROIDED;
+            }
+        }
+        return spectrumType;
+    }
+
+    @Override
+    public void setSpectrumType(@Nonnull MsSpectrumType spectrumType) {
+        this.spectrumType = spectrumType;
+    }
+
+    @Override
+    @Nonnull
+    public MsSpectrumDataPointList getDataPoints() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void getDataPoints(@Nonnull MsSpectrumDataPointList list) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    @Nonnull
+    public MsSpectrumDataPointList getDataPointsByMz(
+            @Nonnull Range<Double> mzRange) {
+        if (mzRange == null) {
+            
+        }
+        return mzRange;
+>>>>>>> 2fc69ee Working on raw data import
     }
 
     @Override
