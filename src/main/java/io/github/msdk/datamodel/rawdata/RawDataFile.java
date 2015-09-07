@@ -57,6 +57,14 @@ public interface RawDataFile {
     File getOriginalFile();
 
     /**
+     * Sets the original file name and path of the raw data file.
+     * 
+     * @param newOriginalFile
+     *          Original filename and path.
+     */
+    void setOriginalFile(@Nullable File newOriginalFile);
+    
+    /**
      * Returns the file type of this raw data file.
      * 
      * @return Raw data file type
@@ -64,6 +72,14 @@ public interface RawDataFile {
     @Nonnull
     RawDataFileType getRawDataFileType();
 
+    /**
+     * Sets the file type of this raw data file.
+     * 
+     * @param rawDataFileType
+     *          Raw data file type
+     */
+    void setRawDataFileType(@Nonnull RawDataFileType rawDataFileType);
+    
     /**
      * Returns all MS functions found in this raw data file.
      * 

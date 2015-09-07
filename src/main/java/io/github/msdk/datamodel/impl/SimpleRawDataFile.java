@@ -21,6 +21,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
@@ -46,6 +47,8 @@ class SimpleRawDataFile implements RawDataFile {
             @Nullable File originalRawDataFile,
             @Nonnull RawDataFileType rawDataFileType,
             @Nonnull DataPointStore dataPointStore) {
+        Preconditions.checkNotNull(rawDataFileType);
+        Preconditions.checkNotNull(dataPointStore);
         this.rawDataFileName = rawDataFileName;
         this.originalRawDataFile = originalRawDataFile;
         this.rawDataFileType = rawDataFileType;
@@ -61,6 +64,7 @@ class SimpleRawDataFile implements RawDataFile {
 
     @Override
     public void setName(@Nonnull String name) {
+        Preconditions.checkNotNull(name);
         this.rawDataFileName = name;
     }
 
@@ -82,6 +86,7 @@ class SimpleRawDataFile implements RawDataFile {
 
     @Override
     public void setRawDataFileType(@Nonnull RawDataFileType rawDataFileType) {
+        Preconditions.checkNotNull(rawDataFileType);
         this.rawDataFileType = rawDataFileType;
     }
 
@@ -107,6 +112,7 @@ class SimpleRawDataFile implements RawDataFile {
 
     @Override
     public void addScan(@Nonnull MsScan scan) {
+        Preconditions.checkNotNull(scan);
         synchronized (scans) {
             scans.add(scan);
         }
@@ -114,6 +120,7 @@ class SimpleRawDataFile implements RawDataFile {
 
     @Override
     public void removeScan(@Nonnull MsScan scan) {
+        Preconditions.checkNotNull(scan);
         synchronized (scans) {
             scans.remove(scan);
         }
@@ -128,6 +135,7 @@ class SimpleRawDataFile implements RawDataFile {
 
     @Override
     public void addChromatogram(@Nonnull Chromatogram chromatogram) {
+        Preconditions.checkNotNull(chromatogram);
         synchronized (chromatograms) {
             chromatograms.add(chromatogram);
         }
@@ -135,6 +143,7 @@ class SimpleRawDataFile implements RawDataFile {
 
     @Override
     public void removeChromatogram(@Nonnull Chromatogram chromatogram) {
+        Preconditions.checkNotNull(chromatogram);
         synchronized (chromatograms) {
             chromatograms.remove(chromatogram);
         }
