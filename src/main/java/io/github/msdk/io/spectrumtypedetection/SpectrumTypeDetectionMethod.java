@@ -14,14 +14,14 @@
 
 package io.github.msdk.io.spectrumtypedetection;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Auto-detection of spectrum type from data points. Determines if the spectrum
@@ -31,8 +31,7 @@ import javax.annotation.Nullable;
  * thresholded spectra is not trivial. We use multiple checks for that purpose,
  * as described in the code comments.
  */
-public class SpectrumTypeDetectionMethod
-        implements MSDKMethod<MsSpectrumType> {
+public class SpectrumTypeDetectionMethod implements MSDKMethod<MsSpectrumType> {
 
     private @Nonnull MsSpectrum inputSpectrum;
     private @Nullable MsSpectrumType result = null;
@@ -70,7 +69,7 @@ public class SpectrumTypeDetectionMethod
             @Nonnull MsSpectrumDataPointList dataPoints) {
 
         // If the spectrum has less than 5 data points, it should be centroided.
-        if (dataPoints.size() < 5)
+        if (dataPoints.getSize() < 5)
             return MsSpectrumType.CENTROIDED;
 
         // Go through the data points and find the highest one
@@ -80,7 +79,7 @@ public class SpectrumTypeDetectionMethod
         final double mzValues[] = dataPoints.getMzBuffer();
         final float intensityValues[] = dataPoints.getIntensityBuffer();
 
-        for (int i = 0; i < dataPoints.size(); i++) {
+        for (int i = 0; i < dataPoints.getSize(); i++) {
 
             // If the spectrum contains data points of zero intensity, it should
             // be in profile mode
@@ -90,7 +89,7 @@ public class SpectrumTypeDetectionMethod
 
             // Let's ignore the first and the last data point, because
             // that would complicate our following checks
-            if ((i == 0) || (i == dataPoints.size() - 1))
+            if ((i == 0) || (i == dataPoints.getSize() - 1))
                 continue;
 
             // Update the maxDataPointIndex accordingly
@@ -108,8 +107,8 @@ public class SpectrumTypeDetectionMethod
         // Now we have the index of the top data point (except the first and
         // the last). We also know the spectrum has at least 5 data points.
         assert topDataPointIndex > 0;
-        assert topDataPointIndex < dataPoints.size() - 1;
-        assert dataPoints.size() >= 5;
+        assert topDataPointIndex < dataPoints.getSize() - 1;
+        assert dataPoints.getSize() >= 5;
 
         // Calculate the m/z difference between the top data point and the
         // previous one
@@ -124,7 +123,7 @@ public class SpectrumTypeDetectionMethod
         for (int i = topDataPointIndex - 2; i < topDataPointIndex + 2; i++) {
 
             // Check if the index is within acceptable range
-            if ((i < 1) || (i > dataPoints.size() - 1))
+            if ((i < 1) || (i > dataPoints.getSize() - 1))
                 continue;
 
             final double currentMzDifference = Math

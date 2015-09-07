@@ -20,8 +20,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.collect.Range;
-
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 
 /**
@@ -59,28 +57,12 @@ public interface RawDataFile {
     File getOriginalFile();
 
     /**
-     * Updates the original filename.
-     * 
-     * @param newOriginalFile
-     *            New original filename.
-     */
-    void setOriginalFile(@Nullable File newOriginalFile);
-
-    /**
      * Returns the file type of this raw data file.
      * 
      * @return Raw data file type
      */
     @Nonnull
     RawDataFileType getRawDataFileType();
-
-    /**
-     * Updates the file type of this raw data file.
-     * 
-     * @param RawDataFileType
-     *            New file type
-     */
-    void setRawDataFileType(@Nonnull RawDataFileType rawDataFileType);
 
     /**
      * Returns all MS functions found in this raw data file.

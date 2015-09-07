@@ -14,7 +14,10 @@
 
 package io.github.msdk.datamodel.rawdata;
 
+import java.io.File;
+
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 
@@ -25,6 +28,22 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
  */
 public interface WritableRawDataFile extends RawDataFile {
 
+    /**
+     * Updates the original filename.
+     * 
+     * @param newOriginalFile
+     *            New original filename.
+     */
+    void setOriginalFile(@Nullable File newOriginalFile);
+
+    /**
+     * Updates the file type of this raw data file.
+     * 
+     * @param RawDataFileType
+     *            New file type
+     */
+    void setRawDataFileType(@Nonnull RawDataFileType rawDataFileType);
+    
     /**
      * Adds a new scan to this file.
      * 

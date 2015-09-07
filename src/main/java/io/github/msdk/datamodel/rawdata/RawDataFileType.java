@@ -80,6 +80,12 @@ public enum RawDataFileType {
     WATERS_RAW,
 
     /**
+     * This is the default for files created within MSDK that have not yet been
+     * exported to any format.
+     */
+    MSDK_INTERNAL,
+
+    /**
      * Unknown or unsupported format.
      */
     UNKNOWN

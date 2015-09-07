@@ -67,10 +67,11 @@ class SimpleMsFunction implements MsFunction {
             if (f.getMsLevel() != null)
                 return false;
         }
-        if (msLevel != null) {
+        final Integer msLevel2 = msLevel;
+        if (msLevel2 != null) {
             if (f.getMsLevel() == null)
                 return false;
-            if (!msLevel.equals(f.getMsLevel()))
+            if (!msLevel2.equals(f.getMsLevel()))
                 return false;
         }
 
@@ -80,8 +81,10 @@ class SimpleMsFunction implements MsFunction {
     @Override
     public int hashCode() {
         int hash = name.hashCode();
-        if (msLevel != null)
-            hash += msLevel.hashCode();
+        final Integer msLevel2 = msLevel;
+        if (msLevel2 != null) {
+            hash += msLevel2.hashCode();
+        }
         return hash;
     }
 

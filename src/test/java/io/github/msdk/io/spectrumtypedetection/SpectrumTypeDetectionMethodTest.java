@@ -28,6 +28,13 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
+import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.MsSpectrumType;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.io.rawdataimport.RawDataFileImportMethod;
+
 public class SpectrumTypeDetectionMethodTest {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -62,11 +69,13 @@ public class SpectrumTypeDetectionMethodTest {
                                 + inputFile);
             }
 
-            logger.info("Testing autodetection of centroided/thresholded/profile scans on file "
-                    + inputFile.getName());
+            logger.info(
+                    "Testing autodetection of centroided/thresholded/profile scans on file "
+                            + inputFile.getName());
 
             // Use a temporary file to store data points
-            DataPointStore dataStore = MSDKDataStore.getTmpFileDataPointStore();
+            DataPointStore dataStore = DataPointStoreFactory
+                    .getTmpFileDataPointStore();
 
             RawDataFileImportMethod importer = new RawDataFileImportMethod(
                     inputFile, dataStore);
@@ -75,6 +84,7 @@ public class SpectrumTypeDetectionMethodTest {
             Assert.assertNotNull(rawFile);
 
             for (MsScan scan : rawFile.getScans()) {
+                @SuppressWarnings("null")
                 SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
                         scan);
                 detector.execute();
