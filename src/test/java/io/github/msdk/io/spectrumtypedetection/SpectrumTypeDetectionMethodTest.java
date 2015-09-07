@@ -14,13 +14,6 @@
 
 package io.github.msdk.io.spectrumtypedetection;
 
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
-import io.github.msdk.datamodel.datapointstore.MSDKDataStore;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.rawdataimport.RawDataFileImportMethod;
-
 import java.io.File;
 
 import org.junit.Assert;
@@ -30,8 +23,8 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
+import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.rawdataimport.RawDataFileImportMethod;
 

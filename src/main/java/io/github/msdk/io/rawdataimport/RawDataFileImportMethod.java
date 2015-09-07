@@ -14,17 +14,17 @@
 
 package io.github.msdk.io.rawdataimport;
 
+import java.io.File;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import io.github.msdk.io.rawdataimport.xmlformats.XMLFileImportMethod;
-
-import java.io.File;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * This class detects the type of the given data file using the
@@ -70,7 +70,7 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
         case MZML:
         case MZXML:
         case MZDATA:
-            parser = new XMLFileImportMethod(sourceFile, fileType, dataStore);
+            parser = new XMLFileImportMethod(sourceFile, fileType);
             break;
         default:
             throw new MSDKException("Unsupported file type (" + fileType

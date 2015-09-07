@@ -19,6 +19,7 @@ import javax.annotation.Nullable;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
+import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
@@ -33,13 +34,19 @@ import io.github.msdk.datamodel.msspectra.MsSpectrumType;
  */
 public class SpectrumTypeDetectionMethod implements MSDKMethod<MsSpectrumType> {
 
-    private @Nonnull MsSpectrum inputSpectrum;
+    private @Nonnull MsSpectrumDataPointList dataPoints;
     private @Nullable MsSpectrumType result = null;
     private Float finishedPercentage = null;
     private boolean canceled = false;
 
-    public SpectrumTypeDetectionMethod(@Nonnull MsSpectrum inputSpectrum) {
-        this.inputSpectrum = inputSpectrum;
+    public SpectrumTypeDetectionMethod(@Nonnull MsSpectrum msSpectrum) {
+        this.dataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
+        msSpectrum.getDataPoints(dataPoints);
+    }
+
+    public SpectrumTypeDetectionMethod(
+            @Nonnull MsSpectrumDataPointList dataPoints) {
+        this.dataPoints = dataPoints;
     }
 
     @Override
@@ -49,7 +56,6 @@ public class SpectrumTypeDetectionMethod implements MSDKMethod<MsSpectrumType> {
 
     @Override
     public MsSpectrumType execute() throws MSDKException {
-        MsSpectrumDataPointList dataPoints = inputSpectrum.getDataPoints();
         result = detectSpectrumType(dataPoints);
         finishedPercentage = 1f;
         return result;

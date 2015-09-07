@@ -52,7 +52,7 @@ class MemoryDataPointStore implements DataPointStore {
 
         // Clone the given list for storage
         final MsSpectrumDataPointList newList = MSDKObjectBuilder
-                .getSpectrumDataPointList();
+                .getMsSpectrumDataPointList();
         newList.copyFrom(dataPoints);
 
         // Save the reference to the new list
