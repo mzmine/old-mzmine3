@@ -100,45 +100,6 @@ public interface RawDataFile {
     List<MsScan> getScans();
 
     /**
-     * Returns an immutable list of all scans of a given MS function. The list
-     * can be safely iterated over, as it cannot be modified by another thread.
-     * 
-     * @param function
-     *            The scans of this function will be returned.
-     * @return A list of matching scans.
-     */
-    @Nonnull
-    List<MsScan> getScans(MsFunction msFunction);
-
-    /**
-     * Returns an immutable list of all scans in a given retention time range.
-     * The list can be safely iterated over, as it cannot be modified by another
-     * thread.
-     * 
-     * @param chromatographyRange
-     *            Range of retention times.
-     * @return A list of matching scans.
-     */
-    @Nonnull
-    List<MsScan> getScans(
-            @Nonnull Range<ChromatographyInfo> chromatographyRange);
-
-    /**
-     * Returns an immutable list of all scans of a given MS function and in a
-     * given retention time range. The list can be safely iterated over, as it
-     * cannot be modified by another thread.
-     * 
-     * @param function
-     *            The scans of this function will be returned.
-     * @param chromatographyRange
-     *            Range of retention times.
-     * @return A list of matching scans.
-     */
-    @Nonnull
-    List<MsScan> getScans(@Nonnull MsFunction function,
-            @Nonnull Range<ChromatographyInfo> chromatographyRange);
-
-    /**
      * Returns an immutable list of all chromatograms. The list can be safely
      * iterated over, as it cannot be modified by another thread.
      * 

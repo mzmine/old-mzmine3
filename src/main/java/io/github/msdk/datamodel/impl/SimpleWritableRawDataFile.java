@@ -22,11 +22,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFileType;
@@ -108,42 +106,17 @@ class SimpleWritableRawDataFile implements WritableRawDataFile {
     }
 
     @Override
-    @Nonnull
-    public List<MsScan> getScans(MsFunction msFunction) {
-        ArrayList<MsScan> msScanList = new ArrayList<MsScan>();
-        synchronized (scans) {
-            for (MsScan scan : scans) {
-                if (scan.getMsFunction().equals(msFunction))
-                    msScanList.add(scan);
-            }
-        }
-        return msScanList;
-    }
-
-    @Override
-    @Nonnull
-    public List<MsScan> getScans(
-            @Nonnull Range<ChromatographyInfo> chromatographyRange) {
-        // TODO Auto-generated method stub
-        return new ArrayList<MsScan>();
-    }
-
-    @Override
-    @Nonnull
-    public List<MsScan> getScans(@Nonnull MsFunction function,
-            @Nonnull Range<ChromatographyInfo> chromatographyRange) {
-        // TODO Auto-generated method stub
-        return new ArrayList<MsScan>();
-    }
-
-    @Override
     public void addScan(@Nonnull MsScan scan) {
-        scans.add(scan);
+        synchronized (scans) {
+            scans.add(scan);
+        }
     }
 
     @Override
     public void removeScan(@Nonnull MsScan scan) {
-        scans.remove(scan);
+        synchronized (scans) {
+            scans.remove(scan);
+        }
     }
 
     @SuppressWarnings("null")
@@ -155,12 +128,16 @@ class SimpleWritableRawDataFile implements WritableRawDataFile {
 
     @Override
     public void addChromatogram(@Nonnull Chromatogram chromatogram) {
-        chromatograms.add(chromatogram);
+        synchronized (chromatograms) {
+            chromatograms.add(chromatogram);
+        }
     }
 
     @Override
     public void removeChromatogram(@Nonnull Chromatogram chromatogram) {
-        chromatograms.remove(chromatogram);
+        synchronized (chromatograms) {
+            chromatograms.remove(chromatogram);
+        }
     }
 
     @Override
