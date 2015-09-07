@@ -73,18 +73,23 @@ public interface MsSpectrumDataPointList {
      * @return
      */
     int getSize();
-    
+
     /**
      * 
      * @param newSize
      */
     void setSize(int newSize);
-    
+
+    /**
+     * Ensures the size of the internal arrays is at least newSize
+     */
+    void allocate(int newSize);
+
     /**
      * 
      */
     void clear();
-    
+
     /**
      * Sets the internal buffers to given arrays. The arrays will be referenced
      * directly without cloning. The m/z buffer contents must be sorted in

@@ -46,18 +46,6 @@ public interface MsSpectrum {
     void setSpectrumType(@Nonnull MsSpectrumType spectrumType);
 
     /**
-     * Returns data points of this spectrum. Importantly, a new instance of
-     * DataPointList is created by each call to this method.
-     * 
-     * Note: this method may need to read data from disk, therefore it may be
-     * quite slow.
-     * 
-     * @return data points (m/z and intensity pairs) of this spectrum
-     */
-    @Nonnull
-    MsSpectrumDataPointList getDataPoints();
-
-    /**
      * Loads the data points of this spectrum into the given DataPointList. If
      * the DataPointList is not empty, it is cleared first. This method allows
      * the internal arrays of the DataPointList to be reused for loading
@@ -70,36 +58,6 @@ public interface MsSpectrum {
      *            DataPointList into which the data points should be loaded
      */
     void getDataPoints(@Nonnull MsSpectrumDataPointList dataPointList);
-
-    /**
-     * Returns data points in given m/z range. Importantly, a new instance of
-     * DataPointList is created by each call to this method.
-     * 
-     * Note: this method may need to read data from disk, therefore it may be
-     * quite slow.
-     * 
-     * @param mzRange
-     *            range of m/z values to select
-     * @return selected data points (m/z and intensity pairs) of this spectrum
-     */
-    @Nonnull
-    MsSpectrumDataPointList getDataPointsByMz(@Nonnull Range<Double> mzRange);
-
-    /**
-     * Returns data points in given intensity range. Importantly, a new instance
-     * of DataPointList is created by each call to this method.
-     * 
-     * Note: this method may need to read data from disk, therefore it may be
-     * quite slow.
-     * 
-     * @param intensityRange
-     *            range of intensity values to select
-     * 
-     * @return selected data points (m/z and intensity pairs) of this spectrum
-     */
-    @Nonnull
-    MsSpectrumDataPointList getDataPointsByIntensity(
-            @Nonnull Range<Float> intensityRange);
 
     /**
      * Returns data points in given m/z and intensity ranges. Importantly, a new
@@ -116,6 +74,7 @@ public interface MsSpectrum {
      */
     @Nonnull
     MsSpectrumDataPointList getDataPointsByMzAndIntensity(
+            @Nonnull MsSpectrumDataPointList dataPointList,
             @Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange);
 

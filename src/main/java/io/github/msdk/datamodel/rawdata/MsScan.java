@@ -21,7 +21,6 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 
 /**
@@ -35,7 +34,7 @@ import io.github.msdk.datamodel.msspectra.MsSpectrum;
  * belongs to that RawDataFile. When RawDataFile.dispose() is called, the data
  * points are discarded so the MsScan instance cannot be used anymore.
  */
-public interface MsScan extends MsSpectrum, Cloneable {
+public interface MsScan extends MsSpectrum {
 
     /**
      * Returns the raw data file that contains this scan. This might return null
@@ -196,16 +195,5 @@ public interface MsScan extends MsSpectrum, Cloneable {
      */
     @Nonnull
     List<IsolationInfo> getIsolations();
-
-    /**
-     * Returns a deep clone of this object.
-     * 
-     * @param newStore
-     *            data points of the newly created MsScan will be stored in this
-     *            store
-     * @return A clone of this MsScan.
-     */
-    @Nonnull
-    MsScan clone(@Nonnull DataPointStore newStore);
 
 }

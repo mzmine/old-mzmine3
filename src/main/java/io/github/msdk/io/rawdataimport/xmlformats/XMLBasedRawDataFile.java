@@ -45,7 +45,7 @@ class XMLBasedRawDataFile implements RawDataFile {
 
     private final @Nonnull File sourceFile;
     private final @Nonnull RawDataFileType fileType;
-    private final @Nonnull JMzReader jmzreader;
+    private final @Nonnull JMzReader jmzReader;
 
     private @Nonnull String name;
 
@@ -53,10 +53,10 @@ class XMLBasedRawDataFile implements RawDataFile {
     @SuppressWarnings("null")
     public XMLBasedRawDataFile(@Nonnull File sourceFile,
             @Nonnull RawDataFileType fileType,
-            @Nonnull JMzReader jmzreader) {
+            @Nonnull JMzReader jmzReader) {
         this.sourceFile = sourceFile;
         this.fileType = fileType;
-        this.jmzreader = jmzreader;
+        this.jmzReader = jmzReader;
         this.name = sourceFile.getName();
     }
 
@@ -114,8 +114,11 @@ this.name = name;
 
     @Override
     public void dispose() {
-        jmzreader.
-        
+        jmzReader=null;
+    }
+    
+    @Nonnull JMzReader getJmzReader() {
+        return jmzReader;
     }
 
 
