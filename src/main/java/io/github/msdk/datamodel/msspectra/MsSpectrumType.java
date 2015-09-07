@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.rawdata;
+package io.github.msdk.datamodel.msspectra;
 
 /**
  * Defines a type of the mass spectrum. For exact definition of the different

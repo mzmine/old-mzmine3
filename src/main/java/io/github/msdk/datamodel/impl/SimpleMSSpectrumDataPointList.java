@@ -20,14 +20,14 @@ import javax.annotation.Nullable;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
+import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 
 /**
  * Basic implementation of DataPointList.
  * 
  * Important: this class is not thread-safe.
  */
-class SimpleSpectrumDataPointList implements MsSpectrumDataPointList {
+class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
 
     /**
      * Array for m/z values. Its length defines the capacity of this list.
@@ -48,7 +48,7 @@ class SimpleSpectrumDataPointList implements MsSpectrumDataPointList {
     /**
      * Creates a new data point list with internal array capacity of 100.
      */
-    SimpleSpectrumDataPointList() {
+    SimpleMSSpectrumDataPointList() {
         this(100);
     }
 
@@ -58,7 +58,7 @@ class SimpleSpectrumDataPointList implements MsSpectrumDataPointList {
      * @param initialCapacity
      *            Initial size of the m/z and intensity arrays.
      */
-    SimpleSpectrumDataPointList(@Nonnull Integer initialCapacity) {
+    SimpleMSSpectrumDataPointList(@Nonnull Integer initialCapacity) {
         mzBuffer = new double[initialCapacity];
         intensityBuffer = new float[initialCapacity];
         size = 0;
@@ -77,7 +77,7 @@ class SimpleSpectrumDataPointList implements MsSpectrumDataPointList {
      * @throws IllegalArgumentException
      *             if the initial array length < size
      */
-    SimpleSpectrumDataPointList(@Nonnull double mzBuffer[],
+    SimpleMSSpectrumDataPointList(@Nonnull double mzBuffer[],
             @Nonnull float intensityBuffer[], int size) {
         Preconditions.checkArgument(mzBuffer.length >= size);
         Preconditions.checkArgument(intensityBuffer.length >= size);

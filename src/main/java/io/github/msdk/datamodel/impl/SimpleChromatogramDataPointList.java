@@ -19,8 +19,8 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.rawdata.ChromatogramDataPointList;
-import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
+import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
+import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 
 /**
  * Basic implementation of DataPointList.

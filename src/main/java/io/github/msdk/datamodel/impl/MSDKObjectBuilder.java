@@ -22,16 +22,16 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.peaklists.FeatureDataPointList;
 import io.github.msdk.datamodel.peaklists.PeakListColumn;
-import io.github.msdk.datamodel.rawdata.ChromatogramDataPointList;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
 
 /**
  * Object builder
@@ -153,7 +153,7 @@ public class MSDKObjectBuilder {
      * @return new DataPointList
      */
     public static final @Nonnull MsSpectrumDataPointList getSpectrumDataPointList() {
-        return new SimpleSpectrumDataPointList();
+        return new SimpleMSSpectrumDataPointList();
     }
 
     /**

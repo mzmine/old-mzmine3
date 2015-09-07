@@ -16,9 +16,9 @@ package io.github.msdk.io.spectrumtypedetection;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
-import io.github.msdk.datamodel.rawdata.MsSpectrum;
-import io.github.msdk.datamodel.rawdata.MsSpectrumType;
+import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
+import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

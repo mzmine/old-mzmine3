@@ -14,10 +14,11 @@
 
 package io.github.msdk.identification;
 
-import io.github.msdk.datamodel.rawdata.MsSpectrum;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import io.github.msdk.datamodel.msspectra.MsSpectrum;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Iterator;

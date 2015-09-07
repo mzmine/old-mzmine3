@@ -30,12 +30,12 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKRuntimeException;
+import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.peaklists.FeatureDataPointList;
-import io.github.msdk.datamodel.rawdata.ChromatogramDataPointList;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
 
 /**
  * A DataPointStore implementation that stores the data points in a temporary

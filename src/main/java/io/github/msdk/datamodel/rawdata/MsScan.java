@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.msspectra.MsSpectrum;
 
 /**
  * Represents a single MS scan in a raw data file. This interface extends

@@ -16,6 +16,8 @@ package io.github.msdk.datamodel.rawdata;
 
 import javax.annotation.Nonnull;
 
+import io.github.msdk.datamodel.chromatograms.Chromatogram;
+
 /**
  * A writable raw data file.
  * 

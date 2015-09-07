@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.rawdata;
+package io.github.msdk.datamodel.msspectra;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

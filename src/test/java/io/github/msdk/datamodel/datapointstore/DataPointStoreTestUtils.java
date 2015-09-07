@@ -18,7 +18,7 @@ import org.junit.Assert;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
+import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 
 /**
  * Tests for DataPointStores

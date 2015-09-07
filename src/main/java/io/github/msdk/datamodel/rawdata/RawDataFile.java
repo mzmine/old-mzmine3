@@ -22,6 +22,8 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
+import io.github.msdk.datamodel.chromatograms.Chromatogram;
+
 /**
  * Raw data file, typically obtained by loading data from one of the supported
  * file formats. A raw data file is a collection of scans (MsScan).
@@ -106,7 +108,7 @@ public interface RawDataFile {
      * @return A list of matching scans.
      */
     @Nonnull
-    List<MsScan> getScans(MsFunction function);
+    List<MsScan> getScans(MsFunction msFunction);
 
     /**
      * Returns an immutable list of all scans in a given retention time range.

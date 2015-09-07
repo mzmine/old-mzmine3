@@ -14,6 +14,8 @@
 
 package io.github.msdk.datamodel.impl;
 
+import javax.annotation.Nullable;
+
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 
@@ -21,7 +23,7 @@ class SimpleChromatographyInfo implements ChromatographyInfo {
 
     private Float retentionTime, secondaryRetentionTime, ionDriftTime;
 
-    private SeparationType separationType;
+    private @Nullable SeparationType separationType;
 
     SimpleChromatographyInfo(Float retentionTime, Float secondaryRetentionTime,
             Float ionDriftTime, SeparationType separationType) {

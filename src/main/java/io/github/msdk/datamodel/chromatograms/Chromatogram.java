@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.rawdata;
+package io.github.msdk.datamodel.chromatograms;
 
 import java.util.List;
 
@@ -20,6 +20,10 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.rawdata.IsolationInfo;
+import io.github.msdk.datamodel.rawdata.MsScanType;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
  * Represents a single MS scan in a raw data file. This interface extends
@@ -79,6 +83,23 @@ public interface Chromatogram extends Cloneable {
     void setChromatogramNumber(@Nonnull Integer chromatogramNumber);
 
     /**
+     * Returns the type of the chromatogram. If unknown, MsScanType.UNKNOWN is
+     * returned.
+     * 
+     * @return Chromatogram type
+     */
+    @Nonnull
+    MsScanType getChromatogramType();
+
+    /**
+     * Updates the chromatogram type.
+     * 
+     * @param newChromatogramType
+     *            New chromatogram type.
+     */
+    void setChromatogramType(@Nonnull ChromatogramType newChromatogramType);
+
+    /**
      * Returns data points of this chromatogram. Importantly, a new instance of
      * DataPointList is created by each call to this method.
      * 
@@ -91,9 +112,9 @@ public interface Chromatogram extends Cloneable {
     ChromatogramDataPointList getDataPoints();
 
     /**
-     * Loads the data points of this chromatogram into the given DataPointList. If
-     * the DataPointList is not empty, it is cleared first. This method allows
-     * the internal arrays of the DataPointList to be reused for loading
+     * Loads the data points of this chromatogram into the given DataPointList.
+     * If the DataPointList is not empty, it is cleared first. This method
+     * allows the internal arrays of the DataPointList to be reused for loading
      * multiple spectra.
      * 
      * Note: this method may need to read data from disk, therefore it may be

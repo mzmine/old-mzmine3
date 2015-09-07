@@ -16,18 +16,16 @@ package io.github.msdk.datamodel.impl;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Range;
 
+import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
-import io.github.msdk.datamodel.rawdata.Chromatogram;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -54,8 +52,8 @@ class SimpleWritableRawDataFile implements WritableRawDataFile {
         this.originalRawDataFile = originalRawDataFile;
         this.rawDataFileType = rawDataFileType;
         this.dataPointStore = dataPointStore;
-        this.scans = new ArrayList();
-        this.chromatograms = new ArrayList();
+        this.scans = new ArrayList<MsScan>();
+        this.chromatograms = new ArrayList<Chromatogram>();
     }
 
     @Override
@@ -92,8 +90,15 @@ class SimpleWritableRawDataFile implements WritableRawDataFile {
     @Override
     @Nonnull
     public List<MsFunction> getMsFunctions() {
-        // TODO Auto-generated method stub
-        return new ArrayList<MsFunction>();
+        ArrayList<MsFunction> msFunctionList = new ArrayList<MsFunction>();
+        synchronized (scans) {
+            for (MsScan scan : scans) {
+                MsFunction f = scan.getMsFunction();
+                if (f != null)
+                    msFunctionList.add(f);
+            }
+        }
+        return msFunctionList;
     }
 
     @SuppressWarnings("null")
@@ -104,9 +109,15 @@ class SimpleWritableRawDataFile implements WritableRawDataFile {
 
     @Override
     @Nonnull
-    public List<MsScan> getScans(MsFunction function) {
-        // TODO Auto-generated method stub
-        return new ArrayList<MsScan>();
+    public List<MsScan> getScans(MsFunction msFunction) {
+        ArrayList<MsScan> msScanList = new ArrayList<MsScan>();
+        synchronized (scans) {
+            for (MsScan scan : scans) {
+                if (scan.getMsFunction().equals(msFunction))
+                    msScanList.add(scan);
+            }
+        }
+        return msScanList;
     }
 
     @Override
@@ -127,12 +138,12 @@ class SimpleWritableRawDataFile implements WritableRawDataFile {
 
     @Override
     public void addScan(@Nonnull MsScan scan) {
-        // TODO Auto-generated method stub
+        scans.add(scan);
     }
 
     @Override
     public void removeScan(@Nonnull MsScan scan) {
-        // TODO Auto-generated method stub
+        scans.remove(scan);
     }
 
     @SuppressWarnings("null")
@@ -144,12 +155,12 @@ class SimpleWritableRawDataFile implements WritableRawDataFile {
 
     @Override
     public void addChromatogram(@Nonnull Chromatogram chromatogram) {
-        // TODO Auto-generated method stub
+        chromatograms.add(chromatogram);
     }
 
     @Override
     public void removeChromatogram(@Nonnull Chromatogram chromatogram) {
-        // TODO Auto-generated method stub
+        chromatograms.remove(chromatogram);
     }
 
     @Override

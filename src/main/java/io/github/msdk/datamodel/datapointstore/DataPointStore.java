@@ -16,9 +16,9 @@ package io.github.msdk.datamodel.datapointstore;
 
 import javax.annotation.Nonnull;
 
+import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
+import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.peaklists.FeatureDataPointList;
-import io.github.msdk.datamodel.rawdata.ChromatogramDataPointList;
-import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
 
 /**
  * Represents a storage mechanism for data points represented by DataPointList.

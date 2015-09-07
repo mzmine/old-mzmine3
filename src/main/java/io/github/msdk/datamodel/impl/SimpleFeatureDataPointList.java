@@ -19,9 +19,9 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
+import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.peaklists.FeatureDataPointList;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
 
 /**
  * Basic implementation of DataPointList.

@@ -15,10 +15,10 @@
 package io.github.msdk.datamodel.impl;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
+import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.SpectrumDataPoint;
-import io.github.msdk.datamodel.rawdata.MsSpectrumDataPointList;
-import io.github.msdk.datamodel.rawdata.MsSpectrum;
-import io.github.msdk.datamodel.rawdata.MsSpectrumType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
