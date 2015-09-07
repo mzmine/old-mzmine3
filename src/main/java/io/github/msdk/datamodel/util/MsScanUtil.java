@@ -30,7 +30,7 @@ public class MsScanUtil {
     static public MsScan clone(@Nonnull DataPointStore newStore, @Nonnull MsScan scan) {
         Preconditions.checkNotNull(newStore);
         MsScan newScan = MSDKObjectBuilder.getMsScan(newStore, scan.getScanNumber(), scan.getMsFunction());
-        final MsSpectrumDataPointList dataPointList = MSDKObjectBuilder.getSpectrumDataPointList();
+        final MsSpectrumDataPointList dataPointList = MSDKObjectBuilder.getMsSpectrumDataPointList();
         scan.getDataPoints(dataPointList);
 
         final RawDataFile rawDataFile2 = scan.getRawDataFile();

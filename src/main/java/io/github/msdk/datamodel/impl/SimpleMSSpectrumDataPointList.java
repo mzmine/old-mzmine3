@@ -14,12 +14,15 @@
 
 package io.github.msdk.datamodel.impl;
 
+import java.util.Arrays;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
+import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 
 /**
@@ -116,13 +119,19 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
                     "The length of the m/z and intensity arrays must be equal");
         }
 
+        // Check if the m/z array is properly sorted
+        for (int pos = 1; pos < newSize; pos++) {
+            if (mzBuffer[pos] < mzBuffer[pos - 1])
+                throw (new MSDKRuntimeException(
+                        "The m/z array is not properly sorted. It should be sorted from lowest to highest."));
+        }
+
         // Update arrays
         this.mzBuffer = mzBuffer;
         this.intensityBuffer = intensityBuffer;
 
-        // Update the size and check if the m/z array is properly sorted
+        // Update the size
         this.size = newSize;
-
     }
 
     /**
@@ -140,7 +149,7 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
         System.arraycopy(list.getIntensityBuffer(), 0, intensityBuffer, 0,
                 list.getSize());
 
-        // Update the size and check if the m/z array is properly sorted
+        // Update the size
         this.size = list.getSize();
 
     }
@@ -162,7 +171,7 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
     public int getSize() {
         return size;
     }
-    
+
     /**
      * 
      * @param newSize
@@ -171,17 +180,55 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
         this.size = newSize;
     }
 
-
     /**
      * Insert into the right position
      */
     public void add(double newMz, float newIntensity) {
-        int targetPosition;
-        for (targetPosition = 0; targetPosition < size; targetPosition++) {
-            if (mzBuffer[targetPosition] > newMz)
-                break;
+        int targetPosition = 0;
+        if (size != 0) {
+            targetPosition = Arrays.binarySearch(mzBuffer, 0, size, newMz);
+            targetPosition = Math.abs(targetPosition + 1);
         }
-        // TODO this.add(targetPosition, newMz, newIntensity);
+        this.add(targetPosition, newMz, newIntensity);
+    }
+
+    /**
+     * Insert data into specific position
+     */
+    public void add(int targetPosition, double newMz, float newIntensity) {
+        int thisCapacity = mzBuffer.length;
+        if (!(size < mzBuffer.length))
+            thisCapacity++;
+
+        double[] mzBufferNew = new double[thisCapacity];
+        float[] intensityBufferNew = new float[thisCapacity];
+
+        // Data before new data point
+        if (targetPosition > 0) {
+            System.arraycopy(getMzBuffer(), 0, mzBufferNew, 0, targetPosition);
+            System.arraycopy(getIntensityBuffer(), 0, intensityBufferNew, 0,
+                    targetPosition);
+        }
+
+        // New data point
+        mzBufferNew[targetPosition] = newMz;
+        intensityBufferNew[targetPosition] = newIntensity;
+
+        // Data after new data point
+        if (targetPosition < thisCapacity) {
+            System.arraycopy(getMzBuffer(), targetPosition, mzBufferNew,
+                    targetPosition + 1, size - targetPosition);
+            System.arraycopy(getIntensityBuffer(), targetPosition,
+                    intensityBufferNew, targetPosition + 1,
+                    size - targetPosition);
+        }
+
+        // Replace arrays with new
+        mzBuffer = mzBufferNew;
+        intensityBuffer = intensityBufferNew;
+
+        // Update the size
+        this.size = size + 1;
     }
 
     /**
@@ -267,7 +314,7 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
             @Nonnull Range<Float> intensityRange) {
 
         final MsSpectrumDataPointList newList = MSDKObjectBuilder
-                .getSpectrumDataPointList();
+                .getMsSpectrumDataPointList();
 
         for (int i = 0; i < size; i++) {
             if (mzRange.contains(mzBuffer[i])
@@ -285,7 +332,18 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
 
     @Override
     public void allocate(int newSize) {
-        // TODO Auto-generated method stub
+        if (mzBuffer.length >= newSize)
+            return;
+
+        double[] mzBufferNew = new double[newSize];
+        float[] intensityBufferNew = new float[newSize];
+
+        System.arraycopy(getMzBuffer(), 0, mzBufferNew, 0, size);
+        System.arraycopy(getIntensityBuffer(), 0, intensityBufferNew, 0, size);
+
+        mzBuffer = mzBufferNew;
+        intensityBuffer = intensityBufferNew;
+
     }
 
 }

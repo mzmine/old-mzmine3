@@ -66,7 +66,7 @@ abstract class AbstractSpectrum implements MsSpectrum {
         if (dataStoreIdCopy == null)
             throw (new MSDKRuntimeException("Missing data store ID"));
         final MsSpectrumDataPointList orgDataPointList = MSDKObjectBuilder
-                .getSpectrumDataPointList();
+                .getMsSpectrumDataPointList();
         dataPointStore.readDataPoints(dataStoreIdCopy, orgDataPointList);
         dataPointList.copyFrom(
                 orgDataPointList.selectDataPoints(mzRange, intensityRange));

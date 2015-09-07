@@ -237,4 +237,9 @@ class SimpleFeatureDataPointList implements FeatureDataPointList {
         this.size = 0;
     }
 
+    @Override
+    public void allocate(int newSize) {
+        // TODO Auto-generated method stub
+    }
+
 }

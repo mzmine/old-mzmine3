@@ -165,7 +165,7 @@ public class MSDKObjectBuilder {
      * 
      * @return new DataPointList
      */
-    public static final @Nonnull MsSpectrumDataPointList getSpectrumDataPointList() {
+    public static final @Nonnull MsSpectrumDataPointList getMsSpectrumDataPointList() {
         return new SimpleMSSpectrumDataPointList();
     }
 

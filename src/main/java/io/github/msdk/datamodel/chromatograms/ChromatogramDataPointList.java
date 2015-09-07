@@ -73,12 +73,17 @@ public interface ChromatogramDataPointList {
      * @return
      */
     int getSize();
-    
+
     /**
      * 
      * @param newSize
      */
     void setSize(int newSize);
+
+    /**
+     * Ensures the size of the internal arrays is at least newSize
+     */
+    void allocate(int newSize);
 
     /**
      * 

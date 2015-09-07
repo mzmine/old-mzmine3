@@ -36,7 +36,7 @@ public class DataPointStoreTestUtils {
             storageIds[i] = store.storeDataPoints(dataPoints);
         }
 
-        MsSpectrumDataPointList retrievedDataPoints = MSDKObjectBuilder.getSpectrumDataPointList();
+        MsSpectrumDataPointList retrievedDataPoints = MSDKObjectBuilder.getMsSpectrumDataPointList();
 
         for (int i = 0; i < numOfGeneratedLists; i++) {
 
@@ -105,7 +105,7 @@ public class DataPointStoreTestUtils {
      */
     public static MsSpectrumDataPointList generateSpectrumDataPoints(int count) {
 
-        final MsSpectrumDataPointList list = MSDKObjectBuilder.getSpectrumDataPointList();
+        final MsSpectrumDataPointList list = MSDKObjectBuilder.getMsSpectrumDataPointList();
         final double mzValues[] = new double[count];
         final float intensityValues[] = new float[count];
 
