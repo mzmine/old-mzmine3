@@ -179,24 +179,15 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
     @Override
     public String toString() {
         StringBuffer buf = new StringBuffer();
-        buf.append("#");
-        buf.append(getScanNumber());
-        buf.append(" @");
-        // buf.append(rtFormat.format(getRetentionTime()));
-        buf.append(" MS");
-        // buf.append(getMSLevel());
-        switch (getSpectrumType()) {
-        case CENTROIDED:
-            buf.append(" c");
-            break;
-        case PROFILE:
-            buf.append(" p");
-            break;
-        case THRESHOLDED:
-            buf.append(" t");
-            break;
+        buf.append("Scan ");
+        final RawDataFile rawDataFile2 = dataFile;
+        if (rawDataFile2 != null) {
+            buf.append(rawDataFile2.getName());
+            buf.append(" ");
         }
-
+        buf.append(msFunction.getName());
+        buf.append(" #");
+        buf.append(getScanNumber());
         return buf.toString();
     }
 

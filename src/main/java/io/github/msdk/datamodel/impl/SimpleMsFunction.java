@@ -20,6 +20,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
+import com.google.common.base.Preconditions;
+
 /**
  * Simple implementation of the MsFunction interface.
  */
@@ -29,18 +31,21 @@ class SimpleMsFunction implements MsFunction {
     private final @Nonnull String name;
     private final @Nullable Integer msLevel;
 
-    SimpleMsFunction(@Nonnull String name, @Nullable Integer msLevel) {
-        this.name = name;
-        this.msLevel = msLevel;
-    }
-
     SimpleMsFunction(@Nonnull String name) {
+        Preconditions.checkNotNull(name);
         this.name = name;
         msLevel = null;
     }
 
+    @SuppressWarnings("null")
     SimpleMsFunction(@Nullable Integer msLevel) {
         this.name = MsFunction.DEFAULT_MS_FUNCTION_NAME;
+        this.msLevel = msLevel;
+    }
+
+    SimpleMsFunction(@Nonnull String name, @Nullable Integer msLevel) {
+        Preconditions.checkNotNull(name);
+        this.name = name;
         this.msLevel = msLevel;
     }
 
@@ -92,7 +97,8 @@ class SimpleMsFunction implements MsFunction {
     public String toString() {
         String str = name;
         if (msLevel != null)
-            str += " (MS" + msLevel + ")";
+            if (!name.toUpperCase().equals("MS" + msLevel))
+                str += " (MS" + msLevel + ")";
         return str;
     }
 

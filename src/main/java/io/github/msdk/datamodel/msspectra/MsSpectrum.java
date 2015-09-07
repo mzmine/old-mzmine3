@@ -66,10 +66,10 @@ public interface MsSpectrum {
      * Note: this method may need to read data from disk, therefore it may be
      * quite slow.
      * 
-     * @param list
+     * @param dataPointList
      *            DataPointList into which the data points should be loaded
      */
-    void getDataPoints(@Nonnull MsSpectrumDataPointList list);
+    void getDataPoints(@Nonnull MsSpectrumDataPointList dataPointList);
 
     /**
      * Returns data points in given m/z range. Importantly, a new instance of
@@ -115,7 +115,8 @@ public interface MsSpectrum {
      * @return selected data points (m/z and intensity pairs) of this spectrum
      */
     @Nonnull
-    MsSpectrumDataPointList getDataPointsByMzAndIntensity(@Nonnull Range<Double> mzRange,
+    MsSpectrumDataPointList getDataPointsByMzAndIntensity(
+            @Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange);
 
     /**
@@ -141,4 +142,12 @@ public interface MsSpectrum {
     @Nonnull
     Float getTIC();
 
+    /**
+     * Returns the range of m/z values for the current spectrum. This can return
+     * null if the spectrum has no data points.
+     * 
+     * @return m/z range
+     */
+    @Nullable
+    Range<Double> getMzRange();
 }
