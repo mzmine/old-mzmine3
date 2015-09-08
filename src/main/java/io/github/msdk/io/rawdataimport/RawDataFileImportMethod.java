@@ -25,6 +25,9 @@ import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import io.github.msdk.io.rawdataimport.mzml.MzMLFileImportMethod;
+import io.github.msdk.io.rawdataimport.mzxml_mzdata.MzDataFileImportMethod;
+import io.github.msdk.io.rawdataimport.mzxml_mzdata.MzXMLFileImportMethod;
+import io.github.msdk.io.rawdataimport.netcdf.NetCDFFileImportMethod;
 
 /**
  * This class detects the type of the given data file using the
@@ -68,9 +71,16 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
 
         switch (fileType) {
         case MZML:
+            parser = new MzMLFileImportMethod(sourceFile);
+            break;
         case MZXML:
+            parser = new MzXMLFileImportMethod(sourceFile);
+            break;
         case MZDATA:
-            parser = new MzMLFileImportMethod(sourceFile, fileType);
+            parser = new MzDataFileImportMethod(sourceFile);
+            break;
+        case NETCDF:
+            parser = new NetCDFFileImportMethod(sourceFile, dataStore);
             break;
         default:
             throw new MSDKException("Unsupported file type (" + fileType

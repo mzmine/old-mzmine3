@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.io.rawdataimport.netcdf;
+package io.github.msdk.io.rawdataimport.waters;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +44,7 @@ import ucar.nc2.Attribute;
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.Variable;
 
-public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
+public class WatersRawImportMethod implements MSDKMethod<RawDataFile> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -53,7 +53,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
     private int parsedScans;
     private int totalScans = 0, numberOfGoodScans, scanNum = 0;
 
-    private int scanStartPositions[];
+    private Hashtable<Integer, Integer[]> scansIndex;
     private Hashtable<Integer, Double> scansRetentionTimes;
 
     private final @Nonnull File sourceFile;
@@ -69,10 +69,10 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
     private double massValueScaleFactor = 1;
     private double intensityValueScaleFactor = 1;
 
-    private final @Nonnull MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
+    private MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
             .getMsSpectrumDataPointList();
 
-    public NetCDFFileImportMethod(@Nonnull File sourceFile,
+    public WatersRawImportMethod(@Nonnull File sourceFile,
             @Nonnull DataPointStore dataStore) {
         this.sourceFile = sourceFile;
         this.dataStore = dataStore;
@@ -83,10 +83,8 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
         logger.info("Started parsing file " + sourceFile);
 
-        @Nonnull
         String fileName = sourceFile.getName();
-        newRawFile = MSDKObjectBuilder.getRawDataFile(fileName, sourceFile,
-                fileType, dataStore);
+        newRawFile = MSDKObjectBuilder.getRawDataFile(fileName, sourceFile, fileType, dataStore);
 
         try {
 
@@ -104,6 +102,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
                 if (canceled) {
                     return null;
                 }
+                // buildingFile.addScan(scan);
                 newRawFile.addScan(buildingScan);
                 parsedScans++;
 
@@ -173,21 +172,26 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
         // find the stop position for last scan
         int[] scanStartPositions = new int[totalScans + 1];
 
-        Array scanIndexArray = scanIndexVariable.read();
+        Array scanIndexArray = null;
+        scanIndexArray = scanIndexVariable.read();
+
         IndexIterator scanIndexIterator = scanIndexArray.getIndexIterator();
         int ind = 0;
         while (scanIndexIterator.hasNext()) {
-            scanStartPositions[ind] = ((Integer) scanIndexIterator.next());
+            scanStartPositions[ind] = ((Integer) scanIndexIterator.next())
+                    .intValue();
             ind++;
         }
-             
+        scanIndexIterator = null;
+        scanIndexArray = null;
+        scanIndexVariable = null;
 
         // Calc stop position for the last scan
         // This defines the end index of the last scan
         scanStartPositions[totalScans] = (int) massValueVariable.getSize();
 
         // Start scan RT
-        float retentionTimes[] = new float[totalScans];
+        double[] retentionTimes = new double[totalScans];
         Variable scanTimeVariable = inputFile
                 .findVariable("scan_acquisition_time");
         if (scanTimeVariable == null) {
@@ -202,11 +206,11 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
         while (scanTimeIterator.hasNext()) {
             if (scanTimeVariable.getDataType()
                     .getPrimitiveClassType() == float.class) {
-                retentionTimes[ind] = (Float) (scanTimeIterator.next());
+                retentionTimes[ind] = ((Double) scanTimeIterator.next()) / 60d;
             }
             if (scanTimeVariable.getDataType()
                     .getPrimitiveClassType() == double.class) {
-                retentionTimes[ind] = ((Double) scanTimeIterator.next()).floatValue();
+                retentionTimes[ind] = ((Double) scanTimeIterator.next()) / 60d;
             }
             ind++;
         }
@@ -282,8 +286,8 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
                     if (nearestI != Integer.MAX_VALUE) {
 
-                        retentionTimes[i] = (float) (retentionTimes[nearestI]
-                                + (i - nearestI) * avgDelta);
+                        retentionTimes[i] = retentionTimes[nearestI]
+                                + (i - nearestI) * avgDelta;
 
                     } else {
                         if (i > 0) {
@@ -310,6 +314,27 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
             }
         }
 
+        // Collect information about retention times, start positions and
+        // lengths for scans
+        scansRetentionTimes = new Hashtable<Integer, Double>();
+        scansIndex = new Hashtable<Integer, Integer[]>();
+        for (int i = 0; i < totalScans; i++) {
+
+            Integer scanNum = new Integer(i);
+
+            Integer[] startAndLength = new Integer[2];
+            startAndLength[0] = scanStartPositions[i];
+            startAndLength[1] = scanStartPositions[i + 1]
+                    - scanStartPositions[i];
+
+            scansRetentionTimes.put(scanNum, new Double(retentionTimes[i]));
+            scansIndex.put(scanNum, startAndLength);
+
+        }
+
+        scanStartPositions = null;
+        retentionTimes = null;
+
     }
 
     /**
@@ -329,9 +354,11 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
         MsScan scan = MSDKObjectBuilder.getMsScan(dataStore, scanNum,
                 msFunction);
 
+        // Get scan starting position and length
+        Integer[] startAndLength = scansIndex.get(scanNum);
+
         // End of file
         if (startAndLength == null) {
-            System.out.println("scan #" + scanNum);
             return null;
         }
 
@@ -344,16 +371,23 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
         }
 
         // Read mass and intensity values
-        final int scanStartPosition[] = { scanStartPositions[i] };
-        final int scanLength[] = {  scanStartPositions[i + 1]
-                - scanStartPositions[i] };
+        final int scanStartPosition[] = { startAndLength[0] };
+        final int scanLength[] = { startAndLength[1] };
         Array massValueArray;
         Array intensityValueArray;
+        try {
             massValueArray = massValueVariable.read(scanStartPosition,
                     scanLength);
             intensityValueArray = intensityValueVariable.read(scanStartPosition,
                     scanLength);
-        
+        } catch (Exception e) {
+            logger.error(
+                    "Could not read from variables mass_values and/or intensity_values.",
+                    e);
+            throw (new MSDKException(
+                    "Could not read from variables mass_values and/or intensity_values."));
+        }
+
         Index massValuesIndex = massValueArray.getIndex();
         Index intensityValuesIndex = intensityValueArray.getIndex();
 
@@ -388,7 +422,6 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
                 .getChromatographyInfo1D(SeparationType.UNKNOWN,
                         retentionTime.floatValue());
         scan.setChromatographyInfo(chromData);
-        
         return scan;
 
     }

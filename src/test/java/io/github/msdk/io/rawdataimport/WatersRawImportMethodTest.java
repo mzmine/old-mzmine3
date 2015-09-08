@@ -14,106 +14,46 @@
 
 package io.github.msdk.io.rawdataimport;
 
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 
-import org.junit.Ignore;
+import org.junit.Assert;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
+import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.io.rawdataimport.waters.WatersRawImportMethod;
 
 public class WatersRawImportMethodTest {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final String TEST_DATA_PATH = "src/test/resources/rawdataimport/waters/";
 
-    private static final String TEST_DATA_PATH = "src/test/resources/rawdataimport/xml";
-
-    @Ignore("not ready yet")
+    @SuppressWarnings("null")
     @Test
-    public void testCDFFileImport() throws Exception {
-
-        File inputFiles[] = new File(TEST_DATA_PATH_CDF).listFiles();
-
-        assertNotNull(inputFiles);
-        assertNotEquals(0, inputFiles.length);
-
-        int filesTested = 0;
-        for (File inputFile : inputFiles) {
-            testFile(inputFile);
-            filesTested++;
-        }
-
-        // make sure we tested some files
-        assertTrue(filesTested > 0);
-    }
-
-    @Test
-    public void testThermoRawImport() throws Exception {
+    public void test20150813() throws Exception {
 
         // Run this test only on Windows
         assumeTrue(System.getProperty("os.name").startsWith("Windows"));
 
-        File inputFiles[] = new File(TEST_DATA_PATH_THERMO).listFiles();
+        // Create the data structures
+        DataPointStore dataStore = DataPointStoreFactory
+                .getTmpFileDataPointStore();
+        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
+                .getMsSpectrumDataPointList();
 
-        assertNotNull(inputFiles);
-        assertNotEquals(0, inputFiles.length);
-
-        int filesTested = 0;
-        for (File inputFile : inputFiles) {
-            testFile(inputFile);
-
-            filesTested++;
-        }
-
-        // make sure we tested some files
-        assertTrue(filesTested > 0);
-    }
-
-    @Test
-    public void testWatersRawImport() throws Exception {
-
-        // Run this test only on Windows
-        assumeTrue(System.getProperty("os.name").startsWith("Windows"));
-
-        File inputFiles[] = new File("src/test/resources/rawdataimport/waters")
-                .listFiles();
-
-        assertNotNull(inputFiles);
-        assertNotEquals(0, inputFiles.length);
-
-        int filesTested = 0;
-        for (File inputFile : inputFiles) {
-            testFile(inputFile);
-            filesTested++;
-        }
-
-        // make sure we tested some files
-        // assertTrue(filesTested > 0);
-    }
-
-    private void testFile(File inputFile) throws Exception {
-
-        logger.info("Checking import of file " + inputFile.getName());
-
-        DataPointStore dataStore = DataPointStoreFactory.getTmpFileDataPointStore();
-
-        RawDataFileImportMethod importer = new RawDataFileImportMethod(
-                inputFile, dataStore);
-
+        // Import the file
+        File inputFile = new File(TEST_DATA_PATH + "20150813-63.raw");
+        Assert.assertTrue(inputFile.canRead());
+        WatersRawImportMethod importer = new WatersRawImportMethod(inputFile,
+                dataStore);
         RawDataFile rawFile = importer.execute();
-
-        assertNotNull(rawFile);
-        assertNotEquals(rawFile.getScans().size(), 0);
-
-        rawFile.dispose();
+        Assert.assertNotNull(rawFile);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
 
     }
+
 }

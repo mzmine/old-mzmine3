@@ -34,8 +34,13 @@ public class MzMLFileImportMethodTest {
 
     private static final String TEST_DATA_PATH = "src/test/resources/rawdataimport/mzml/";
 
+    @SuppressWarnings("null")
     @Test
     public void test5peptideFT() throws MSDKException {
+
+        // Create the data structures
+        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
+                .getMsSpectrumDataPointList();
 
         // Import the file
         File inputFile = new File(TEST_DATA_PATH + "5peptideFT.mzML");
@@ -48,17 +53,15 @@ public class MzMLFileImportMethodTest {
         // The file has 7 scans
         List<MsScan> scans = rawFile.getScans();
         Assert.assertNotNull(scans);
-        Assert.assertEquals(scans.size(), 7);
-
-        // Create a data point list
-        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
-                .getMsSpectrumDataPointList();
+        Assert.assertEquals(7, scans.size());
 
         // 2nd scan, #2
         MsScan scan2 = scans.get(1);
         Assert.assertEquals(new Integer(2), scan2.getScanNumber());
         Assert.assertEquals(MsSpectrumType.PROFILE, scan2.getSpectrumType());
         Assert.assertEquals(new Integer(1), scan2.getMsFunction().getMsLevel());
+        Assert.assertEquals(0.474f,
+                scan2.getChromatographyInfo().getRetentionTime(), 0.01f);
         Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
         scan2.getDataPoints(dataPoints);
         Assert.assertEquals(19800, dataPoints.getSize());
@@ -70,6 +73,8 @@ public class MzMLFileImportMethodTest {
         Assert.assertEquals(new Integer(5), scan5.getScanNumber());
         Assert.assertEquals(MsSpectrumType.CENTROIDED, scan5.getSpectrumType());
         Assert.assertEquals(new Integer(2), scan5.getMsFunction().getMsLevel());
+        Assert.assertEquals(2.094f,
+                scan5.getChromatographyInfo().getRetentionTime(), 0.01f);
         Assert.assertEquals(PolarityType.POSITIVE, scan5.getPolarity());
         scan5.getDataPoints(dataPoints);
         Assert.assertEquals(837, dataPoints.getSize());
@@ -80,8 +85,13 @@ public class MzMLFileImportMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testParamGroup() throws MSDKException {
+
+        // Create the data structures
+        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
+                .getMsSpectrumDataPointList();
 
         // Import the file
         File inputFile = new File(TEST_DATA_PATH
@@ -95,17 +105,15 @@ public class MzMLFileImportMethodTest {
         // The file has 102 scans
         List<MsScan> scans = rawFile.getScans();
         Assert.assertNotNull(scans);
-        Assert.assertEquals(scans.size(), 102);
-
-        // Create a data point list
-        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
-                .getMsSpectrumDataPointList();
+        Assert.assertEquals(102, scans.size());
 
         // 2nd scan, #1001
         MsScan scan2 = scans.get(1);
         Assert.assertEquals(new Integer(1001), scan2.getScanNumber());
         Assert.assertEquals(MsSpectrumType.CENTROIDED, scan2.getSpectrumType());
         Assert.assertEquals(new Integer(2), scan2.getMsFunction().getMsLevel());
+        Assert.assertEquals(100.002f,
+                scan2.getChromatographyInfo().getRetentionTime(), 0.01f);
         Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
         scan2.getDataPoints(dataPoints);
         Assert.assertEquals(33, dataPoints.getSize());
@@ -119,6 +127,8 @@ public class MzMLFileImportMethodTest {
                 scan101.getSpectrumType());
         Assert.assertEquals(new Integer(1),
                 scan101.getMsFunction().getMsLevel());
+        Assert.assertEquals(109.998f,
+                scan101.getChromatographyInfo().getRetentionTime(), 0.01f);
         scan101.getDataPoints(dataPoints);
         Assert.assertEquals(21, dataPoints.getSize());
         Float scan5maxInt = MsSpectrumUtil.getMaxIntensity(dataPoints);

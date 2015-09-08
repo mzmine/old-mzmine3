@@ -72,13 +72,12 @@ abstract class AbstractSpectrum implements MsSpectrum {
                 orgDataPointList.selectDataPoints(mzRange, intensityRange));
     }
 
+    @SuppressWarnings("null")
     synchronized public void setDataPoints(
             @Nonnull MsSpectrumDataPointList newDataPoints) {
-        final Object dataStoreIdCopy = dataStoreId;
-        Preconditions.checkNotNull(dataStoreIdCopy);
         Preconditions.checkNotNull(newDataPoints);
-        if (dataStoreIdCopy != null)
-            dataPointStore.removeDataPoints(dataStoreIdCopy);
+        if (dataStoreId != null)
+            dataPointStore.removeDataPoints(dataStoreId);
         dataStoreId = dataPointStore.storeDataPoints(newDataPoints);
         mzRange = newDataPoints.getMzRange();
         totalIonCurrent = newDataPoints.getTIC();
