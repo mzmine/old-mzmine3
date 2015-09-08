@@ -67,9 +67,9 @@ public class NetCDFFileImportMethodTest {
         Assert.assertEquals(2504.508f,
                 scan3.getChromatographyInfo().getRetentionTime(), 0.01f);
         scan3.getDataPoints(dataPoints);
-        Assert.assertEquals(19800, dataPoints.getSize());
-        Float scan2maxInt = MsSpectrumUtil.getMaxIntensity(dataPoints);
-        Assert.assertEquals(4.5E4f, scan2maxInt, 1E3f);
+        Assert.assertEquals(420, dataPoints.getSize());
+        Float scan3maxInt = MsSpectrumUtil.getMaxIntensity(dataPoints);
+        Assert.assertEquals(4.5E4f, scan3maxInt, 1E3f);
 
         // 1278th scan, #1278
         MsScan scan1278 = scans.get(1277);
@@ -79,11 +79,11 @@ public class NetCDFFileImportMethodTest {
         Assert.assertEquals(new Integer(1),
                 scan1278.getMsFunction().getMsLevel());
         Assert.assertEquals(4499.826f,
-                scan3.getChromatographyInfo().getRetentionTime(), 0.01f);
+                scan1278.getChromatographyInfo().getRetentionTime(), 0.01f);
         scan1278.getDataPoints(dataPoints);
-        Assert.assertEquals(837, dataPoints.getSize());
-        Float scan5maxInt = MsSpectrumUtil.getMaxIntensity(dataPoints);
-        Assert.assertEquals(4.0E3f, scan5maxInt, 1E2f);
+        Assert.assertEquals(61, dataPoints.getSize());
+        Float scan1278maxInt = MsSpectrumUtil.getMaxIntensity(dataPoints);
+        Assert.assertEquals(4.0E3f, scan1278maxInt, 1E2f);
 
         rawFile.dispose();
 
