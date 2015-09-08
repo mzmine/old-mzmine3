@@ -64,7 +64,8 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
     private boolean canceled = false;
 
     private JMzMLRawDataFile newRawFile;
-    private long totalScans = 0, parsedScans;
+    private long totalScans = 0, totalChromatograms = 0, parsedScans,
+            parsedChromatograms;
     private int lastScanNumber = 0;
 
     private Map<String, Integer> scanIdTable = new Hashtable<String, Integer>();
@@ -88,6 +89,8 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
         totalScans = parser
                 .getObjectCountForXpath("/run/spectrumList/spectrum");
+        totalChromatograms = parser
+                .getObjectCountForXpath("/run/chromatogramList/chromatogram");
 
         // Prepare data structures
         List<MsFunction> msFunctionsList = new ArrayList<>();
@@ -168,6 +171,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
         }
 
+        parsedChromatograms = totalChromatograms;
         logger.info("Finished importing " + sourceFile + ", parsed "
                 + parsedScans + " scans");
 
@@ -202,7 +206,9 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
     @Override
     public Float getFinishedPercentage() {
-        return totalScans == 0 ? null : (float) parsedScans / totalScans;
+        return totalScans == 0 ? null
+                : (float) (parsedScans + parsedChromatograms)
+                        / (totalScans + totalChromatograms);
     }
 
     @Override

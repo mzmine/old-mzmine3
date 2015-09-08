@@ -138,4 +138,15 @@ public class MzMLFileImportMethodTest {
 
     }
 
+    @Test
+    public void testChromatogram() throws MSDKException {
+
+        // Import the file
+        File inputFile = new File(TEST_DATA_PATH + "SRM.mzML");
+        Assert.assertTrue(inputFile.canRead());
+        MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
+        RawDataFile rawFile = importer.execute();
+        Assert.assertNotNull(rawFile);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+    }
 }
