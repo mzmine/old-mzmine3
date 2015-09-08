@@ -67,6 +67,7 @@ public class MSDKObjectBuilder {
      * @param msLevel
      * @return
      */
+    @SuppressWarnings("null")
     public static final @Nonnull MsFunction getMsFunction(@Nonnull String name,
             @Nullable Integer msLevel) {
 
@@ -142,12 +143,12 @@ public class MSDKObjectBuilder {
     }
 
     public static final @Nonnull ChromatographyInfo getChromatographyInfo1D(
-            SeparationType separationType, float rt1) {
+            SeparationType separationType, Float rt1) {
         return new SimpleChromatographyInfo(rt1, null, null, separationType);
     }
 
     public static final @Nonnull ChromatographyInfo getChromatographyInfo2D(
-            SeparationType separationType, float rt1, float rt2) {
+            SeparationType separationType, Float rt1, Float rt2) {
         if (separationType.getFeatureDimensions() < 2) {
             throw new IllegalArgumentException(
                     "2D ChromatographyInfo requires at least 2 feature dimensions. Provided separation type "
@@ -158,7 +159,7 @@ public class MSDKObjectBuilder {
     }
 
     public static final @Nonnull ChromatographyInfo getImsInfo(
-            SeparationType separationType, float rt1, float ionDriftTime) {
+            SeparationType separationType, Float rt1, Float ionDriftTime) {
         if (separationType.getFeatureDimensions() < 2) {
             throw new IllegalArgumentException(
                     "2D ChromatographyInfo requires at least 2 feature dimensions. Provided separation type "

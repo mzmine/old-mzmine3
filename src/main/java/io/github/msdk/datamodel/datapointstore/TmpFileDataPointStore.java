@@ -31,8 +31,10 @@ import org.slf4j.LoggerFactory;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
+import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
  * A DataPointStore implementation that stores the data points in a temporary
@@ -155,7 +157,7 @@ class TmpFileDataPointStore implements DataPointStore {
             final int numOfDataPoints = dataPoints.getSize();
 
             // Calculate minimum necessary size of the byte buffer
-            final int numOfBytes = numOfDataPoints * (Float.SIZE / 8);
+            int numOfBytes = numOfDataPoints * (Float.SIZE / 8) * 3;
 
             // Make sure we have enough space in the byte buffer
             if (byteBuffer.capacity() < numOfBytes) {
@@ -164,8 +166,25 @@ class TmpFileDataPointStore implements DataPointStore {
                 byteBuffer.clear();
             }
 
+            final ChromatographyInfo retentionTimes[] = dataPoints
+                    .getRtBuffer();
+
             FloatBuffer fltBuffer = byteBuffer.asFloatBuffer();
-            fltBuffer.put(dataPoints.getRtBuffer(), 0, numOfDataPoints);
+            Float f;
+            for (ChromatographyInfo ch : retentionTimes) {
+                f = ch.getRetentionTime();
+                if (f == null)
+                    f = Float.NaN;
+                fltBuffer.put(f);
+                f = ch.getSecondaryRetentionTime();
+                if (f == null)
+                    f = Float.NaN;
+                fltBuffer.put(f);
+                f = ch.getIonDriftTime();
+                if (f == null)
+                    f = Float.NaN;
+                fltBuffer.put(f);
+            }
             tmpDataFile.write(byteBuffer.array(), 0, numOfBytes);
 
             fltBuffer = byteBuffer.asFloatBuffer();
@@ -184,7 +203,6 @@ class TmpFileDataPointStore implements DataPointStore {
         }
 
         return lastStorageId;
-
     }
 
     /**
@@ -261,7 +279,7 @@ class TmpFileDataPointStore implements DataPointStore {
         final int numOfDataPoints = dataPointsLengths.get(ID);
 
         // Calculate minimum necessary size of the byte buffer
-        final int numOfBytes = numOfDataPoints * (Float.SIZE / 8);
+        int numOfBytes = numOfDataPoints * (Float.SIZE / 8) * 3;
 
         // Make sure we have enough space in the byte buffer
         if (byteBuffer.capacity() < numOfBytes) {
@@ -280,9 +298,23 @@ class TmpFileDataPointStore implements DataPointStore {
             ChromatographyInfo rtValues[] = list.getRtBuffer();
             if (rtValues.length < numOfDataPoints)
                 rtValues = new ChromatographyInfo[numOfDataPoints];
-            fltBuffer.get(rtValues, 0, numOfDataPoints);
+
+            for (int i = 0; i < numOfDataPoints; i++) {
+                Float rt = fltBuffer.get();
+                if (rt == Float.NaN)
+                    rt = null;
+                Float srt = fltBuffer.get();
+                if (srt == Float.NaN)
+                    srt = null;
+                Float idt = fltBuffer.get();
+                if (idt == Float.NaN)
+                    idt = null;
+                rtValues[i] = MSDKObjectBuilder.getChromatographyInfo2D(
+                        SeparationType.UNKNOWN, rt, srt);
+            }
 
             // Read intensity values
+            numOfBytes = numOfDataPoints * (Float.SIZE / 8);
             tmpDataFile.read(byteBuffer.array(), 0, numOfBytes);
             fltBuffer = byteBuffer.asFloatBuffer();
             float intensityValues[] = list.getIntensityBuffer();
