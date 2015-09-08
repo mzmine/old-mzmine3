@@ -21,8 +21,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
+import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -39,6 +42,10 @@ public class SpectrumTypeDetectionMethodTest {
      */
     @Test
     public void testSpectrumTypeDetectionAlgorithm() throws Exception {
+
+        // Create the data structures
+        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
+                .getMsSpectrumDataPointList();
 
         File inputFiles[] = new File(TEST_DATA_PATH).listFiles();
 
@@ -57,7 +64,7 @@ public class SpectrumTypeDetectionMethodTest {
             else if (inputFile.getName().startsWith("profile"))
                 expectedType = MsSpectrumType.PROFILE;
             else {
-                throw new Exception(
+                throw new MSDKException(
                         "Cannot determine expected spectrum type of file "
                                 + inputFile);
             }
@@ -77,11 +84,13 @@ public class SpectrumTypeDetectionMethodTest {
             Assert.assertNotNull(rawFile);
 
             for (MsScan scan : rawFile.getScans()) {
-                @SuppressWarnings("null")
+
+                // Load data points
+                scan.getDataPoints(dataPoints);
+
                 SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
-                        scan);
-                detector.execute();
-                MsSpectrumType detectedType = detector.getResult();
+                        dataPoints);
+                MsSpectrumType detectedType = detector.execute();
                 Assert.assertNotNull(detectedType);
 
                 Assert.assertEquals("Scan type wrongly detected for scan "

@@ -50,8 +50,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
 
     private NetcdfFile inputFile;
 
-    private int parsedScans;
-    private int totalScans = 0;
+    private int parsedScans, totalScans = 0;
 
     private int scanStartPositions[];
     private float scanRetentionTimes[];

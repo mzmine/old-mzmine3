@@ -61,7 +61,7 @@ public class FileTypeDetectionMethod implements MSDKMethod<RawDataFileType> {
 
     private @Nonnull File fileName;
     private @Nullable RawDataFileType result = null;
-    private Float finishedPercentage = null;
+    private @Nullable Float finishedPercentage = null;
 
     /**
      * 

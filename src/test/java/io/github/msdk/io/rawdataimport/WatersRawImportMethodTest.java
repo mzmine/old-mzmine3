@@ -26,7 +26,7 @@ import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.rawdataimport.waters.WatersRawImportMethod;
+import io.github.msdk.io.rawdataimport.nativeformats.WatersRawImportMethod;
 
 public class WatersRawImportMethodTest {
 
