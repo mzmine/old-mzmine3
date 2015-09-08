@@ -29,15 +29,15 @@ class SimplePeakListColumn<DataType> implements PeakListColumn<DataType> {
 
     private @Nonnull String name;
     private @Nonnull Class<DataType> dataTypeClass;
-    private @Nullable SimpleSample simpleSample;
+    private @Nullable Sample simpleSample;
 
-    SimplePeakListColumn(@Nonnull String name, @Nonnull Class<DataType> dataTypeClass,
-            @Nullable SimpleSample simpleSample) {
+    SimplePeakListColumn(@Nonnull String name,
+            @Nonnull Class<DataType> dataTypeClass, @Nullable Sample sample) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(dataTypeClass);
         this.name = name;
         this.dataTypeClass = dataTypeClass;
-        this.simpleSample = simpleSample;
+        this.simpleSample = sample;
     }
 
     @Override

@@ -14,6 +14,7 @@
 
 package io.github.msdk.datamodel.impl;
 
+import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,25 +23,34 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.base.Preconditions;
-
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
-import io.github.msdk.datamodel.peaklists.FeatureDataPointList;
 import io.github.msdk.datamodel.peaklists.PeakListColumn;
+import io.github.msdk.datamodel.peaklists.Sample;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
  * Object builder
  */
 public class MSDKObjectBuilder {
+
+    /**
+     * Common columns for peak lists
+     */
+    private static final @Nonnull SimplePeakListColumn<Integer> IdPeakListColumn = new SimplePeakListColumn<Integer>(
+            "Id", Integer.class, null);
+    private static final @Nonnull SimplePeakListColumn<Double> MzPeakListColumn = new SimplePeakListColumn<Double>(
+            "m/z", Double.class, null);
+    private static final @Nonnull SimplePeakListColumn<ChromatographyInfo> ChromatographyInfoPeakListColumn = new SimplePeakListColumn<ChromatographyInfo>(
+            "Chromatography Info", ChromatographyInfo.class, null);
 
     /**
      * The number of MS functions used in a project is typically small, but each
@@ -102,13 +112,18 @@ public class MSDKObjectBuilder {
      * @param msLevel
      * @return
      */
+    @SuppressWarnings("null")
     public static final @Nonnull MsFunction getMsFunction(
             @Nullable Integer msLevel) {
         return getMsFunction(MsFunction.DEFAULT_MS_FUNCTION_NAME, msLevel);
     }
 
-    public static final @Nonnull RawDataFile getRawDataFile() {
-        return new SimpleRawDataFile();
+    public static final @Nonnull RawDataFile getRawDataFile(
+            @Nonnull String rawDataFileName, @Nullable File originalRawDataFile,
+            @Nonnull RawDataFileType rawDataFileType,
+            @Nonnull DataPointStore dataPointStore) {
+        return new SimpleRawDataFile(rawDataFileName, originalRawDataFile,
+                rawDataFileType, dataPointStore);
     }
 
     public static final @Nonnull MsScan getMsScan(
@@ -139,7 +154,6 @@ public class MSDKObjectBuilder {
                             + separationType + " has "
                             + separationType.getFeatureDimensions());
         }
-        // TODO add further validation
         return new SimpleChromatographyInfo(rt1, rt2, null, separationType);
     }
 
@@ -161,7 +175,8 @@ public class MSDKObjectBuilder {
     }
 
     /**
-     * Creates a new SpectrumDataPointList instance with no data points
+     * Creates a new SpectrumDataPointList instance with no data points and
+     * initial capacity of 100.
      * 
      * @return new DataPointList
      */
@@ -170,46 +185,36 @@ public class MSDKObjectBuilder {
     }
 
     /**
-     * Creates a new DataPointList instance with no data points and initial
-     * capacity of 100.
+     * Creates a new ChromatogramDataPointList instance with no data points and
+     * initial capacity of 100.
      * 
-     * @return new DataPointList
-     */
-    public static final @Nonnull FeatureDataPointList getFeatureDataPointList() {
-        return new SimpleFeatureDataPointList();
-    }
-
-    /**
-     * Creates a new DataPointList instance with no data points and given
-     * initial capacity.
-     * 
-     * @param capacity
-     *            Initial capacity of the list
      * @return new DataPointList
      */
     public static final @Nonnull ChromatogramDataPointList getChromatogramDataPointList() {
         return new SimpleChromatogramDataPointList();
     }
 
+    /**
+     * Creates a new PeakListColumn instance.
+     * 
+     * @return new SimplePeakListColumn
+     */
     public static @Nonnull <DataType> PeakListColumn<DataType> getPeakListColumn(
-            Class<DataType> dataTypeClass) {
-        // TODO
-        return null;
+            @Nonnull String name, @Nonnull Class<DataType> dataTypeClass,
+            @Nullable Sample sample) {
+        return new SimplePeakListColumn<DataType>(name, dataTypeClass, sample);
     }
 
     public static @Nonnull PeakListColumn<Double> getMzPeakListColumn() {
-        // TODO
-        return null;
+        return MzPeakListColumn;
     }
 
     public static @Nonnull PeakListColumn<ChromatographyInfo> getChromatographyInfoPeakListColumn() {
-        // TODO
-        return null;
+        return ChromatographyInfoPeakListColumn;
     }
 
     public static @Nonnull PeakListColumn<Integer> getIdPeakListColumn() {
-        // TODO
-        return null;
+        return IdPeakListColumn;
     }
 
 }

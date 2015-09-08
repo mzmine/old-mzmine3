@@ -19,6 +19,8 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+
 /**
  * This interface provides a convenient data structure for storing large amount
  * of data points in memory. Internally, it is implemented by two arrays, one
@@ -31,9 +33,9 @@ import com.google.common.collect.Range;
  * always preferred, as iteration via the List interface has to create a new
  * DataPoint instance for each visited data point.
  * 
- * DataPointList methods always keep the data points sorted in the rt order,
- * and this requirement must be maintained when the internal rt and intensity
- * arrays are modified directly.
+ * DataPointList methods always keep the data points sorted in the rt order, and
+ * this requirement must be maintained when the internal rt and intensity arrays
+ * are modified directly.
  * 
  * The equals() method compares the contents of the two data point lists, and
  * ignores their internal array sizes (capacities).
@@ -41,19 +43,19 @@ import com.google.common.collect.Range;
  * This data structure is not thread-safe.
  */
 public interface ChromatogramDataPointList {
-    
+
     /**
-     * Returns the current rt buffer array. The size of the array might be
-     * larger than the actual size of this DataPointList, therefore data
-     * operations should always use the size returned by the size() method and
-     * not the length of the returned array. The returned array reflects only
-     * the current state of this list - if more data points are added, the
-     * internal buffer might be replaced with a larger array.
+     * Returns the current ChromatographyInfo buffer array. The size of the
+     * array might be larger than the actual size of this DataPointList,
+     * therefore data operations should always use the size returned by the
+     * size() method and not the length of the returned array. The returned
+     * array reflects only the current state of this list - if more data points
+     * are added, the internal buffer might be replaced with a larger array.
      * 
-     * @return current rt buffer
+     * @return current ChromatographyInfo buffer
      */
     @Nonnull
-    float[] getRtBuffer();
+    ChromatographyInfo[] getRtBuffer();
 
     /**
      * Returns the current intensity buffer array. The size of the array might
@@ -89,7 +91,7 @@ public interface ChromatogramDataPointList {
      * 
      */
     void clear();
-    
+
     /**
      * Sets the internal buffers to given arrays. The arrays will be referenced
      * directly without cloning. The rt buffer contents must be sorted in
@@ -107,7 +109,7 @@ public interface ChromatogramDataPointList {
      * @throws IllegalStateException
      *             if the rt array is not sorted in ascending order
      */
-    void setBuffers(@Nonnull float[] rtBuffer,
+    void setBuffers(@Nonnull ChromatographyInfo[] rtBuffer,
             @Nonnull float[] intensityBuffer, int newSize);
 
     /**
@@ -120,7 +122,7 @@ public interface ChromatogramDataPointList {
      * @param newIntensity
      *            intensity value of the new data point
      */
-    void add(float newRt, float newIntensity);
+    void add(ChromatographyInfo newRt, float newIntensity);
 
     /**
      * Copies the contents of another data point list into this list. The
@@ -142,16 +144,17 @@ public interface ChromatogramDataPointList {
      *            intensity range to select
      * @return new DataPointList
      */
-    ChromatogramDataPointList selectDataPoints(@Nonnull Range<Float> rtRange,
+    ChromatogramDataPointList selectDataPoints(
+            @Nonnull Range<ChromatographyInfo> rtRange,
             @Nonnull Range<Float> intensityRange);
 
     /**
-     * Returns the range of rt values in this DataPointList, or null if the
-     * list is empty.
+     * Returns the range of ChromatographyInfo values in this DataPointList, or
+     * null if the list is empty.
      * 
-     * @return range of rt values in this DataPointList, or null
+     * @return range of ChromatographyInfo values in this DataPointList, or null
      */
     @Nullable
-    Range<Float> getRtRange();
+    Range<ChromatographyInfo> getRtRange();
 
 }

@@ -18,7 +18,6 @@ import javax.annotation.Nonnull;
 
 import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
-import io.github.msdk.datamodel.peaklists.FeatureDataPointList;
 
 /**
  * Represents a storage mechanism for data points represented by DataPointList.
@@ -43,10 +42,7 @@ public interface DataPointStore {
 
     @Nonnull
     Object storeDataPoints(@Nonnull ChromatogramDataPointList dataPoints);
-    
-    @Nonnull
-    Object storeDataPoints(@Nonnull FeatureDataPointList dataPoints);
-    
+
     /**
      * Reads the data points associated with given ID into a given
      * DataPointList. If the data point list does not have enough space, it is
@@ -62,9 +58,7 @@ public interface DataPointStore {
     void readDataPoints(@Nonnull Object id, @Nonnull MsSpectrumDataPointList list);
     
     void readDataPoints(@Nonnull Object id, @Nonnull ChromatogramDataPointList list);
-    
-    void readDataPoints(@Nonnull Object id, @Nonnull FeatureDataPointList list);
-
+ 
     /**
      * Discards data points stored under given ID.
      * 

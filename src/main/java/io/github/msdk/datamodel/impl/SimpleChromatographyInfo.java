@@ -25,8 +25,10 @@ class SimpleChromatographyInfo implements ChromatographyInfo {
 
     private @Nullable SeparationType separationType;
 
-    SimpleChromatographyInfo(Float retentionTime, Float secondaryRetentionTime,
-            Float ionDriftTime, SeparationType separationType) {
+    SimpleChromatographyInfo(@Nullable Float retentionTime,
+            @Nullable Float secondaryRetentionTime,
+            @Nullable Float ionDriftTime,
+            @Nullable SeparationType separationType) {
         this.retentionTime = retentionTime;
         this.secondaryRetentionTime = secondaryRetentionTime;
         this.ionDriftTime = ionDriftTime;
@@ -62,7 +64,8 @@ class SimpleChromatographyInfo implements ChromatographyInfo {
 
         // 2. Compare secondary retention time
         if (returnValue == 0) {
-            returnValue = this.secondaryRetentionTime.compareTo(o.getSecondaryRetentionTime());
+            returnValue = this.secondaryRetentionTime
+                    .compareTo(o.getSecondaryRetentionTime());
         }
 
         // 3. Compare ion drift time

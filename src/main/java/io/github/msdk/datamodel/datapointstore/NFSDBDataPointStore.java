@@ -31,7 +31,6 @@ import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
-import io.github.msdk.datamodel.peaklists.FeatureDataPointList;
 
 /**
  * A DataPointStore implementation that stores the data points in memory. Use
@@ -59,7 +58,6 @@ class NFSDBDataPointStore implements DataPointStore {
                     + tmpDataFileName);
 
             JournalFactory factory = new JournalFactory(tmpDataFileName);
-
 
         } catch (IOException e) {
             throw new MSDKException(e);
@@ -123,33 +121,6 @@ class NFSDBDataPointStore implements DataPointStore {
     }
 
     /**
-     * Stores new array of data points.
-     * 
-     * @return Storage ID for the newly stored data.
-     */
-    @Override
-    public @Nonnull Integer storeDataPoints(
-            @Nonnull FeatureDataPointList dataPoints) {
-
-        if (storageMap == null)
-            throw new IllegalStateException("This object has been disposed");
-
-        // Clone the given list for storage
-        final FeatureDataPointList newList = MSDKObjectBuilder
-                .getFeatureDataPointList();
-        newList.copyFrom(dataPoints);
-
-        // Save the reference to the new list
-        synchronized (storageMap) {
-            // Increase the storage ID
-            lastStorageId++;
-            storageMap.put(lastStorageId, newList);
-        }
-
-        return lastStorageId;
-    }
-
-    /**
      * Reads the data points associated with given ID.
      */
     @Override
@@ -195,32 +166,6 @@ class NFSDBDataPointStore implements DataPointStore {
             throw new MSDKRuntimeException(
                     "Object stored under ID " + ID + " is not of correct type");
         final ChromatogramDataPointList storedList = (ChromatogramDataPointList) storedObject;
-
-        // Copy data
-        list.copyFrom(storedList);
-
-    }
-
-    /**
-     * Reads the data points associated with given ID.
-     */
-    @Override
-    synchronized public void readDataPoints(@Nonnull Object ID,
-            @Nonnull FeatureDataPointList list) {
-
-        if (storageMap == null)
-            throw new IllegalStateException("This object has been disposed");
-
-        if (!storageMap.containsKey(ID))
-            throw new IllegalArgumentException(
-                    "ID " + ID + " not found in storage");
-
-        // Get the stored DataPointList
-        final Object storedObject = storageMap.get(ID);
-        if (!(storedObject instanceof FeatureDataPointList))
-            throw new MSDKRuntimeException(
-                    "Object stored under ID " + ID + " is not of correct type");
-        final FeatureDataPointList storedList = (FeatureDataPointList) storedObject;
 
         // Copy data
         list.copyFrom(storedList);

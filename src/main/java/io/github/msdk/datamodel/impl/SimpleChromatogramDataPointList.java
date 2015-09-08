@@ -24,6 +24,7 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * Basic implementation of DataPointList.
@@ -33,10 +34,10 @@ import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
 
     /**
-     * Array for RT values. Its length defines the capacity of this list.
+     * Array for ChromatographyInfo values. Its length defines the capacity of this list.
      */
-    private @Nonnull float[] rtBuffer;
-
+    private @Nonnull ChromatographyInfo[] rtBuffer;
+ 
     /**
      * Array for intensity values. Its length is always the same as the RT
      * buffer length.
@@ -62,7 +63,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
      *            Initial size of the RT and intensity arrays.
      */
     SimpleChromatogramDataPointList(@Nonnull Integer initialCapacity) {
-        rtBuffer = new float[initialCapacity];
+        rtBuffer = new ChromatographyInfo[initialCapacity];
         intensityBuffer = new float[initialCapacity];
         size = 0;
     }
@@ -72,7 +73,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
      * referenced, not cloned.
      * 
      * @param rtBuffer
-     *            array of RT values
+     *            array of ChromatographyInfo values
      * @param intensityBuffer
      *            array of intensity values
      * @param size
@@ -80,7 +81,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
      * @throws IllegalArgumentException
      *             if the initial array length < size
      */
-    SimpleChromatogramDataPointList(@Nonnull float rtBuffer[],
+    SimpleChromatogramDataPointList(@Nonnull ChromatographyInfo rtBuffer[],
             @Nonnull float intensityBuffer[], int size) {
         Preconditions.checkArgument(rtBuffer.length >= size);
         Preconditions.checkArgument(intensityBuffer.length >= size);
@@ -94,7 +95,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
      */
     @Override
     @Nonnull
-    public float[] getRtBuffer() {
+    public ChromatographyInfo[] getRtBuffer() {
         return rtBuffer;
     }
 
@@ -108,10 +109,10 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     }
 
     /**
-     * Replaces theRT and intensity arrays with new ones
+     * Replaces the RT and intensity arrays with new ones
      */
     @Override
-    public void setBuffers(@Nonnull float[] rtBuffer,
+    public void setBuffers(@Nonnull ChromatographyInfo[] rtBuffer,
             @Nonnull float[] intensityBuffer, int newSize) {
 
         if (rtBuffer.length != intensityBuffer.length) {
@@ -121,7 +122,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
 
         // Check if the RT array is properly sorted
         for (int pos = 1; pos < newSize; pos++) {
-            if (rtBuffer[pos] < rtBuffer[pos - 1])
+            if (rtBuffer[pos].compareTo(rtBuffer[pos - 1]) >= 0)
                 throw (new MSDKRuntimeException(
                         "The RT array is not properly sorted. It should be sorted from lowest to highest."));
         }
@@ -140,7 +141,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     @Override
     public void copyFrom(@Nonnull ChromatogramDataPointList list) {
         if (rtBuffer.length < list.getSize()) {
-            rtBuffer = new float[list.getSize()];
+            rtBuffer = new ChromatographyInfo[list.getSize()];
             intensityBuffer = new float[list.getSize()];
         }
 
@@ -158,7 +159,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
      */
     @Override
     @Nullable
-    public Range<Float> getRtRange() {
+    public Range<ChromatographyInfo> getRtRange() {
         if (size == 0)
             return null;
         return Range.closed(rtBuffer[0], rtBuffer[size - 1]);
@@ -184,24 +185,25 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     /**
      * Insert into the right position
      */
-    public void add(float newRt, float newIntensity) {
+    public void add(ChromatographyInfo newRt, float newIntensity) {
         int targetPosition = 0;
         if (size != 0) {
             targetPosition = Arrays.binarySearch(rtBuffer, 0, size, newRt);
             targetPosition = Math.abs(targetPosition + 1);
         }
+
         this.add(targetPosition, newRt, newIntensity);
     }
 
     /**
      * Insert data into specific position
      */
-    public void add(int targetPosition, float newRt, float newIntensity) {
+    public void add(int targetPosition, ChromatographyInfo newRt, float newIntensity) {
         int thisCapacity = rtBuffer.length;
         if (!(size < rtBuffer.length))
             thisCapacity++;
 
-        float[] rtBufferNew = new float[thisCapacity];
+        ChromatographyInfo[] rtBufferNew = new ChromatographyInfo[thisCapacity];
         float[] intensityBufferNew = new float[thisCapacity];
 
         // Data before new data point
@@ -251,7 +253,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
             return false;
 
         // Get the arrays of the other list
-        final float otherRtBuffer[] = otherList.getRtBuffer();
+        final ChromatographyInfo otherRtBuffer[] = otherList.getRtBuffer();
         final float otherIntensityBuffer[] = otherList.getIntensityBuffer();
 
         // Check the array contents
@@ -273,7 +275,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     public int hashCode() {
         int result = 1;
         for (int i = 0; i < size; i++) {
-            long bits = Double.doubleToLongBits(rtBuffer[i]);
+            long bits = Double.doubleToLongBits(rtBuffer[i].hashCode());
             result = 31 * result + (int) (bits ^ (bits >>> 32));
             result = 31 * result + Float.floatToIntBits(intensityBuffer[i]);
         }
@@ -301,7 +303,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     @Override
     @Nonnull
     public ChromatogramDataPointList selectDataPoints(
-            @Nonnull Range<Float> rtRange,
+            @Nonnull Range<ChromatographyInfo> rtRange,
             @Nonnull Range<Float> intensityRange) {
 
         final ChromatogramDataPointList newList = MSDKObjectBuilder
@@ -326,7 +328,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
         if (rtBuffer.length >= newSize)
             return;
 
-        float[] rtBufferNew = new float[newSize];
+        ChromatographyInfo[] rtBufferNew = new ChromatographyInfo[newSize];
         float[] intensityBufferNew = new float[newSize];
 
         System.arraycopy(getRtBuffer(), 0, rtBufferNew, 0, size);
