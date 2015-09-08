@@ -28,7 +28,7 @@ import com.google.common.base.Strings;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.FragmentationInfo;
+import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScanType;
@@ -119,7 +119,7 @@ class JmzReaderUtil {
         return PolarityType.UNKNOWN;
     }
 
-    static FragmentationInfo extractSourceFragmentation(Spectrum spectrum) {
+    static ActivationInfo extractSourceFragmentation(Spectrum spectrum) {
         return null;
     }
 

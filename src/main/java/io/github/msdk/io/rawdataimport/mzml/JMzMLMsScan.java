@@ -25,7 +25,7 @@ import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.FragmentationInfo;
+import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -49,7 +49,7 @@ class JMzMLMsScan implements MsScan {
     private final @Nonnull Integer scanNumber;
     private final @Nonnull Float tic;
     private final @Nonnull PolarityType polarity;
-    private final @Nullable FragmentationInfo sourceFragmentation;
+    private final @Nullable ActivationInfo sourceFragmentation;
     private final @Nonnull List<IsolationInfo> isolations;
 
     JMzMLMsScan(@Nonnull JMzMLRawDataFile dataFile, @Nonnull String spectrumId,
@@ -59,7 +59,7 @@ class JMzMLMsScan implements MsScan {
             @Nonnull MsScanType scanType, @Nullable Range<Double> mzRange,
             @Nullable Range<Double> scanningRange, @Nonnull Integer scanNumber,
             @Nonnull Float tic, @Nonnull PolarityType polarity,
-            @Nullable FragmentationInfo sourceFragmentation,
+            @Nullable ActivationInfo sourceFragmentation,
             @Nonnull List<IsolationInfo> isolations) {
         this.dataFile = dataFile;
         this.spectrumId = spectrumId;
@@ -173,7 +173,7 @@ class JMzMLMsScan implements MsScan {
 
     @Override
     @Nullable
-    public FragmentationInfo getSourceInducedFragmentation() {
+    public ActivationInfo getSourceInducedFragmentation() {
         return sourceFragmentation;
     }
 
@@ -234,7 +234,7 @@ class JMzMLMsScan implements MsScan {
 
     @Override
     public void setSourceInducedFragmentation(
-            @Nullable FragmentationInfo newFragmentationInfo) {
+            @Nullable ActivationInfo newFragmentationInfo) {
         throw new UnsupportedOperationException();
     }
 

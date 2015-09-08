@@ -14,17 +14,22 @@
 
 package io.github.msdk.io.rawdataimport.mzml;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
+import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
+import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.FragmentationInfo;
+import io.github.msdk.datamodel.rawdata.ActivationInfo;
+import io.github.msdk.datamodel.rawdata.ActivationType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScanType;
@@ -42,14 +47,6 @@ import uk.ac.ebi.jmzml.model.mzml.Spectrum;
  */
 class JMzMLUtil {
 
-    // CV term for scan start time
-    private static final String cvScanStartTime="MS:1000016";
-    
-    // CV term for minutes. MS:1000038 is used in mzML 1.0, while UO:000003 is used in mzML 1.1.0
-    private static final String cvUnitsMin1="MS:1000038";
-    private static final String cvUnitsMin2="UO:0000031";
-
-    
     static MsFunction extractMsFunction(Spectrum spectrum) {
         Integer msLevel = 1;
         // Browse the spectrum parameters
@@ -92,12 +89,12 @@ class JMzMLUtil {
                     continue;
 
                 // Retention time (actually "Scan start time") MS:1000016
-                if (accession.equals(cvScanStartTime)) {
+                if (accession.equals(JMzMLCV.cvScanStartTime)) {
                     try {
                         float retentionTime;
                         if ((unitAccession == null)
-                                || (unitAccession.equals(cvUnitsMin1))
-                                || unitAccession.equals(cvUnitsMin2)) {
+                                || (unitAccession.equals(JMzMLCV.cvUnitsMin1))
+                                || unitAccession.equals(JMzMLCV.cvUnitsMin2)) {
                             // Minutes
                             retentionTime = Float.parseFloat(value) * 60f;
                         } else {
@@ -122,16 +119,16 @@ class JMzMLUtil {
     }
 
     static void extractDataPoints(Spectrum spectrum,
-            MsSpectrumDataPointList dataPoints) {
+            MsSpectrumDataPointList spectrumDataPoints) {
 
-        dataPoints.clear();
+        spectrumDataPoints.clear();
 
         BinaryDataArrayList dataList = spectrum.getBinaryDataArrayList();
 
         if ((dataList == null) || (dataList.getCount().equals(0)))
             return;
 
-        dataPoints.allocate(dataList.getCount());
+        spectrumDataPoints.allocate(dataList.getCount());
 
         BinaryDataArray mzArray = dataList.getBinaryDataArray().get(0);
         BinaryDataArray intensityArray = dataList.getBinaryDataArray().get(1);
@@ -140,7 +137,60 @@ class JMzMLUtil {
         for (int i = 0; i < mzValues.length; i++) {
             final double mz = mzValues[i].doubleValue();
             final float intensity = intensityValues[i].floatValue();
-            dataPoints.add(mz, intensity);
+            spectrumDataPoints.add(mz, intensity);
+        }
+
+    }
+
+    public static void extractDataPoints(
+            uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram,
+            ChromatogramDataPointList dataPointList) {
+        ChromatographyInfo chromatographyInfo;
+        dataPointList.clear();
+
+        BinaryDataArrayList dataList = jmzChromatogram.getBinaryDataArrayList();
+
+        if ((dataList == null) || (dataList.getCount().equals(0)))
+            return;
+
+        dataPointList.allocate(dataList.getCount());
+
+        BinaryDataArray rtArray = dataList.getBinaryDataArray().get(0);
+        BinaryDataArray intensityArray = dataList.getBinaryDataArray().get(1);
+        Number rtValues[] = rtArray.getBinaryDataAsNumberArray();
+        Number intensityValues[] = intensityArray.getBinaryDataAsNumberArray();
+        for (int i = 0; i < rtValues.length; i++) {
+            final float rt = rtValues[i].floatValue();
+            final float intensity = intensityValues[i].floatValue();
+            chromatographyInfo = MSDKObjectBuilder
+                    .getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
+            dataPointList.add(chromatographyInfo, intensity);
+        }
+    }
+
+    static void extractDataPoints(Spectrum spectrum,
+            ChromatogramDataPointList chromatogramDataPoints) {
+        ChromatographyInfo chromatographyInfo;
+
+        chromatogramDataPoints.clear();
+
+        BinaryDataArrayList dataList = spectrum.getBinaryDataArrayList();
+
+        if ((dataList == null) || (dataList.getCount().equals(0)))
+            return;
+
+        chromatogramDataPoints.allocate(dataList.getCount());
+
+        BinaryDataArray rtArray = dataList.getBinaryDataArray().get(0);
+        BinaryDataArray intensityArray = dataList.getBinaryDataArray().get(1);
+        Number rtValues[] = rtArray.getBinaryDataAsNumberArray();
+        Number intensityValues[] = intensityArray.getBinaryDataAsNumberArray();
+        for (int i = 0; i < rtValues.length; i++) {
+            final float rt = rtValues[i].floatValue();
+            final float intensity = intensityValues[i].floatValue();
+            chromatographyInfo = MSDKObjectBuilder
+                    .getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
+            chromatogramDataPoints.add(chromatographyInfo, intensity);
         }
 
     }
@@ -183,9 +233,9 @@ class JMzMLUtil {
 
                 if (accession == null)
                     continue;
-                if (accession.equals("MS:1000130"))
+                if (accession.equals(JMzMLCV.cvPolarityPositive))
                     return PolarityType.POSITIVE;
-                if (accession.equals("MS:1000129"))
+                if (accession.equals(JMzMLCV.cvPolarityNegative))
                     return PolarityType.NEGATIVE;
             }
         }
@@ -201,9 +251,9 @@ class JMzMLUtil {
                         String accession = param.getAccession();
                         if (accession == null)
                             continue;
-                        if (accession.equals("MS:1000130"))
+                        if (accession.equals(JMzMLCV.cvPolarityPositive))
                             return PolarityType.POSITIVE;
-                        if (accession.equals("MS:1000129"))
+                        if (accession.equals(JMzMLCV.cvPolarityNegative))
                             return PolarityType.NEGATIVE;
                     }
 
@@ -214,11 +264,123 @@ class JMzMLUtil {
 
     }
 
-    static FragmentationInfo extractSourceFragmentation(Spectrum spectrum) {
+    static ActivationInfo extractSourceFragmentation(Spectrum spectrum) {
         return null;
     }
 
     static List<IsolationInfo> extractIsolations(Spectrum spectrum) {
         return Collections.emptyList();
     }
+
+    static SeparationType extractSeparationType(Spectrum spectrum) {
+        return SeparationType.UNKNOWN;
+    }
+
+    static ChromatogramType extractChromatogramType(Spectrum spectrum) {
+        return ChromatogramType.UNKNOWN;
+    }
+
+    public static SeparationType extractSeparationType(
+            uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram) {
+        return SeparationType.UNKNOWN;
+    }
+
+    public static ChromatogramType extractChromatogramType(
+            uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram) {
+        List<CVParam> cvParams = chromatogram.getCvParam();
+        cvParams = chromatogram.getCvParam();
+
+        if (cvParams != null) {
+            for (CVParam param : cvParams) {
+                String accession = param.getAccession();
+
+                if (accession == null)
+                    continue;
+                if (accession.equals(JMzMLCV.cvChromatogramTIC))
+                    return ChromatogramType.TIC;
+                if (accession.equals(JMzMLCV.cvChromatogramMRM_SRM))
+                    return ChromatogramType.MRM_SRM;
+                if (accession.equals(JMzMLCV.cvChromatogramSIC))
+                    return ChromatogramType.SIC;
+                if (accession.equals(JMzMLCV.cvChromatogramBPC))
+                    return ChromatogramType.BPC;
+            }
+        }
+
+        return ChromatogramType.UNKNOWN;
+    }
+
+    
+    @SuppressWarnings("null")
+    public static List<IsolationInfo> extractIsolations(
+            uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram) {
+        if (extractChromatogramType(chromatogram) == ChromatogramType.MRM_SRM) {
+            List<CVParam> cvParams;
+            Double precursorIsolationMz = null, productIsolationMz = null,
+                    precursorActivationEnergy = null;
+            ActivationType precursorActivation = ActivationType.UNKNOWN;
+            ActivationInfo activationInfo = null;
+
+            // Precursor isolation window
+            cvParams = chromatogram.getPrecursor().getIsolationWindow()
+                    .getCvParam();
+            if (cvParams != null) {
+                for (CVParam param : cvParams) {
+                    if (param.getAccession().equals(JMzMLCV.cvIsolationWindow)) {
+                        precursorIsolationMz = Double
+                                .parseDouble(param.getValue());
+                        break;
+                    }
+                }
+            }
+
+            // Precursor activation
+            cvParams = chromatogram.getPrecursor().getActivation().getCvParam();
+            if (cvParams != null) {
+                for (CVParam param : cvParams) {
+                    if (param.getAccession().equals(JMzMLCV.cvActivationCID))
+                        precursorActivation = ActivationType.CID;
+                    if (param.getAccession().equals(JMzMLCV.cvActivationEnergy))
+                        precursorActivationEnergy = Double
+                                .parseDouble(param.getValue());
+                }
+            }
+
+            // Product isolation window
+            cvParams = chromatogram.getProduct().getIsolationWindow()
+                    .getCvParam();
+            if (cvParams != null) {
+                for (CVParam param : cvParams) {
+                    if (param.getAccession().equals(JMzMLCV.cvIsolationWindow)) {
+                        productIsolationMz = Double
+                                .parseDouble(param.getValue());
+                        break;
+                    }
+                }
+            }
+
+            if (precursorActivationEnergy != null) {
+                activationInfo = MSDKObjectBuilder.getActivationInfo(precursorActivationEnergy, precursorActivation);
+            }
+
+            List<IsolationInfo> isolations = new ArrayList<>();
+            IsolationInfo isolationInfo = null;
+
+            if (precursorIsolationMz != null) {
+                isolationInfo = MSDKObjectBuilder.getIsolationInfo(Range.singleton(precursorIsolationMz), null, precursorIsolationMz, null, activationInfo);
+                isolations.add(isolationInfo);
+            }
+
+            if (productIsolationMz != null) {
+                isolationInfo = MSDKObjectBuilder.getIsolationInfo(Range.singleton(productIsolationMz), null, productIsolationMz, null, null);
+                isolations.add(isolationInfo);
+            }
+
+            return isolations;
+        }
+
+        return Collections.emptyList();
+
+    }
+
 }

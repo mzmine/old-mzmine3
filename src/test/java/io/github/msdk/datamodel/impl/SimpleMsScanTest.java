@@ -28,8 +28,8 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.FragmentationInfo;
-import io.github.msdk.datamodel.rawdata.FragmentationType;
+import io.github.msdk.datamodel.rawdata.ActivationInfo;
+import io.github.msdk.datamodel.rawdata.ActivationType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -152,15 +152,15 @@ public class SimpleMsScanTest {
         Assert.assertEquals(null, msScan1.getSourceInducedFragmentation());
 
         // Change scanning range
-        final @Nonnull FragmentationInfo newFragmentationInfo = new SimpleFragmentationInfo(
-                25.00, FragmentationType.CID);
+        final @Nonnull ActivationInfo newFragmentationInfo = new SimpleActivationInfo(
+                25.00, ActivationType.CID);
         msScan1.setSourceInducedFragmentation(newFragmentationInfo);
 
         // Verify scanning range
         Assert.assertEquals(new Double(25.00),
                 msScan1.getSourceInducedFragmentation().getActivationEnergy());
-        Assert.assertEquals(FragmentationType.CID,
-                msScan1.getSourceInducedFragmentation().getFragmentationType());
+        Assert.assertEquals(ActivationType.CID,
+                msScan1.getSourceInducedFragmentation().getActivationType());
     }
 
     @SuppressWarnings("null")

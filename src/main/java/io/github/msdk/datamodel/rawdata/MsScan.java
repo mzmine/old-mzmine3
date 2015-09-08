@@ -175,7 +175,7 @@ public interface MsScan extends MsSpectrum {
      * @return Fragmentation info of ion source-induced fragmentation, or null.
      */
     @Nullable
-    FragmentationInfo getSourceInducedFragmentation();
+    ActivationInfo getSourceInducedFragmentation();
 
     /**
      * Updates the fragmentation parameters of ion source-induced fragmentation.
@@ -184,7 +184,7 @@ public interface MsScan extends MsSpectrum {
      *            New fragmentation parameters.
      */
     void setSourceInducedFragmentation(
-            @Nullable FragmentationInfo newFragmentationInfo);
+            @Nullable ActivationInfo newFragmentationInfo);
 
     /**
      * Returns a list of isolations performed for this scan. These isolations

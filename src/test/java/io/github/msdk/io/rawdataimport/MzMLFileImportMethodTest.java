@@ -21,9 +21,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
+import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
+import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import io.github.msdk.datamodel.rawdata.ActivationType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -141,6 +145,10 @@ public class MzMLFileImportMethodTest {
     @Test
     public void testChromatogram() throws MSDKException {
 
+        // Create the data structures
+        ChromatogramDataPointList dataPoints = MSDKObjectBuilder
+                .getChromatogramDataPointList();
+
         // Import the file
         File inputFile = new File(TEST_DATA_PATH + "SRM.mzML");
         Assert.assertTrue(inputFile.canRead());
@@ -148,5 +156,32 @@ public class MzMLFileImportMethodTest {
         RawDataFile rawFile = importer.execute();
         Assert.assertNotNull(rawFile);
         Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        // The file has 37 chromatograms
+        List<Chromatogram> chromatograms = rawFile.getChromatograms();
+        Assert.assertNotNull(chromatograms);
+        Assert.assertEquals(37, chromatograms.size());
+
+        // 4th chromatogram
+        Chromatogram chromatogram = chromatograms.get(3);
+        Assert.assertEquals(new Integer(4),
+                chromatogram.getChromatogramNumber());
+        Assert.assertEquals(ChromatogramType.MRM_SRM,
+                chromatogram.getChromatogramType());
+        chromatogram.getDataPoints(dataPoints);
+        Assert.assertEquals(new Integer(1608), (Integer) dataPoints.getSize());
+        Assert.assertEquals(new Integer(2),
+                (Integer) chromatogram.getIsolations().size());
+        Assert.assertEquals(new Double(440.706),
+                chromatogram.getIsolations().get(1).getPrecursorMz());
+        Assert.assertEquals(ActivationType.CID, chromatogram.getIsolations()
+                .get(0).getActivationInfo().getActivationType());
+
+        // 1st chromatogram
+        chromatogram = chromatograms.get(0);
+        Assert.assertEquals(ChromatogramType.TIC,
+                chromatogram.getChromatogramType());
+        Assert.assertEquals(0, chromatogram.getIsolations().size());
     }
+
 }

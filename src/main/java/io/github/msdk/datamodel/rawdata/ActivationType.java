@@ -21,7 +21,7 @@ package io.github.msdk.datamodel.rawdata;
  * Naito, Definitions of Terms Relating to Mass Spectrometry (IUPAC
  * Recommendations 2013) Pure Appl. Chem. 2013, 85, 1515-1609.
  */
-public enum FragmentationType {
+public enum ActivationType {
 
     /**
      * Collision-induced dissociation.

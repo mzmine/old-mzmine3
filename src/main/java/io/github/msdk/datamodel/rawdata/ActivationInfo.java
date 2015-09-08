@@ -24,7 +24,7 @@ import javax.annotation.concurrent.Immutable;
  * and safely used by multiple threads.
  */
 @Immutable
-public interface FragmentationInfo {
+public interface ActivationInfo {
 
     /**
      * Returns the type of the fragmentation (MS/MS) experiment. If unknown,
@@ -33,7 +33,7 @@ public interface FragmentationInfo {
      * @return Fragmentation type
      */
     @Nonnull
-    FragmentationType getFragmentationType();
+    ActivationType getActivationType();
 
     /**
      * Returns the activation energy applied for this MS/MS scan. This value has

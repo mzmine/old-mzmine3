@@ -16,7 +16,7 @@ package io.github.msdk.datamodel.impl;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.FragmentationInfo;
+import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -45,7 +45,7 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
     private @Nonnull MsScanType msScanType = MsScanType.UNKNOWN;
     private @Nullable Range<Double> scanningRange;
     private @Nullable ChromatographyInfo chromInfo;
-    private @Nullable FragmentationInfo sourceInducedFragInfo;
+    private @Nullable ActivationInfo sourceInducedFragInfo;
 
     private final @Nonnull List<IsolationInfo> isolations = new LinkedList<>();
 
@@ -141,13 +141,13 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
 
     @Override
     @Nullable
-    public FragmentationInfo getSourceInducedFragmentation() {
+    public ActivationInfo getSourceInducedFragmentation() {
         return sourceInducedFragInfo;
     }
 
     @Override
     public void setSourceInducedFragmentation(
-            @Nullable FragmentationInfo newFragmentationInfo) {
+            @Nullable ActivationInfo newFragmentationInfo) {
         this.sourceInducedFragInfo = newFragmentationInfo;
     }
 

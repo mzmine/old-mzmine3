@@ -40,11 +40,11 @@ public enum ChromatogramType {
     XIC,
 
     /**
-     * Single ion monitoring (SIM) chromatogram. Only a narrow range of m/z
+     * Single ion current (SIC) chromatogram. Only a narrow range of m/z
      * values are detected in the analysis and a chromatogram similar to the XIC
      * is generated.
      */
-    SIM,
+    SIC,
 
     /**
      * Multiple Reaction Monitoring (MRM) or Selected Reaction Monitoring (SRM).

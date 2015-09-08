@@ -76,6 +76,6 @@ public interface IsolationInfo {
      * @return Fragmentation info, or null.
      */
     @Nullable
-    FragmentationInfo getFragmentationInfo();
+    ActivationInfo getActivationInfo();
 
 }

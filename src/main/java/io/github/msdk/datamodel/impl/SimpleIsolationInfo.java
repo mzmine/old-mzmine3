@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.rawdata.FragmentationInfo;
+import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 
 /**
@@ -32,7 +32,7 @@ class SimpleIsolationInfo implements IsolationInfo {
     private @Nullable Float ionInjectTime;
     private @Nullable Double precursorMz;
     private @Nullable Integer precursorCharge;
-    private @Nullable FragmentationInfo fragmentationInfo;
+    private @Nullable ActivationInfo activationInfo;
 
     SimpleIsolationInfo(@Nonnull Range<Double> isolationMzRange) {
         Preconditions.checkNotNull(isolationMzRange);
@@ -40,19 +40,19 @@ class SimpleIsolationInfo implements IsolationInfo {
         ionInjectTime = null;
         precursorMz = null;
         precursorCharge = null;
-        fragmentationInfo = null;
+        activationInfo = null;
     }
 
     SimpleIsolationInfo(@Nonnull Range<Double> isolationMzRange,
             @Nullable Float ionInjectTime, @Nullable Double precursorMz,
             @Nullable Integer precursorCharge,
-            @Nullable FragmentationInfo fragmentationInfo) {
+            @Nullable ActivationInfo activationInfo) {
         Preconditions.checkNotNull(isolationMzRange);
         this.isolationMzRange = isolationMzRange;
         this.ionInjectTime = ionInjectTime;
         this.precursorMz = precursorMz;
         this.precursorCharge = precursorCharge;
-        this.fragmentationInfo = fragmentationInfo;
+        this.activationInfo = activationInfo;
     }
 
     @Override
@@ -81,8 +81,8 @@ class SimpleIsolationInfo implements IsolationInfo {
 
     @Override
     @Nullable
-    public FragmentationInfo getFragmentationInfo() {
-        return fragmentationInfo;
+    public ActivationInfo getActivationInfo() {
+        return activationInfo;
     }
 
 }

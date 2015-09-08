@@ -31,4 +31,16 @@ class JMzMLCV {
     static final String cvPolarityPositive = "MS:1000130";
     static final String cvPolarityNegative = "MS:1000129";
 
+    // Chromatograms
+    static final String cvChromatogramTIC = "MS:1000235";
+    static final String cvChromatogramMRM_SRM = "MS:1001473";
+    static final String cvChromatogramSIC = "MS:1000627";
+    static final String cvChromatogramBPC = "MS:1000628";
+
+    // Activation
+    static final String cvActivationEnergy = "MS:1000045";
+    static final String cvActivationCID = "MS:1000133";
+
+    // Isolation
+    static final String cvIsolationWindow = "MS:1000827";
 }

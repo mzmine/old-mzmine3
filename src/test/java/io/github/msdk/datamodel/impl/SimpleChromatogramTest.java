@@ -77,10 +77,10 @@ public class SimpleChromatogramTest {
                 chromatogram1.getChromatogramType());
 
         // Change chromatogram type
-        chromatogram1.setChromatogramType(ChromatogramType.SIM);
+        chromatogram1.setChromatogramType(ChromatogramType.SIC);
 
         // Verify chromatogram type
-        Assert.assertEquals(ChromatogramType.SIM,
+        Assert.assertEquals(ChromatogramType.SIC,
                 chromatogram1.getChromatogramType());
     }
 

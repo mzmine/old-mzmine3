@@ -19,23 +19,23 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 
-import io.github.msdk.datamodel.rawdata.FragmentationInfo;
-import io.github.msdk.datamodel.rawdata.FragmentationType;
+import io.github.msdk.datamodel.rawdata.ActivationInfo;
+import io.github.msdk.datamodel.rawdata.ActivationType;
 
 /**
  * Implementation of FragmentationInfo
  */
-class SimpleFragmentationInfo implements FragmentationInfo {
+class SimpleActivationInfo implements ActivationInfo {
 
-    private @Nonnull FragmentationType fragmentationType = FragmentationType.UNKNOWN;
+    private @Nonnull ActivationType fragmentationType = ActivationType.UNKNOWN;
     private @Nullable Double activationEnergy;
 
-    SimpleFragmentationInfo(@Nullable Double activationEnergy) {
+    SimpleActivationInfo(@Nullable Double activationEnergy) {
         this.activationEnergy = activationEnergy;
     }
 
-    SimpleFragmentationInfo(@Nullable Double activationEnergy,
-            @Nonnull FragmentationType fragmentationType) {
+    SimpleActivationInfo(@Nullable Double activationEnergy,
+            @Nonnull ActivationType fragmentationType) {
         Preconditions.checkNotNull(fragmentationType);
         this.activationEnergy = activationEnergy;
         this.fragmentationType = fragmentationType;
@@ -43,7 +43,7 @@ class SimpleFragmentationInfo implements FragmentationInfo {
 
     @Override
     @Nonnull
-    public FragmentationType getFragmentationType() {
+    public ActivationType getActivationType() {
         return fragmentationType;
     }
 

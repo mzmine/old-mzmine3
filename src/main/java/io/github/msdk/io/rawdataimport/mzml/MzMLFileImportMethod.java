@@ -33,17 +33,19 @@ import com.google.common.collect.Range;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.FragmentationInfo;
+import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.datamodel.util.MsSpectrumUtil;
 import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionMethod;
 import uk.ac.ebi.jmzml.model.mzml.Spectrum;
@@ -96,84 +98,133 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
         List<MsFunction> msFunctionsList = new ArrayList<>();
         List<MsScan> scansList = new ArrayList<>();
         List<Chromatogram> chromatogramsList = new ArrayList<>();
-        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
+        MsSpectrumDataPointList spectrumDataPoints = MSDKObjectBuilder
                 .getMsSpectrumDataPointList();
 
         // Create the XMLBasedRawDataFile object
         newRawFile = new JMzMLRawDataFile(sourceFile, parser, msFunctionsList,
                 scansList, chromatogramsList);
 
-        MzMLObjectIterator<Spectrum> iterator = parser
-                .unmarshalCollectionFromXpath("/run/spectrumList/spectrum",
-                        Spectrum.class);
+        if (totalScans > 0) {
+            MzMLObjectIterator<Spectrum> iterator = parser
+                    .unmarshalCollectionFromXpath("/run/spectrumList/spectrum",
+                            Spectrum.class);
 
-        while (iterator.hasNext()) {
+            while (iterator.hasNext()) {
 
-            if (canceled)
-                return null;
+                if (canceled)
+                    return null;
 
-            Spectrum spectrum = iterator.next();
+                Spectrum spectrum = iterator.next();
 
-            // Get the scan number
-            String spectrumId = spectrum.getId();
-            Integer scanNumber = convertSpectrumIdToScanNumber(spectrumId);
+                // Get the scan number
+                String spectrumId = spectrum.getId();
+                Integer scanNumber = convertSpectrumIdToScanNumber(spectrumId);
 
-            // Get the MS function
-            MsFunction msFunction = JMzMLUtil.extractMsFunction(spectrum);
-            msFunctionsList.add(msFunction);
+                // Get the MS function
+                MsFunction msFunction = JMzMLUtil.extractMsFunction(spectrum);
+                msFunctionsList.add(msFunction);
 
-            // Store the chromatography data
-            ChromatographyInfo chromData = JMzMLUtil
-                    .extractChromatographyData(spectrum);
+                // Store the chromatography data
+                ChromatographyInfo chromData = JMzMLUtil
+                        .extractChromatographyData(spectrum);
 
-            // Extract the scan data points, so we can check the m/z range and
-            // detect the spectrum type (profile/centroid)
-            JMzMLUtil.extractDataPoints(spectrum, dataPoints);
+                // Extract the scan data points, so we can check the m/z range
+                // and
+                // detect the spectrum type (profile/centroid)
+                JMzMLUtil.extractDataPoints(spectrum, spectrumDataPoints);
 
-            // Get the m/z range
-            Range<Double> mzRange = MsSpectrumUtil.getMzRange(dataPoints);
+                // Get the m/z range
+                Range<Double> mzRange = MsSpectrumUtil
+                        .getMzRange(spectrumDataPoints);
 
-            // Get the instrument scanning range
-            Range<Double> scanningRange = null;
+                // Get the instrument scanning range
+                Range<Double> scanningRange = null;
 
-            // Get the TIC
-            Float tic = MsSpectrumUtil.getTIC(dataPoints);
+                // Get the TIC
+                Float tic = MsSpectrumUtil.getTIC(spectrumDataPoints);
 
-            // Auto-detect whether this scan is centroided
-            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
-                    dataPoints);
-            MsSpectrumType spectrumType = detector.execute();
+                // Auto-detect whether this scan is centroided
+                SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                        spectrumDataPoints);
+                MsSpectrumType spectrumType = detector.execute();
 
-            // Get the MS scan type
-            MsScanType scanType = JMzMLUtil.extractScanType(spectrum);
+                // Get the MS scan type
+                MsScanType scanType = JMzMLUtil.extractScanType(spectrum);
 
-            // Get the polarity
-            PolarityType polarity = JMzMLUtil.extractPolarity(spectrum);
+                // Get the polarity
+                PolarityType polarity = JMzMLUtil.extractPolarity(spectrum);
 
-            // Get the in-source fragmentation
-            FragmentationInfo sourceFragmentation = JMzMLUtil
-                    .extractSourceFragmentation(spectrum);
+                // Get the in-source fragmentation
+                ActivationInfo sourceFragmentation = JMzMLUtil
+                        .extractSourceFragmentation(spectrum);
 
-            // Get the in-source fragmentation
-            List<IsolationInfo> isolations = JMzMLUtil
-                    .extractIsolations(spectrum);
+                // Get the in-source fragmentation
+                List<IsolationInfo> isolations = JMzMLUtil
+                        .extractIsolations(spectrum);
 
-            // Create a new MsScan instance
-            JMzMLMsScan scan = new JMzMLMsScan(newRawFile, spectrumId,
-                    spectrumType, msFunction, chromData, scanType, mzRange,
-                    scanningRange, scanNumber, tic, polarity,
-                    sourceFragmentation, isolations);
+                // Create a new MsScan instance
+                JMzMLMsScan scan = new JMzMLMsScan(newRawFile, spectrumId,
+                        spectrumType, msFunction, chromData, scanType, mzRange,
+                        scanningRange, scanNumber, tic, polarity,
+                        sourceFragmentation, isolations);
 
-            // Add the scan to the final raw data file
-            scansList.add(scan);
+                // Add the scan to the final raw data file
+                scansList.add(scan);
 
-            parsedScans++;
+                parsedScans++;
 
+            }
+        }
+
+        if (totalChromatograms > 0) {
+            MzMLObjectIterator<uk.ac.ebi.jmzml.model.mzml.Chromatogram> iterator = parser
+                    .unmarshalCollectionFromXpath(
+                            "/run/chromatogramList/chromatogram",
+                            uk.ac.ebi.jmzml.model.mzml.Chromatogram.class);
+
+            while (iterator.hasNext()) {
+
+                if (canceled)
+                    return null;
+
+                uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram = iterator.next();
+
+                // Get the chromatogram id
+                String chromatogramId = chromatogram.getId();
+
+                // Get the chromatogram number
+                Integer chromatogramNumber = chromatogram.getIndex() + 1;
+
+                // Get the separation type
+                SeparationType separationType = JMzMLUtil
+                        .extractSeparationType(chromatogram);
+
+                // Get the chromatogram type
+                ChromatogramType chromatogramType = JMzMLUtil
+                        .extractChromatogramType(chromatogram);
+
+                // Get the in-source fragmentation
+                List<IsolationInfo> isolations = JMzMLUtil
+                        .extractIsolations(chromatogram);
+
+                // Create a new Chromatogram instance
+                JMzMLChromatogram chrom = new JMzMLChromatogram(newRawFile,
+                        chromatogramId, chromatogramNumber, separationType,
+                        chromatogramType, isolations);
+
+                // Add the chromatogram to the final raw data file
+                chromatogramsList.add(chrom);
+
+                parsedChromatograms++;
+
+            }
         }
 
         parsedChromatograms = totalChromatograms;
         logger.info("Finished importing " + sourceFile + ", parsed "
-                + parsedScans + " scans");
+                + parsedScans + " scans and " + parsedChromatograms
+                + " chromatograms");
 
         return newRawFile;
 
@@ -206,7 +257,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
     @Override
     public Float getFinishedPercentage() {
-        return totalScans == 0 ? null
+        return (totalScans + totalChromatograms) == 0 ? null
                 : (float) (parsedScans + parsedChromatograms)
                         / (totalScans + totalChromatograms);
     }
