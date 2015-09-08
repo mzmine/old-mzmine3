@@ -23,7 +23,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
@@ -73,7 +72,6 @@ public class MSDKObjectBuilder {
      * @param msLevel
      * @return
      */
-    @SuppressWarnings("null")
     public static final @Nonnull MsFunction getMsFunction(@Nonnull String name,
             @Nullable Integer msLevel) {
 
@@ -231,9 +229,11 @@ public class MSDKObjectBuilder {
      * @param fragmentationType
      * @return new SimpleActivationInfo
      */
-    public static final @Nonnull ActivationInfo getActivationInfo(@Nullable Double activationEnergy,
+    public static final @Nonnull ActivationInfo getActivationInfo(
+            @Nullable Double activationEnergy,
             @Nonnull ActivationType fragmentationType) {
-        ActivationInfo newFunc = new SimpleActivationInfo(activationEnergy, fragmentationType);
+        ActivationInfo newFunc = new SimpleActivationInfo(activationEnergy,
+                fragmentationType);
         return newFunc;
     }
 
@@ -247,11 +247,13 @@ public class MSDKObjectBuilder {
      * @param activationInfo
      * @return new SimpleIsolationInfo
      */
-    public static final @Nonnull IsolationInfo getIsolationInfo(@Nonnull Range<Double> isolationMzRange,
+    public static final @Nonnull IsolationInfo getIsolationInfo(
+            @Nonnull Range<Double> isolationMzRange,
             @Nullable Float ionInjectTime, @Nullable Double precursorMz,
             @Nullable Integer precursorCharge,
             @Nullable ActivationInfo activationInfo) {
-        IsolationInfo newFunc = new SimpleIsolationInfo(isolationMzRange, ionInjectTime, precursorMz, precursorCharge, activationInfo);
+        IsolationInfo newFunc = new SimpleIsolationInfo(isolationMzRange,
+                ionInjectTime, precursorMz, precursorCharge, activationInfo);
         return newFunc;
     }
 

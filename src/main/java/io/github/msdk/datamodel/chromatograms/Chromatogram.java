@@ -20,7 +20,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
@@ -112,7 +111,6 @@ public interface Chromatogram extends Cloneable {
      *            DataPointList into which the data points should be loaded
      */
     void getDataPoints(@Nonnull ChromatogramDataPointList dataPointList);
-
 
     /**
      * Updates the data points of this chromatogram. If this Chromatogram has
