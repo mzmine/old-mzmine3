@@ -55,4 +55,21 @@ public class MsSpectrumUtil {
         return tic;
     }
 
+    /**
+     * Returns the highest intensity value. Returns 0 if the list has no data
+     * points.
+     */
+    @Nonnull
+    public static Float getMaxIntensity(
+            @Nonnull MsSpectrumDataPointList dataPoints) {
+        Preconditions.checkNotNull(dataPoints);
+        float intValues[] = dataPoints.getIntensityBuffer();
+        float maxInt = 0f;
+        for (int i = 0; i < dataPoints.getSize(); i++) {
+            if (intValues[i] > maxInt)
+                maxInt = intValues[i];
+        }
+        return maxInt;
+    }
+
 }

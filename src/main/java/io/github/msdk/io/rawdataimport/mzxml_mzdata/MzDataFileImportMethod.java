@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.io.rawdataimport.xmlformats;
+package io.github.msdk.io.rawdataimport.mzxml_mzdata;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -48,24 +48,21 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import io.github.msdk.datamodel.util.MsSpectrumUtil;
 import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionMethod;
-import uk.ac.ebi.pride.tools.jmzreader.JMzReader;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
 import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
 import uk.ac.ebi.pride.tools.mzdata_parser.MzDataFile;
-import uk.ac.ebi.pride.tools.mzml_wrapper.MzMlWrapper;
-import uk.ac.ebi.pride.tools.mzxml_parser.MzXMLFile;
 import uk.ac.ebi.pride.tools.mzxml_parser.MzXMLParsingException;
 
 /**
  * This class reads XML-based mass spec data formats (mzData, mzXML, and mzML)
  * using the jmzreader library.
  */
-public class XMLFileImportMethod implements MSDKMethod<RawDataFile> {
+public class MzDataFileImportMethod implements MSDKMethod<RawDataFile> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final @Nonnull File sourceFile;
-    private final @Nonnull RawDataFileType fileType;
+    private final @Nonnull RawDataFileType fileType = RawDataFileType.MZDATA;
 
     private boolean canceled = false;
 
@@ -75,10 +72,8 @@ public class XMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
     private Map<String, Integer> scanIdTable = new Hashtable<String, Integer>();
 
-    public XMLFileImportMethod(@Nonnull File sourceFile,
-            @Nonnull RawDataFileType fileType) {
+    public MzDataFileImportMethod(@Nonnull File sourceFile) {
         this.sourceFile = sourceFile;
-        this.fileType = fileType;
     }
 
     /**
@@ -92,24 +87,10 @@ public class XMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
         logger.info("Started parsing file " + sourceFile);
 
-        JMzReader parser = null;
-
+        MzDataFile parser;
         try {
-            switch (fileType) {
-            case MZDATA:
-                parser = new MzDataFile(sourceFile);
-                break;
-            case MZML:
-                parser = new MzMlWrapper(sourceFile);
-                break;
-            case MZXML:
-                parser = new MzXMLFile(sourceFile);
-                break;
-            default:
-                throw new MSDKException(
-                        "This reader cannot read file type " + fileType);
-            }
-        } catch (Exception e) {
+            parser = new MzDataFile(sourceFile);
+        } catch (JMzReaderException e) {
             throw new MSDKException(e);
         }
 

@@ -32,6 +32,7 @@ public interface MSDKMethod<ResultType> {
      * 
      * @return Finished percentage (0.0 to 1.0, inclusive), or null.
      */
+    @Nullable
     Float getFinishedPercentage();
 
     /**

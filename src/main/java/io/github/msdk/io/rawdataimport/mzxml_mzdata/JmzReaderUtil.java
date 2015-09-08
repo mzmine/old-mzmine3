@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.io.rawdataimport.xmlformats;
+package io.github.msdk.io.rawdataimport.mzxml_mzdata;
 
 import java.util.Collections;
 import java.util.List;
