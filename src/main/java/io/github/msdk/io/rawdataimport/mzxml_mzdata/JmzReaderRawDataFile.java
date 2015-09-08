@@ -30,7 +30,7 @@ import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReader;
 
 /**
- * This class reads XML-based mass spec data formats (mzData, mzXML, and mzML)
+ * This class reads XML-based mass spec data formats (mzData, mzXML)
  * using the jmzreader library.
  */
 class JmzReaderRawDataFile implements RawDataFile {

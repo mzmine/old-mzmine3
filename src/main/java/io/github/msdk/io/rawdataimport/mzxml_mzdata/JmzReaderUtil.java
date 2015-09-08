@@ -15,8 +15,15 @@
 package io.github.msdk.io.rawdataimport.mzxml_mzdata;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.Duration;
+
+import com.google.common.base.Strings;
 
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
@@ -27,17 +34,25 @@ import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import uk.ac.ebi.pride.tools.jmzreader.model.Param;
 import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
 import uk.ac.ebi.pride.tools.jmzreader.model.impl.CvParam;
 import uk.ac.ebi.pride.tools.jmzreader.model.impl.ParamGroup;
-import uk.ac.ebi.pride.tools.jmzreader.model.impl.UserParam;
 
 /**
  * This class provides conversions from the jmzreader data model to MSDK data
  * model
  */
 class JmzReaderUtil {
+
+    private static DatatypeFactory dataTypeFactory;
+
+    static {
+        try {
+            dataTypeFactory = DatatypeFactory.newInstance();
+        } catch (DatatypeConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
 
     static MsFunction extractMsFunction(Spectrum spectrum) {
         Integer msLevel = spectrum.getMsLevel();
@@ -48,53 +63,21 @@ class JmzReaderUtil {
 
         ParamGroup params = spectrum.getAdditional();
 
-        ParamGroup additional = spectrum.getAdditional();
-
-        if (false) {
-            for (CvParam cvParam : additional.getCvParams()) {
-                System.out.println("CV PARAM " + cvParam.getAccession() + " - "
-                        + cvParam.getName() + " = " + cvParam.getValue());
-            }
-            for (Param userParam : additional.getParams()) {
-                System.out.println("PARAM " + userParam.getName() + " = "
-                        + userParam.getValue());
-            }
-            for (UserParam userParam : additional.getUserParams()) {
-                System.out.println("USER PARAM " + userParam.getName() + " = "
-                        + userParam.getValue());
-            }
-        }
-
-        if (true)
-            return null;
-        List<CvParam> cvParams = params.getCvParams();
-        List<Param> paramss = params.getParams();
-
-        for (CvParam param : cvParams) {
-            String accession = param.getAccession();
-            // String unitAccession = param.getUnitAccession();
-            String value = param.getValue();
-            if ((accession == null) || (value == null))
+        for (CvParam cvParam : params.getCvParams()) {
+            final String accession = cvParam.getAccession();
+            if (Strings.isNullOrEmpty(accession))
                 continue;
+            if (JmzReaderCV.cvScanRetentionTime.equals(accession)) {
+                String value = cvParam.getValue();
+                if (Strings.isNullOrEmpty(value))
+                    continue;
 
-            // Retention time (actually "Scan start time") MS:1000016
-            if (accession.equals("MS:1000016")) {
-                // MS:1000038 is used in mzML 1.0, while UO:0000031
-                // is used in mzML 1.1.0 :-/
-                double retentionTime;
-                String unitAccession = "UO:0000031";
-                if ((unitAccession == null)
-                        || (unitAccession.equals("MS:1000038"))
-                        || unitAccession.equals("UO:0000031")) {
-                    retentionTime = Double.parseDouble(value);
-                } else {
-                    retentionTime = Double.parseDouble(value) / 60d;
-                }
-                final ChromatographyInfo newChromData = MSDKObjectBuilder
-                        .getChromatographyInfo1D(SeparationType.UNKNOWN,
-                                (float) retentionTime);
-                return newChromData;
+                Date currentDate = new Date();
+                Duration dur = dataTypeFactory.newDuration(value);
+                float rt = dur.getTimeInMillis(currentDate) / 1000f;
 
+                return MSDKObjectBuilder
+                        .getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
             }
         }
 
@@ -117,6 +100,22 @@ class JmzReaderUtil {
     }
 
     static PolarityType extractPolarity(Spectrum spectrum) {
+        ParamGroup params = spectrum.getAdditional();
+
+        for (CvParam cvParam : params.getCvParams()) {
+            final String accession = cvParam.getAccession();
+            if (Strings.isNullOrEmpty(accession))
+                continue;
+            if (JmzReaderCV.cvScanPolarity.equals(accession)) {
+                String value = cvParam.getValue();
+                if (Strings.isNullOrEmpty(value))
+                    continue;
+                if ("+".equals(value))
+                    return PolarityType.POSITIVE;
+                if ("-".equals(value))
+                    return PolarityType.NEGATIVE;
+            }
+        }
         return PolarityType.UNKNOWN;
     }
 
@@ -127,4 +126,5 @@ class JmzReaderUtil {
     static List<IsolationInfo> extractIsolations(Spectrum spectrum) {
         return Collections.emptyList();
     }
+
 }

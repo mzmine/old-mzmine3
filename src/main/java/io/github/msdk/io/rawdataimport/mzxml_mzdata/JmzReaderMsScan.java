@@ -38,9 +38,6 @@ import uk.ac.ebi.pride.tools.jmzreader.JMzReader;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
 import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
 
-/**
- * 
- */
 class JmzReaderMsScan implements MsScan {
 
     private final @Nonnull JmzReaderRawDataFile dataFile;
