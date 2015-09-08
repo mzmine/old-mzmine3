@@ -108,15 +108,17 @@ public class MzMLFileImportMethodTest {
         Assert.assertEquals(new Integer(2), scan2.getMsFunction().getMsLevel());
         Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
         scan2.getDataPoints(dataPoints);
-        Assert.assertEquals(33  , dataPoints.getSize());
+        Assert.assertEquals(33, dataPoints.getSize());
         Float scan2maxInt = MsSpectrumUtil.getMaxIntensity(dataPoints);
         Assert.assertEquals(6.8E3f, scan2maxInt, 1E2f);
 
         // 101th scan, #1100
         MsScan scan101 = scans.get(100);
         Assert.assertEquals(new Integer(1100), scan101.getScanNumber());
-        Assert.assertEquals(MsSpectrumType.CENTROIDED, scan101.getSpectrumType());
-        Assert.assertEquals(new Integer(1), scan101.getMsFunction().getMsLevel());
+        Assert.assertEquals(MsSpectrumType.CENTROIDED,
+                scan101.getSpectrumType());
+        Assert.assertEquals(new Integer(1),
+                scan101.getMsFunction().getMsLevel());
         scan101.getDataPoints(dataPoints);
         Assert.assertEquals(21, dataPoints.getSize());
         Float scan5maxInt = MsSpectrumUtil.getMaxIntensity(dataPoints);

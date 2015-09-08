@@ -13,7 +13,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<cdk.version>1.5.10</cdk.version>
+		<cdk.version>1.5.11</cdk.version>
 		<controlsfx.version>8.40.9</controlsfx.version>
 		<jfreechart.version>1.0.19</jfreechart.version>
 		<junit.version>4.12</junit.version>
@@ -96,15 +96,14 @@
 
 	<repositories>
 		<repository>
-			<!-- jmzreader repository -->
+			<!-- EBI repository for jmzreader, jmzml -->
 			<id>ebi-repo</id>
 			<name>The EBI Maven repository</name>
 			<url>http://www.ebi.ac.uk/~maven/m2repo/</url>
-			<!-- <url>http://www.ebi.ac.uk/intact/maven/nexus/content/repositories/ebi-repo/</url> -->
 		</repository>
 		<repository>
 			<id>lib</id>
-			<name>MZmine local libraries</name>
+			<name>Local repository</name>
 			<url>file://${project.basedir}/src/main/lib</url>
 		</repository>
 		<repository>
@@ -162,13 +161,19 @@
 		<dependency>
 			<groupId>edu.ucar</groupId>
 			<artifactId>netcdf4</artifactId>
-			<version>4.5.3</version>
+			<version>4.5.5</version>
 		</dependency>
 
 		<dependency>
 			<groupId>uk.ac.ebi.pride.tools</groupId>
 			<artifactId>jmzreader</artifactId>
 			<version>1.2.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -187,6 +192,16 @@
 			<groupId>uk.ac.ebi.jmzml</groupId>
 			<artifactId>jmzml</artifactId>
 			<version>1.7.2</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
