@@ -19,9 +19,16 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
+import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
+import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 
 public class ChromatogramUtil {
+
+    private static ChromatogramDataPointList dataPointList = MSDKObjectBuilder
+            .getChromatogramDataPointList();
 
     /**
      * @return The most representative scan of this feature (with highest signal
@@ -45,32 +52,44 @@ public class ChromatogramUtil {
     }
 
     /**
-     * Returns the retention time range of all raw data points used to detect
-     * this peak
+     * Returns the range of ChromatographyInfo of all data points in this peak.
      */
+    @SuppressWarnings("null")
     @Nonnull
-    public static Range<Double> getRawDataPointsRTRange() {
-        // TODO
-        return null;
+    public static Range<ChromatographyInfo> getDataPointsChromatographyRange(
+            @Nonnull Chromatogram chromatogram) {
+        chromatogram.getDataPoints(dataPointList);
+        final ChromatographyInfo[] chromatographyInfo = dataPointList
+                .getRtBuffer();
+        final Range<ChromatographyInfo> chromatographyRange = Range.closed(
+                chromatographyInfo[0],
+                chromatographyInfo[dataPointList.getSize()]);
+        return chromatographyRange;
     }
 
     /**
-     * Returns the range of m/z values of all raw data points used to detect
-     * this peak
+     * Returns the range of intensity values of all data points in this peak.
      */
+    @SuppressWarnings("null")
     @Nonnull
-    public static Range<Double> getRawDataPointsMzRange() {
-        // TODO
-        return null;
+    public static Range<Float> getDataPointsIntensityRange(
+            @Nonnull Chromatogram chromatogram) {
+        chromatogram.getDataPoints(dataPointList);
+        final float[] intensities = dataPointList.getIntensityBuffer();
+        final float lower = intensities[0];
+        final float upper = intensities[dataPointList.getSize()];
+        final Range<Float> intensityRange = Range.closed(lower, upper);
+        return intensityRange;
     }
 
     /**
-     * Returns the range of intensity values of all raw data points used to
-     * detect this peak
+     * Returns the number of data points for this peak.
      */
-    @Nonnull
-    public static Range<Double> getRawDataPointsIntensityRange() {
-        // TODO
-        return null;
+    @SuppressWarnings("null")
+    public static int getNumberOfDataPoints(
+            @Nonnull Chromatogram chromatogram) {
+        chromatogram.getDataPoints(dataPointList);
+        return dataPointList.getSize();
     }
+
 }
