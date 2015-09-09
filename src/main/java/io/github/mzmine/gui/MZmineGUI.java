@@ -25,10 +25,9 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-import io.github.mzmine.datamodel.MZmineProject;
 import io.github.mzmine.datamodel.impl.MZmineObjectBuilder;
+import io.github.mzmine.datamodel.MZmineProject;
 import io.github.mzmine.main.MZmineCore;
-import io.github.mzmine.taskcontrol.Task;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -40,6 +39,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.concurrent.Task;
 
 /**
  * MZmine JavaFX Application class
@@ -127,8 +127,7 @@ public final class MZmineGUI extends Application {
 
     static void submitTasks(Collection<Task> tasks) {
         for (Task task : tasks) {
-            TaskJavaFXWrapper wrappedTask = new TaskJavaFXWrapper(task);
-            mainWindowController.addTask(wrappedTask);
+            mainWindowController.addTask(task);
         }
 
     }

@@ -25,8 +25,8 @@ import javax.annotation.Nonnull;
 
 import io.github.mzmine.datamodel.MZmineProject;
 import io.github.mzmine.parameters.ParameterSet;
-import io.github.mzmine.taskcontrol.Task;
 import io.github.mzmine.util.ExitCode;
+import javafx.concurrent.Task;
 
 /**
  * Interface representing a module that can be executed from the GUI through a

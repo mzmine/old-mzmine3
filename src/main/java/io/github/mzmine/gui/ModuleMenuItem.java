@@ -29,13 +29,13 @@ import io.github.mzmine.main.MZmineModules;
 import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
-import io.github.mzmine.taskcontrol.Task;
 import io.github.mzmine.util.ExitCode;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.MenuItem;
+import javafx.concurrent.Task;
 
 /**
  * 

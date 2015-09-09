@@ -23,8 +23,8 @@ import java.util.logging.Logger;
 
 import io.github.mzmine.conf.MZmineConfiguration;
 import io.github.mzmine.datamodel.MZmineProject;
-import io.github.mzmine.datamodel.PeakList;
-import io.github.mzmine.datamodel.RawDataFile;
+import io.github.msdk.datamodel.peaklists.PeakList;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
  * Shutdown hook - invoked on JRE shutdown. This method saves current
@@ -64,7 +64,7 @@ class ShutDownHook implements Runnable {
         // Remove all temporary files
         MZmineProject currentProject = MZmineCore.getCurrentProject();
         if (currentProject != null) {
-            for (RawDataFile dataFile : currentProject.getDataFiles()) {
+            for (RawDataFile dataFile : currentProject.getRawDataFiles()) {
                 dataFile.dispose();
             }
             for (PeakList peakList : currentProject.getPeakLists()) {

@@ -23,9 +23,14 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
+import org.controlsfx.control.StatusBar;
+import org.controlsfx.control.TaskProgressView;
+
+import io.github.mzmine.main.MZmineCore;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -34,16 +39,10 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
-
-import org.controlsfx.control.StatusBar;
-import org.controlsfx.control.TaskProgressView;
-
-import io.github.mzmine.main.MZmineCore;
 
 /**
  * This class is the main window of application
@@ -67,7 +66,7 @@ public class MainWindowController implements Initializable {
     private TreeView<Object> peakListTree;
 
     @FXML
-    private TaskProgressView<TaskJavaFXWrapper> tasksView;
+    private TaskProgressView<Task> tasksView;
 
     @FXML
     private StatusBar statusBar;
@@ -171,7 +170,7 @@ public class MainWindowController implements Initializable {
         return tasksView;
     }
 
-    void addTask(TaskJavaFXWrapper task) {
+    void addTask(Task task) {
         tasksView.getTasks().add(task);
     }
 

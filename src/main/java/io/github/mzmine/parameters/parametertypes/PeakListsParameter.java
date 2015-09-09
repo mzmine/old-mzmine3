@@ -23,7 +23,7 @@ import java.util.Collection;
 
 import org.w3c.dom.Element;
 
-import io.github.mzmine.datamodel.PeakList;
+import io.github.msdk.datamodel.peaklists.PeakList;
 import io.github.mzmine.parameters.Parameter;
 
 /**

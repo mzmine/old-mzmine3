@@ -19,16 +19,14 @@
 
 package io.github.mzmine.modules.rawdataimport;
 
+import java.io.File;
 import java.util.List;
 
-import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.parameters.Parameter;
 import io.github.mzmine.parameters.SimpleParameterSet;
 import io.github.mzmine.util.ExitCode;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-
-import java.io.File;
 
 public class RawDataImportParameters extends SimpleParameterSet {
 
