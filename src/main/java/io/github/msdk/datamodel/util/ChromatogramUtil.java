@@ -15,7 +15,6 @@
 package io.github.msdk.datamodel.util;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.google.common.collect.Range;
 
@@ -23,33 +22,11 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.MsScan;
 
 public class ChromatogramUtil {
 
     private static ChromatogramDataPointList dataPointList = MSDKObjectBuilder
             .getChromatogramDataPointList();
-
-    /**
-     * @return The most representative scan of this feature (with highest signal
-     *         intensity), or null if this peak is not connected to any raw
-     *         data.
-     */
-    @Nullable
-    public static MsScan getRepresentativeScan() {
-        // TODO
-        return null;
-    }
-
-    /**
-     * Returns the number of scan that represents the fragmentation of this peak
-     * in MS2 level.
-     */
-    @Nullable
-    public static MsScan getMostIntenseFragmentScan() {
-        // TODO
-        return null;
-    }
 
     /**
      * Returns the range of ChromatographyInfo of all data points in this peak.
