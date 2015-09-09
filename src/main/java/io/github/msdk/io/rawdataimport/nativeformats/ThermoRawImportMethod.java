@@ -16,10 +16,12 @@ package io.github.msdk.io.rawdataimport.nativeformats;
 
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Files;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +43,7 @@ public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
     private RawDataFile newRawFile;
     private boolean canceled = false;
 
-    private Process dumper = null;
+    private Process dumperProcess = null;
     private RawDumpParser parser = null;
 
     public ThermoRawImportMethod(@Nonnull File sourceFile,
@@ -54,51 +56,61 @@ public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
     @Override
     public RawDataFile execute() throws MSDKException {
 
-        logger.info("Started parsing file " + sourceFile);
-
-        String fileName = sourceFile.getName();
-        newRawFile = MSDKObjectBuilder.getRawDataFile(fileName, sourceFile,
-                fileType, dataStore);
-
-        // Path to the rawdump executable
-        String rawDumpPath = System.getProperty("user.dir") + File.separator
-                + "src" + File.separator + "main" + File.separator
-                + "vendor_lib" + File.separator + "thermo" + File.separator
-                + "ThermoRawDump.exe";
-
-        if (!new File(rawDumpPath).canExecute())
-            throw new MSDKException("Cannot execute program " + rawDumpPath);
-
-        String cmdLine[] = new String[] { rawDumpPath, sourceFile.getPath() };
-
         String osName = System.getProperty("os.name").toUpperCase();
         if (!osName.contains("WINDOWS")) {
             throw new MSDKException(
                     "Native data format import only works on MS Windows");
         }
 
+        logger.info("Started parsing file " + sourceFile);
+
         try {
 
+            // Decompress the thermo raw dump executable to a temporary folder
+            File tempFolder = Files.createTempDirectory("msdk").toFile();
+            tempFolder.deleteOnExit();
+            InputStream dumpArchive = this.getClass().getClassLoader()
+                    .getResourceAsStream("thermorawdump.zip");
+            if (dumpArchive == null)
+                throw new MSDKException(
+                        "Failed to load the thermorawdump.zip archive from the MSDK jar");
+            ZipUtils.extractStreamToFolder(dumpArchive, tempFolder);
+
+            // Path to the rawdump executable
+            File rawDumpPath = new File(tempFolder, "ThermoRawDump.exe");
+
+            if (!rawDumpPath.canExecute())
+                throw new MSDKException(
+                        "Cannot execute program " + rawDumpPath);
+
             // Create a separate process and execute RAWdump.exe
-            dumper = Runtime.getRuntime().exec(cmdLine);
+            final String cmdLine[] = new String[] { rawDumpPath.getPath(),
+                    sourceFile.getPath() };
+            dumperProcess = Runtime.getRuntime().exec(cmdLine);
 
             // Get the stdout of RAWdump process as InputStream
-            InputStream dumpStream = dumper.getInputStream();
+            InputStream dumpStream = dumperProcess.getInputStream();
+
+            // Create the new RawDataFile
+            String fileName = sourceFile.getName();
+            newRawFile = MSDKObjectBuilder.getRawDataFile(fileName, sourceFile,
+                    fileType, dataStore);
 
             // Read the dump data
-            parser = new RawDumpParser();
-            parser.readRAWDump(dumpStream, newRawFile, dataStore);
+            parser = new RawDumpParser(newRawFile, dataStore);
+            parser.readRAWDump(dumpStream);
 
             // Cleanup
             dumpStream.close();
-            dumper.destroy();
+            dumperProcess.destroy();
+            FileUtils.deleteDirectory(tempFolder);
 
             if (canceled)
                 return null;
 
         } catch (Throwable e) {
-            if (dumper != null)
-                dumper.destroy();
+            if (dumperProcess != null)
+                dumperProcess.destroy();
 
             throw new MSDKException(e);
         }

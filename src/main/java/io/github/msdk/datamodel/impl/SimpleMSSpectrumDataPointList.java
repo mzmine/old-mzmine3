@@ -177,6 +177,9 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
      * @param newSize
      */
     public void setSize(int newSize) {
+        if (newSize > mzBuffer.length)
+            throw new MSDKRuntimeException(
+                    "Not enough allocated space to change the size of data point list");
         this.size = newSize;
     }
 

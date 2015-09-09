@@ -14,10 +14,8 @@
 
 package io.github.msdk.io.rawdataimport.nativeformats;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.regex.Matcher;
@@ -52,8 +50,17 @@ class RawDumpParser {
     private float retentionTime;
     private double precursorMZ;
 
-    private MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
+    private final RawDataFile newRawFile;
+    private final DataPointStore dataStore;
+    private byte byteBuffer[] = new byte[100000];
+
+    private final MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
             .getMsSpectrumDataPointList();
+
+    RawDumpParser(RawDataFile newRawFile, DataPointStore dataStore) {
+        this.newRawFile = newRawFile;
+        this.dataStore = dataStore;
+    }
 
     /**
      * This method reads the dump of the RAW data file produced by RAWdump.exe
@@ -62,180 +69,17 @@ class RawDumpParser {
      * @throws IOException
      * @throws NumberFormatException
      */
-    void readRAWDump(InputStream dumpStream, RawDataFile newRawFile,
-            DataPointStore dataStore)
-                    throws MSDKException, NumberFormatException, IOException {
+    void readRAWDump(InputStream dumpStream)
+            throws MSDKException, NumberFormatException, IOException {
 
         String line;
-        byte byteBuffer[] = new byte[100000];
 
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(dumpStream, "UTF-8"));
-
-        // while ((line = TextUtils.readLineFromStream(dumpStream)) != null) {
-        while ((line = reader.readLine()) != null) {
+        while ((line = TextUtils.readLineFromStream(dumpStream)) != null) {
 
             if (canceled)
                 return;
 
-            if (line.startsWith("ERROR: ")) {
-                throw (new MSDKException(line.substring("ERROR: ".length())));
-            }
-
-            if (line.startsWith("NUMBER OF SCANS: ")) {
-                totalScans = Integer
-                        .parseInt(line.substring("NUMBER OF SCANS: ".length()));
-            }
-
-            if (line.startsWith("SCAN NUMBER: ")) {
-                scanNumber = Integer
-                        .parseInt(line.substring("SCAN NUMBER: ".length()));
-            }
-
-            if (line.startsWith("SCAN ID: ")) {
-                scanId = line.substring("SCAN ID: ".length());
-            }
-
-            if (line.startsWith("MS LEVEL: ")) {
-                msLevel = Integer
-                        .parseInt(line.substring("MS LEVEL: ".length()));
-            }
-
-            if (line.startsWith("POLARITY: ")) {
-                if (line.contains("-"))
-                    polarity = PolarityType.NEGATIVE;
-                else if (line.contains("+"))
-                    polarity = PolarityType.POSITIVE;
-                else
-                    polarity = PolarityType.UNKNOWN;
-            }
-
-            if (line.startsWith("RETENTION TIME: ")) {
-                // Retention time is reported in minutes.
-                retentionTime = Float.parseFloat(
-                        line.substring("RETENTION TIME: ".length())) * 60.0f;
-            }
-
-            if (line.startsWith("PRECURSOR: ")) {
-                String tokens[] = line.split(" ");
-                double token2 = Double.parseDouble(tokens[1]);
-                int token3 = Integer.parseInt(tokens[2]);
-                if (token2 > 0) {
-                    precursorMZ = token2;
-                    precursorCharge = token3;
-                }
-            }
-
-            if (line.startsWith("MASS VALUES: ")) {
-                Pattern p = Pattern
-                        .compile("MASS VALUES: (\\d+) x (\\d+) BYTES");
-                Matcher m = p.matcher(line);
-                if (!m.matches())
-                    throw new MSDKException("Could not parse line " + line);
-                numOfDataPoints = Integer.parseInt(m.group(1));
-                dataPoints.allocate(numOfDataPoints);
-
-                final int byteSize = Integer.parseInt(m.group(2));
-
-                final int numOfBytes = numOfDataPoints * byteSize;
-                if (byteBuffer.length < numOfBytes)
-                    byteBuffer = new byte[numOfBytes * 2];
-                dumpStream.read(byteBuffer, 0, numOfBytes);
-
-                ByteBuffer mzByteBuffer = ByteBuffer
-                        .wrap(byteBuffer, 0, numOfBytes)
-                        .order(ByteOrder.LITTLE_ENDIAN);
-
-                double mzValuesBuffer[] = dataPoints.getMzBuffer();
-
-                for (int i = 0; i < numOfDataPoints; i++) {
-                    if (byteSize == 8)
-                        mzValuesBuffer[i] = mzByteBuffer.getDouble();
-                    else
-                        mzValuesBuffer[i] = mzByteBuffer.getFloat();
-                }
-
-            }
-
-            if (line.startsWith("INTENSITY VALUES: ")) {
-                Pattern p = Pattern
-                        .compile("INTENSITY VALUES: (\\d+) x (\\d+) BYTES");
-                Matcher m = p.matcher(line);
-                if (!m.matches())
-                    throw new MSDKException("Could not parse line " + line);
-                // numOfDataPoints must be same for MASS VALUES and INTENSITY
-                // VALUES
-                if (numOfDataPoints != Integer.parseInt(m.group(1))) {
-                    throw new MSDKException("Scan " + scanNumber + " contained "
-                            + numOfDataPoints + " mass values, but "
-                            + m.group(1) + " intensity values");
-                }
-                dataPoints.allocate(numOfDataPoints);
-                final int byteSize = Integer.parseInt(m.group(2));
-
-                final int numOfBytes = numOfDataPoints * byteSize;
-                if (byteBuffer.length < numOfBytes)
-                    byteBuffer = new byte[numOfBytes * 2];
-                dumpStream.read(byteBuffer, 0, numOfBytes);
-
-                ByteBuffer intensityByteBuffer = ByteBuffer
-                        .wrap(byteBuffer, 0, numOfBytes)
-                        .order(ByteOrder.LITTLE_ENDIAN);
-
-                float intensityValuesBuffer[] = dataPoints.getIntensityBuffer();
-
-                for (int i = 0; i < numOfDataPoints; i++) {
-                    if (byteSize == 8)
-                        intensityValuesBuffer[i] = (float) intensityByteBuffer
-                                .getDouble();
-                    else
-                        intensityValuesBuffer[i] = intensityByteBuffer
-                                .getFloat();
-                }
-
-                // INTENSITY VALUES was the last item of the scan, so now we can
-                // create a new scan
-
-                // Auto-detect whether this scan is centroided
-                SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
-                        dataPoints);
-                MsSpectrumType spectrumType = detector.execute();
-
-                // Create a new scan
-                MsFunction msFunction = MSDKObjectBuilder
-                        .getMsFunction(msLevel);
-
-                MsScan newScan = MSDKObjectBuilder.getMsScan(dataStore,
-                        scanNumber, msFunction);
-
-                ChromatographyInfo chromInfo = MSDKObjectBuilder
-                        .getChromatographyInfo1D(SeparationType.UNKNOWN,
-                                retentionTime);
-                newScan.setChromatographyInfo(chromInfo);
-
-                newScan.setDataPoints(dataPoints);
-                newScan.setSpectrumType(spectrumType);
-                newScan.setPolarity(polarity);
-                newScan.setScanningRange(scanningMzRange);
-
-                // TODO: scanId, scanningMzRange, precursor
-
-                newRawFile.addScan(newScan);
-
-                parsedScans++;
-
-                // Clean the variables for next scan
-                scanNumber = 0;
-                scanId = null;
-                polarity = null;
-                scanningMzRange = null;
-                msLevel = 0;
-                retentionTime = 0;
-                precursorMZ = 0;
-                precursorCharge = 0;
-                numOfDataPoints = 0;
-
-            }
+            parseLine(line, dumpStream);
 
         }
 
@@ -249,6 +93,163 @@ class RawDumpParser {
                             + parsedScans + " out of " + totalScans + ")"));
         }
 
+    }
+
+    private void parseLine(String line, InputStream dumpStream)
+            throws MSDKException, IOException {
+        if (line.startsWith("ERROR: ")) {
+            throw (new MSDKException(line));
+        }
+
+        if (line.startsWith("NUMBER OF SCANS: ")) {
+            totalScans = Integer
+                    .parseInt(line.substring("NUMBER OF SCANS: ".length()));
+        }
+
+        if (line.startsWith("SCAN NUMBER: ")) {
+            scanNumber = Integer
+                    .parseInt(line.substring("SCAN NUMBER: ".length()));
+        }
+
+        if (line.startsWith("SCAN ID: ")) {
+            scanId = line.substring("SCAN ID: ".length());
+        }
+
+        if (line.startsWith("MS LEVEL: ")) {
+            msLevel = Integer.parseInt(line.substring("MS LEVEL: ".length()));
+        }
+
+        if (line.startsWith("POLARITY: ")) {
+            if (line.contains("-"))
+                polarity = PolarityType.NEGATIVE;
+            else if (line.contains("+"))
+                polarity = PolarityType.POSITIVE;
+            else
+                polarity = PolarityType.UNKNOWN;
+        }
+
+        if (line.startsWith("RETENTION TIME: ")) {
+            // Retention time is reported in minutes.
+            retentionTime = Float.parseFloat(
+                    line.substring("RETENTION TIME: ".length())) * 60.0f;
+        }
+
+        if (line.startsWith("PRECURSOR: ")) {
+            String tokens[] = line.split(" ");
+            double token2 = Double.parseDouble(tokens[1]);
+            int token3 = Integer.parseInt(tokens[2]);
+            if (token2 > 0) {
+                precursorMZ = token2;
+                precursorCharge = token3;
+            }
+        }
+
+        if (line.startsWith("MASS VALUES: ")) {
+            Pattern p = Pattern.compile("MASS VALUES: (\\d+) x (\\d+) BYTES");
+            Matcher m = p.matcher(line);
+            if (!m.matches())
+                throw new MSDKException("Could not parse line " + line);
+            numOfDataPoints = Integer.parseInt(m.group(1));
+            dataPoints.allocate(numOfDataPoints);
+            dataPoints.setSize(numOfDataPoints);
+            
+            final int byteSize = Integer.parseInt(m.group(2));
+
+            final int numOfBytes = numOfDataPoints * byteSize;
+            if (byteBuffer.length < numOfBytes)
+                byteBuffer = new byte[numOfBytes * 2];
+            dumpStream.read(byteBuffer, 0, numOfBytes);
+
+            ByteBuffer mzByteBuffer = ByteBuffer.wrap(byteBuffer, 0, numOfBytes)
+                    .order(ByteOrder.LITTLE_ENDIAN);
+
+            double mzValuesBuffer[] = dataPoints.getMzBuffer();
+
+            for (int i = 0; i < numOfDataPoints; i++) {
+                if (byteSize == 8)
+                    mzValuesBuffer[i] = mzByteBuffer.getDouble();
+                else
+                    mzValuesBuffer[i] = mzByteBuffer.getFloat();
+            }
+
+        }
+
+        if (line.startsWith("INTENSITY VALUES: ")) {
+            Pattern p = Pattern
+                    .compile("INTENSITY VALUES: (\\d+) x (\\d+) BYTES");
+            Matcher m = p.matcher(line);
+            if (!m.matches())
+                throw new MSDKException("Could not parse line " + line);
+            // numOfDataPoints must be same for MASS VALUES and INTENSITY
+            // VALUES
+            if (numOfDataPoints != Integer.parseInt(m.group(1))) {
+                throw new MSDKException("Scan " + scanNumber + " contained "
+                        + numOfDataPoints + " mass values, but " + m.group(1)
+                        + " intensity values");
+            }
+            final int byteSize = Integer.parseInt(m.group(2));
+
+            final int numOfBytes = numOfDataPoints * byteSize;
+            if (byteBuffer.length < numOfBytes)
+                byteBuffer = new byte[numOfBytes * 2];
+            dumpStream.read(byteBuffer, 0, numOfBytes);
+
+            ByteBuffer intensityByteBuffer = ByteBuffer
+                    .wrap(byteBuffer, 0, numOfBytes)
+                    .order(ByteOrder.LITTLE_ENDIAN);
+
+            float intensityValuesBuffer[] = dataPoints.getIntensityBuffer();
+
+            for (int i = 0; i < numOfDataPoints; i++) {
+                if (byteSize == 8)
+                    intensityValuesBuffer[i] = (float) intensityByteBuffer
+                            .getDouble();
+                else
+                    intensityValuesBuffer[i] = intensityByteBuffer.getFloat();
+            }
+        }
+
+        if (line.startsWith("END OF SCAN")) {
+
+            // Auto-detect whether this scan is centroided
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    dataPoints);
+            MsSpectrumType spectrumType = detector.execute();
+
+            // Create a new scan
+            MsFunction msFunction = MSDKObjectBuilder.getMsFunction(msLevel);
+
+            MsScan newScan = MSDKObjectBuilder.getMsScan(dataStore, scanNumber,
+                    msFunction);
+
+            ChromatographyInfo chromInfo = MSDKObjectBuilder
+                    .getChromatographyInfo1D(SeparationType.UNKNOWN,
+                            retentionTime);
+            newScan.setChromatographyInfo(chromInfo);
+
+            newScan.setDataPoints(dataPoints);
+            newScan.setSpectrumType(spectrumType);
+            newScan.setPolarity(polarity);
+            newScan.setScanningRange(scanningMzRange);
+
+            // TODO: scanId, scanningMzRange, precursor
+
+            newRawFile.addScan(newScan);
+
+            parsedScans++;
+
+            // Clean the variables for next scan
+            scanNumber = 0;
+            scanId = null;
+            polarity = null;
+            scanningMzRange = null;
+            msLevel = 0;
+            retentionTime = 0;
+            precursorMZ = 0;
+            precursorCharge = 0;
+            numOfDataPoints = 0;
+
+        }
     }
 
     Float getFinishedPercentage() {

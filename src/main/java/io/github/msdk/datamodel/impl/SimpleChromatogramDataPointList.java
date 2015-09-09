@@ -34,10 +34,11 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
 
     /**
-     * Array for ChromatographyInfo values. Its length defines the capacity of this list.
+     * Array for ChromatographyInfo values. Its length defines the capacity of
+     * this list.
      */
     private @Nonnull ChromatographyInfo[] rtBuffer;
- 
+
     /**
      * Array for intensity values. Its length is always the same as the RT
      * buffer length.
@@ -179,6 +180,9 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
      * @param newSize
      */
     public void setSize(int newSize) {
+        if (newSize > rtBuffer.length)
+            throw new MSDKRuntimeException(
+                    "Not enough allocated space to change the size of data point list");
         this.size = newSize;
     }
 
@@ -198,7 +202,8 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     /**
      * Insert data into specific position
      */
-    public void add(int targetPosition, ChromatographyInfo newRt, float newIntensity) {
+    public void add(int targetPosition, ChromatographyInfo newRt,
+            float newIntensity) {
         int thisCapacity = rtBuffer.length;
         if (!(size < rtBuffer.length))
             thisCapacity++;
