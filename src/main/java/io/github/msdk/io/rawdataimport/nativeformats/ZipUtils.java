@@ -45,12 +45,11 @@ class ZipUtils {
         ZipEntry entry;
         while ((entry = zipStream.getNextEntry()) != null) {
             File filePath = new File(destDirectory, entry.getName());
+            // Create the folder for this entry, if it does not exist
+            filePath.getParentFile().mkdirs();
             if (!entry.isDirectory()) {
                 // if the entry is a file, extracts it
                 extractFile(zipStream, filePath);
-            } else {
-                // if the entry is a directory, make the directory
-                filePath.mkdir();
             }
             zipStream.closeEntry();
         }
@@ -61,8 +60,8 @@ class ZipUtils {
     /**
      * Extracts a zip entry (file entry)
      */
-    private static void extractFile(final @Nonnull ZipInputStream zipIn, final @Nonnull File filePath)
-            throws IOException {
+    private static void extractFile(final @Nonnull ZipInputStream zipIn,
+            final @Nonnull File filePath) throws IOException {
         BufferedOutputStream bos = new BufferedOutputStream(
                 new FileOutputStream(filePath));
         byte[] bytesIn = new byte[BUFFER_SIZE];

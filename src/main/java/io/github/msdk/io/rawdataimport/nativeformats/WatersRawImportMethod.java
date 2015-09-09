@@ -14,11 +14,15 @@
 
 package io.github.msdk.io.rawdataimport.nativeformats;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,15 +30,12 @@ import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFileType;
 
 public class WatersRawImportMethod implements MSDKMethod<RawDataFile> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    private int parsedScans, totalScans = 0;
 
     private final @Nonnull File sourceFile;
     private final @Nonnull RawDataFileType fileType = RawDataFileType.WATERS_RAW;
@@ -43,8 +44,8 @@ public class WatersRawImportMethod implements MSDKMethod<RawDataFile> {
     private RawDataFile newRawFile;
     private boolean canceled = false;
 
-    private MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
-            .getMsSpectrumDataPointList();
+    private Process dumperProcess = null;
+    private RawDumpParser parser = null;
 
     public WatersRawImportMethod(@Nonnull File sourceFile,
             @Nonnull DataPointStore dataStore) {
@@ -52,17 +53,70 @@ public class WatersRawImportMethod implements MSDKMethod<RawDataFile> {
         this.dataStore = dataStore;
     }
 
+    @SuppressWarnings("null")
     @Override
     public RawDataFile execute() throws MSDKException {
 
+        String osName = System.getProperty("os.name").toUpperCase();
+        if (!osName.contains("WINDOWS")) {
+            throw new MSDKException(
+                    "Native data format import only works on MS Windows");
+        }
+
         logger.info("Started parsing file " + sourceFile);
 
-        String fileName = sourceFile.getName();
-        newRawFile = MSDKObjectBuilder.getRawDataFile(fileName, sourceFile,
-                fileType, dataStore);
+        try {
 
-        logger.info("Finished parsing " + sourceFile + ", parsed " + parsedScans
-                + " scans");
+            // Decompress the Waters raw dump executable to a temporary folder
+            File tempFolder = Files.createTempDirectory("msdk").toFile();
+            tempFolder.deleteOnExit();
+            InputStream dumpArchive = this.getClass().getClassLoader()
+                    .getResourceAsStream("watersrawdump.zip");
+            if (dumpArchive == null)
+                throw new MSDKException(
+                        "Failed to load the watersrawdump.zip archive from the MSDK jar");
+            ZipUtils.extractStreamToFolder(dumpArchive, tempFolder);
+
+            // Path to the rawdump executable
+            File rawDumpPath = new File(tempFolder, "WatersRawDump.exe");
+
+            if (!rawDumpPath.canExecute())
+                throw new MSDKException(
+                        "Cannot execute program " + rawDumpPath);
+
+            // Create a separate process and execute RAWdump.exe
+            final String cmdLine[] = new String[] { rawDumpPath.getPath(),
+                    sourceFile.getPath() };
+            dumperProcess = Runtime.getRuntime().exec(cmdLine);
+
+            // Get the stdout of RAWdump process as InputStream
+            InputStream dumpStream = dumperProcess.getInputStream();
+
+            // Create the new RawDataFile
+            String fileName = sourceFile.getName();
+            newRawFile = MSDKObjectBuilder.getRawDataFile(fileName, sourceFile,
+                    fileType, dataStore);
+
+            // Read the dump data
+            parser = new RawDumpParser(newRawFile, dataStore);
+            parser.readRAWDump(dumpStream);
+
+            // Cleanup
+            dumpStream.close();
+            dumperProcess.destroy();
+            FileUtils.deleteDirectory(tempFolder);
+
+            if (canceled)
+                return null;
+
+        } catch (Throwable e) {
+            if (dumperProcess != null)
+                dumperProcess.destroy();
+
+            throw new MSDKException(e);
+        }
+
+        logger.info("Finished parsing " + sourceFile);
 
         return newRawFile;
 
@@ -76,12 +130,18 @@ public class WatersRawImportMethod implements MSDKMethod<RawDataFile> {
 
     @Override
     public Float getFinishedPercentage() {
-        return totalScans == 0 ? null : (float) parsedScans / totalScans;
+        if (parser == null)
+            return 0f;
+        else
+            return parser.getFinishedPercentage();
     }
 
     @Override
     public void cancel() {
         this.canceled = true;
+        if (parser != null) {
+            parser.cancel();
+        }
     }
 
 }

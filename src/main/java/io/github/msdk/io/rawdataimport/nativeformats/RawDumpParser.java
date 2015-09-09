@@ -97,6 +97,7 @@ class RawDumpParser {
 
     private void parseLine(String line, InputStream dumpStream)
             throws MSDKException, IOException {
+
         if (line.startsWith("ERROR: ")) {
             throw (new MSDKException(line));
         }
@@ -152,7 +153,7 @@ class RawDumpParser {
             numOfDataPoints = Integer.parseInt(m.group(1));
             dataPoints.allocate(numOfDataPoints);
             dataPoints.setSize(numOfDataPoints);
-            
+
             final int byteSize = Integer.parseInt(m.group(2));
 
             final int numOfBytes = numOfDataPoints * byteSize;
