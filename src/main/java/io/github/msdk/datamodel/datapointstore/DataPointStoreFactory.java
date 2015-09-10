@@ -23,10 +23,8 @@ import io.github.msdk.MSDKException;
  */
 public class DataPointStoreFactory {
 
-    private static final @Nonnull MemoryDataPointStore memoryDataStore = new MemoryDataPointStore();
-
     public static final @Nonnull DataPointStore getMemoryDataStore() {
-        return memoryDataStore;
+        return new MemoryDataPointStore();
     }
 
     public static final @Nonnull DataPointStore getTmpFileDataPointStore()
