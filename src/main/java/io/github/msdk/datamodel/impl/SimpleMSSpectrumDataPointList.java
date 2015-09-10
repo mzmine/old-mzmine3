@@ -14,8 +14,6 @@
 
 package io.github.msdk.datamodel.impl;
 
-import java.util.Arrays;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -119,19 +117,12 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
                     "The length of the m/z and intensity arrays must be equal");
         }
 
-        // Check if the m/z array is properly sorted
-        for (int pos = 1; pos < newSize; pos++) {
-            if (mzBuffer[pos] < mzBuffer[pos - 1])
-                throw (new MSDKRuntimeException(
-                        "The m/z array is not properly sorted. It should be sorted from lowest to highest."));
-        }
-
         // Update arrays
         this.mzBuffer = mzBuffer;
         this.intensityBuffer = intensityBuffer;
 
         // Update the size
-        this.size = newSize;
+        setSize(newSize);
     }
 
     /**
@@ -177,61 +168,43 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
      * @param newSize
      */
     public void setSize(int newSize) {
+
+        if (newSize < 0)
+            throw new IllegalArgumentException("Size cannot be negative");
+
         if (newSize > mzBuffer.length)
             throw new MSDKRuntimeException(
                     "Not enough allocated space to change the size of data point list");
+
         this.size = newSize;
+
+        // Ensure the arrays are sorted in m/z order
+        if (newSize > 0)
+            sortArrays();
+
     }
 
     /**
-     * Insert into the right position
+     * Sorts the internal arrays in m/z order, using a primitive bubble-sort
+     * algorithm, because this is a fairly rare operation and implementing
+     * quick-sort on two arrays is cumbersome.
      */
-    public void add(double newMz, float newIntensity) {
-        int targetPosition = 0;
-        if (size != 0) {
-            targetPosition = Arrays.binarySearch(mzBuffer, 0, size, newMz);
-            targetPosition = Math.abs(targetPosition + 1);
+    private void sortArrays() {
+
+        for (int lastIndex = size; lastIndex > 0; lastIndex--) {
+            for (int index = 1; index < lastIndex; index++) {
+                if (mzBuffer[index] < mzBuffer[index - 1]) {
+
+                    // Swap the two values
+                    final double tmpMz = mzBuffer[index];
+                    final float tmpInt = intensityBuffer[index];
+                    mzBuffer[index] = mzBuffer[index - 1];
+                    intensityBuffer[index] = intensityBuffer[index - 1];
+                    mzBuffer[index - 1] = tmpMz;
+                    intensityBuffer[index - 1] = tmpInt;
+                }
+            }
         }
-        this.add(targetPosition, newMz, newIntensity);
-    }
-
-    /**
-     * Insert data into specific position
-     */
-    public void add(int targetPosition, double newMz, float newIntensity) {
-        int thisCapacity = mzBuffer.length;
-        if (!(size < mzBuffer.length))
-            thisCapacity++;
-
-        double[] mzBufferNew = new double[thisCapacity];
-        float[] intensityBufferNew = new float[thisCapacity];
-
-        // Data before new data point
-        if (targetPosition > 0) {
-            System.arraycopy(getMzBuffer(), 0, mzBufferNew, 0, targetPosition);
-            System.arraycopy(getIntensityBuffer(), 0, intensityBufferNew, 0,
-                    targetPosition);
-        }
-
-        // New data point
-        mzBufferNew[targetPosition] = newMz;
-        intensityBufferNew[targetPosition] = newIntensity;
-
-        // Data after new data point
-        if (targetPosition < thisCapacity) {
-            System.arraycopy(getMzBuffer(), targetPosition, mzBufferNew,
-                    targetPosition + 1, size - targetPosition);
-            System.arraycopy(getIntensityBuffer(), targetPosition,
-                    intensityBufferNew, targetPosition + 1,
-                    size - targetPosition);
-        }
-
-        // Replace arrays with new
-        mzBuffer = mzBufferNew;
-        intensityBuffer = intensityBufferNew;
-
-        // Update the size
-        this.size = size + 1;
     }
 
     /**

@@ -27,7 +27,7 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.util.MsSpectrumUtil;
-import io.github.msdk.io.rawdataimport.mzxml_mzdata.MzXMLFileImportMethod;
+import io.github.msdk.io.rawdataimport.mzxml.MzXMLFileImportMethod;
 
 public class MzXMLFileImportMethodTest {
 

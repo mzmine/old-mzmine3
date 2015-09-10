@@ -14,8 +14,6 @@
 
 package io.github.msdk.datamodel.impl;
 
-import java.util.Arrays;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -180,63 +178,43 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
      * @param newSize
      */
     public void setSize(int newSize) {
+
+        if (newSize < 0)
+            throw new IllegalArgumentException("Size cannot be negative");
+
         if (newSize > rtBuffer.length)
             throw new MSDKRuntimeException(
                     "Not enough allocated space to change the size of data point list");
+
         this.size = newSize;
+
+        // Ensure the arrays are sorted in m/z order
+        if (newSize > 0)
+            sortArrays();
+
     }
 
     /**
-     * Insert into the right position
+     * Sorts the internal arrays in RT order, using a primitive bubble-sort
+     * algorithm, because this is a fairly rare operation and implementing
+     * quick-sort on two arrays is cumbersome.
      */
-    public void add(ChromatographyInfo newRt, float newIntensity) {
-        int targetPosition = 0;
-        if (size != 0) {
-            targetPosition = Arrays.binarySearch(rtBuffer, 0, size, newRt);
-            targetPosition = Math.abs(targetPosition + 1);
+    private void sortArrays() {
+
+        for (int lastIndex = size; lastIndex > 0; lastIndex--) {
+            for (int index = 1; index < lastIndex; index++) {
+                if (rtBuffer[index].compareTo(rtBuffer[index - 1]) < 0) {
+
+                    // Swap the two values
+                    final ChromatographyInfo tmpRt = rtBuffer[index];
+                    final float tmpInt = intensityBuffer[index];
+                    rtBuffer[index] = rtBuffer[index - 1];
+                    intensityBuffer[index] = intensityBuffer[index - 1];
+                    rtBuffer[index - 1] = tmpRt;
+                    intensityBuffer[index - 1] = tmpInt;
+                }
+            }
         }
-
-        this.add(targetPosition, newRt, newIntensity);
-    }
-
-    /**
-     * Insert data into specific position
-     */
-    public void add(int targetPosition, ChromatographyInfo newRt,
-            float newIntensity) {
-        int thisCapacity = rtBuffer.length;
-        if (!(size < rtBuffer.length))
-            thisCapacity++;
-
-        ChromatographyInfo[] rtBufferNew = new ChromatographyInfo[thisCapacity];
-        float[] intensityBufferNew = new float[thisCapacity];
-
-        // Data before new data point
-        if (targetPosition > 0) {
-            System.arraycopy(getRtBuffer(), 0, rtBufferNew, 0, targetPosition);
-            System.arraycopy(getIntensityBuffer(), 0, intensityBufferNew, 0,
-                    targetPosition);
-        }
-
-        // New data point
-        rtBufferNew[targetPosition] = newRt;
-        intensityBufferNew[targetPosition] = newIntensity;
-
-        // Data after new data point
-        if (targetPosition < thisCapacity) {
-            System.arraycopy(getRtBuffer(), targetPosition, rtBufferNew,
-                    targetPosition + 1, size - targetPosition);
-            System.arraycopy(getIntensityBuffer(), targetPosition,
-                    intensityBufferNew, targetPosition + 1,
-                    size - targetPosition);
-        }
-
-        // Replace arrays with new
-        rtBuffer = rtBufferNew;
-        intensityBuffer = intensityBufferNew;
-
-        // Update the size
-        this.size = size + 1;
     }
 
     /**
@@ -314,13 +292,38 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
         final ChromatogramDataPointList newList = MSDKObjectBuilder
                 .getChromatogramDataPointList();
 
+        // Find how many data points will pass the conditions
+        int numOfGoodDataPoints = 0;
         for (int i = 0; i < size; i++) {
-            if (rtRange.contains(rtBuffer[i])
-                    && intensityRange.contains(intensityBuffer[i]))
-                newList.add(rtBuffer[i], intensityBuffer[i]);
+            if (!rtRange.contains(rtBuffer[i]))
+                continue;
+            if (!intensityRange.contains(intensityBuffer[i]))
+                continue;
+            numOfGoodDataPoints++;
         }
 
+        // Allocate space for the data points
+        newList.allocate(numOfGoodDataPoints);
+        final ChromatographyInfo newRtBuffer[] = newList.getRtBuffer();
+        final float newIntensityBuffer[] = newList.getIntensityBuffer();
+
+        // Copy the actual data point values
+        int newIndex = 0;
+        for (int i = 0; i < size; i++) {
+            if (!rtRange.contains(rtBuffer[i]))
+                continue;
+            if (!intensityRange.contains(intensityBuffer[i]))
+                continue;
+            newRtBuffer[newIndex] = rtBuffer[i];
+            newIntensityBuffer[newIndex] = intensityBuffer[i];
+            newIndex++;
+        }
+
+        // Commit the changes
+        newList.setSize(numOfGoodDataPoints);
+
         return newList;
+
     }
 
     @Override

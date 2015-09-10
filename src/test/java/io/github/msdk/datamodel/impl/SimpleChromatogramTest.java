@@ -52,6 +52,7 @@ public class SimpleChromatogramTest {
                 chromatogram1.getChromatogramNumber());
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testRawDataFile() throws MSDKException {
         // Verify raw data file

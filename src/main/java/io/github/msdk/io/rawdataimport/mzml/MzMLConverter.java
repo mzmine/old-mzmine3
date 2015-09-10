@@ -53,7 +53,7 @@ import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 /**
  * This class provides conversions from the jzml data model to MSDK data model
  */
-class JMzMLConverter {
+class MzMLConverter {
 
     private int lastScanNumber = 0;
 
@@ -402,9 +402,9 @@ class JMzMLConverter {
     }
 
     static void extractDataPoints(Spectrum spectrum,
-            MsSpectrumDataPointList spectrumDataPoints) {
+            MsSpectrumDataPointList dataPointList) {
 
-        spectrumDataPoints.clear();
+        dataPointList.clear();
 
         BinaryDataArrayList dataList = spectrum.getBinaryDataArrayList();
 
@@ -420,9 +420,9 @@ class JMzMLConverter {
                 .getBinaryDataAsNumberArray();
 
         // Allocate space for the data points
-        spectrumDataPoints.allocate(mzValues.length);
-        final double mzBuffer[] = spectrumDataPoints.getMzBuffer();
-        final float intensityBuffer[] = spectrumDataPoints.getIntensityBuffer();
+        dataPointList.allocate(mzValues.length);
+        final double mzBuffer[] = dataPointList.getMzBuffer();
+        final float intensityBuffer[] = dataPointList.getIntensityBuffer();
 
         // Copy the actual data point values
         for (int i = 0; i < mzValues.length; i++) {
@@ -431,16 +431,16 @@ class JMzMLConverter {
         }
 
         // Commit the changes
-        spectrumDataPoints.setSize(mzValues.length);
+        dataPointList.setSize(mzValues.length);
 
     }
 
     static void extractDataPoints(Spectrum spectrum,
-            MsSpectrumDataPointList spectrumDataPoints,
+            MsSpectrumDataPointList dataPointList,
             @Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange) {
 
-        spectrumDataPoints.clear();
+        dataPointList.clear();
 
         BinaryDataArrayList dataList = spectrum.getBinaryDataArrayList();
 
@@ -469,9 +469,9 @@ class JMzMLConverter {
             return;
 
         // Allocate space for the data points
-        spectrumDataPoints.allocate(numOfGoodDataPoints);
-        final double mzBuffer[] = spectrumDataPoints.getMzBuffer();
-        final float intensityBuffer[] = spectrumDataPoints.getIntensityBuffer();
+        dataPointList.allocate(numOfGoodDataPoints);
+        final double mzBuffer[] = dataPointList.getMzBuffer();
+        final float intensityBuffer[] = dataPointList.getIntensityBuffer();
 
         // Copy the actual data point values
         int newIndex = 0;
@@ -482,14 +482,14 @@ class JMzMLConverter {
         }
 
         // Commit the changes
-        spectrumDataPoints.setSize(numOfGoodDataPoints);
+        dataPointList.setSize(numOfGoodDataPoints);
 
     }
 
     static void extractDataPoints(
             uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram,
             ChromatogramDataPointList dataPointList) {
-        ChromatographyInfo chromatographyInfo;
+
         dataPointList.clear();
 
         BinaryDataArrayList dataList = jmzChromatogram.getBinaryDataArrayList();
@@ -497,46 +497,31 @@ class JMzMLConverter {
         if ((dataList == null) || (dataList.getCount().equals(0)))
             return;
 
-        dataPointList.allocate(dataList.getCount());
+        // Obtain the data arrays from spectrum
+        final BinaryDataArray rtArray = dataList.getBinaryDataArray().get(0);
+        final BinaryDataArray intensityArray = dataList.getBinaryDataArray()
+                .get(1);
+        final Number rtValues[] = rtArray.getBinaryDataAsNumberArray();
+        final Number intensityValues[] = intensityArray
+                .getBinaryDataAsNumberArray();
 
-        BinaryDataArray rtArray = dataList.getBinaryDataArray().get(0);
-        BinaryDataArray intensityArray = dataList.getBinaryDataArray().get(1);
-        Number rtValues[] = rtArray.getBinaryDataAsNumberArray();
-        Number intensityValues[] = intensityArray.getBinaryDataAsNumberArray();
+        // Allocate space for the data points
+        dataPointList.allocate(rtValues.length);
+        final ChromatographyInfo rtBuffer[] = dataPointList.getRtBuffer();
+        final float intensityBuffer[] = dataPointList.getIntensityBuffer();
+
+        // Copy the actual data point values
         for (int i = 0; i < rtValues.length; i++) {
             final float rt = rtValues[i].floatValue();
             final float intensity = intensityValues[i].floatValue();
-            chromatographyInfo = MSDKObjectBuilder
+            final ChromatographyInfo chromatographyInfo = MSDKObjectBuilder
                     .getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
-            dataPointList.add(chromatographyInfo, intensity);
-        }
-    }
-
-    static void extractDataPoints(Spectrum spectrum,
-            ChromatogramDataPointList chromatogramDataPoints) {
-        ChromatographyInfo chromatographyInfo;
-
-        chromatogramDataPoints.clear();
-
-        BinaryDataArrayList dataList = spectrum.getBinaryDataArrayList();
-
-        if ((dataList == null) || (dataList.getCount().equals(0)))
-            return;
-
-        chromatogramDataPoints.allocate(dataList.getCount());
-
-        BinaryDataArray rtArray = dataList.getBinaryDataArray().get(0);
-        BinaryDataArray intensityArray = dataList.getBinaryDataArray().get(1);
-        Number rtValues[] = rtArray.getBinaryDataAsNumberArray();
-        Number intensityValues[] = intensityArray.getBinaryDataAsNumberArray();
-        for (int i = 0; i < rtValues.length; i++) {
-            final float rt = rtValues[i].floatValue();
-            final float intensity = intensityValues[i].floatValue();
-            chromatographyInfo = MSDKObjectBuilder
-                    .getChromatographyInfo1D(SeparationType.UNKNOWN, rt);
-            chromatogramDataPoints.add(chromatographyInfo, intensity);
+            rtBuffer[i] = chromatographyInfo;
+            intensityBuffer[i] = intensity;
         }
 
+        // Commit the changes
+        dataPointList.setSize(rtValues.length);
     }
 
 }

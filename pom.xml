@@ -166,8 +166,8 @@
 
 		<dependency>
 			<groupId>uk.ac.ebi.pride.tools</groupId>
-			<artifactId>jmzreader</artifactId>
-			<version>1.2.0</version>
+			<artifactId>mzxml-parser</artifactId>
+			<version>1.3.3</version>
 			<exclusions>
 				<exclusion>
 					<artifactId>log4j</artifactId>
@@ -178,14 +178,14 @@
 
 		<dependency>
 			<groupId>uk.ac.ebi.pride.tools</groupId>
-			<artifactId>mzxml-parser</artifactId>
-			<version>1.3.3</version>
-		</dependency>
-
-		<dependency>
-			<groupId>uk.ac.ebi.pride.tools</groupId>
 			<artifactId>mzdata-parser</artifactId>
 			<version>1.2.1</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>jmzreader</artifactId>
+					<groupId>uk.ac.ebi.pride.tools</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>

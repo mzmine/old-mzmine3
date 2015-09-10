@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.io.rawdataimport.mzxml_mzdata;
+package io.github.msdk.io.rawdataimport.mzxml;
 
 import java.util.Collections;
 import java.util.Date;
@@ -44,11 +44,11 @@ import uk.ac.ebi.pride.tools.jmzreader.model.impl.ParamGroup;
  * This class provides conversions from the jmzreader data model to MSDK data
  * model
  */
-class JmzReaderConverter {
+class MzXMLConverter {
 
     private DatatypeFactory dataTypeFactory;
 
-    JmzReaderConverter() {
+    MzXMLConverter() {
         try {
             dataTypeFactory = DatatypeFactory.newInstance();
         } catch (DatatypeConfigurationException e) {

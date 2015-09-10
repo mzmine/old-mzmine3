@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.io.rawdataimport.mzxml_mzdata;
+package io.github.msdk.io.rawdataimport.mzml;
 
 import java.io.File;
 import java.util.List;
@@ -27,33 +27,27 @@ import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFileType;
-import uk.ac.ebi.pride.tools.jmzreader.JMzReader;
+import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
-/**
- * This class reads XML-based mass spec data formats (mzData, mzXML)
- * using the jmzreader library.
- */
-class JmzReaderRawDataFile implements RawDataFile {
+class MzMLRawDataFile implements RawDataFile {
+
+    private static final @Nonnull RawDataFileType fileType = RawDataFileType.MZML;
 
     private final @Nonnull File sourceFile;
-    private final @Nonnull RawDataFileType fileType;
-    private @Nullable JMzReader jmzReader;
-    
+    private @Nullable MzMLUnmarshaller parser;
+
     private final @Nonnull List<MsFunction> msFunctions;
     private final @Nonnull List<MsScan> msScans;
     private final @Nonnull List<Chromatogram> chromatograms;
-    
+
     private @Nonnull String name;
 
     @SuppressWarnings("null")
-    public JmzReaderRawDataFile(@Nonnull File sourceFile,
-            @Nonnull RawDataFileType fileType, @Nonnull JMzReader jmzReader,
-            List<MsFunction> msFunctions,
-            List<MsScan> msScans,
-            List<Chromatogram> chromatograms) {
+    public MzMLRawDataFile(@Nonnull File sourceFile,
+            @Nonnull MzMLUnmarshaller parser, List<MsFunction> msFunctions,
+            List<MsScan> msScans, List<Chromatogram> chromatograms) {
         this.sourceFile = sourceFile;
-        this.fileType = fileType;
-        this.jmzReader = jmzReader;
+        this.parser = parser;
         this.name = sourceFile.getName();
         this.msFunctions = msFunctions;
         this.msScans = msScans;
@@ -106,18 +100,18 @@ class JmzReaderRawDataFile implements RawDataFile {
 
     @Override
     public void dispose() {
-        jmzReader = null;
+        parser = null;
     }
 
     @Nullable
-    JMzReader getJmzReader() {
-        return jmzReader;
+    MzMLUnmarshaller getParser() {
+        return parser;
     }
 
     /*
      * Unsupported set-operations
      */
-    
+
     @Override
     public void setOriginalFile(@Nullable File newOriginalFile) {
         throw new UnsupportedOperationException();

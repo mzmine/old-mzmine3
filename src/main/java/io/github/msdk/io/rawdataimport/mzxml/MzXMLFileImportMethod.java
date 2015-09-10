@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.io.rawdataimport.mzxml_mzdata;
+package io.github.msdk.io.rawdataimport.mzxml;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
     private boolean canceled = false;
 
-    private JmzReaderRawDataFile newRawFile;
+    private MzXMLRawDataFile newRawFile;
     private long totalScans = 0, parsedScans;
 
     public MzXMLFileImportMethod(@Nonnull File sourceFile) {
@@ -86,11 +86,11 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
                     .getMsSpectrumDataPointList();
 
             // Create the XMLBasedRawDataFile object
-            newRawFile = new JmzReaderRawDataFile(sourceFile, fileType, parser,
+            newRawFile = new MzXMLRawDataFile(sourceFile, fileType, parser,
                     msFunctionsList, scansList, chromatogramsList);
 
             // Create the converter from jmzreader data model to our data model
-            final JmzReaderConverter converter = new JmzReaderConverter();
+            final MzXMLConverter converter = new MzXMLConverter();
 
             final List<Long> scanNumbers = parser.getScanNumbers();
 
@@ -119,7 +119,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
                 // Extract the scan data points, so we can check the m/z range
                 // and detect the spectrum type (profile/centroid)
-                JmzReaderConverter.extractDataPoints(spectrum, dataPoints);
+                MzXMLConverter.extractDataPoints(spectrum, dataPoints);
 
                 // Get the m/z range
                 Range<Double> mzRange = MsSpectrumUtil.getMzRange(dataPoints);
@@ -150,7 +150,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
                         .extractIsolations(spectrum);
 
                 // Create a new MsScan instance
-                JmzReaderMsScan scan = new JmzReaderMsScan(newRawFile,
+                MzXMLMsScan scan = new MzXMLMsScan(newRawFile,
                         spectrumId, spectrumType, msFunction, chromData,
                         scanType, mzRange, scanningRange, scanNumber,
                         scanDefinition, tic, polarity, sourceFragmentation,

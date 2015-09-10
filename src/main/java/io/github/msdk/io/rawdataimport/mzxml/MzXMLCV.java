@@ -12,10 +12,10 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.io.rawdataimport.mzxml_mzdata;
+package io.github.msdk.io.rawdataimport.mzxml;
 
 /**
- * Controlled vocabulary (CV) values for mzXML and mzData files.
+ * Controlled vocabulary (CV) values for mzXML files.
  */
 class MzXMLCV {
 

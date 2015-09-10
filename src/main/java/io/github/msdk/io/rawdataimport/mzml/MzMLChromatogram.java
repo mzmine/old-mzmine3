@@ -33,16 +33,16 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
-class JMzMLChromatogram implements Chromatogram {
+class MzMLChromatogram implements Chromatogram {
 
-    private final @Nonnull JMzMLRawDataFile dataFile;
+    private final @Nonnull MzMLRawDataFile dataFile;
     private final @Nonnull String chromatogramId;
     private final @Nonnull Integer chromatogramNumber;
     private final @Nonnull ChromatogramType chromatogramType;
     private final @Nonnull SeparationType separationType;
     private final @Nonnull List<IsolationInfo> isolations;
 
-    JMzMLChromatogram(@Nonnull JMzMLRawDataFile dataFile,
+    MzMLChromatogram(@Nonnull MzMLRawDataFile dataFile,
             @Nonnull String chromatogramId,
             @Nonnull Integer chromatogramNumber,
             @Nonnull SeparationType separationType,
@@ -83,7 +83,7 @@ class JMzMLChromatogram implements Chromatogram {
                         "The raw data file object has been disposed");
             }
             uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram = parser.getChromatogramById(chromatogramId);
-            JMzMLConverter.extractDataPoints(jmzChromatogram, dataPointList);
+            MzMLConverter.extractDataPoints(jmzChromatogram, dataPointList);
         } catch (MzMLUnmarshallerException e) {
             throw (new MSDKRuntimeException(e));
         }

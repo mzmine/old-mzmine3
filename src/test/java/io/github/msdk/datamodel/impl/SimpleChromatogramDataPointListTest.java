@@ -14,41 +14,9 @@
 
 package io.github.msdk.datamodel.impl;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.SeparationType;
-
 /**
- * Tests for SimpleChromatogramDataPointListTest
+ * Tests for SimpleChromatogramDataPointList
  */
 public class SimpleChromatogramDataPointListTest {
-
-    @Test
-    public void testAddDataPoint() throws MSDKException {
-        ChromatogramDataPointList dataPoints = MSDKObjectBuilder
-                .getChromatogramDataPointList();
-
-        dataPoints.add(new SimpleChromatographyInfo(2.0f, null, null,
-                SeparationType.LC), 222);
-        dataPoints.add(new SimpleChromatographyInfo(1.0f, null, null,
-                SeparationType.LC), 111);
-        dataPoints.add(new SimpleChromatographyInfo(3.0f, null, null,
-                SeparationType.LC), 333);
-        dataPoints.add(new SimpleChromatographyInfo(5.0f, null, null,
-                SeparationType.LC), 555);
-        dataPoints.add(new SimpleChromatographyInfo(4.0f, null, null,
-                SeparationType.LC), 444);
-        dataPoints.add(new SimpleChromatographyInfo(3.5f, null, null,
-                SeparationType.LC), 350);
-
-        ChromatographyInfo[] rtBuffer = dataPoints.getRtBuffer();
-        for (int pos = 1; pos < dataPoints.getSize(); pos++) {
-            Assert.assertTrue(rtBuffer[pos].compareTo(rtBuffer[pos-1]) >= 0);
-        }
-    }
 
 }

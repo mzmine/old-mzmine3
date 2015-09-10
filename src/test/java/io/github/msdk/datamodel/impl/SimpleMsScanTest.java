@@ -27,9 +27,9 @@ import com.google.common.collect.Range;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -99,6 +99,7 @@ public class SimpleMsScanTest {
         Assert.assertEquals(MsScanType.MRM_SRM, msScan1.getMsScanType());
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testRawDataFile() throws MSDKException {
         // Verify raw data file
@@ -129,6 +130,7 @@ public class SimpleMsScanTest {
         Assert.assertEquals(newScanRange, msScan1.getScanningRange());
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testChromatographyInfo() throws MSDKException {
         // Verify scanning range
@@ -146,6 +148,7 @@ public class SimpleMsScanTest {
                 msScan1.getChromatographyInfo().getRetentionTime());
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testSourceInducedFragmentation() throws MSDKException {
         // Verify scanning range

@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.io.rawdataimport.mzml;
+package io.github.msdk.io.rawdataimport.mzxml;
 
 import java.io.File;
 import java.util.List;
@@ -27,14 +27,17 @@ import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFileType;
-import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
+import uk.ac.ebi.pride.tools.mzxml_parser.MzXMLFile;
 
-class JMzMLRawDataFile implements RawDataFile {
-
-    private static final @Nonnull RawDataFileType fileType = RawDataFileType.MZML;
+/**
+ * This class reads XML-based mass spec data formats (mzData, mzXML) using the
+ * jmzreader library.
+ */
+class MzXMLRawDataFile implements RawDataFile {
 
     private final @Nonnull File sourceFile;
-    private @Nullable MzMLUnmarshaller parser;
+    private final @Nonnull RawDataFileType fileType;
+    private @Nullable MzXMLFile parser;
 
     private final @Nonnull List<MsFunction> msFunctions;
     private final @Nonnull List<MsScan> msScans;
@@ -43,10 +46,12 @@ class JMzMLRawDataFile implements RawDataFile {
     private @Nonnull String name;
 
     @SuppressWarnings("null")
-    public JMzMLRawDataFile(@Nonnull File sourceFile,
-            @Nonnull MzMLUnmarshaller parser, List<MsFunction> msFunctions,
-            List<MsScan> msScans, List<Chromatogram> chromatograms) {
+    public MzXMLRawDataFile(@Nonnull File sourceFile,
+            @Nonnull RawDataFileType fileType, @Nonnull MzXMLFile parser,
+            List<MsFunction> msFunctions, List<MsScan> msScans,
+            List<Chromatogram> chromatograms) {
         this.sourceFile = sourceFile;
+        this.fileType = fileType;
         this.parser = parser;
         this.name = sourceFile.getName();
         this.msFunctions = msFunctions;
@@ -104,7 +109,7 @@ class JMzMLRawDataFile implements RawDataFile {
     }
 
     @Nullable
-    MzMLUnmarshaller getParser() {
+    MzXMLFile getParser() {
         return parser;
     }
 

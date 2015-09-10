@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.io.rawdataimport.mzxml_mzdata;
+package io.github.msdk.io.rawdataimport.mzml;
 
 import java.util.List;
 
@@ -31,17 +31,17 @@ import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
-import uk.ac.ebi.pride.tools.jmzreader.JMzReader;
-import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
-import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
+import uk.ac.ebi.jmzml.model.mzml.Spectrum;
+import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
+import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
-class JmzReaderMsScan extends AbstractReadOnlyMsScan {
+class MzMLMsScan extends AbstractReadOnlyMsScan {
 
-    private final @Nonnull JmzReaderRawDataFile dataFile;
+    private final @Nonnull MzMLRawDataFile dataFile;
     private final @Nonnull String spectrumId;
 
-    JmzReaderMsScan(@Nonnull JmzReaderRawDataFile dataFile,
-            @Nonnull String spectrumId, @Nonnull MsSpectrumType spectrumType,
+    MzMLMsScan(@Nonnull MzMLRawDataFile dataFile, @Nonnull String spectrumId,
+            @Nonnull MsSpectrumType spectrumType,
             @Nonnull MsFunction msFunction,
             @Nonnull ChromatographyInfo chromatographyInfo,
             @Nonnull MsScanType scanType, @Nullable Range<Double> mzRange,
@@ -62,14 +62,14 @@ class JmzReaderMsScan extends AbstractReadOnlyMsScan {
     @Override
     public void getDataPoints(@Nonnull MsSpectrumDataPointList dataPoints) {
         try {
-            JMzReader jmzReader = dataFile.getJmzReader();
-            if (jmzReader == null) {
+            MzMLUnmarshaller parser = dataFile.getParser();
+            if (parser == null) {
                 throw new MSDKRuntimeException(
                         "The raw data file object has been disposed");
             }
-            Spectrum jmzSpectrum = jmzReader.getSpectrumById(spectrumId);
-            JmzReaderConverter.extractDataPoints(jmzSpectrum, dataPoints);
-        } catch (JMzReaderException e) {
+            Spectrum jmzSpectrum = parser.getSpectrumById(spectrumId);
+            MzMLConverter.extractDataPoints(jmzSpectrum, dataPoints);
+        } catch (MzMLUnmarshallerException e) {
             throw (new MSDKRuntimeException(e));
         }
     }
@@ -80,17 +80,18 @@ class JmzReaderMsScan extends AbstractReadOnlyMsScan {
             @Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange) {
         try {
-            JMzReader jmzReader = dataFile.getJmzReader();
-            if (jmzReader == null) {
+            MzMLUnmarshaller parser = dataFile.getParser();
+            if (parser == null) {
                 throw new MSDKRuntimeException(
                         "The raw data file object has been disposed");
             }
-            Spectrum jmzSpectrum = jmzReader.getSpectrumById(spectrumId);
-            JmzReaderConverter.extractDataPoints(jmzSpectrum, dataPoints,
-                    mzRange, intensityRange);
-        } catch (JMzReaderException e) {
+            Spectrum jmzSpectrum = parser.getSpectrumById(spectrumId);
+            MzMLConverter.extractDataPoints(jmzSpectrum, dataPoints, mzRange,
+                    intensityRange);
+        } catch (MzMLUnmarshallerException e) {
             throw (new MSDKRuntimeException(e));
         }
+
     }
 
 }

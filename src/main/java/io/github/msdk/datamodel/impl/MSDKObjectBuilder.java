@@ -72,6 +72,7 @@ public class MSDKObjectBuilder {
      * @param msLevel
      * @return
      */
+    @SuppressWarnings("null")
     public static final @Nonnull MsFunction getMsFunction(@Nonnull String name,
             @Nullable Integer msLevel) {
 

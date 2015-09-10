@@ -25,9 +25,9 @@ import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import io.github.msdk.io.filetypedetection.FileTypeDetectionMethod;
+import io.github.msdk.io.rawdataimport.mzdata.MzDataFileImportMethod;
 import io.github.msdk.io.rawdataimport.mzml.MzMLFileImportMethod;
-import io.github.msdk.io.rawdataimport.mzxml_mzdata.MzDataFileImportMethod;
-import io.github.msdk.io.rawdataimport.mzxml_mzdata.MzXMLFileImportMethod;
+import io.github.msdk.io.rawdataimport.mzxml.MzXMLFileImportMethod;
 import io.github.msdk.io.rawdataimport.netcdf.NetCDFFileImportMethod;
 
 /**
@@ -78,7 +78,7 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
             parser = new MzXMLFileImportMethod(sourceFile);
             break;
         case MZDATA:
-            parser = new MzDataFileImportMethod(sourceFile);
+            parser = new MzDataFileImportMethod(sourceFile, dataStore);
             break;
         case NETCDF:
             parser = new NetCDFFileImportMethod(sourceFile, dataStore);

@@ -61,7 +61,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
     private boolean canceled = false;
 
-    private JMzMLRawDataFile newRawFile;
+    private MzMLRawDataFile newRawFile;
     private long totalScans = 0, totalChromatograms = 0, parsedScans,
             parsedChromatograms;
 
@@ -95,11 +95,11 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
                 .getMsSpectrumDataPointList();
 
         // Create the XMLBasedRawDataFile object
-        newRawFile = new JMzMLRawDataFile(sourceFile, parser, msFunctionsList,
+        newRawFile = new MzMLRawDataFile(sourceFile, parser, msFunctionsList,
                 scansList, chromatogramsList);
 
         // Create the converter from jmzml data model to our data model
-        final JMzMLConverter converter = new JMzMLConverter();
+        final MzMLConverter converter = new MzMLConverter();
 
         if (totalScans > 0) {
             MzMLObjectIterator<Spectrum> iterator = parser
@@ -133,7 +133,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
                 // Extract the scan data points, so we can check the m/z range
                 // and detect the spectrum type (profile/centroid)
-                JMzMLConverter.extractDataPoints(spectrum, spectrumDataPoints);
+                MzMLConverter.extractDataPoints(spectrum, spectrumDataPoints);
 
                 // Get the m/z range
                 Range<Double> mzRange = MsSpectrumUtil
@@ -165,7 +165,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
                         .extractIsolations(spectrum);
 
                 // Create a new MsScan instance
-                JMzMLMsScan scan = new JMzMLMsScan(newRawFile, spectrumId,
+                MzMLMsScan scan = new MzMLMsScan(newRawFile, spectrumId,
                         spectrumType, msFunction, chromData, scanType, mzRange,
                         scanningRange, scanNumber, scanDefinition, tic,
                         polarity, sourceFragmentation, isolations);
@@ -211,7 +211,7 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
                         .extractIsolations(chromatogram);
 
                 // Create a new Chromatogram instance
-                JMzMLChromatogram chrom = new JMzMLChromatogram(newRawFile,
+                MzMLChromatogram chrom = new MzMLChromatogram(newRawFile,
                         chromatogramId, chromatogramNumber, separationType,
                         chromatogramType, isolations);
 

@@ -46,7 +46,7 @@ public class ThermoRawImportMethodTest {
 
         // Create the data structures
         DataPointStore dataStore = DataPointStoreFactory
-                .getTmpFileDataPointStore();
+                .getMemoryDataStore();
         MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
                 .getMsSpectrumDataPointList();
 
