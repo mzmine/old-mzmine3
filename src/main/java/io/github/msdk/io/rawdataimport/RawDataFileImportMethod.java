@@ -24,6 +24,7 @@ import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.RawDataFileType;
+import io.github.msdk.io.filetypedetection.FileTypeDetectionMethod;
 import io.github.msdk.io.rawdataimport.mzml.MzMLFileImportMethod;
 import io.github.msdk.io.rawdataimport.mzxml_mzdata.MzDataFileImportMethod;
 import io.github.msdk.io.rawdataimport.mzxml_mzdata.MzXMLFileImportMethod;

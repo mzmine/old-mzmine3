@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.rawdata.RawDataFileType;
+import io.github.msdk.io.filetypedetection.FileTypeDetectionMethod;
 
 public class FileTypeDetectionMethodTest {
 
