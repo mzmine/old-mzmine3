@@ -40,7 +40,10 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.CENTROIDED;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            @SuppressWarnings("null")
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -51,6 +54,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testCentroided2() throws Exception {
 
@@ -63,7 +67,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.CENTROIDED;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -74,6 +80,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testCentroided3() throws Exception {
 
@@ -86,7 +93,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.CENTROIDED;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -97,6 +106,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testCentroided4() throws Exception {
 
@@ -109,7 +119,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.CENTROIDED;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -120,6 +132,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testCentroided5() throws Exception {
 
@@ -132,7 +145,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.CENTROIDED;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -143,6 +158,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testCentroided6() throws Exception {
 
@@ -155,7 +171,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.CENTROIDED;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -166,6 +184,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testCentroided7() throws Exception {
 
@@ -178,7 +197,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.CENTROIDED;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -189,6 +210,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testCentroided8() throws Exception {
 
@@ -201,7 +223,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.CENTROIDED;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -212,6 +236,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testCentroided9() throws Exception {
 
@@ -224,7 +249,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.CENTROIDED;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -235,6 +262,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testCentroided10() throws Exception {
 
@@ -247,7 +275,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.CENTROIDED;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -258,6 +288,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testCentroided11() throws Exception {
 
@@ -270,7 +301,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.CENTROIDED;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -281,6 +314,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testCentroided12() throws Exception {
 
@@ -293,7 +327,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.CENTROIDED;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -304,6 +340,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testCentroided13() throws Exception {
 
@@ -316,7 +353,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.CENTROIDED;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -327,6 +366,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testCentroided14() throws Exception {
 
@@ -339,7 +379,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.CENTROIDED;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -350,6 +392,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testProfile1() throws Exception {
 
@@ -362,7 +405,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.PROFILE;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -373,6 +418,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testProfile2() throws Exception {
 
@@ -385,7 +431,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.PROFILE;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -396,6 +444,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testProfile3() throws Exception {
 
@@ -408,7 +457,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.PROFILE;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -419,6 +470,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testProfile4() throws Exception {
 
@@ -431,7 +483,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.PROFILE;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -442,6 +496,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testProfile5() throws Exception {
 
@@ -454,7 +509,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.PROFILE;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -465,6 +522,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testProfile6() throws Exception {
 
@@ -477,7 +535,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.PROFILE;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -488,6 +548,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testProfile7() throws Exception {
 
@@ -500,7 +561,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.PROFILE;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -511,6 +574,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testProfile8() throws Exception {
 
@@ -523,7 +587,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.PROFILE;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -534,6 +600,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testProfile9() throws Exception {
 
@@ -546,7 +613,9 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.PROFILE;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),
@@ -557,29 +626,7 @@ public class SpectrumTypeDetectionMethodTest {
 
     }
 
-    @Test
-    public void testProfile10() throws Exception {
-
-        File inputFile = new File(TEST_DATA_PATH + "profile10.mzML");
-        Assert.assertTrue(inputFile.canRead());
-        MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
-        RawDataFile rawFile = importer.execute();
-        Assert.assertNotNull(rawFile);
-        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
-
-        for (MsScan scan : rawFile.getScans()) {
-            final MsSpectrumType expectedType = MsSpectrumType.PROFILE;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
-            Assert.assertEquals(
-                    "Scan type wrongly detected for scan "
-                            + scan.getScanNumber() + " in " + rawFile.getName(),
-                    expectedType, detectedType);
-        }
-
-        rawFile.dispose();
-
-    }
-
+    @SuppressWarnings("null")
     @Test
     public void testThresholded1() throws Exception {
 
@@ -592,7 +639,35 @@ public class SpectrumTypeDetectionMethodTest {
 
         for (MsScan scan : rawFile.getScans()) {
             final MsSpectrumType expectedType = MsSpectrumType.THRESHOLDED;
-            final MsSpectrumType detectedType = scan.getSpectrumType();
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
+            Assert.assertEquals(
+                    "Scan type wrongly detected for scan "
+                            + scan.getScanNumber() + " in " + rawFile.getName(),
+                    expectedType, detectedType);
+        }
+
+        rawFile.dispose();
+
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testThresholded2() throws Exception {
+
+        File inputFile = new File(TEST_DATA_PATH + "thresholded2.mzML");
+        Assert.assertTrue(inputFile.canRead());
+        MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
+        RawDataFile rawFile = importer.execute();
+        Assert.assertNotNull(rawFile);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        for (MsScan scan : rawFile.getScans()) {
+            final MsSpectrumType expectedType = MsSpectrumType.THRESHOLDED;
+            SpectrumTypeDetectionMethod detector = new SpectrumTypeDetectionMethod(
+                    scan);
+            final MsSpectrumType detectedType = detector.execute();
             Assert.assertEquals(
                     "Scan type wrongly detected for scan "
                             + scan.getScanNumber() + " in " + rawFile.getName(),

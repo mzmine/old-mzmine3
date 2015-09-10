@@ -74,8 +74,9 @@ public class SpectrumTypeDetectionMethod implements MSDKMethod<MsSpectrumType> {
     private MsSpectrumType detectSpectrumType(
             @Nonnull MsSpectrumDataPointList dataPoints) {
 
-        // If the spectrum has less than 5 data points, it should be centroided.
-        if (dataPoints.getSize() < 5)
+        // If the spectrum has less than 100 data points, it should be
+        // centroided.
+        if (dataPoints.getSize() < 100)
             return MsSpectrumType.CENTROIDED;
 
         // Go through the data points and find the highest one
@@ -108,6 +109,7 @@ public class SpectrumTypeDetectionMethod implements MSDKMethod<MsSpectrumType> {
         // Check if canceled
         if (canceled)
             return null;
+
         finishedPercentage = 0.3f;
 
         // Now we have the index of the top data point (except the first and
@@ -138,8 +140,8 @@ public class SpectrumTypeDetectionMethod implements MSDKMethod<MsSpectrumType> {
             // Check if the m/z distance of the pair of consecutive data points
             // falls within 25% tolerance of the distance of the top data point
             // and its neighbor. If not, the spectrum should be centroided.
-            if ((currentMzDifference < 0.8 * topMzDifference)
-                    || (currentMzDifference > 1.25 * topMzDifference)) {
+            if ((currentMzDifference < (0.8 * topMzDifference))
+                    || (currentMzDifference > (1.25 * topMzDifference))) {
                 return MsSpectrumType.CENTROIDED;
             }
 
@@ -148,20 +150,8 @@ public class SpectrumTypeDetectionMethod implements MSDKMethod<MsSpectrumType> {
         // Check if canceled
         if (canceled)
             return null;
-        finishedPercentage = 0.7f;
 
-        // The previous check will detect most of the centroided spectra, but
-        // there is a catch: some centroided spectra were produced by binning,
-        // and the bins typically have regular distribution of data points, so
-        // the above check would fail. Binning is normally used for
-        // low-resolution spectra, so we can check the m/z difference the 3
-        // consecutive data points (with the top one in the middle). If it goes
-        // above 0.1, the spectrum should be centroided.
-        final double mzDifferenceTopThree = Math
-                .abs(mzValues[topDataPointIndex - 1]
-                        - mzValues[topDataPointIndex + 1]);
-        if (mzDifferenceTopThree > 0.1)
-            return MsSpectrumType.CENTROIDED;
+        finishedPercentage = 0.7f;
 
         // Finally, we check the data points on the left and on the right of the
         // top one. If the spectrum is continuous (thresholded), their intensity
