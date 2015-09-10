@@ -14,7 +14,6 @@
 
 package io.github.msdk.io.rawdataimport.nativeformats;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;

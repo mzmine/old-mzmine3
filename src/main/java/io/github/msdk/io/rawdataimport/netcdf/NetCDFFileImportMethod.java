@@ -65,6 +65,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
     private Variable massValueVariable, intensityValueVariable;
 
     // Some software produces netcdf files with a scale factor such as 0.05
+    // TODO: need junit test for this
     private double massValueScaleFactor = 1;
     private double intensityValueScaleFactor = 1;
 
@@ -228,7 +229,8 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
          * present scans
          * 
          * - scan_index: fill with following good value
-         * 
+         *
+         * TODO: need junit test for this
          */
 
         // Calculate number of good scans

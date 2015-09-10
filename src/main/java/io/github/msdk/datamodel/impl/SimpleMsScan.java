@@ -40,6 +40,7 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
 
     private @Nullable RawDataFile dataFile;
     private @Nonnull Integer scanNumber;
+    private @Nullable String scanDefinition;
     private @Nonnull MsFunction msFunction;
     private @Nonnull PolarityType polarity = PolarityType.UNKNOWN;
     private @Nonnull MsScanType msScanType = MsScanType.UNKNOWN;
@@ -79,6 +80,17 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
     public void setScanNumber(@Nonnull Integer scanNumber) {
         Preconditions.checkNotNull(scanNumber);
         this.scanNumber = scanNumber;
+    }
+
+    @Override
+    @Nullable
+    public String getScanDefinition() {
+        return scanDefinition;
+    }
+
+    @Override
+    public void setScanDefinition(@Nullable String scanDefinition) {
+        this.scanDefinition = scanDefinition;
     }
 
     @Override
@@ -135,7 +147,8 @@ class SimpleMsScan extends AbstractSpectrum implements MsScan {
     }
 
     @Override
-    public void setChromatographyInfo(@Nullable ChromatographyInfo chromatographyInfo) {
+    public void setChromatographyInfo(
+            @Nullable ChromatographyInfo chromatographyInfo) {
         this.chromInfo = chromatographyInfo;
     }
 

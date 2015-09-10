@@ -27,8 +27,8 @@ import com.google.common.base.Strings;
 
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScanType;
@@ -42,11 +42,11 @@ import uk.ac.ebi.pride.tools.jmzreader.model.impl.ParamGroup;
  * This class provides conversions from the jmzreader data model to MSDK data
  * model
  */
-class JmzReaderUtil {
+class JmzReaderConverter {
 
-    private static DatatypeFactory dataTypeFactory;
+    private DatatypeFactory dataTypeFactory;
 
-    static {
+    JmzReaderConverter() {
         try {
             dataTypeFactory = DatatypeFactory.newInstance();
         } catch (DatatypeConfigurationException e) {
@@ -54,12 +54,12 @@ class JmzReaderUtil {
         }
     }
 
-    static MsFunction extractMsFunction(Spectrum spectrum) {
+    MsFunction extractMsFunction(Spectrum spectrum) {
         Integer msLevel = spectrum.getMsLevel();
         return MSDKObjectBuilder.getMsFunction(msLevel);
     }
 
-    static ChromatographyInfo extractChromatographyData(Spectrum spectrum) {
+    ChromatographyInfo extractChromatographyData(Spectrum spectrum) {
 
         ParamGroup params = spectrum.getAdditional();
 
@@ -67,7 +67,7 @@ class JmzReaderUtil {
             final String accession = cvParam.getAccession();
             if (Strings.isNullOrEmpty(accession))
                 continue;
-            if (JmzReaderCV.cvScanRetentionTime.equals(accession)) {
+            if (MzXMLCV.cvScanRetentionTime.equals(accession)) {
                 String value = cvParam.getValue();
                 if (Strings.isNullOrEmpty(value))
                     continue;
@@ -84,29 +84,18 @@ class JmzReaderUtil {
         return null;
     }
 
-    static void extractDataPoints(Spectrum spectrum,
-            MsSpectrumDataPointList dataPoints) {
-        Map<Double, Double> jmzreaderPeakList = spectrum.getPeakList();
-        dataPoints.clear();
-        dataPoints.allocate(jmzreaderPeakList.size());
-        for (Double mz : jmzreaderPeakList.keySet()) {
-            final float intensity = jmzreaderPeakList.get(mz).floatValue();
-            dataPoints.add(mz.floatValue(), intensity);
-        }
-    }
-
-    static MsScanType extractScanType(Spectrum spectrum) {
+    MsScanType extractScanType(Spectrum spectrum) {
         return MsScanType.UNKNOWN;
     }
 
-    static PolarityType extractPolarity(Spectrum spectrum) {
+    PolarityType extractPolarity(Spectrum spectrum) {
         ParamGroup params = spectrum.getAdditional();
 
         for (CvParam cvParam : params.getCvParams()) {
             final String accession = cvParam.getAccession();
             if (Strings.isNullOrEmpty(accession))
                 continue;
-            if (JmzReaderCV.cvScanPolarity.equals(accession)) {
+            if (MzXMLCV.cvScanPolarity.equals(accession)) {
                 String value = cvParam.getValue();
                 if (Strings.isNullOrEmpty(value))
                     continue;
@@ -119,12 +108,23 @@ class JmzReaderUtil {
         return PolarityType.UNKNOWN;
     }
 
-    static ActivationInfo extractSourceFragmentation(Spectrum spectrum) {
+    ActivationInfo extractSourceFragmentation(Spectrum spectrum) {
         return null;
     }
 
-    static List<IsolationInfo> extractIsolations(Spectrum spectrum) {
+    List<IsolationInfo> extractIsolations(Spectrum spectrum) {
         return Collections.emptyList();
+    }
+
+    static void extractDataPoints(Spectrum spectrum,
+            MsSpectrumDataPointList dataPoints) {
+        Map<Double, Double> jmzreaderPeakList = spectrum.getPeakList();
+        dataPoints.clear();
+        dataPoints.allocate(jmzreaderPeakList.size());
+        for (Double mz : jmzreaderPeakList.keySet()) {
+            final float intensity = jmzreaderPeakList.get(mz).floatValue();
+            dataPoints.add(mz.floatValue(), intensity);
+        }
     }
 
 }

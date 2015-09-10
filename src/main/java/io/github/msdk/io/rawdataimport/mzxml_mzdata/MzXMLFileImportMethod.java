@@ -32,8 +32,8 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -89,6 +89,9 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
             newRawFile = new JmzReaderRawDataFile(sourceFile, fileType, parser,
                     msFunctionsList, scansList, chromatogramsList);
 
+            // Create the converter from jmzreader data model to our data model
+            final JmzReaderConverter converter = new JmzReaderConverter();
+
             final List<Long> scanNumbers = parser.getScanNumbers();
 
             for (int scanIndex = 0; scanIndex < totalScans; scanIndex++) {
@@ -103,18 +106,20 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
                 String spectrumId = spectrum.getId();
                 Integer scanNumber = scanNumbers.get(scanIndex).intValue();
 
+                // For now, let's use the spectrum id as scan definition
+                String scanDefinition = spectrumId;
+
                 // Get the MS function
-                MsFunction msFunction = JmzReaderUtil
-                        .extractMsFunction(spectrum);
+                MsFunction msFunction = converter.extractMsFunction(spectrum);
                 msFunctionsList.add(msFunction);
 
                 // Store the chromatography data
-                ChromatographyInfo chromData = JmzReaderUtil
+                ChromatographyInfo chromData = converter
                         .extractChromatographyData(spectrum);
 
                 // Extract the scan data points, so we can check the m/z range
                 // and detect the spectrum type (profile/centroid)
-                JmzReaderUtil.extractDataPoints(spectrum, dataPoints);
+                JmzReaderConverter.extractDataPoints(spectrum, dataPoints);
 
                 // Get the m/z range
                 Range<Double> mzRange = MsSpectrumUtil.getMzRange(dataPoints);
@@ -131,24 +136,25 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
                 MsSpectrumType spectrumType = detector.execute();
 
                 // Get the MS scan type
-                MsScanType scanType = JmzReaderUtil.extractScanType(spectrum);
+                MsScanType scanType = converter.extractScanType(spectrum);
 
                 // Get the polarity
-                PolarityType polarity = JmzReaderUtil.extractPolarity(spectrum);
+                PolarityType polarity = converter.extractPolarity(spectrum);
 
                 // Get the in-source fragmentation
-                ActivationInfo sourceFragmentation = JmzReaderUtil
+                ActivationInfo sourceFragmentation = converter
                         .extractSourceFragmentation(spectrum);
 
                 // Get the in-source fragmentation
-                List<IsolationInfo> isolations = JmzReaderUtil
+                List<IsolationInfo> isolations = converter
                         .extractIsolations(spectrum);
 
                 // Create a new MsScan instance
                 JmzReaderMsScan scan = new JmzReaderMsScan(newRawFile,
                         spectrumId, spectrumType, msFunction, chromData,
-                        scanType, mzRange, scanningRange, scanNumber, tic,
-                        polarity, sourceFragmentation, isolations);
+                        scanType, mzRange, scanningRange, scanNumber,
+                        scanDefinition, tic, polarity, sourceFragmentation,
+                        isolations);
 
                 // Add the scan to the final raw data file
                 scansList.add(scan);

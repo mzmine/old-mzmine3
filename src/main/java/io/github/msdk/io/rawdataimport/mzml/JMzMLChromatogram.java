@@ -83,7 +83,7 @@ class JMzMLChromatogram implements Chromatogram {
                         "The raw data file object has been disposed");
             }
             uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram = parser.getChromatogramById(chromatogramId);
-            JMzMLUtil.extractDataPoints(jmzChromatogram, dataPointList);
+            JMzMLConverter.extractDataPoints(jmzChromatogram, dataPointList);
         } catch (MzMLUnmarshallerException e) {
             throw (new MSDKRuntimeException(e));
         }

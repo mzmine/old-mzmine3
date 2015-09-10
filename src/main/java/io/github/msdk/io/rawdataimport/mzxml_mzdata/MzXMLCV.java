@@ -17,7 +17,7 @@ package io.github.msdk.io.rawdataimport.mzxml_mzdata;
 /**
  * Controlled vocabulary (CV) values for mzXML and mzData files.
  */
-class JmzReaderCV {
+class MzXMLCV {
 
     // Polarity
     static final String cvScanPolarity = "MS:1000465";

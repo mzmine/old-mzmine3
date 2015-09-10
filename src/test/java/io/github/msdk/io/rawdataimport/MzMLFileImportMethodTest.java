@@ -28,6 +28,7 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ActivationType;
+import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -91,6 +92,53 @@ public class MzMLFileImportMethodTest {
 
     @SuppressWarnings("null")
     @Test
+    public void testPwizTiny() throws MSDKException {
+
+        // Create the data structures
+        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
+                .getMsSpectrumDataPointList();
+
+        // Import the file
+        File inputFile = new File(TEST_DATA_PATH + "tiny.pwiz.idx.mzML");
+        Assert.assertTrue(inputFile.canRead());
+        MzMLFileImportMethod importer = new MzMLFileImportMethod(inputFile);
+        RawDataFile rawFile = importer.execute();
+        Assert.assertNotNull(rawFile);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        // The file has 4 scans
+        List<MsScan> scans = rawFile.getScans();
+        Assert.assertNotNull(scans);
+        Assert.assertEquals(4, scans.size());
+
+        // 2nd scan, #20
+        MsScan scan2 = scans.get(1);
+        Assert.assertEquals(new Integer(20), scan2.getScanNumber());
+        Assert.assertEquals(MsSpectrumType.CENTROIDED, scan2.getSpectrumType());
+        Assert.assertEquals(new Integer(2), scan2.getMsFunction().getMsLevel());
+        Assert.assertEquals(359.43f,
+                scan2.getChromatographyInfo().getRetentionTime(), 0.01f);
+        Assert.assertEquals(PolarityType.POSITIVE, scan2.getPolarity());
+        scan2.getDataPoints(dataPoints);
+        Assert.assertEquals(10, dataPoints.getSize());
+        Float scan2maxInt = MsSpectrumUtil.getMaxIntensity(dataPoints);
+        Assert.assertEquals(20f, scan2maxInt, 0.001f);
+
+        List<IsolationInfo> scan2Isolations = scan2.getIsolations();
+        Assert.assertNotNull(scan2Isolations);
+        Assert.assertEquals(1, scan2Isolations.size());
+
+        IsolationInfo scan2Isolation = scan2Isolations.get(0);
+        Assert.assertEquals(445.34, scan2Isolation.getPrecursorMz(), 0.001);
+        Assert.assertEquals(new Integer(2),
+                scan2Isolation.getPrecursorCharge());
+
+        rawFile.dispose();
+
+    }
+
+    @SuppressWarnings("null")
+    @Test
     public void testParamGroup() throws MSDKException {
 
         // Create the data structures
@@ -143,7 +191,57 @@ public class MzMLFileImportMethodTest {
     }
 
     @Test
-    public void testChromatogram() throws MSDKException {
+    public void testCompressedAndUncompressed() throws MSDKException {
+
+        // Create the data structures
+        MsSpectrumDataPointList dataPoints1 = MSDKObjectBuilder
+                .getMsSpectrumDataPointList();
+        MsSpectrumDataPointList dataPoints2 = MSDKObjectBuilder
+                .getMsSpectrumDataPointList();
+
+        // Import the compressed file
+        File compressedFile = new File(
+                TEST_DATA_PATH + "MzMLFile_7_compressed.mzML");
+        Assert.assertTrue(compressedFile.canRead());
+        MzMLFileImportMethod importer = new MzMLFileImportMethod(
+                compressedFile);
+        RawDataFile compressedRaw = importer.execute();
+        Assert.assertNotNull(compressedRaw);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        // Import the uncompressed file
+        File unCompressedFile = new File(
+                TEST_DATA_PATH + "MzMLFile_7_uncompressed.mzML");
+        Assert.assertTrue(unCompressedFile.canRead());
+        importer = new MzMLFileImportMethod(unCompressedFile);
+        RawDataFile uncompressedRaw = importer.execute();
+        Assert.assertNotNull(uncompressedRaw);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        // These files have 3 scans
+        List<MsScan> compressedScans = compressedRaw.getScans();
+        List<MsScan> unCompressedScans = uncompressedRaw.getScans();
+        Assert.assertEquals(3, compressedScans.size());
+        Assert.assertEquals(3, unCompressedScans.size());
+
+        for (int i = 0; i < 3; i++) {
+            MsScan compressedScan = compressedScans.get(i);
+            MsScan unCompressedScan = unCompressedScans.get(i);
+
+            compressedScan.getDataPoints(dataPoints1);
+            unCompressedScan.getDataPoints(dataPoints2);
+
+            Assert.assertTrue(dataPoints1.equals(dataPoints2));
+        }
+
+        compressedRaw.dispose();
+        uncompressedRaw.dispose();
+
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testSRM() throws MSDKException {
 
         // Create the data structures
         ChromatogramDataPointList dataPoints = MSDKObjectBuilder

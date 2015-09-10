@@ -29,6 +29,7 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
@@ -42,13 +43,13 @@ class RawDumpParser {
 
     private int parsedScans, totalScans = 0;
 
-    private int scanNumber = 0, msLevel = 0, precursorCharge = 0,
-            numOfDataPoints;
+    private int scanNumber = 0, msLevel = 0, numOfDataPoints;
     private String scanId;
     private PolarityType polarity;
     private Range<Double> scanningMzRange;
     private float retentionTime;
-    private double precursorMZ;
+    private Double precursorMz;
+    private Integer precursorCharge;
 
     private final RawDataFile newRawFile;
     private final DataPointStore dataStore;
@@ -95,6 +96,7 @@ class RawDumpParser {
 
     }
 
+    @SuppressWarnings("null")
     private void parseLine(String line, InputStream dumpStream)
             throws MSDKException, IOException {
 
@@ -140,7 +142,7 @@ class RawDumpParser {
             double token2 = Double.parseDouble(tokens[1]);
             int token3 = Integer.parseInt(tokens[2]);
             if (token2 > 0) {
-                precursorMZ = token2;
+                precursorMz = token2;
                 precursorCharge = token3;
             }
         }
@@ -232,11 +234,17 @@ class RawDumpParser {
             newScan.setSpectrumType(spectrumType);
             newScan.setPolarity(polarity);
             newScan.setScanningRange(scanningMzRange);
+            newScan.setScanDefinition(scanId);
 
-            // TODO: scanId, scanningMzRange, precursor
+            if (precursorMz != null) {
+                IsolationInfo isolation = MSDKObjectBuilder.getIsolationInfo(
+                        Range.singleton(precursorMz), null, precursorMz,
+                        precursorCharge, null);
+                newScan.getIsolations().add(isolation);
+            }
 
+            // Add the scan to the file
             newRawFile.addScan(newScan);
-
             parsedScans++;
 
             // Clean the variables for next scan
@@ -246,8 +254,8 @@ class RawDumpParser {
             scanningMzRange = null;
             msLevel = 0;
             retentionTime = 0;
-            precursorMZ = 0;
-            precursorCharge = 0;
+            precursorMz = null;
+            precursorCharge = null;
             numOfDataPoints = 0;
 
         }

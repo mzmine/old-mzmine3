@@ -16,16 +16,31 @@ package io.github.msdk.io.rawdataimport.mzml;
 
 /**
  * Controlled vocabulary (CV) values for mzML files.
+ * 
+ * @see <a href=
+ *      "http://psidev.cvs.sourceforge.net/viewvc/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo">
+ *      Official CV specification</a>
+ * 
  */
-class JMzMLCV {
+class MzMLCV {
 
     // Scan start time
     static final String cvScanStartTime = "MS:1000016";
+
+    // m/z and charge state
+    static final String cvMz = "MS:1000040";
+    static final String cvChargeState = "MS:1000041";
 
     // Minutes unit. MS:1000038 is used in mzML 1.0, while UO:000003 is used in
     // mzML 1.1.0
     static final String cvUnitsMin1 = "MS:1000038";
     static final String cvUnitsMin2 = "UO:0000031";
+
+    // Scan filter string
+    static final String cvScanFilterString = "MS:1000512";
+
+    // Precursor m/z.
+    static final String cvPrecursorMz = "MS:1000744";
 
     // Polarity
     static final String cvPolarityPositive = "MS:1000130";
@@ -43,4 +58,5 @@ class JMzMLCV {
 
     // Isolation
     static final String cvIsolationWindow = "MS:1000827";
+
 }

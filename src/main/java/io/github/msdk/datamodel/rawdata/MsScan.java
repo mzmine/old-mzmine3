@@ -79,6 +79,28 @@ public interface MsScan extends MsSpectrum {
     void setScanNumber(@Nonnull Integer scanNumber);
 
     /**
+     * Returns the instrument-specific textual definition of the scan
+     * parameters. For example, in Thermo raw data this may look like:
+     * 
+     * FTMS + p ESI Full ms2 209.09@hcd35.00 [50.00-230.00]
+     * 
+     * The scan definition can be null if not specified in the raw data.
+     * 
+     * @return Scan definition
+     */
+    @Nullable
+    String getScanDefinition();
+
+    /**
+     * Updates the scan definition (instrument-specific textual definition of
+     * the scan parameters).
+     * 
+     * @param scanDefinition
+     *            New scan definition.
+     */
+    void setScanDefinition(@Nullable String scanDefinition);
+
+    /**
      * Returns the MS function of this scan.
      * 
      * @return MS function.

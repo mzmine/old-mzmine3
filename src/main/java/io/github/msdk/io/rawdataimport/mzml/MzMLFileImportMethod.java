@@ -16,11 +16,7 @@ package io.github.msdk.io.rawdataimport.mzml;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,8 +33,8 @@ import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -68,9 +64,6 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
     private JMzMLRawDataFile newRawFile;
     private long totalScans = 0, totalChromatograms = 0, parsedScans,
             parsedChromatograms;
-    private int lastScanNumber = 0;
-
-    private Map<String, Integer> scanIdTable = new Hashtable<String, Integer>();
 
     public MzMLFileImportMethod(@Nonnull File sourceFile) {
         this.sourceFile = sourceFile;
@@ -105,6 +98,9 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
         newRawFile = new JMzMLRawDataFile(sourceFile, parser, msFunctionsList,
                 scansList, chromatogramsList);
 
+        // Create the converter from jmzml data model to our data model
+        final JMzMLConverter converter = new JMzMLConverter();
+
         if (totalScans > 0) {
             MzMLObjectIterator<Spectrum> iterator = parser
                     .unmarshalCollectionFromXpath("/run/spectrumList/spectrum",
@@ -117,22 +113,27 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
                 Spectrum spectrum = iterator.next();
 
-                // Get the scan number
+                // Get spectrum ID
                 String spectrumId = spectrum.getId();
-                Integer scanNumber = convertSpectrumIdToScanNumber(spectrumId);
+
+                // Get the scan number
+                Integer scanNumber = converter.extractScanNumber(spectrum);
+
+                // Get the scan definition
+                String scanDefinition = converter
+                        .extractScanDefinition(spectrum);
 
                 // Get the MS function
-                MsFunction msFunction = JMzMLUtil.extractMsFunction(spectrum);
+                MsFunction msFunction = converter.extractMsFunction(spectrum);
                 msFunctionsList.add(msFunction);
 
                 // Store the chromatography data
-                ChromatographyInfo chromData = JMzMLUtil
+                ChromatographyInfo chromData = converter
                         .extractChromatographyData(spectrum);
 
                 // Extract the scan data points, so we can check the m/z range
-                // and
-                // detect the spectrum type (profile/centroid)
-                JMzMLUtil.extractDataPoints(spectrum, spectrumDataPoints);
+                // and detect the spectrum type (profile/centroid)
+                JMzMLConverter.extractDataPoints(spectrum, spectrumDataPoints);
 
                 // Get the m/z range
                 Range<Double> mzRange = MsSpectrumUtil
@@ -150,24 +151,24 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
                 MsSpectrumType spectrumType = detector.execute();
 
                 // Get the MS scan type
-                MsScanType scanType = JMzMLUtil.extractScanType(spectrum);
+                MsScanType scanType = converter.extractScanType(spectrum);
 
                 // Get the polarity
-                PolarityType polarity = JMzMLUtil.extractPolarity(spectrum);
+                PolarityType polarity = converter.extractPolarity(spectrum);
 
                 // Get the in-source fragmentation
-                ActivationInfo sourceFragmentation = JMzMLUtil
+                ActivationInfo sourceFragmentation = converter
                         .extractSourceFragmentation(spectrum);
 
                 // Get the in-source fragmentation
-                List<IsolationInfo> isolations = JMzMLUtil
+                List<IsolationInfo> isolations = converter
                         .extractIsolations(spectrum);
 
                 // Create a new MsScan instance
                 JMzMLMsScan scan = new JMzMLMsScan(newRawFile, spectrumId,
                         spectrumType, msFunction, chromData, scanType, mzRange,
-                        scanningRange, scanNumber, tic, polarity,
-                        sourceFragmentation, isolations);
+                        scanningRange, scanNumber, scanDefinition, tic,
+                        polarity, sourceFragmentation, isolations);
 
                 // Add the scan to the final raw data file
                 scansList.add(scan);
@@ -188,7 +189,8 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
                 if (canceled)
                     return null;
 
-                uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram = iterator.next();
+                uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram = iterator
+                        .next();
 
                 // Get the chromatogram id
                 String chromatogramId = chromatogram.getId();
@@ -197,15 +199,15 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
                 Integer chromatogramNumber = chromatogram.getIndex() + 1;
 
                 // Get the separation type
-                SeparationType separationType = JMzMLUtil
+                SeparationType separationType = converter
                         .extractSeparationType(chromatogram);
 
                 // Get the chromatogram type
-                ChromatogramType chromatogramType = JMzMLUtil
+                ChromatogramType chromatogramType = converter
                         .extractChromatogramType(chromatogram);
 
                 // Get the in-source fragmentation
-                List<IsolationInfo> isolations = JMzMLUtil
+                List<IsolationInfo> isolations = converter
                         .extractIsolations(chromatogram);
 
                 // Create a new Chromatogram instance
@@ -228,31 +230,6 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
 
         return newRawFile;
 
-    }
-
-    private Integer convertSpectrumIdToScanNumber(String spectrumId) {
-
-        if (scanIdTable.containsKey(spectrumId))
-            return scanIdTable.get(spectrumId);
-
-        final Pattern pattern = Pattern.compile("scan=([0-9]+)");
-        final Matcher matcher = pattern.matcher(spectrumId);
-        boolean scanNumberFound = matcher.find();
-
-        // Some vendors include scan=XX in the ID, some don't, such as
-        // mzML converted from WIFF files. See the definition of nativeID in
-        // http://psidev.cvs.sourceforge.net/viewvc/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo
-        if (scanNumberFound) {
-            Integer scanNumber = Integer.parseInt(matcher.group(1));
-            lastScanNumber = scanNumber;
-            scanIdTable.put(spectrumId, scanNumber);
-            return scanNumber;
-        }
-
-        Integer scanNumber = lastScanNumber + 1;
-        lastScanNumber++;
-        scanIdTable.put(spectrumId, scanNumber);
-        return scanNumber;
     }
 
     @Override
