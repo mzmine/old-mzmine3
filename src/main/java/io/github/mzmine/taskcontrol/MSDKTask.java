@@ -19,16 +19,47 @@
 
 package io.github.mzmine.taskcontrol;
 
+import javax.annotation.Nullable;
+
 import io.github.msdk.MSDKMethod;
-import io.github.mzmine.datamodel.MZmineProject;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 
 public class MSDKTask extends Task<Object> {
 
     private MSDKMethod<?> method;
+    private String title, message;
+    private Double progress;
 
-    public MSDKTask(MZmineProject project, MSDKMethod<?> method) {
+    public MSDKTask(String title, @Nullable String message,
+            MSDKMethod<?> method) {
+        this.title = title;
+        this.message = message;
         this.method = method;
+        refreshStatus();
+
+        EventHandler<WorkerStateEvent> cancelEvent = new EventHandler<WorkerStateEvent>() {
+            @Override
+            public void handle(WorkerStateEvent workerEvent) {
+                method.cancel();
+            }
+        };
+
+        setOnCancelled(cancelEvent);
+    }
+
+    public void refreshStatus() {
+        // Progress
+        if (method.getFinishedPercentage() == null)
+            progress = 0.0;
+        else
+            progress = method.getFinishedPercentage().doubleValue();
+        updateProgress(progress, 1);
+
+        // Title and message
+        updateTitle(title);
+        updateMessage(message);
     }
 
     @Override

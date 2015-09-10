@@ -20,13 +20,16 @@
 package io.github.mzmine.gui;
 
 import java.net.URL;
+import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.logging.Logger;
 
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.TaskProgressView;
 
 import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -58,6 +61,8 @@ public class MainWindowController implements Initializable {
     private static final Image fileIcon = new Image("fileicon.png");
     private static final Image peakListIcon = new Image(
             "peaklisticon_single.png");
+    private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(
+            2);
 
     @FXML
     private TreeView<Object> rawDataTree;
@@ -66,7 +71,7 @@ public class MainWindowController implements Initializable {
     private TreeView<Object> peakListTree;
 
     @FXML
-    private TaskProgressView<Task> tasksView;
+    private TaskProgressView<Task<?>> tasksView;
 
     @FXML
     private StatusBar statusBar;
@@ -127,9 +132,8 @@ public class MainWindowController implements Initializable {
 
         // Setup the Timeline to update the memory indicator periodically
         final Timeline memoryUpdater = new Timeline();
-        final int UPDATE_FREQUENCY = 500; // ms
+        int UPDATE_FREQUENCY = 500; // ms
         memoryUpdater.setCycleCount(Animation.INDEFINITE);
-        memoryUpdater.setAutoReverse(true);
         memoryUpdater.getKeyFrames().add(new KeyFrame(
                 Duration.millis(UPDATE_FREQUENCY), (ActionEvent e) -> {
 
@@ -146,6 +150,22 @@ public class MainWindowController implements Initializable {
                 }));
         memoryUpdater.play();
 
+        // Setup the Timeline to update the MSDK tasks periodically
+        final Timeline msdkTaskUpdater = new Timeline();
+        UPDATE_FREQUENCY = 50; // ms
+        msdkTaskUpdater.setCycleCount(Animation.INDEFINITE);
+        msdkTaskUpdater.getKeyFrames().add(new KeyFrame(
+                Duration.millis(UPDATE_FREQUENCY), (ActionEvent e) -> {
+
+                    Collection<Task<?>> tasks = tasksView.getTasks();
+                    for (Task<?> task : tasks) {
+                        if (task instanceof MSDKTask) {
+                            MSDKTask msdkTask = (MSDKTask) task;
+                            msdkTask.refreshStatus();
+                        }
+                    }
+                }));
+        msdkTaskUpdater.play();
     }
 
     @FXML
@@ -170,8 +190,9 @@ public class MainWindowController implements Initializable {
         return tasksView;
     }
 
-    void addTask(Task task) {
+    void addTask(Task<?> task) {
         tasksView.getTasks().add(task);
+        executor.execute(task);
     }
 
 }

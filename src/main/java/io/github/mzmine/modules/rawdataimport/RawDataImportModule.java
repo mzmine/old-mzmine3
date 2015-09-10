@@ -29,6 +29,7 @@ import javax.annotation.Nonnull;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.rawdataimport.RawDataFileImportMethod;
 import io.github.mzmine.datamodel.MZmineProject;
 import io.github.mzmine.modules.MZmineModuleCategory;
@@ -37,6 +38,8 @@ import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.taskcontrol.MSDKTask;
 import io.github.mzmine.util.ExitCode;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 
 /**
  * Raw data import module
@@ -44,7 +47,6 @@ import javafx.concurrent.Task;
 public class RawDataImportModule implements MZmineProcessingModule {
 
     private Logger logger = Logger.getLogger(this.getClass().getName());
-
     private static final String MODULE_NAME = "Raw data import";
     private static final String MODULE_DESCRIPTION = "This module imports raw data into the project.";
 
@@ -82,8 +84,19 @@ public class RawDataImportModule implements MZmineProcessingModule {
             MSDKTask newTask = null;
             try {
                 dataStore = DataPointStoreFactory.getTmpFileDataPointStore();
-                RawDataFileImportMethod method = new RawDataFileImportMethod(fileName, dataStore);
-                newTask = new MSDKTask(project, method);
+                RawDataFileImportMethod method = new RawDataFileImportMethod(
+                        fileName, dataStore);
+                newTask = new MSDKTask("Importing raw data file",
+                        fileName.getName(), method);
+
+                EventHandler<WorkerStateEvent> succesEvent = new EventHandler<WorkerStateEvent>() {
+                    @Override
+                    public void handle(WorkerStateEvent workerEvent) {
+                        RawDataFile rawDataFile = method.getResult();
+                        project.addFile(rawDataFile);
+                    }
+                };
+                newTask.setOnSucceeded(succesEvent);
             } catch (MSDKException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -96,7 +109,6 @@ public class RawDataImportModule implements MZmineProcessingModule {
             }
 
             tasks.add(newTask);
-
         }
 
         return ExitCode.OK;
