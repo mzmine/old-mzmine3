@@ -130,4 +130,45 @@ public class MzDataFileImportMethodTest {
 
     }
 
+    @SuppressWarnings("null")
+    @Test
+    public void testMSMSposChallenge0() throws MSDKException {
+
+        // Create the data structures
+        DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
+        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
+                .getMsSpectrumDataPointList();
+
+        // Import the file
+        File inputFile = new File(TEST_DATA_PATH + "MSMSpos_Challenge0.mzData");
+        Assert.assertTrue(inputFile.canRead());
+        MzDataFileImportMethod importer = new MzDataFileImportMethod(inputFile,
+                dataStore);
+        RawDataFile rawFile = importer.execute();
+        Assert.assertNotNull(rawFile);
+        Assert.assertEquals(1.0, importer.getFinishedPercentage(), 0.0001);
+
+        // The file has 112 scans
+        List<MsScan> scans = rawFile.getScans();
+        Assert.assertNotNull(scans);
+        Assert.assertEquals(104, scans.size());
+
+        // 1st scan, #918
+        MsScan scan1 = scans.get(0);
+        Assert.assertEquals(new Integer(918), scan1.getScanNumber());
+        Assert.assertEquals(MsSpectrumType.CENTROIDED, scan1.getSpectrumType());
+        Assert.assertEquals(new Integer(2), scan1.getMsFunction().getMsLevel());
+        ChromatographyInfo rt = scan1.getChromatographyInfo();
+        Assert.assertNotNull(rt);
+        Assert.assertEquals(309.350f, rt.getRetentionTime(), 0.01f);
+        Assert.assertEquals(PolarityType.POSITIVE, scan1.getPolarity());
+        scan1.getDataPoints(dataPoints);
+        Assert.assertEquals(41, dataPoints.getSize());
+        Float scan1MaxInt = MsSpectrumUtil.getMaxIntensity(dataPoints);
+        Assert.assertEquals(2.36E3f, scan1MaxInt, 1E2f);
+
+        rawFile.dispose();
+
+    }
+
 }
