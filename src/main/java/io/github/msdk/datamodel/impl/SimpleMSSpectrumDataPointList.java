@@ -319,11 +319,35 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
         final MsSpectrumDataPointList newList = MSDKObjectBuilder
                 .getMsSpectrumDataPointList();
 
+        // Find how many data points will pass the conditions
+        int numOfGoodDataPoints = 0;
         for (int i = 0; i < size; i++) {
-            if (mzRange.contains(mzBuffer[i])
-                    && intensityRange.contains(intensityBuffer[i]))
-                newList.add(mzBuffer[i], intensityBuffer[i]);
+            if (!mzRange.contains(mzBuffer[i]))
+                continue;
+            if (!intensityRange.contains(intensityBuffer[i]))
+                continue;
+            numOfGoodDataPoints++;
         }
+
+        // Allocate space for the data points
+        newList.allocate(numOfGoodDataPoints);
+        final double newMzBuffer[] = newList.getMzBuffer();
+        final float newIntensityBuffer[] = newList.getIntensityBuffer();
+
+        // Copy the actual data point values
+        int newIndex = 0;
+        for (int i = 0; i < size; i++) {
+            if (!mzRange.contains(mzBuffer[i]))
+                continue;
+            if (!intensityRange.contains(intensityBuffer[i]))
+                continue;
+            newMzBuffer[newIndex] = mzBuffer[i];
+            newIntensityBuffer[newIndex] = intensityBuffer[i];
+            newIndex++;
+        }
+
+        // Commit the changes
+        newList.setSize(numOfGoodDataPoints);
 
         return newList;
     }

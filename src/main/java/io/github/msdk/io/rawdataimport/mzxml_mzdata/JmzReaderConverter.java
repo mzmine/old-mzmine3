@@ -19,11 +19,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nonnull;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
@@ -117,14 +119,70 @@ class JmzReaderConverter {
     }
 
     static void extractDataPoints(Spectrum spectrum,
-            MsSpectrumDataPointList dataPoints) {
+            MsSpectrumDataPointList spectrumDataPoints) {
+
         Map<Double, Double> jmzreaderPeakList = spectrum.getPeakList();
-        dataPoints.clear();
-        dataPoints.allocate(jmzreaderPeakList.size());
+
+        spectrumDataPoints.clear();
+
+        // Allocate space for the data points
+        spectrumDataPoints.allocate(jmzreaderPeakList.size());
+        final double mzBuffer[] = spectrumDataPoints.getMzBuffer();
+        final float intensityBuffer[] = spectrumDataPoints.getIntensityBuffer();
+
+        // Copy the actual data point values
+        int newIndex = 0;
         for (Double mz : jmzreaderPeakList.keySet()) {
-            final float intensity = jmzreaderPeakList.get(mz).floatValue();
-            dataPoints.add(mz.floatValue(), intensity);
+            mzBuffer[newIndex] = mz.doubleValue();
+            intensityBuffer[newIndex] = jmzreaderPeakList.get(mz).floatValue();
+            newIndex++;
         }
+
+        // Commit the changes
+        spectrumDataPoints.setSize(jmzreaderPeakList.size());
+    }
+
+    static void extractDataPoints(Spectrum spectrum,
+            MsSpectrumDataPointList spectrumDataPoints,
+            @Nonnull Range<Double> mzRange,
+            @Nonnull Range<Float> intensityRange) {
+
+        Map<Double, Double> jmzreaderPeakList = spectrum.getPeakList();
+
+        spectrumDataPoints.clear();
+
+        // Find how many data points will pass the conditions
+        int numOfGoodDataPoints = 0;
+        for (Double mz : jmzreaderPeakList.keySet()) {
+            if (!mzRange.contains(mz.doubleValue()))
+                continue;
+            if (!intensityRange
+                    .contains(jmzreaderPeakList.get(mz).floatValue()))
+                continue;
+            numOfGoodDataPoints++;
+        }
+
+        // Allocate space for the data points
+        spectrumDataPoints.allocate(numOfGoodDataPoints);
+        final double mzBuffer[] = spectrumDataPoints.getMzBuffer();
+        final float intensityBuffer[] = spectrumDataPoints.getIntensityBuffer();
+
+        // Copy the actual data point values
+        int newIndex = 0;
+        for (Double mz : jmzreaderPeakList.keySet()) {
+            if (!mzRange.contains(mz.doubleValue()))
+                continue;
+            if (!intensityRange
+                    .contains(jmzreaderPeakList.get(mz).floatValue()))
+                continue;
+            mzBuffer[newIndex] = mz.doubleValue();
+            intensityBuffer[newIndex] = jmzreaderPeakList.get(mz).floatValue();
+            newIndex++;
+        }
+
+        // Commit the changes
+        spectrumDataPoints.setSize(numOfGoodDataPoints);
+
     }
 
 }

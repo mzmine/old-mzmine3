@@ -15,12 +15,10 @@
 package io.github.msdk.io.rawdataimport.mzxml_mzdata;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
@@ -78,7 +76,7 @@ class JmzReaderMsScan extends AbstractReadOnlyMsScan {
 
     @Override
     public void getDataPointsByMzAndIntensity(
-            @Nonnull MsSpectrumDataPointList list,
+            @Nonnull MsSpectrumDataPointList dataPoints,
             @Nonnull Range<Double> mzRange,
             @Nonnull Range<Float> intensityRange) {
         try {
@@ -88,18 +86,8 @@ class JmzReaderMsScan extends AbstractReadOnlyMsScan {
                         "The raw data file object has been disposed");
             }
             Spectrum jmzSpectrum = jmzReader.getSpectrumById(spectrumId);
-            Map<Double, Double> mzValues = jmzSpectrum.getPeakList();
-            list.clear();
-            list.allocate(mzValues.size());
-            for (Double mz : mzValues.keySet()) {
-                if (!mzRange.contains(mz))
-                    continue;
-                Double intensity = mzValues.get(mz);
-                Preconditions.checkNotNull(intensity);
-                if (!intensityRange.contains(intensity.floatValue()))
-                    continue;
-                list.add(mz.doubleValue(), intensity.floatValue());
-            }
+            JmzReaderConverter.extractDataPoints(jmzSpectrum, dataPoints,
+                    mzRange, intensityRange);
         } catch (JMzReaderException e) {
             throw (new MSDKRuntimeException(e));
         }

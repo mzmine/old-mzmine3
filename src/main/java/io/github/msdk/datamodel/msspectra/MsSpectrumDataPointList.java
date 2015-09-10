@@ -75,6 +75,9 @@ public interface MsSpectrumDataPointList {
     int getSize();
 
     /**
+     * Sets a new size, after the user manipulated with the m/z and intensity
+     * buffers. This method also ensures the data points are properly sorted in
+     * the m/z order.
      * 
      * @param newSize
      */
@@ -109,18 +112,6 @@ public interface MsSpectrumDataPointList {
      */
     void setBuffers(@Nonnull double[] mzBuffer,
             @Nonnull float[] intensityBuffer, int newSize);
-
-    /**
-     * Add a new data point into the right position of the list, maintaining the
-     * m/z order. If the internal arrays are full, they are replaced with new
-     * arrays of twice the length.
-     * 
-     * @param newMz
-     *            m/z value of the new data point
-     * @param newIntensity
-     *            intensity value of the new data point
-     */
-    void add(double newMz, float newIntensity);
 
     /**
      * Copies the contents of another data point list into this list. The

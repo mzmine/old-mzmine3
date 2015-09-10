@@ -14,32 +14,11 @@
 
 package io.github.msdk.datamodel.impl;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
-
 /**
- * Tests for SimpleMSSpectrumDataPointListTest
+ * Tests for SimpleMSSpectrumDataPointList
  */
 public class SimpleMSSpectrumDataPointListTest {
 
-    @Test
-    public void testAddDataPoint() throws MSDKException {
-        MsSpectrumDataPointList dataPoints = MSDKObjectBuilder
-                .getMsSpectrumDataPointList();
-        dataPoints.add(2.0, 222);
-        dataPoints.add(1.0, 111);
-        dataPoints.add(3.0, 333);
-        dataPoints.add(5.0, 555);
-        dataPoints.add(4.0, 444);
-        dataPoints.add(3.5, 350);
 
-        double[] mzBuffer = dataPoints.getMzBuffer();
-        for (int pos = 1; pos < dataPoints.getSize(); pos++) {
-            Assert.assertTrue(mzBuffer[pos - 1] < mzBuffer[pos]);
-        }
-    }
 
 }

@@ -86,8 +86,8 @@ class JMzMLMsScan extends AbstractReadOnlyMsScan {
                         "The raw data file object has been disposed");
             }
             Spectrum jmzSpectrum = parser.getSpectrumById(spectrumId);
-            JMzMLConverter.extractDataPointsByMzAndIntensity(jmzSpectrum,
-                    dataPoints, mzRange, intensityRange);
+            JMzMLConverter.extractDataPoints(jmzSpectrum, dataPoints, mzRange,
+                    intensityRange);
         } catch (MzMLUnmarshallerException e) {
             throw (new MSDKRuntimeException(e));
         }

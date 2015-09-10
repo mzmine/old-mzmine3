@@ -411,17 +411,78 @@ class JMzMLConverter {
         if ((dataList == null) || (dataList.getCount().equals(0)))
             return;
 
-        spectrumDataPoints.allocate(dataList.getCount());
+        // Obtain the data arrays from spectrum
+        final BinaryDataArray mzArray = dataList.getBinaryDataArray().get(0);
+        final BinaryDataArray intensityArray = dataList.getBinaryDataArray()
+                .get(1);
+        final Number mzValues[] = mzArray.getBinaryDataAsNumberArray();
+        final Number intensityValues[] = intensityArray
+                .getBinaryDataAsNumberArray();
 
-        BinaryDataArray mzArray = dataList.getBinaryDataArray().get(0);
-        BinaryDataArray intensityArray = dataList.getBinaryDataArray().get(1);
-        Number mzValues[] = mzArray.getBinaryDataAsNumberArray();
-        Number intensityValues[] = intensityArray.getBinaryDataAsNumberArray();
+        // Allocate space for the data points
+        spectrumDataPoints.allocate(mzValues.length);
+        final double mzBuffer[] = spectrumDataPoints.getMzBuffer();
+        final float intensityBuffer[] = spectrumDataPoints.getIntensityBuffer();
+
+        // Copy the actual data point values
         for (int i = 0; i < mzValues.length; i++) {
-            final double mz = mzValues[i].doubleValue();
-            final float intensity = intensityValues[i].floatValue();
-            spectrumDataPoints.add(mz, intensity);
+            mzBuffer[i] = mzValues[i].doubleValue();
+            intensityBuffer[i] = intensityValues[i].floatValue();
         }
+
+        // Commit the changes
+        spectrumDataPoints.setSize(mzValues.length);
+
+    }
+
+    static void extractDataPoints(Spectrum spectrum,
+            MsSpectrumDataPointList spectrumDataPoints,
+            @Nonnull Range<Double> mzRange,
+            @Nonnull Range<Float> intensityRange) {
+
+        spectrumDataPoints.clear();
+
+        BinaryDataArrayList dataList = spectrum.getBinaryDataArrayList();
+
+        if ((dataList == null) || (dataList.getCount().equals(0)))
+            return;
+
+        // Obtain the data arrays from spectrum
+        final BinaryDataArray mzArray = dataList.getBinaryDataArray().get(0);
+        final BinaryDataArray intensityArray = dataList.getBinaryDataArray()
+                .get(1);
+        final Number mzValues[] = mzArray.getBinaryDataAsNumberArray();
+        final Number intensityValues[] = intensityArray
+                .getBinaryDataAsNumberArray();
+
+        // Find how many data points will pass the conditions
+        int numOfGoodDataPoints = 0;
+        for (int i = 0; i < mzValues.length; i++) {
+            if (!mzRange.contains(mzValues[i].doubleValue()))
+                continue;
+            if (!intensityRange.contains(intensityValues[i].floatValue()))
+                continue;
+            numOfGoodDataPoints++;
+        }
+
+        if (numOfGoodDataPoints == 0)
+            return;
+
+        // Allocate space for the data points
+        spectrumDataPoints.allocate(numOfGoodDataPoints);
+        final double mzBuffer[] = spectrumDataPoints.getMzBuffer();
+        final float intensityBuffer[] = spectrumDataPoints.getIntensityBuffer();
+
+        // Copy the actual data point values
+        int newIndex = 0;
+        for (int i = 0; i < mzValues.length; i++) {
+            mzBuffer[newIndex] = mzValues[i].doubleValue();
+            intensityBuffer[newIndex] = intensityValues[i].floatValue();
+            newIndex++;
+        }
+
+        // Commit the changes
+        spectrumDataPoints.setSize(numOfGoodDataPoints);
 
     }
 
@@ -476,32 +537,6 @@ class JMzMLConverter {
             chromatogramDataPoints.add(chromatographyInfo, intensity);
         }
 
-    }
-
-    static void extractDataPointsByMzAndIntensity(Spectrum spectrum,
-            MsSpectrumDataPointList dataPoints, @Nonnull Range<Double> mzRange,
-            @Nonnull Range<Float> intensityRange) {
-
-        dataPoints.clear();
-
-        BinaryDataArrayList dataList = spectrum.getBinaryDataArrayList();
-
-        if ((dataList == null) || (dataList.getCount().equals(0)))
-            return;
-
-        BinaryDataArray mzArray = dataList.getBinaryDataArray().get(0);
-        BinaryDataArray intensityArray = dataList.getBinaryDataArray().get(1);
-        Number mzValues[] = mzArray.getBinaryDataAsNumberArray();
-        Number intensityValues[] = intensityArray.getBinaryDataAsNumberArray();
-        for (int i = 0; i < mzValues.length; i++) {
-            final double mz = mzValues[i].doubleValue();
-            if (!mzRange.contains(mz))
-                continue;
-            final float intensity = intensityValues[i].floatValue();
-            if (!intensityRange.contains(intensity))
-                continue;
-            dataPoints.add(mz, intensity);
-        }
     }
 
 }
