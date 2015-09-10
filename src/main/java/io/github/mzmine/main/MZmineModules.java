@@ -55,9 +55,9 @@ public final class MZmineModules implements Runnable {
 
         logger.finest("Loading modules");
 
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        Document modulesDocument = null;
         try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            Document modulesDocument = null;
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             modulesDocument = dBuilder.parse(MODULES_FILE);
             Element rootElement = modulesDocument.getDocumentElement();
