@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.io.rawdataimport;
+package io.github.msdk.io.filetypedetection;
 
 import java.io.File;
 
