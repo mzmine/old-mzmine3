@@ -30,6 +30,11 @@ import org.dockfx.DockNode;
 import org.dockfx.DockPane;
 import org.dockfx.DockPos;
 
+<<<<<<< Upstream, based on origin/master
+=======
+import io.github.mzmine.datamodel.MZmineProject;
+import io.github.mzmine.datamodel.impl.MZmineObjectBuilder;
+>>>>>>> 5a97d1b Added toggle button to dock nodes
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.project.MZmineProject;
 import javafx.application.Application;

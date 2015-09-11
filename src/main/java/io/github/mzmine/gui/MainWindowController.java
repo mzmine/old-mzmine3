@@ -27,6 +27,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
+import javax.script.Bindings;
 
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.TaskProgressView;
@@ -47,9 +48,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
@@ -125,8 +128,20 @@ public class MainWindowController implements Initializable {
                     lineChart.getData().addAll(series);
 
                     // New test dock
-                    final DockNode testDock = new DockNode(lineChart,
-                            "Example Line Chart 2");
+                    final DockNode testDock = new DockNode(lineChart,"Example Line Chart 2");
+
+                    // Add default button
+                    ToggleButton DefaultButton;
+                    DefaultButton = new ToggleButton();
+                    DefaultButton.setOnAction(new EventHandler<ActionEvent>() {
+                      @Override
+                      public void handle(ActionEvent event) {
+                          System.out.println("Selected property: "+DefaultButton.selectedProperty());
+                      }
+                    });
+                    DefaultButton.setMinSize(16, 20); DefaultButton.setMaxSize(16, 20);
+                    testDock.getDockTitleBar().getChildren().add(DefaultButton);
+
                     testDock.dock(mainDockPane, DockPos.RIGHT);
                     //testDock.setFloating(true);
                 }
