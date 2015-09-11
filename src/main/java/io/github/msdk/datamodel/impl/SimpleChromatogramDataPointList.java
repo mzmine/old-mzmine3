@@ -23,6 +23,7 @@ import com.google.common.collect.Range;
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.msdk.datamodel.util.DataPointSorter;
 
 /**
  * Basic implementation of DataPointList.
@@ -52,7 +53,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
      * Creates a new data point list with internal array capacity of 100.
      */
     SimpleChromatogramDataPointList() {
-        this(100);
+        this(0);
     }
 
     /**
@@ -190,31 +191,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
 
         // Ensure the arrays are sorted in m/z order
         if (newSize > 0)
-            sortArrays();
-
-    }
-
-    /**
-     * Sorts the internal arrays in RT order, using a primitive bubble-sort
-     * algorithm, because this is a fairly rare operation and implementing
-     * quick-sort on two arrays is cumbersome.
-     */
-    private void sortArrays() {
-
-        for (int lastIndex = size; lastIndex > 0; lastIndex--) {
-            for (int index = 1; index < lastIndex; index++) {
-                if (rtBuffer[index].compareTo(rtBuffer[index - 1]) < 0) {
-
-                    // Swap the two values
-                    final ChromatographyInfo tmpRt = rtBuffer[index];
-                    final float tmpInt = intensityBuffer[index];
-                    rtBuffer[index] = rtBuffer[index - 1];
-                    intensityBuffer[index] = intensityBuffer[index - 1];
-                    rtBuffer[index - 1] = tmpRt;
-                    intensityBuffer[index - 1] = tmpInt;
-                }
-            }
-        }
+            DataPointSorter.sortDataPoints(rtBuffer, intensityBuffer, size);
     }
 
     /**
@@ -333,14 +310,18 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
 
     @Override
     public void allocate(int newSize) {
+
         if (rtBuffer.length >= newSize)
             return;
 
         ChromatographyInfo[] rtBufferNew = new ChromatographyInfo[newSize];
         float[] intensityBufferNew = new float[newSize];
 
-        System.arraycopy(getRtBuffer(), 0, rtBufferNew, 0, size);
-        System.arraycopy(getIntensityBuffer(), 0, intensityBufferNew, 0, size);
+        if (size > 0) {
+            System.arraycopy(getRtBuffer(), 0, rtBufferNew, 0, size);
+            System.arraycopy(getIntensityBuffer(), 0, intensityBufferNew, 0,
+                    size);
+        }
 
         rtBuffer = rtBufferNew;
         intensityBuffer = intensityBufferNew;

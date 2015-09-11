@@ -22,6 +22,7 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
+import io.github.msdk.datamodel.util.DataPointSorter;
 
 /**
  * Basic implementation of DataPointList.
@@ -180,31 +181,8 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
 
         // Ensure the arrays are sorted in m/z order
         if (newSize > 0)
-            sortArrays();
+            DataPointSorter.sortDataPoints(mzBuffer, intensityBuffer, newSize);
 
-    }
-
-    /**
-     * Sorts the internal arrays in m/z order, using a primitive bubble-sort
-     * algorithm, because this is a fairly rare operation and implementing
-     * quick-sort on two arrays is cumbersome.
-     */
-    private void sortArrays() {
-
-        for (int lastIndex = size; lastIndex > 0; lastIndex--) {
-            for (int index = 1; index < lastIndex; index++) {
-                if (mzBuffer[index] < mzBuffer[index - 1]) {
-
-                    // Swap the two values
-                    final double tmpMz = mzBuffer[index];
-                    final float tmpInt = intensityBuffer[index];
-                    mzBuffer[index] = mzBuffer[index - 1];
-                    intensityBuffer[index] = intensityBuffer[index - 1];
-                    mzBuffer[index - 1] = tmpMz;
-                    intensityBuffer[index - 1] = tmpInt;
-                }
-            }
-        }
     }
 
     /**
@@ -332,14 +310,18 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
 
     @Override
     public void allocate(int newSize) {
+
         if (mzBuffer.length >= newSize)
             return;
 
         double[] mzBufferNew = new double[newSize];
         float[] intensityBufferNew = new float[newSize];
 
-        System.arraycopy(getMzBuffer(), 0, mzBufferNew, 0, size);
-        System.arraycopy(getIntensityBuffer(), 0, intensityBufferNew, 0, size);
+        if (size > 0) {
+            System.arraycopy(getMzBuffer(), 0, mzBufferNew, 0, size);
+            System.arraycopy(getIntensityBuffer(), 0, intensityBufferNew, 0,
+                    size);
+        }
 
         mzBuffer = mzBufferNew;
         intensityBuffer = intensityBufferNew;
