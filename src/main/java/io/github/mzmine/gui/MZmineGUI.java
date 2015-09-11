@@ -96,6 +96,7 @@ public final class MZmineGUI extends Application {
 
         // Configure DockFX - currently does not support FXML
         DockPane dockPane = mainWindowController.getMainDockPane();
+        DockNode visualizerDock = mainWindowController.getVisualizerDock();
         TreeView<?> rawDataTree = mainWindowController.getRawDataTree();
         TreeView<?> peakListTree = mainWindowController.getPeakListTree();
         TaskProgressView<?> tasksView = mainWindowController.getTaskTable();
@@ -138,9 +139,10 @@ public final class MZmineGUI extends Application {
         lineChart.getData().addAll(series);
 
         // Initial dock for visualizers
-        DockNode visualizerDock = new DockNode(lineChart, "Example Line Chart");
+        visualizerDock = new DockNode(lineChart, "Example Line Chart");
         visualizerDock.setPrefWidth(650);
         visualizerDock.dock(dockPane, DockPos.RIGHT);
+        mainWindowController.setVisualizerDock(visualizerDock);
 
         // Add task table
         DockNode taskDock = new DockNode(tasksView);

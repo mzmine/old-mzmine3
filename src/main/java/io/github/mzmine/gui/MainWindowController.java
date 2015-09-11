@@ -25,9 +25,13 @@ import java.util.ResourceBundle;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.logging.Logger;
 
+import javax.annotation.Nonnull;
+
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.TaskProgressView;
+import org.dockfx.DockNode;
 import org.dockfx.DockPane;
+import org.dockfx.DockPos;
 
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.taskcontrol.MSDKTask;
@@ -36,8 +40,12 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
@@ -67,6 +75,7 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private DockPane mainDockPane;
+    private DockNode visualizerDock;
 
     @FXML
     private TreeView<Object> rawDataTree;
@@ -96,6 +105,43 @@ public class MainWindowController implements Initializable {
         rawDataRootItem.setGraphic(new ImageView(rawDataFilesIcon));
         rawDataRootItem.setExpanded(true);
         rawDataTree.setRoot(rawDataRootItem);
+
+        // Add mouse clicked event handler
+        rawDataTree.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getClickCount() == 2) {
+                    // Sample Line Chart
+                    NumberAxis xAxis = new NumberAxis();
+                    NumberAxis yAxis = new NumberAxis();
+                    xAxis.setLabel("Label X");
+                    final LineChart<Number, Number> lineChart = new LineChart<Number, Number>(
+                            xAxis, yAxis);
+                    lineChart.setTitle("Line Chart Example 2");
+                    XYChart.Series series = new XYChart.Series();
+                    series.setName("Sample X");
+                    series.getData().add(new XYChart.Data(1, 23));
+                    series.getData().add(new XYChart.Data(2, 14));
+                    series.getData().add(new XYChart.Data(3, 15));
+                    series.getData().add(new XYChart.Data(4, 24));
+                    series.getData().add(new XYChart.Data(5, 34));
+                    series.getData().add(new XYChart.Data(6, 36));
+                    series.getData().add(new XYChart.Data(7, 22));
+                    series.getData().add(new XYChart.Data(8, 45));
+                    series.getData().add(new XYChart.Data(9, 43));
+                    series.getData().add(new XYChart.Data(10, 17));
+                    series.getData().add(new XYChart.Data(11, 29));
+                    series.getData().add(new XYChart.Data(12, 25));
+                    lineChart.getData().addAll(series);
+
+                    // New test dock
+                    final DockNode testDock = new DockNode(lineChart,
+                            "Example Line Chart 2");
+                    testDock.dock(mainDockPane, DockPos.RIGHT);
+                    //testDock.setFloating(true);
+                }
+            }
+        });
 
         peakListTree.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
@@ -184,6 +230,14 @@ public class MainWindowController implements Initializable {
 
     public DockPane getMainDockPane() {
         return mainDockPane;
+    }
+
+    public DockNode getVisualizerDock() {
+        return visualizerDock;
+    }
+
+    public void setVisualizerDock(@Nonnull DockNode visualizerDock) {
+        this.visualizerDock = visualizerDock;
     }
 
     public TreeView<?> getRawDataTree() {
