@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.TaskProgressView;
+import org.dockfx.DockPane;
 
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.taskcontrol.MSDKTask;
@@ -63,6 +64,9 @@ public class MainWindowController implements Initializable {
             "peaklisticon_single.png");
     private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(
             2);
+
+    @FXML
+    private DockPane mainDockPane;
 
     @FXML
     private TreeView<Object> rawDataTree;
@@ -176,6 +180,10 @@ public class MainWindowController implements Initializable {
             System.gc();
         }).start();
 
+    }
+
+    public DockPane getMainDockPane() {
+        return mainDockPane;
     }
 
     public TreeView<?> getRawDataTree() {

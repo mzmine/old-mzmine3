@@ -25,6 +25,11 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.logging.Logger;
 
+import org.controlsfx.control.TaskProgressView;
+import org.dockfx.DockNode;
+import org.dockfx.DockPane;
+import org.dockfx.DockPos;
+
 import io.github.mzmine.datamodel.impl.MZmineObjectBuilder;
 import io.github.mzmine.datamodel.MZmineProject;
 import io.github.mzmine.main.MZmineCore;
@@ -35,9 +40,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
 import javafx.concurrent.Task;
 
@@ -60,11 +70,11 @@ public final class MZmineGUI extends Application {
 
         try {
             // Load the main window
-            URL mainFXML = getClass().getResource("MainWindow.fxml");
+            URL mainFXML = getClass().getResource("MainWindowDockFX.fxml"); //MainWindow.fxml
             FXMLLoader loader = new FXMLLoader(mainFXML);
             BorderPane rootPane = (BorderPane) loader.load();
             mainWindowController = loader.getController();
-            Scene scene = new Scene(rootPane, 600, 700, Color.RED);
+            Scene scene = new Scene(rootPane, 800, 600, Color.WHITE);
             stage.setScene(scene);
 
             // Load menu
@@ -76,6 +86,39 @@ public final class MZmineGUI extends Application {
             logger.severe("Error loading MZmine GUI from FXML: " + e);
             Platform.exit();
         }
+
+        // Configure DockFX - currently does not support FXML
+        DockPane dockPane = mainWindowController.getMainDockPane();
+        TreeView<?> rawDataTree = mainWindowController.getRawDataTree();
+        TreeView<?> peakListTree = mainWindowController.getPeakListTree();
+        TaskProgressView<?> tasksView = mainWindowController.getTaskTable();
+
+        // Add raw data file and peak lists trees to tabs
+        TabPane tabs = new TabPane();
+        Tab fileTab = new Tab("Raw Data Files", rawDataTree);
+        fileTab.setClosable(false);
+        Tab peakTab = new Tab("Peak Lists", peakListTree);
+        peakTab.setClosable(false);
+        tabs.getTabs().addAll(fileTab, peakTab);
+        DockNode tabsDock = new DockNode(tabs);
+        tabsDock.setDockTitleBar(null); // Disable undocking
+        tabsDock.setPrefSize(200, 500);
+        tabsDock.setVisible(true);
+        tabsDock.dock(dockPane, DockPos.LEFT);
+
+        // Add empty dock for visualizers
+        DockNode visualizerDock = new DockNode(tasksView);
+        visualizerDock.setPrefSize(500, 500);
+     //   visualizerDock.dock(dockPane, DockPos.RIGHT);
+
+        // Add task table
+        DockNode taskDock = new DockNode(tasksView);
+        taskDock.setPrefSize(800, 100);
+        taskDock.setVisible(true);
+        taskDock.setClosable(false);
+        taskDock.dock(dockPane, DockPos.BOTTOM);
+
+
 
         stage.setTitle("MZmine " + MZmineCore.getMZmineVersion());
 
@@ -93,6 +136,7 @@ public final class MZmineGUI extends Application {
         });
 
         stage.show();
+        DockPane.initializeDefaultUserAgentStylesheet();
 
     }
 

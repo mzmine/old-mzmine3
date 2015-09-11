@@ -40,6 +40,16 @@ public class FXTabs extends Application {
         tabs.getTabs().add(tab3);
         tabs.getTabs().add(tab4);
 
+        tabs.getTabs().add(new DraggableTab("Something"));
+        tabs.getTabs().add(new DraggableTab("Sample A"));
+        tabs.getTabs().add(new DraggableTab("Sample B"));
+        tabs.getTabs().add(new DraggableTab("Sample C"));
+        tabs.getTabs().add(new DraggableTab("Sample D"));
+        tabs.getTabs().add(new DraggableTab("Sample E"));
+        tabs.getTabs().add(new DraggableTab("Sample F"));
+        tabs.getTabs().add(new DraggableTab("Sample G"));
+        tabs.getTabs().add(new DraggableTab("Sample H"));
+
         StackPane root = new StackPane();
         root.getChildren().add(tabs);
 

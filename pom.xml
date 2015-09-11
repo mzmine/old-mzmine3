@@ -216,6 +216,11 @@
 			<version>1.7.12</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.dockfx</groupId>
+			<artifactId>dockfx</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 </project>
