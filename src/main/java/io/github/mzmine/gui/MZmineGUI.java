@@ -150,7 +150,7 @@ public final class MZmineGUI extends Application {
 
         // Set application icon
         final Image mzMineIcon = new Image(
-                "file:lib" + File.separator + "mzmine-icon.png");
+                "file:icon" + File.separator + "mzmine-icon.png");
         stage.getIcons().setAll(mzMineIcon);
 
         stage.setOnCloseRequest(e -> {
@@ -188,7 +188,7 @@ public final class MZmineGUI extends Application {
         dialog.showAndWait();
     }
 
-    static MZmineProject getCurrentProject() {
+    public static MZmineProject getCurrentProject() {
         return currentProject;
     }
 

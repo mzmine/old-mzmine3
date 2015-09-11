@@ -21,7 +21,7 @@ package io.github.mzmine.parameters.parametertypes;
 
 import java.util.Collection;
 
-public class FormulaParameter extends StringParameter {
+public class FormulaParameter extends StringParameter2 {
 
     private static final String formulaPattern = "^([A-Z][a-z]?[0-9]*)+$";
 
