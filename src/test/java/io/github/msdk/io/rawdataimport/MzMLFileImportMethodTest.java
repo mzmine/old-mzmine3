@@ -280,6 +280,8 @@ public class MzMLFileImportMethodTest {
         Assert.assertEquals(ChromatogramType.TIC,
                 chromatogram.getChromatogramType());
         Assert.assertEquals(0, chromatogram.getIsolations().size());
+
+        rawFile.dispose();
     }
 
 }

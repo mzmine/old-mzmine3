@@ -32,4 +32,8 @@ public class MainMenuController {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
+    @FXML
+    protected void exitApplication(ActionEvent event) {
+        MZmineGUI.requestQuit();
+    }
 }

@@ -96,7 +96,7 @@ public final class MZmineGUI extends Application {
 
         // Add raw data file and peak lists trees to tabs
         TabPane tabs = new TabPane();
-        Tab fileTab = new Tab("Raw Data Files", rawDataTree);
+        Tab fileTab = new Tab("Raw Data", rawDataTree);
         fileTab.setClosable(false);
         Tab peakTab = new Tab("Peak Lists", peakListTree);
         peakTab.setClosable(false);
