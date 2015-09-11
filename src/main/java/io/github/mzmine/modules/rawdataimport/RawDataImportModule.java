@@ -31,10 +31,10 @@ import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.rawdataimport.RawDataFileImportMethod;
-import io.github.mzmine.datamodel.MZmineProject;
 import io.github.mzmine.modules.MZmineModuleCategory;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.taskcontrol.MSDKTask;
 import io.github.mzmine.util.ExitCode;
 import javafx.concurrent.Task;
@@ -65,7 +65,8 @@ public class RawDataImportModule implements MZmineProcessingModule {
     @Override
     @Nonnull
     public ExitCode runModule(@Nonnull MZmineProject project,
-            @Nonnull ParameterSet parameters, @Nonnull Collection<Task> tasks) {
+            @Nonnull ParameterSet parameters,
+            @Nonnull Collection<Task<?>> tasks) {
 
         List<File> fileNames = parameters
                 .getParameter(RawDataImportParameters.fileNames).getValue();

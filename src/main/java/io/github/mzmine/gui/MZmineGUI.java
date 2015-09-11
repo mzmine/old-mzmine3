@@ -30,33 +30,26 @@ import org.dockfx.DockNode;
 import org.dockfx.DockPane;
 import org.dockfx.DockPos;
 
-import io.github.mzmine.datamodel.impl.MZmineObjectBuilder;
-import io.github.mzmine.datamodel.MZmineProject;
 import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.project.MZmineProject;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
-import javafx.concurrent.Task;
 
 /**
  * MZmine JavaFX Application class
@@ -73,7 +66,7 @@ public final class MZmineGUI extends Application {
     public void start(Stage stage) {
 
         // Create an empty project
-        currentProject = MZmineObjectBuilder.getMZmineProject();
+        currentProject = new MZmineProject();
 
         try {
             // Load the main window
@@ -199,8 +192,8 @@ public final class MZmineGUI extends Application {
         return currentProject;
     }
 
-    static void submitTasks(Collection<Task> tasks) {
-        for (Task task : tasks) {
+    static void submitTasks(Collection<Task<?>> tasks) {
+        for (Task<?> task : tasks) {
             mainWindowController.addTask(task);
         }
 

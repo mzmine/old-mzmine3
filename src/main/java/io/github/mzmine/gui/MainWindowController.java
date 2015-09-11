@@ -21,6 +21,7 @@ package io.github.mzmine.gui;
 
 import java.net.URL;
 import java.util.Collection;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.logging.Logger;
@@ -51,8 +52,6 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 
@@ -64,12 +63,6 @@ public class MainWindowController implements Initializable {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    private static final Image rawDataFilesIcon = new Image("xicicon.png");
-    private static final Image peakListsIcon = new Image("peaklistsicon.png");
-    private static final Image groupIcon = new Image("groupicon.png");
-    private static final Image fileIcon = new Image("fileicon.png");
-    private static final Image peakListIcon = new Image(
-            "peaklisticon_single.png");
     private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(
             2);
 
@@ -78,7 +71,7 @@ public class MainWindowController implements Initializable {
     private DockNode visualizerDock;
 
     @FXML
-    private TreeView<Object> rawDataTree;
+    private TreeView<RawDataTreeItem> rawDataTree;
 
     @FXML
     private TreeView<Object> peakListTree;
@@ -100,11 +93,8 @@ public class MainWindowController implements Initializable {
 
         rawDataTree.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
-
-        TreeItem<Object> rawDataRootItem = new TreeItem<>("Raw data files");
-        rawDataRootItem.setGraphic(new ImageView(rawDataFilesIcon));
-        rawDataRootItem.setExpanded(true);
-        rawDataTree.setRoot(rawDataRootItem);
+        rawDataTree.setShowRoot(false);
+        rawDataTree.setRoot(MZmineGUI.getCurrentProject().getRawDataRootItem());
 
         // Add mouse clicked event handler
         rawDataTree.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -146,36 +136,29 @@ public class MainWindowController implements Initializable {
         peakListTree.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
         TreeItem<Object> peakListsRootItem = new TreeItem<>("Peak lists");
-        peakListsRootItem.setGraphic(new ImageView(peakListsIcon));
-        peakListsRootItem.setExpanded(true);
         peakListTree.setRoot(peakListsRootItem);
 
         // peakListTree.setCellFactory(TextFieldTreeCell.forTreeView());
 
-        TreeItem<Object> df1 = new TreeItem<>("File 1");
-        df1.setGraphic(new ImageView(fileIcon));
-
-        TreeItem<Object> group1 = new TreeItem<>("Group 1");
-        group1.setGraphic(new ImageView(groupIcon));
-        TreeItem<Object> df2 = new TreeItem<>("File 2");
-        df2.setGraphic(new ImageView(fileIcon));
-        TreeItem<Object> df3 = new TreeItem<>("File 3");
-        df3.setGraphic(new ImageView(fileIcon));
-        TreeItem<Object> df4 = new TreeItem<>("File 4");
-        df4.setGraphic(new ImageView(fileIcon));
-        TreeItem<Object> df5 = new TreeItem<>("File 5");
-        df5.setGraphic(new ImageView(fileIcon));
-        TreeItem<Object> df6 = new TreeItem<>("File 6");
-        df6.setGraphic(new ImageView(fileIcon));
-        group1.getChildren().addAll(df4, df5, df6);
-        rawDataTree.getRoot().getChildren().addAll(df1, group1, df2, df3);
+        /*
+         * TreeItem<Object> df1 = new TreeItem<>("File 1"); df1.setGraphic(new
+         * ImageView(fileIcon));
+         * 
+         * TreeItem<Object> group1 = new TreeItem<>("Group 1");
+         * group1.setGraphic(new ImageView(groupIcon)); TreeItem<Object> df2 =
+         * new TreeItem<>("File 2"); df2.setGraphic(new ImageView(fileIcon));
+         * TreeItem<Object> df3 = new TreeItem<>("File 3"); df3.setGraphic(new
+         * ImageView(fileIcon)); TreeItem<Object> df4 = new TreeItem<>("File 4"
+         * ); df4.setGraphic(new ImageView(fileIcon)); TreeItem<Object> df5 =
+         * new TreeItem<>("File 5"); df5.setGraphic(new ImageView(fileIcon));
+         * TreeItem<Object> df6 = new TreeItem<>("File 6"); df6.setGraphic(new
+         * ImageView(fileIcon)); group1.getChildren().addAll(df4, df5, df6);
+         * rawDataTree.getRoot().getChildren().addAll(df1, group1, df2, df3);
+         */
 
         TreeItem<Object> item1 = new TreeItem<>("Peak list 1");
-        item1.setGraphic(new ImageView(peakListIcon));
         TreeItem<Object> item2 = new TreeItem<>("Peak list 2");
-        item2.setGraphic(new ImageView(peakListIcon));
         TreeItem<Object> item3 = new TreeItem<>("Peak list 3");
-        item3.setGraphic(new ImageView(peakListIcon));
         peakListTree.getRoot().getChildren().addAll(item1, item2, item3);
 
         statusBar.setText("Welcome to MZmine " + MZmineCore.getMZmineVersion());
@@ -240,7 +223,7 @@ public class MainWindowController implements Initializable {
         this.visualizerDock = visualizerDock;
     }
 
-    public TreeView<?> getRawDataTree() {
+    public TreeView<RawDataTreeItem> getRawDataTree() {
         return rawDataTree;
     }
 
@@ -255,6 +238,15 @@ public class MainWindowController implements Initializable {
     void addTask(Task<?> task) {
         tasksView.getTasks().add(task);
         executor.execute(task);
+    }
+
+    @FXML
+    protected void handleShowTIC(ActionEvent event) {
+        System.out.println("show tic event " + event);
+        List<TreeItem<RawDataTreeItem>> selectedItems = rawDataTree.getSelectionModel().getSelectedItems();
+        
+        
+        
     }
 
 }

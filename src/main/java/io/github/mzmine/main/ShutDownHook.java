@@ -22,7 +22,7 @@ package io.github.mzmine.main;
 import java.util.logging.Logger;
 
 import io.github.mzmine.conf.MZmineConfiguration;
-import io.github.mzmine.datamodel.MZmineProject;
+import io.github.mzmine.project.MZmineProject;
 import io.github.msdk.datamodel.peaklists.PeakList;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 

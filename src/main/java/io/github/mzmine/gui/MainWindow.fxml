@@ -15,7 +15,17 @@
 	<center>
 		<DockPane fx:id="mainDockPane">
 			<children>
-				<TreeView fx:id="rawDataTree" prefHeight="120" />
+				<TreeView fx:id="rawDataTree" prefHeight="120">
+					<contextMenu>
+						<ContextMenu>
+							<items>
+								<MenuItem text="Show TIC" onAction="#handleShowTIC" />
+								<MenuItem text="Export" />
+								<MenuItem text="Report" />
+							</items>
+						</ContextMenu>
+					</contextMenu>
+				</TreeView>
 				<TreeView fx:id="peakListTree" prefHeight="120" />
 				<TaskProgressView fx:id="tasksView" prefHeight="120" />
 			</children>

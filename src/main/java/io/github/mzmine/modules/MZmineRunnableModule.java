@@ -23,8 +23,8 @@ import java.util.Collection;
 
 import javax.annotation.Nonnull;
 
-import io.github.mzmine.datamodel.MZmineProject;
 import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.util.ExitCode;
 import javafx.concurrent.Task;
 
@@ -67,7 +67,7 @@ public interface MZmineRunnableModule extends MZmineModule {
      */
     @Nonnull
     public ExitCode runModule(@Nonnull MZmineProject project,
-            @Nonnull ParameterSet parameters, @Nonnull Collection<Task> tasks);
+            @Nonnull ParameterSet parameters, @Nonnull Collection<Task<?>> tasks);
 
     /**
      * Returns the category of the module (e.g. raw data processing, peak

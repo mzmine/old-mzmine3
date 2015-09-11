@@ -30,7 +30,6 @@ public class MSDKTask extends Task<Object> {
 
     private MSDKMethod<?> method;
     private String title, message;
-    private Double progress;
 
     public MSDKTask(String title, @Nullable String message,
             MSDKMethod<?> method) {
@@ -50,12 +49,11 @@ public class MSDKTask extends Task<Object> {
     }
 
     public void refreshStatus() {
+
         // Progress
-        if (method.getFinishedPercentage() == null)
-            progress = 0.0;
-        else
-            progress = method.getFinishedPercentage().doubleValue();
-        updateProgress(progress, 1);
+        final Float finishedPerc = method.getFinishedPercentage();
+        if (finishedPerc != null)
+            updateProgress(finishedPerc.doubleValue(), 1.0);
 
         // Title and message
         updateTitle(title);
@@ -64,8 +62,7 @@ public class MSDKTask extends Task<Object> {
 
     @Override
     protected Object call() throws Exception {
-        method.execute();
-        return null;
+        return method.execute();
     }
 
 }

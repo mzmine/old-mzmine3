@@ -23,12 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import io.github.mzmine.datamodel.MZmineProject;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.main.MZmineModules;
 import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.util.ExitCode;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -102,7 +102,7 @@ public final class ModuleMenuItem extends MenuItem
             ParameterSet parametersCopy = moduleParameters.cloneParameterSet();
             logger.finest("Starting module " + module.getName()
                     + " with parameters " + parametersCopy);
-            List<Task> tasks = new ArrayList<>();
+            List<Task<?>> tasks = new ArrayList<>();
             MZmineProject project = MZmineGUI.getCurrentProject();
             runnableModule.runModule(project, parametersCopy, tasks);
             MZmineGUI.submitTasks(tasks);
