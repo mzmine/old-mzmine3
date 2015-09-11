@@ -17,7 +17,7 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.visualization;
+package io.github.mzmine.modules.visualization.chromatogram;
 
 import java.util.List;
 
