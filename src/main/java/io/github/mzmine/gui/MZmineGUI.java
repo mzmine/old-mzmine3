@@ -102,18 +102,19 @@ public final class MZmineGUI extends Application {
         tabs.getTabs().addAll(fileTab, peakTab);
         DockNode tabsDock = new DockNode(tabs);
         tabsDock.setDockTitleBar(null); // Disable undocking
-        tabsDock.setPrefSize(200, 500);
+        tabsDock.setPrefSize(200, 400);
+        tabsDock.setMinHeight(400);
         tabsDock.setVisible(true);
         tabsDock.dock(dockPane, DockPos.LEFT);
 
         // Add empty dock for visualizers
         DockNode visualizerDock = new DockNode(tasksView);
-        visualizerDock.setPrefSize(500, 500);
-     //   visualizerDock.dock(dockPane, DockPos.RIGHT);
+        visualizerDock.setPrefSize(600, 400);
+        visualizerDock.dock(dockPane, DockPos.RIGHT);
 
         // Add task table
         DockNode taskDock = new DockNode(tasksView);
-        taskDock.setPrefSize(800, 100);
+        taskDock.setPrefHeight(100);
         taskDock.setVisible(true);
         taskDock.setClosable(false);
         taskDock.dock(dockPane, DockPos.BOTTOM);
