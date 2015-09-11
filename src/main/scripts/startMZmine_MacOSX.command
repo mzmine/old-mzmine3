@@ -4,7 +4,7 @@
 # Optional values - Please modify as needed
 # *****************************************
 
-# Total amount of memory in MB available to MZmine 2.
+# Total amount of memory in MB available to MZmine 3.
 # AUTO = automatically determined
 # Default: AUTO
 HEAP_SIZE=AUTO
