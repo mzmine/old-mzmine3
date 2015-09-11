@@ -37,16 +37,23 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.ScatterChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
 import javafx.concurrent.Task;
@@ -70,11 +77,11 @@ public final class MZmineGUI extends Application {
 
         try {
             // Load the main window
-            URL mainFXML = getClass().getResource("MainWindowDockFX.fxml"); //MainWindow.fxml
+            URL mainFXML = getClass().getResource("MainWindow.fxml");
             FXMLLoader loader = new FXMLLoader(mainFXML);
             BorderPane rootPane = (BorderPane) loader.load();
             mainWindowController = loader.getController();
-            Scene scene = new Scene(rootPane, 800, 600, Color.WHITE);
+            Scene scene = new Scene(rootPane, 1000, 600, Color.WHITE);
             stage.setScene(scene);
 
             // Load menu
@@ -107,9 +114,32 @@ public final class MZmineGUI extends Application {
         tabsDock.setVisible(true);
         tabsDock.dock(dockPane, DockPos.LEFT);
 
-        // Add empty dock for visualizers
-        DockNode visualizerDock = new DockNode(tasksView);
-        visualizerDock.setPrefSize(600, 400);
+        // Sample Line Chart
+        NumberAxis xAxis = new NumberAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setLabel("Label X");
+        final LineChart<Number, Number> lineChart = new LineChart<Number, Number>(
+                xAxis, yAxis);
+        lineChart.setTitle("Line Chart Example");
+        XYChart.Series series = new XYChart.Series();
+        series.setName("Sample X");
+        series.getData().add(new XYChart.Data(1, 23));
+        series.getData().add(new XYChart.Data(2, 14));
+        series.getData().add(new XYChart.Data(3, 15));
+        series.getData().add(new XYChart.Data(4, 24));
+        series.getData().add(new XYChart.Data(5, 34));
+        series.getData().add(new XYChart.Data(6, 36));
+        series.getData().add(new XYChart.Data(7, 22));
+        series.getData().add(new XYChart.Data(8, 45));
+        series.getData().add(new XYChart.Data(9, 43));
+        series.getData().add(new XYChart.Data(10, 17));
+        series.getData().add(new XYChart.Data(11, 29));
+        series.getData().add(new XYChart.Data(12, 25));
+        lineChart.getData().addAll(series);
+
+        // Initial dock for visualizers
+        DockNode visualizerDock = new DockNode(lineChart, "Example Line Chart");
+        visualizerDock.setPrefWidth(650);
         visualizerDock.dock(dockPane, DockPos.RIGHT);
 
         // Add task table
@@ -119,10 +149,7 @@ public final class MZmineGUI extends Application {
         taskDock.setClosable(false);
         taskDock.dock(dockPane, DockPos.BOTTOM);
 
-
-
         stage.setTitle("MZmine " + MZmineCore.getMZmineVersion());
-
         stage.setMinWidth(300);
         stage.setMinHeight(300);
 

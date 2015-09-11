@@ -4,6 +4,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
+<?import org.dockfx.DockPane?>
+<?import org.dockfx.DockNode?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="io.github.mzmine.gui.MainWindowController">
@@ -11,33 +13,13 @@
 		<URL value="@MainWindow.css" />
 	</stylesheets>
 	<center>
-		<SplitPane dividerPositions="0.8" orientation="VERTICAL">
-			<items>
-				<SplitPane dividerPositions="0.5" minHeight="100"
-					orientation="HORIZONTAL">
-					<items>
-						<ScrollPane minWidth="150" fitToHeight="true"
-							fitToWidth="true">
-							<content>
-								<TreeView fx:id="rawDataTree" editable="true" />
-							</content>
-						</ScrollPane>
-						<ScrollPane minWidth="150" fitToHeight="true"
-							fitToWidth="true">
-							<content>
-								<TreeView fx:id="peakListTree" editable="true" />
-							</content>
-						</ScrollPane>
-					</items>
-				</SplitPane>
-				<ScrollPane minHeight="100" fitToHeight="true"
-					fitToWidth="true" SplitPane.resizableWithParent="false">
-					<content>
-						<TaskProgressView fx:id="tasksView" prefHeight="120" />
-					</content>
-				</ScrollPane>
-			</items>
-		</SplitPane>
+		<DockPane fx:id="mainDockPane">
+			<children>
+				<TreeView fx:id="rawDataTree" prefHeight="120" />
+				<TreeView fx:id="peakListTree" prefHeight="120" />
+				<TaskProgressView fx:id="tasksView" prefHeight="120" />
+			</children>
+		</DockPane>
 	</center>
 	<bottom>
 		<StatusBar fx:id="statusBar" minHeight="30" maxHeight="30">
