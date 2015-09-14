@@ -35,6 +35,19 @@
 					</accelerator>
 				</MenuItem>
 				<SeparatorMenuItem />
+				<Menu text="Import...">
+					<items>
+						<ModuleMenuItem text="Raw Data" moduleClass="io.github.mzmine.modules.rawdataimport.RawDataImportModule" />
+						<MenuItem text="Peak Lists" />
+					</items>
+				</Menu>
+				<Menu text="Export...">
+					<items>
+						<MenuItem text="Raw Data" />
+						<MenuItem text="Peak Lists" />
+					</items>
+				</Menu>
+				<SeparatorMenuItem />
 				<ModuleMenuItem text="Import Raw Data"
 					moduleClass="io.github.mzmine.modules.rawdataimport.RawDataImportModule" />
 				<Menu text="Import Peak Lists...">
@@ -67,49 +80,66 @@
 				<MenuItem text="Exit" onAction="#exitApplication" />
 			</items>
 		</Menu>
-		<Menu text="Batch Mode">
+		<Menu text="Batch Processing">
 			<items>
-				<MenuItem text="Open Batch Mode" />
-				<MenuItem text="Run Batch Mode Without GUI" />
+				<MenuItem text="Batch Processing with GUI" />
+				<MenuItem text="Batch Processing without GUI" />
 			</items>
 		</Menu>
 		<Menu text="Raw Data Methods">
 			<items>
 				<Menu text="Filtering">
 					<items>
-						<MenuItem text="Baseline Correction" />
 						<MenuItem text="Crop Filter" />
 						<MenuItem text="Scan by Scan" />
-						<MenuItem text="Align Scans" />
-						<MenuItem text="Scan Smoothing" />
 						<MenuItem text="FTMS Shoulder Peaks Filter" />
 					</items>
 				</Menu>
-				<Menu text="Peak Detection">
+				<Menu text="Smoothing">
 					<items>
+						<MenuItem text="Baseline Correction" />
+					</items>
+				</Menu>
+				<Menu text="Feature Detection">
+					<items>
+						<SeparatorMenuItem>
+							<content>
+								<Text text=" MS"  styleClass="textSeparator" />
+							</content>
+						</SeparatorMenuItem>
 						<MenuItem text="Mass Detection (TO BE REMOVED)" />
 						<MenuItem text="Chromatoram Builder" />
 						<MenuItem text="Targeted Peak Detection" />
 						<MenuItem text="2D Peak Detection (GridMass)" />
+						<SeparatorMenuItem>
+							<content><Text text="" /></content>
+						</SeparatorMenuItem>
+						<SeparatorMenuItem>
+							<content>
+								<Text text=" MS/MS"  styleClass="textSeparator" />
+							</content>
+						</SeparatorMenuItem>
 						<MenuItem text="MS/MS Peak List Builder" />
+						<SeparatorMenuItem>
+							<content><Text text="" /></content>
+						</SeparatorMenuItem>
+						<SeparatorMenuItem>
+							<content>
+								<Text text=" SRM"  styleClass="textSeparator" />
+							</content>
+						</SeparatorMenuItem>
+						<MenuItem text="SRM Peak List Builder" />
 					</items>
 				</Menu>
 			</items>
 		</Menu>
 		<Menu text="Peak List Methods">
 			<items>
-				<Menu text="Peak Detection">
+				<Menu text="Feature Detection">
 					<items>
 						<MenuItem text="Smoothing" />
 						<MenuItem text="Chromatogram Deconvolution" />
-						<MenuItem text="Peak Shape Modeler (Experimental)" />
 						<MenuItem text="Peak Extender" />
-					</items>
-				</Menu>
-				<Menu text="Gap Filling">
-					<items>
-						<MenuItem text="Peak Finder" />
-						<MenuItem text="Same RT and m/z Range Gap Filler" />
 					</items>
 				</Menu>
 				<Menu text="Isotopes">
@@ -122,6 +152,12 @@
 						<MenuItem text="Duplicate Peak Filter" />
 						<MenuItem text="Peak List Rows Filter" />
 						<MenuItem text="Peak Filter" />
+					</items>
+				</Menu>
+				<Menu text="Gap Filling">
+					<items>
+						<MenuItem text="Feature Finder" />
+						<MenuItem text="Same RT and m/z Range Gap Filler" />
 					</items>
 				</Menu>
 				<Menu text="Alignment">
@@ -152,19 +188,19 @@
 				</Menu>
 			</items>
 		</Menu>
-		<Menu text="Data Visualization">
+		<Menu text="Plots">
 			<items>
 				<SeparatorMenuItem>
 					<content>
 						<Text text=" Raw Data" styleClass="textSeparator" />
 					</content>
 				</SeparatorMenuItem>
-				<MenuItem text="Spectra Visualizer" />
-				<MenuItem text="Chromatogram Visualizer" />
-				<MenuItem text="2D Visualizer" />
-				<MenuItem text="2D Visualizer" />
-				<MenuItem text="MS/MS Visualizer" />
-				<MenuItem text="Neutral Loss Visualizer" />
+				<MenuItem text="Spectra Plot" />
+				<MenuItem text="Chromatogram Plot" />
+				<MenuItem text="2D Plot" />
+				<MenuItem text="2D Plot" />
+				<MenuItem text="MS/MS Plot" />
+				<MenuItem text="Neutral Loss Plot" />
 				<SeparatorMenuItem>
 					<content><Text text="" /></content>
 				</SeparatorMenuItem>
@@ -175,18 +211,39 @@
 				</SeparatorMenuItem>
 				<MenuItem text="Scatter Plot" />
 				<MenuItem text="Histogram Plot" />
-				<MenuItem text="Peak Intensity Plot" />
+				<MenuItem text="Peak Plot" />
+				<MenuItem text="Heat Map Plot" />
 			</items>
 		</Menu>
 		<Menu text="Data Analysis">
 			<items>
-				<MenuItem text="CV Plot" />
-				<MenuItem text="Logratio Analysis" />
+				<SeparatorMenuItem>
+					<content>
+						<Text text=" Bubble Plots"  styleClass="textSeparator" />
+					</content>
+				</SeparatorMenuItem>
+				<MenuItem text="CV Plot - Replace with Bubble Plot" />
+				<MenuItem text="Logratio Analysis - Replace with Bubble Plot" />
+				<SeparatorMenuItem>
+					<content><Text text="" /></content>
+				</SeparatorMenuItem>
+				<SeparatorMenuItem>
+					<content>
+						<Text text=" Dimensionality Reduction"  styleClass="textSeparator" />
+					</content>
+				</SeparatorMenuItem>
 				<MenuItem text="Principal Component Analysis (PCA)" />
 				<MenuItem text="Curvilinear Distance Analysis (CDA)" />
 				<MenuItem text="Sammon's Projection" />
+				<SeparatorMenuItem>
+					<content><Text text="" /></content>
+				</SeparatorMenuItem>
+				<SeparatorMenuItem>
+					<content>
+						<Text text=" Clustering"  styleClass="textSeparator" />
+					</content>
+				</SeparatorMenuItem>				
 				<MenuItem text="Clustering" />
-				<MenuItem text="Heat Map Plot" />
 			</items>
 		</Menu>
 		<Menu text="Settings" />
