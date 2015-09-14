@@ -2,6 +2,7 @@
 
 <?import javafx.scene.input.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
 <?import io.github.mzmine.gui.*?>
 
 <MenuBar useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8"
@@ -97,19 +98,81 @@
 		</Menu>
 		<Menu text="Peak List Methods">
 			<items>
-				<MenuItem text="Action 1" />
+				<Menu text="Peak Detection">
+					<items>
+						<MenuItem text="Smoothing" />
+						<MenuItem text="Chromatogram Deconvolution" />
+						<MenuItem text="Peak Shape Modeler (Experimental)" />
+						<MenuItem text="Peak Extender" />
+					</items>
+				</Menu>
+				<Menu text="Gap Filling">
+					<items>
+						<MenuItem text="Peak Finder" />
+						<MenuItem text="Same RT and m/z Range Gap Filler" />
+					</items>
+				</Menu>
+				<Menu text="Isotopes">
+					<items>
+						<MenuItem text="Isotopic Peaks Grouper" />
+					</items>
+				</Menu>
+				<Menu text="Filtering">
+					<items>
+						<MenuItem text="Duplicate Peak Filter" />
+						<MenuItem text="Peak List Rows Filter" />
+						<MenuItem text="Peak Filter" />
+					</items>
+				</Menu>
+				<Menu text="Alignment">
+					<items>
+						<MenuItem text="Join Aligner" />
+						<MenuItem text="RANSAC Aligner" />
+					</items>
+				</Menu>
+				<Menu text="Normalization">
+					<items>
+						<MenuItem text="Retention Time Normalizer" />
+						<MenuItem text="Linear Normalizer" />
+						<MenuItem text="Standard Compound Normalizer" />
+					</items>
+				</Menu>
+				<Menu text="Identification">
+					<items>
+						<MenuItem text="Custom Database Search" />
+						<MenuItem text="Fragment Search" />
+						<MenuItem text="Adduct Search" />
+						<MenuItem text="Complex Search" />
+						<MenuItem text="Online Database Search" />
+						<MenuItem text="Glycerophospholipid Preciction" />
+						<MenuItem text="CAMERA Search" />
+						<MenuItem text="NIST MS Search" />
+						<MenuItem text="Formula Prediction" />
+					</items>
+				</Menu>
 			</items>
 		</Menu>
 		<Menu text="Data Visualization">
 			<items>
-				<!--<CustomMenuItem content=""/> -->
+				<SeparatorMenuItem>
+					<content>
+						<Text text=" Raw Data" styleClass="textSeparator" />
+					</content>
+				</SeparatorMenuItem>
 				<MenuItem text="Spectra Visualizer" />
 				<MenuItem text="Chromatogram Visualizer" />
 				<MenuItem text="2D Visualizer" />
 				<MenuItem text="2D Visualizer" />
 				<MenuItem text="MS/MS Visualizer" />
 				<MenuItem text="Neutral Loss Visualizer" />
-				<SeparatorMenuItem />
+				<SeparatorMenuItem>
+					<content><Text text="" /></content>
+				</SeparatorMenuItem>
+				<SeparatorMenuItem>
+					<content>
+						<Text text=" Peak Data"  styleClass="textSeparator" />
+					</content>
+				</SeparatorMenuItem>
 				<MenuItem text="Scatter Plot" />
 				<MenuItem text="Histogram Plot" />
 				<MenuItem text="Peak Intensity Plot" />
@@ -117,7 +180,13 @@
 		</Menu>
 		<Menu text="Data Analysis">
 			<items>
+				<MenuItem text="CV Plot" />
+				<MenuItem text="Logratio Analysis" />
 				<MenuItem text="Principal Component Analysis (PCA)" />
+				<MenuItem text="Curvilinear Distance Analysis (CDA)" />
+				<MenuItem text="Sammon's Projection" />
+				<MenuItem text="Clustering" />
+				<MenuItem text="Heat Map Plot" />
 			</items>
 		</Menu>
 		<Menu text="Settings" />
