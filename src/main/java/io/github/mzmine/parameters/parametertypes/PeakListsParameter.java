@@ -1,0 +1,97 @@
+/*
+ * Copyright 2006-2015 The MZmine 3 Development Team
+ * 
+ * This file is part of MZmine 2.
+ * 
+ * MZmine 2 is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * MZmine 2 is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * MZmine 2; if not, write to the Free Software Foundation, Inc., 51 Franklin
+ * St, Fifth Floor, Boston, MA 02110-1301 USA
+ */
+
+package io.github.mzmine.parameters.parametertypes;
+
+import java.util.Collection;
+
+import org.w3c.dom.Element;
+
+import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.mzmine.parameters.Parameter;
+
+/**
+ * 
+ */
+public class PeakListsParameter implements Parameter<FeatureTable[]> {
+
+    private int minCount, maxCount;
+    private FeatureTable value[];
+
+    public PeakListsParameter() {
+        this(1, Integer.MAX_VALUE);
+    }
+
+    public PeakListsParameter(int minCount) {
+        this(minCount, Integer.MAX_VALUE);
+    }
+
+    public PeakListsParameter(int minCount, int maxCount) {
+        this.minCount = minCount;
+        this.maxCount = maxCount;
+    }
+
+    public FeatureTable[] getValue() {
+        return value;
+    }
+
+    public void setValue(FeatureTable newValue[]) {
+        this.value = newValue;
+    }
+
+    @Override
+    public PeakListsParameter cloneParameter() {
+        PeakListsParameter copy = new PeakListsParameter(minCount, maxCount);
+        copy.value = value;
+        return copy;
+    }
+
+    @Override
+    public String getName() {
+        return "Peak lists";
+    }
+
+    @Override
+    public void loadValueFromXML(Element xmlElement) {
+    }
+
+    @Override
+    public void saveValueToXML(Element xmlElement) {
+    }
+
+    @Override
+    public boolean checkValue(Collection<String> errorMessages) {
+        if (value == null) {
+            errorMessages.add("No peak list is selected");
+            return false;
+        }
+        if (value.length < minCount) {
+            errorMessages.add(
+                    "At least " + minCount + " peak lists must be selected");
+            return false;
+        }
+        if (value.length > maxCount) {
+            errorMessages
+                    .add("Maximum " + maxCount + " peak lists may be selected");
+            return false;
+        }
+        return true;
+    }
+
+}

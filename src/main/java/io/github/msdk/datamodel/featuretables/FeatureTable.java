@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.peaklists;
+package io.github.msdk.datamodel.featuretables;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 /**
  * This data structure is not thread-safe.
  */
-public interface PeakList {
+public interface FeatureTable {
 
     /**
      * @return Short descriptive name for the peak list
@@ -38,35 +38,35 @@ public interface PeakList {
      * Returns an immutable list of columns
      */
     @Nonnull
-    List<PeakListColumn<?>> getColumns();
+    List<FeatureTableColumn<?>> getColumns();
 
     /**
      * Add a new column to the peak list
      */
-    void addColumn(@Nonnull PeakListColumn<?> col);
+    void addColumn(@Nonnull FeatureTableColumn<?> col);
 
     /**
      * Removes a column from this peak list
      * 
      */
-    void removeColumn(@Nonnull PeakListColumn<?> col);
+    void removeColumn(@Nonnull FeatureTableColumn<?> col);
 
     /**
      * Returns an immutable list of rows
      */
     @Nonnull
-    List<PeakListRow> getRows();
+    List<FeatureTableRow> getRows();
 
     /**
      * Add a new row to the peak list
      */
-    void addRow(@Nonnull PeakListRow row);
+    void addRow(@Nonnull FeatureTableRow row);
 
     /**
      * Removes a row from this peak list
      * 
      */
-    void removeRow(@Nonnull PeakListRow row);
+    void removeRow(@Nonnull FeatureTableRow row);
 
     /**
      * Shortcut to return an immutable list of samples found in this peak list.

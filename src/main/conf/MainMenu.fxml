@@ -38,19 +38,19 @@
 				<Menu text="Import...">
 					<items>
 						<ModuleMenuItem text="Raw Data" moduleClass="io.github.mzmine.modules.rawdataimport.RawDataImportModule" />
-						<MenuItem text="Peak Lists" />
+						<MenuItem text="Feature Table" />
 					</items>
 				</Menu>
 				<Menu text="Export...">
 					<items>
 						<MenuItem text="Raw Data" />
-						<MenuItem text="Peak Lists" />
+						<MenuItem text="Feature Table" />
 					</items>
 				</Menu>
 				<SeparatorMenuItem />
 				<ModuleMenuItem text="Import Raw Data"
 					moduleClass="io.github.mzmine.modules.rawdataimport.RawDataImportModule" />
-				<Menu text="Import Peak Lists...">
+				<Menu text="Import Feature Tables...">
 					<items>
 						<MenuItem text="CSV" />
 						<MenuItem text="mzIdentML" />
@@ -68,7 +68,7 @@
 						<MenuItem text="TXT" />
 					</items>
 				</Menu>
-				<Menu text="Export Peak Lists...">
+				<Menu text="Export Feature Tables...">
 					<items>
 						<MenuItem text="CSV" />
 						<MenuItem text="MetaboAnalyst" />
@@ -91,8 +91,8 @@
 				<Menu text="Filtering">
 					<items>
 						<MenuItem text="Crop Filter" />
-						<MenuItem text="Scan by Scan" />
-						<MenuItem text="FTMS Shoulder Peaks Filter" />
+						<MenuItem text="Scan by Scan Filter" />
+						<MenuItem text="FTMS Shoulder Feature Filter" />
 					</items>
 				</Menu>
 				<Menu text="Smoothing">
@@ -107,10 +107,9 @@
 								<Text text=" MS"  styleClass="textSeparator" />
 							</content>
 						</SeparatorMenuItem>
-						<MenuItem text="Mass Detection (TO BE REMOVED)" />
 						<MenuItem text="Chromatoram Builder" />
-						<MenuItem text="Targeted Peak Detection" />
-						<MenuItem text="2D Peak Detection (GridMass)" />
+						<MenuItem text="Targeted Feature Detection" />
+						<MenuItem text="GridMass - 2D Feature Detection" />
 						<SeparatorMenuItem>
 							<content><Text text="" /></content>
 						</SeparatorMenuItem>
@@ -119,7 +118,7 @@
 								<Text text=" MS/MS"  styleClass="textSeparator" />
 							</content>
 						</SeparatorMenuItem>
-						<MenuItem text="MS/MS Peak List Builder" />
+						<MenuItem text="MS/MS Feature List Builder" />
 						<SeparatorMenuItem>
 							<content><Text text="" /></content>
 						</SeparatorMenuItem>
@@ -128,30 +127,30 @@
 								<Text text=" SRM"  styleClass="textSeparator" />
 							</content>
 						</SeparatorMenuItem>
-						<MenuItem text="SRM Peak List Builder" />
+						<MenuItem text="SRM Feature List Builder" />
 					</items>
 				</Menu>
 			</items>
 		</Menu>
-		<Menu text="Peak List Methods">
+		<Menu text="Feature Methods">
 			<items>
 				<Menu text="Feature Detection">
 					<items>
 						<MenuItem text="Smoothing" />
 						<MenuItem text="Chromatogram Deconvolution" />
-						<MenuItem text="Peak Extender" />
+						<MenuItem text="Feature Extender" />
 					</items>
 				</Menu>
 				<Menu text="Isotopes">
 					<items>
-						<MenuItem text="Isotopic Peaks Grouper" />
+						<MenuItem text="Isotopic Feature Grouper" />
 					</items>
 				</Menu>
 				<Menu text="Filtering">
 					<items>
-						<MenuItem text="Duplicate Peak Filter" />
-						<MenuItem text="Peak List Rows Filter" />
-						<MenuItem text="Peak Filter" />
+						<MenuItem text="Duplicate Feature Filter (Move to Rows Filter)" />
+						<MenuItem text="Rows Filter" />
+						<MenuItem text="Feature Filter" />
 					</items>
 				</Menu>
 				<Menu text="Gap Filling">
@@ -206,12 +205,12 @@
 				</SeparatorMenuItem>
 				<SeparatorMenuItem>
 					<content>
-						<Text text=" Peak Data"  styleClass="textSeparator" />
+						<Text text=" Feature Data"  styleClass="textSeparator" />
 					</content>
 				</SeparatorMenuItem>
 				<MenuItem text="Scatter Plot" />
 				<MenuItem text="Histogram Plot" />
-				<MenuItem text="Peak Plot" />
+				<MenuItem text="Feature Plot" />
 				<MenuItem text="Heat Map Plot" />
 			</items>
 		</Menu>
@@ -222,8 +221,8 @@
 						<Text text=" Bubble Plots"  styleClass="textSeparator" />
 					</content>
 				</SeparatorMenuItem>
-				<MenuItem text="CV Plot - Replace with Bubble Plot" />
-				<MenuItem text="Logratio Analysis - Replace with Bubble Plot" />
+				<MenuItem text="Coefficient of Variation Plot" />
+				<MenuItem text="Logratio Analysis" />
 				<SeparatorMenuItem>
 					<content><Text text="" /></content>
 				</SeparatorMenuItem>

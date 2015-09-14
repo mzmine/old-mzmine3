@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.peaklists;
+package io.github.msdk.datamodel.featuretables;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,14 +22,14 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 /**
  * 
  */
-public interface PeakListRow {
+public interface FeatureTableRow {
 
     /**
      * Returns the peak list where this peak list row belongs. Each peak list
      * row is assigned to exactly one peak list.
      */
     @Nonnull
-    PeakList getPeakList();
+    FeatureTable getPeakList();
 
     /**
      * Shortcut to return the ID column value of this row
@@ -54,12 +54,12 @@ public interface PeakListRow {
      * Return data assigned to this row
      */
     @Nullable
-    <DataType> DataType getData(@Nonnull PeakListColumn<DataType> column);
+    <DataType> DataType getData(@Nonnull FeatureTableColumn<DataType> column);
 
     /**
      * Return data assigned to this row
      */
-    <DataType> void setData(PeakListColumn<DataType> column,
+    <DataType> void setData(FeatureTableColumn<DataType> column,
             @Nonnull DataType data);
 
 }

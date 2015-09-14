@@ -28,8 +28,8 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
-import io.github.msdk.datamodel.peaklists.PeakList;
-import io.github.msdk.datamodel.peaklists.Sample;
+import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.mzmine.gui.RawDataTreeItem;
 import javafx.scene.control.TreeItem;
@@ -52,7 +52,7 @@ public class MZmineProject {
 
     private final TreeItem<RawDataTreeItem> rawDataRootItem;
 
-    private final List<PeakList> peakLists = new ArrayList<>();
+    private final List<FeatureTable> peakLists = new ArrayList<>();
 
     public MZmineProject() {
         rawDataRootItem = new TreeItem<>(new RawDataTreeItem());
@@ -79,7 +79,7 @@ public class MZmineProject {
     public List<Sample> getSamples() {
         final ArrayList<Sample> allSamples = new ArrayList<>();
         synchronized (peakLists) {
-            for (PeakList peakList : peakLists) {
+            for (FeatureTable peakList : peakLists) {
                 for (Sample s : peakList.getSamples()) {
                     if (!allSamples.contains(s))
                         allSamples.add(s);
@@ -117,13 +117,13 @@ public class MZmineProject {
         return ImmutableList.copyOf(dataFiles);
     }
 
-    public void addPeakList(PeakList peakList) {
+    public void addFeatureTable(FeatureTable peakList) {
         synchronized (peakLists) {
             peakLists.add(peakList);
         }
     }
 
-    public void removePeakList(PeakList peakList) {
+    public void removePeakList(FeatureTable peakList) {
         synchronized (peakLists) {
             peakLists.remove(peakList);
         }
@@ -132,8 +132,8 @@ public class MZmineProject {
     @SuppressWarnings("null")
 
     @Nonnull
-    public List<PeakList> getPeakLists() {
-        final List<PeakList> snapShot;
+    public List<FeatureTable> getPeakLists() {
+        final List<FeatureTable> snapShot;
         synchronized (peakLists) {
             snapShot = ImmutableList.copyOf(peakLists);
         }

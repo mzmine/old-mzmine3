@@ -91,14 +91,14 @@ public final class MZmineGUI extends Application {
         DockPane dockPane = mainWindowController.getMainDockPane();
         DockNode visualizerDock = mainWindowController.getVisualizerDock();
         TreeView<?> rawDataTree = mainWindowController.getRawDataTree();
-        TreeView<?> peakListTree = mainWindowController.getPeakListTree();
+        TreeView<?> peakListTree = mainWindowController.getFeatureTree();
         TaskProgressView<?> tasksView = mainWindowController.getTaskTable();
 
         // Add raw data file and peak lists trees to tabs
         TabPane tabs = new TabPane();
         Tab fileTab = new Tab("Raw Data", rawDataTree);
         fileTab.setClosable(false);
-        Tab peakTab = new Tab("Peak Lists", peakListTree);
+        Tab peakTab = new Tab("Feature Tables", peakListTree);
         peakTab.setClosable(false);
         tabs.getTabs().addAll(fileTab, peakTab);
         DockNode tabsDock = new DockNode(tabs);

@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.peaklists;
+package io.github.msdk.datamodel.featuretables;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
  *
  * @param <DataType>
  */
-public interface PeakListColumn<DataType> {
+public interface FeatureTableColumn<DataType> {
 
     /**
      * @return Short descriptive name for the peak list column

@@ -29,9 +29,9 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
+import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
-import io.github.msdk.datamodel.peaklists.PeakListColumn;
-import io.github.msdk.datamodel.peaklists.Sample;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -50,11 +50,11 @@ public class MSDKObjectBuilder {
     /**
      * Common columns for peak lists
      */
-    private static final @Nonnull SimplePeakListColumn<Integer> IdPeakListColumn = new SimplePeakListColumn<Integer>(
+    private static final @Nonnull SimpleFeatureTableColumn<Integer> IdPeakListColumn = new SimpleFeatureTableColumn<Integer>(
             "Id", Integer.class, null);
-    private static final @Nonnull SimplePeakListColumn<Double> MzPeakListColumn = new SimplePeakListColumn<Double>(
+    private static final @Nonnull SimpleFeatureTableColumn<Double> MzPeakListColumn = new SimpleFeatureTableColumn<Double>(
             "m/z", Double.class, null);
-    private static final @Nonnull SimplePeakListColumn<ChromatographyInfo> ChromatographyInfoPeakListColumn = new SimplePeakListColumn<ChromatographyInfo>(
+    private static final @Nonnull SimpleFeatureTableColumn<ChromatographyInfo> ChromatographyInfoPeakListColumn = new SimpleFeatureTableColumn<ChromatographyInfo>(
             "Chromatography Info", ChromatographyInfo.class, null);
 
     /**
@@ -205,21 +205,21 @@ public class MSDKObjectBuilder {
      * 
      * @return new SimplePeakListColumn
      */
-    public static @Nonnull <DataType> PeakListColumn<DataType> getPeakListColumn(
+    public static @Nonnull <DataType> FeatureTableColumn<DataType> getPeakListColumn(
             @Nonnull String name, @Nonnull Class<DataType> dataTypeClass,
             @Nullable Sample sample) {
-        return new SimplePeakListColumn<DataType>(name, dataTypeClass, sample);
+        return new SimpleFeatureTableColumn<DataType>(name, dataTypeClass, sample);
     }
 
-    public static @Nonnull PeakListColumn<Double> getMzPeakListColumn() {
+    public static @Nonnull FeatureTableColumn<Double> getMzPeakListColumn() {
         return MzPeakListColumn;
     }
 
-    public static @Nonnull PeakListColumn<ChromatographyInfo> getChromatographyInfoPeakListColumn() {
+    public static @Nonnull FeatureTableColumn<ChromatographyInfo> getChromatographyInfoPeakListColumn() {
         return ChromatographyInfoPeakListColumn;
     }
 
-    public static @Nonnull PeakListColumn<Integer> getIdPeakListColumn() {
+    public static @Nonnull FeatureTableColumn<Integer> getIdPeakListColumn() {
         return IdPeakListColumn;
     }
 

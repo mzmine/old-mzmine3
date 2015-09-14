@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 
 import io.github.mzmine.conf.MZmineConfiguration;
 import io.github.mzmine.project.MZmineProject;
-import io.github.msdk.datamodel.peaklists.PeakList;
+import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**
@@ -67,7 +67,7 @@ class ShutDownHook implements Runnable {
             for (RawDataFile dataFile : currentProject.getRawDataFiles()) {
                 dataFile.dispose();
             }
-            for (PeakList peakList : currentProject.getPeakLists()) {
+            for (FeatureTable peakList : currentProject.getPeakLists()) {
                 peakList.dispose();
             }
         }

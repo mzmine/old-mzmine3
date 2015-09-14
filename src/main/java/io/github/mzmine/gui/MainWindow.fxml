@@ -26,7 +26,7 @@
 						</ContextMenu>
 					</contextMenu>
 				</TreeView>
-				<TreeView fx:id="peakListTree" prefHeight="120" />
+				<TreeView fx:id="featureTree" prefHeight="120" />
 				<TaskProgressView fx:id="tasksView" prefHeight="120" />
 			</children>
 		</DockPane>

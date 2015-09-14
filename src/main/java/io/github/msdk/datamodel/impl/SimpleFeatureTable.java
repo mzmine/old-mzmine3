@@ -24,28 +24,28 @@ import com.google.common.collect.ImmutableList;
 import com.sun.istack.Nullable;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
-import io.github.msdk.datamodel.peaklists.PeakList;
-import io.github.msdk.datamodel.peaklists.PeakListColumn;
-import io.github.msdk.datamodel.peaklists.PeakListRow;
-import io.github.msdk.datamodel.peaklists.Sample;
+import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
+import io.github.msdk.datamodel.featuretables.FeatureTableRow;
+import io.github.msdk.datamodel.featuretables.Sample;
 
 /**
  * Implementation of the PeakList interface.
  */
-class SimplePeakList implements PeakList {
+class SimpleFeatureTable implements FeatureTable {
 
     private @Nonnull String name;
     private @Nonnull DataPointStore dataPointStore;
-    private @Nullable ArrayList<PeakListRow> peakListRows;
-    private @Nullable ArrayList<PeakListColumn<?>> peakListColumns;
+    private @Nullable ArrayList<FeatureTableRow> peakListRows;
+    private @Nullable ArrayList<FeatureTableColumn<?>> peakListColumns;
 
-    SimplePeakList(@Nonnull String name, @Nonnull DataPointStore dataPointStore) {
+    SimpleFeatureTable(@Nonnull String name, @Nonnull DataPointStore dataPointStore) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(dataPointStore);
         this.name = name;
         this.dataPointStore = dataPointStore;
-        peakListRows = new ArrayList<PeakListRow>();
-        peakListColumns = new ArrayList<PeakListColumn<?>>();
+        peakListRows = new ArrayList<FeatureTableRow>();
+        peakListColumns = new ArrayList<FeatureTableColumn<?>>();
     }
 
     @Override
@@ -61,13 +61,13 @@ class SimplePeakList implements PeakList {
 
     @SuppressWarnings("null")
     @Override
-    public @Nonnull List<PeakListRow> getRows() {
-        List<PeakListRow> peakListRowCopy = ImmutableList.copyOf(peakListRows);
+    public @Nonnull List<FeatureTableRow> getRows() {
+        List<FeatureTableRow> peakListRowCopy = ImmutableList.copyOf(peakListRows);
         return peakListRowCopy;
     }
 
     @Override
-    public void addRow(@Nonnull PeakListRow row) {
+    public void addRow(@Nonnull FeatureTableRow row) {
         Preconditions.checkNotNull( row);
         synchronized (peakListRows) {
             peakListRows.add(row);
@@ -75,7 +75,7 @@ class SimplePeakList implements PeakList {
     }
 
     @Override
-    public void removeRow(@Nonnull PeakListRow row) {
+    public void removeRow(@Nonnull FeatureTableRow row) {
         Preconditions.checkNotNull( row);
         synchronized (peakListRows) {
             peakListRows.remove(row);
@@ -84,14 +84,14 @@ class SimplePeakList implements PeakList {
 
     @SuppressWarnings("null")
     @Override
-    public @Nonnull List<PeakListColumn<?>> getColumns() {
-        List<PeakListColumn<?>> peakListColumnsCopy = ImmutableList
+    public @Nonnull List<FeatureTableColumn<?>> getColumns() {
+        List<FeatureTableColumn<?>> peakListColumnsCopy = ImmutableList
                 .copyOf(peakListColumns);
         return peakListColumnsCopy;
     }
 
     @Override
-    public void addColumn(@Nonnull PeakListColumn<?> col) {
+    public void addColumn(@Nonnull FeatureTableColumn<?> col) {
         Preconditions.checkNotNull(col);
         synchronized (peakListColumns) {
             peakListColumns.add(col);
@@ -99,7 +99,7 @@ class SimplePeakList implements PeakList {
     }
 
     @Override
-    public void removeColumn(@Nonnull PeakListColumn<?> col) {
+    public void removeColumn(@Nonnull FeatureTableColumn<?> col) {
         Preconditions.checkNotNull(col);
         synchronized (peakListColumns) {
             peakListColumns.remove(col);
@@ -111,7 +111,7 @@ class SimplePeakList implements PeakList {
     public @Nonnull List<Sample> getSamples() {
         ArrayList<Sample> sampleList = new ArrayList<Sample>();
         synchronized (peakListColumns) {
-            for (PeakListColumn<?> col : peakListColumns) {
+            for (FeatureTableColumn<?> col : peakListColumns) {
                 Sample s = col.getSample();
                 if (s != null)
                     sampleList.add(s);

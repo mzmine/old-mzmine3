@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 
-import io.github.msdk.datamodel.peaklists.Sample;
+import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 /**

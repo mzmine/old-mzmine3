@@ -19,19 +19,19 @@ import javax.annotation.Nullable;
 
 import com.google.common.base.Preconditions;
 
-import io.github.msdk.datamodel.peaklists.PeakListColumn;
-import io.github.msdk.datamodel.peaklists.Sample;
+import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
+import io.github.msdk.datamodel.featuretables.Sample;
 
 /**
  * Implementation of PeakListColumn
  */
-class SimplePeakListColumn<DataType> implements PeakListColumn<DataType> {
+class SimpleFeatureTableColumn<DataType> implements FeatureTableColumn<DataType> {
 
     private @Nonnull String name;
     private @Nonnull Class<DataType> dataTypeClass;
     private @Nullable Sample simpleSample;
 
-    SimplePeakListColumn(@Nonnull String name,
+    SimpleFeatureTableColumn(@Nonnull String name,
             @Nonnull Class<DataType> dataTypeClass, @Nullable Sample sample) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(dataTypeClass);

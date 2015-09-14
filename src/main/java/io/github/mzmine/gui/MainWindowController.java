@@ -27,7 +27,6 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
-import javax.script.Bindings;
 
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.TaskProgressView;
@@ -48,7 +47,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
@@ -77,7 +75,7 @@ public class MainWindowController implements Initializable {
     private TreeView<RawDataTreeItem> rawDataTree;
 
     @FXML
-    private TreeView<Object> peakListTree;
+    private TreeView<Object> featureTree;
 
     @FXML
     private TaskProgressView<Task<?>> tasksView;
@@ -128,32 +126,35 @@ public class MainWindowController implements Initializable {
                     lineChart.getData().addAll(series);
 
                     // New test dock
-                    final DockNode testDock = new DockNode(lineChart,"Example Line Chart 2");
+                    final DockNode testDock = new DockNode(lineChart,
+                            "Example Line Chart 2");
 
                     // Add default button
                     ToggleButton DefaultButton;
                     DefaultButton = new ToggleButton();
                     DefaultButton.setOnAction(new EventHandler<ActionEvent>() {
-                      @Override
-                      public void handle(ActionEvent event) {
-                          System.out.println("Selected property: "+DefaultButton.selectedProperty());
-                      }
+                        @Override
+                        public void handle(ActionEvent event) {
+                            System.out.println("Selected property: "
+                                    + DefaultButton.selectedProperty());
+                        }
                     });
-                    DefaultButton.setMinSize(16, 20); DefaultButton.setMaxSize(16, 20);
+                    DefaultButton.setMinSize(16, 20);
+                    DefaultButton.setMaxSize(16, 20);
                     testDock.getDockTitleBar().getChildren().add(DefaultButton);
 
                     testDock.dock(mainDockPane, DockPos.RIGHT);
-                    //testDock.setFloating(true);
+                    // testDock.setFloating(true);
                 }
             }
         });
 
-        peakListTree.getSelectionModel()
+        featureTree.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
         TreeItem<Object> peakListsRootItem = new TreeItem<>("Peak lists");
-        peakListTree.setRoot(peakListsRootItem);
+        featureTree.setRoot(peakListsRootItem);
 
-        // peakListTree.setCellFactory(TextFieldTreeCell.forTreeView());
+        // featureTree.setCellFactory(TextFieldTreeCell.forTreeView());
 
         /*
          * TreeItem<Object> df1 = new TreeItem<>("File 1"); df1.setGraphic(new
@@ -174,7 +175,7 @@ public class MainWindowController implements Initializable {
         TreeItem<Object> item1 = new TreeItem<>("Peak list 1");
         TreeItem<Object> item2 = new TreeItem<>("Peak list 2");
         TreeItem<Object> item3 = new TreeItem<>("Peak list 3");
-        peakListTree.getRoot().getChildren().addAll(item1, item2, item3);
+        featureTree.getRoot().getChildren().addAll(item1, item2, item3);
 
         statusBar.setText("Welcome to MZmine " + MZmineCore.getMZmineVersion());
 
@@ -242,8 +243,8 @@ public class MainWindowController implements Initializable {
         return rawDataTree;
     }
 
-    public TreeView<?> getPeakListTree() {
-        return peakListTree;
+    public TreeView<?> getFeatureTree() {
+        return featureTree;
     }
 
     public TaskProgressView<?> getTaskTable() {
@@ -258,10 +259,9 @@ public class MainWindowController implements Initializable {
     @FXML
     protected void handleShowTIC(ActionEvent event) {
         System.out.println("show tic event " + event);
-        List<TreeItem<RawDataTreeItem>> selectedItems = rawDataTree.getSelectionModel().getSelectedItems();
-        
-        
-        
+        List<TreeItem<RawDataTreeItem>> selectedItems = rawDataTree
+                .getSelectionModel().getSelectedItems();
+
     }
 
 }

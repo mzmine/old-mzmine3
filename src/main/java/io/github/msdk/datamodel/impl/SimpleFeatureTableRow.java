@@ -20,21 +20,21 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
 
-import io.github.msdk.datamodel.peaklists.PeakList;
-import io.github.msdk.datamodel.peaklists.PeakListColumn;
-import io.github.msdk.datamodel.peaklists.PeakListRow;
+import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
+import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * Implementation of PeakListRow
  */
-class SimplePeakListRow implements PeakListRow {
+class SimpleFeatureTableRow implements FeatureTableRow {
 
     private int rowId;
-    private @Nonnull PeakList peaklist;
-    private @Nonnull Hashtable<PeakListColumn<?>, Object> rowData;
+    private @Nonnull FeatureTable peaklist;
+    private @Nonnull Hashtable<FeatureTableColumn<?>, Object> rowData;
 
-    SimplePeakListRow(@Nonnull PeakList peaklist, int rowId) {
+    SimpleFeatureTableRow(@Nonnull FeatureTable peaklist, int rowId) {
         Preconditions.checkNotNull(peaklist);
         this.peaklist = peaklist;
         this.rowId = rowId;
@@ -42,7 +42,7 @@ class SimplePeakListRow implements PeakListRow {
     }
 
     @Override
-    public @Nonnull PeakList getPeakList() {
+    public @Nonnull FeatureTable getPeakList() {
         return peaklist;
     }
 
@@ -62,7 +62,7 @@ class SimplePeakListRow implements PeakListRow {
     }
 
     @Override
-    public <DataType> void setData(PeakListColumn<DataType> column,
+    public <DataType> void setData(FeatureTableColumn<DataType> column,
             @Nonnull DataType data) {
         Preconditions.checkNotNull(column);
         Preconditions.checkNotNull(data);
@@ -71,7 +71,7 @@ class SimplePeakListRow implements PeakListRow {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <DataType> DataType getData(@Nonnull PeakListColumn<DataType> column) {
+    public <DataType> DataType getData(@Nonnull FeatureTableColumn<DataType> column) {
         Preconditions.checkNotNull(column);
         return (DataType) rowData.get(column);
     }
