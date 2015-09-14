@@ -30,6 +30,7 @@ import org.dockfx.DockNode;
 import org.dockfx.DockPane;
 import org.dockfx.DockPos;
 
+import io.github.mzmine.gui.mainwindow.MainWindowController;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.project.MZmineProject;
 import javafx.application.Application;
@@ -70,7 +71,7 @@ public final class MZmineGUI extends Application {
 
         try {
             // Load the main window
-            URL mainFXML = getClass().getResource("MainWindow.fxml");
+            URL mainFXML = getClass().getResource("mainwindow/MainWindow.fxml");
             FXMLLoader loader = new FXMLLoader(mainFXML);
             BorderPane rootPane = (BorderPane) loader.load();
             mainWindowController = loader.getController();
@@ -192,7 +193,7 @@ public final class MZmineGUI extends Application {
         return currentProject;
     }
 
-    static void submitTasks(Collection<Task<?>> tasks) {
+    public static void submitTasks(Collection<Task<?>> tasks) {
         for (Task<?> task : tasks) {
             mainWindowController.addTask(task);
         }

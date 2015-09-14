@@ -17,7 +17,7 @@
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.gui;
+package io.github.mzmine.gui.mainwindow;
 
 import java.awt.Desktop;
 import java.io.IOException;
@@ -25,6 +25,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
+import io.github.mzmine.gui.MZmineGUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuItem;

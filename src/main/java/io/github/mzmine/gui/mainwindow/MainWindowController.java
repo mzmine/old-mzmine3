@@ -17,7 +17,7 @@
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.gui;
+package io.github.mzmine.gui.mainwindow;
 
 import java.net.URL;
 import java.util.Collection;
@@ -34,6 +34,7 @@ import org.dockfx.DockNode;
 import org.dockfx.DockPane;
 import org.dockfx.DockPos;
 
+import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.animation.Animation;
@@ -251,7 +252,7 @@ public class MainWindowController implements Initializable {
         return tasksView;
     }
 
-    void addTask(Task<?> task) {
+    public void addTask(Task<?> task) {
         tasksView.getTasks().add(task);
         executor.execute(task);
     }

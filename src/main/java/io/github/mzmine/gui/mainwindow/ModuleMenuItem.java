@@ -17,12 +17,13 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.gui;
+package io.github.mzmine.gui.mainwindow;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineModules;
 import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.modules.MZmineRunnableModule;

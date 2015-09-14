@@ -31,7 +31,7 @@ import com.google.common.collect.ImmutableList;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.mzmine.gui.RawDataTreeItem;
+import io.github.mzmine.gui.mainwindow.RawDataTreeItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

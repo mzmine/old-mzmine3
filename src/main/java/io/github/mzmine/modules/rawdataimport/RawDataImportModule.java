@@ -67,8 +67,9 @@ public class RawDataImportModule implements MZmineProcessingModule {
             @Nonnull ParameterSet parameters,
             @Nonnull Collection<Task<?>> tasks) {
 
-        List<File> fileNames = Collections.emptyList(); 
-        // parameters        .getParameter(RawDataImportParameters.fileNames).getValue();
+        List<File> fileNames = Collections.emptyList();
+        // parameters
+        // .getParameter(RawDataImportParameters.fileNames).getValue();
 
         for (File fileName : fileNames) {
 
@@ -105,7 +106,7 @@ public class RawDataImportModule implements MZmineProcessingModule {
             if (newTask == null) {
                 logger.warning(
                         "Cannot determine file type of file " + fileName);
-                return ;
+                return;
             }
 
             tasks.add(newTask);
@@ -117,9 +118,9 @@ public class RawDataImportModule implements MZmineProcessingModule {
     public @Nonnull MZmineModuleCategory getModuleCategory() {
         return MZmineModuleCategory.RAWDATA;
     }
-    
+
     private RawDataImportParameters params = new RawDataImportParameters();
-    
+
     public @Nonnull ParameterSet getParameters() {
         return params;
     }

@@ -23,11 +23,15 @@ import java.net.URL;
 
 import org.controlsfx.control.PropertySheet;
 
+import com.sun.javafx.robot.impl.FXRobotHelper.FXRobotSceneAccessor;
+
 import io.github.mzmine.gui.helpwindow.HelpWindow;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.stage.StageStyle;
 import javafx.scene.control.ButtonType;
 
 /**
@@ -35,37 +39,67 @@ import javafx.scene.control.ButtonType;
  */
 public class ParameterSetupDialog extends Alert {
 
+    /**
+     * Help window for this setup dialog. Initially null, until the user clicks
+     * the Help button.
+     */
+    private HelpWindow helpWindow = null;
+
     ParameterSetupDialog(ParameterSet parameters) {
-        
+
         super(AlertType.CONFIRMATION);
-        
+
         setTitle("Parameters");
         setHeaderText("Please set parameter values");
         setResizable(true);
 
-        
-        ButtonType helpButtonType = new ButtonType("Help", ButtonData.HELP);
-        
-        
-        getDialogPane().getButtonTypes().add(helpButtonType);
-        
-        Button helpButton = (Button) getDialogPane().lookupButton(helpButtonType);
-        helpButton.setOnAction(e -> {
-            
-            System.out.println(e);
-            URL r = parameters.getClass().getResource("help/help.html");
-            System.out.println(r);
-            
-            HelpWindow hw = new HelpWindow(r.toString());
-            hw.show();
-            
-            e.consume();
-        });
-        
-        ObservableList<PropertySheet.Item> parametersList = parameters.getParameters();
+        final URL helpURL = parameters.getClass().getResource("help/help.html");
+        setupHelpButton(helpURL);
+
+        ObservableList<PropertySheet.Item> parametersList = parameters
+                .getParameters();
         PropertySheet sheet = new PropertySheet(parametersList);
         sheet.setPrefSize(600.0, 500.0);
         getDialogPane().setContent(sheet);
+
+    }
+
+    private void setupHelpButton(URL helpURL) {
+
+        ButtonType helpButtonType = new ButtonType("Help", ButtonData.HELP);
+        getDialogPane().getButtonTypes().add(helpButtonType);
+
+        Button helpButton = (Button) getDialogPane()
+                .lookupButton(helpButtonType);
+
+        if (helpURL == null) {
+            helpButton.setDisable(true);
+            return;
+        }
+
+        // Prevent closing this dialog by the Help button by adding an event filter
+        helpButton.addEventFilter(ActionEvent.ACTION, event -> {
+            if ((helpWindow != null) && (!helpWindow.isShowing())) {
+                helpWindow = null;
+            }
+
+            if (helpWindow != null) {
+                
+                helpWindow.toFront();
+                //helpWindow.getDialogPane().requestFocus();
+            } else {
+                helpWindow = new HelpWindow(helpURL.toString());
+                helpWindow.show();
+            }
+            event.consume();
+        });
+
+        // Close the help window when we close this dialog
+        setOnHidden(e -> {
+            if ((helpWindow != null) && (helpWindow.isShowing())) {
+                helpWindow.close();
+            }
+        });
 
     }
 

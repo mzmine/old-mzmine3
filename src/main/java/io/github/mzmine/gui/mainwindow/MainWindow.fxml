@@ -8,7 +8,7 @@
 <?import org.dockfx.DockNode?>
 
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="io.github.mzmine.gui.MainWindowController">
+	fx:controller="io.github.mzmine.gui.mainwindow.MainWindowController">
 	<stylesheets>
 		<URL value="@MainWindow.css" />
 	</stylesheets>

@@ -3,10 +3,10 @@
 <?import javafx.scene.input.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.text.*?>
-<?import io.github.mzmine.gui.*?>
+<?import io.github.mzmine.gui.mainwindow.*?>
 
 <MenuBar useSystemMenuBar="true" xmlns="http://javafx.com/javafx/8"
-	xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.mzmine.gui.MainMenuController">
+	xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.mzmine.gui.mainwindow.MainMenuController">
 	<menus>
 		<Menu text="File">
 			<items>
