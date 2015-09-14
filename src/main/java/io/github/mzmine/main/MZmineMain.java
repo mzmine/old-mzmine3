@@ -19,6 +19,7 @@
 
 package io.github.mzmine.main;
 
+import java.util.Properties;
 import java.util.logging.Logger;
 
 import io.github.mzmine.gui.MZmineGUI;
@@ -33,6 +34,14 @@ public final class MZmineMain {
 
     public static void main(String args[]) {
 
+        
+        Properties a = System.getProperties();
+        for (Object p : a.keySet()) {
+            if (p.toString().startsWith("io"))
+            System.out.println(p + " -> " + a.get(p));
+            
+        };
+        
         /*
          * Cleanup old temporary files on a new thread
          */

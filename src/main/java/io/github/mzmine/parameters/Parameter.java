@@ -21,36 +21,22 @@ package io.github.mzmine.parameters;
 
 import java.util.Collection;
 
+import org.controlsfx.control.PropertySheet.Item;
 import org.w3c.dom.Element;
 
 /**
  * Parameter interface, represents parameters or variables used in the project
  */
-public interface Parameter<ValueType> {
-
-    /**
-     * Returns this parameter's name. The name must be unique within one
-     * ParameterSet.
-     * 
-     * @return Parameter name
-     */
-    public String getName();
+public interface Parameter<ValueType> extends Item, Cloneable {
 
     public ValueType getValue();
 
-    public void setValue(ValueType newValue);
+    public void setValue(Object newValue);
 
     public boolean checkValue(Collection<String> errorMessages);
 
     public void loadValueFromXML(Element xmlElement);
 
     public void saveValueToXML(Element xmlElement);
-
-    /**
-     * We use cloneParameter() instead of clone() to force the implementing
-     * classes to implement this method. Plain clone() is automatically
-     * implemented by the Object class.
-     */
-    public Parameter<ValueType> cloneParameter();
 
 }

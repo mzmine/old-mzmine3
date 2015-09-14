@@ -64,42 +64,6 @@ public class MZmineConfiguration {
         // preferences = new MZminePreferences();
     }
 
-    public static ParameterSet getModuleParameters(
-            Class<? extends MZmineModule> moduleClass) {
-        ParameterSet parameters = moduleParameters.get(moduleClass);
-        if (parameters == null) {
-            MZmineModule module = MZmineModules.getModuleInstance(moduleClass);
-            Class<? extends ParameterSet> parameterSetClass = module
-                    .getParameterSetClass();
-            try {
-                parameters = parameterSetClass.newInstance();
-                moduleParameters.put(moduleClass, parameters);
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        return parameters;
-    }
-
-    public static void setModuleParameters(
-            Class<? extends MZmineModule> moduleClass,
-            ParameterSet parameters) {
-        assert moduleClass != null;
-        assert parameters != null;
-        MZmineModule moduleInstance = MZmineModules
-                .getModuleInstance(moduleClass);
-        Class<? extends ParameterSet> parametersClass = moduleInstance
-                .getParameterSetClass();
-        if (!parametersClass.isInstance(parameters)) {
-            throw new IllegalArgumentException(
-                    "Given parameter set is an instance of "
-                            + parameters.getClass() + " instead of "
-                            + parametersClass);
-        }
-        moduleParameters.put(moduleClass, parameters);
-
-    }
-
     public NumberFormat getIntensityFormat() {
         return DecimalFormat.getNumberInstance();
         // return
@@ -154,9 +118,9 @@ public class MZmineConfiguration {
 
                 Element moduleElement = (Element) nodes.item(0);
 
-                ParameterSet moduleParameters = getModuleParameters(
+                /*ParameterSet moduleParameters = getModuleParameters(
                         module.getClass());
-                moduleParameters.loadValuesFromXML(moduleElement);
+                moduleParameters.loadValuesFromXML(moduleElement);*/
             }
 
             logger.info("Loaded configuration from file " + file);
@@ -195,9 +159,9 @@ public class MZmineConfiguration {
                         .createElement("parameters");
                 moduleElement.appendChild(paramElement);
 
-                ParameterSet moduleParameters = getModuleParameters(
+              /*  ParameterSet moduleParameters = getModuleParameters(
                         module.getClass());
-                moduleParameters.saveValuesToXML(paramElement);
+                moduleParameters.saveValuesToXML(paramElement);*/
 
             }
 

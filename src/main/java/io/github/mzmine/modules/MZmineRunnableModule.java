@@ -25,7 +25,6 @@ import javax.annotation.Nonnull;
 
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineProject;
-import io.github.mzmine.util.ExitCode;
 import javafx.concurrent.Task;
 
 /**
@@ -60,13 +59,8 @@ public interface MZmineRunnableModule extends MZmineModule {
      * @param tasks
      *            A collection where the module should add its newly created
      *            Tasks, if it creates any.
-     * @return Exit code of the operation. ExitCode.OK means the module was
-     *         started properly, however it does not guarantee that the Tasks
-     *         will finish without error. ExitCode.ERROR means there was a
-     *         problem starting the module.
      */
-    @Nonnull
-    public ExitCode runModule(@Nonnull MZmineProject project,
+    public void runModule(@Nonnull MZmineProject project,
             @Nonnull ParameterSet parameters, @Nonnull Collection<Task<?>> tasks);
 
     /**

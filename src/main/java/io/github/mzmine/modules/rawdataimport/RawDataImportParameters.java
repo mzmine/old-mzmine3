@@ -19,16 +19,11 @@
 
 package io.github.mzmine.modules.rawdataimport;
 
-import java.io.File;
-import java.util.List;
-
-import io.github.mzmine.parameters.Parameter;
-import io.github.mzmine.parameters.SimpleParameterSet;
-import io.github.mzmine.util.ExitCode;
-import javafx.stage.FileChooser;
+import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.parameters.parametertypes.StringParameter;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-public class RawDataImportParameters extends SimpleParameterSet {
+public class RawDataImportParameters extends ParameterSet {
 
     private static final ExtensionFilter filters[] = new ExtensionFilter[] {
             new ExtensionFilter("All raw data files", "*.csv", "*.cdf", "*.nc",
@@ -42,26 +37,17 @@ public class RawDataImportParameters extends SimpleParameterSet {
             new ExtensionFilter("XCalibur RAW files", "*.raw"),
             new ExtensionFilter("XML files", "*.xml") };
 
-    public static final FileNamesParameter fileNames = new FileNamesParameter();
+    public static final StringParameter param1 = new StringParameter("asda",
+            "asdasdasa");
+    
+    public static final StringParameter param2 = new StringParameter("asda2afsa",
+            "asdasdasa asdasd");
+    
+    public static final StringParameter param3 = new StringParameter("asda3a sdas",
+            "asdasdasa asd as");
 
     public RawDataImportParameters() {
-        super(new Parameter[] { fileNames });
-    }
-
-    public ExitCode showSetupDialog() {
-
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select raw data files to import");
-        fileChooser.getExtensionFilters().addAll(filters);
-
-        List<File> selectedFiles = fileChooser.showOpenMultipleDialog(null);
-
-        if ((selectedFiles == null) || (selectedFiles.isEmpty()))
-            return ExitCode.CANCEL;
-
-        getParameter(fileNames).setValue(selectedFiles);
-
-        return ExitCode.OK;
+        parameters.addAll(param1, param2, param3);
     }
 
 }

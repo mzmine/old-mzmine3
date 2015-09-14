@@ -19,64 +19,22 @@
 
 package io.github.mzmine.modules.visualization.chromatogram;
 
-import java.util.List;
-
 import org.controlsfx.control.PropertySheet;
-import org.controlsfx.property.editor.DefaultPropertyEditorFactory;
-import org.controlsfx.property.editor.Editors;
-import org.controlsfx.property.editor.PropertyEditor;
 
-import io.github.mzmine.parameters.parametertypes.ComboParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.util.Callback;
 
 public class TICVisualizerParameters extends PropertySheet {
 
     /**
-     * The data file.
+     * Windows size and position
      */
-    public final PropertySheet.Item dataFiles = new StringParameter("aa","bbb", "ccc");
-    // public final PropertySheet.Item dataFiles = new RawDataFilesParameter();
-
-    /**
-     * Scans (used to be RT range).
-     */
-    /*public final PropertySheet.Item scanSelection = new ScanSelectionParameter(
-            new ScanSelection(1));*/
-
-    /**
-     * Type of plot.
-     */
-    /*public final PropertySheet.Item plotType = new ComboParameter<TICPlotType>(
-            "Plot type",
-            "Type of Y value calculation (TIC = sum, base peak = max)",
-            TICPlotType.values());*/
-
-    /**
-     * m/z range.
-     */
-   // public static final PropertySheet.Item mzRange = new MZRangeParameter();
+    private final StringParameter param1 = new StringParameter("aaa", "bbb");
 
     /**
      * Create the parameter set.
      */
     public TICVisualizerParameters() {
-        getItems().addAll(dataFiles);
-        
-        SimpleObjectProperty<Callback<PropertySheet.Item, PropertyEditor<?>>> propertyEditorFactory = new SimpleObjectProperty<>(this, "propertyEditor", new DefaultPropertyEditorFactory());
-
-        setPropertyEditorFactory(new Callback<PropertySheet.Item, PropertyEditor<?>>() {
-            @Override
-            public PropertyEditor<?> call(PropertySheet.Item param) {
-                if(param.getValue() instanceof List) {
-                    return Editors.createChoiceEditor(param, (List) param.getValue());
-                }
-
-                return propertyEditorFactory.get().call(param);
-            }
-        });
-        
+        getItems().add(param1);
     }
 
 }

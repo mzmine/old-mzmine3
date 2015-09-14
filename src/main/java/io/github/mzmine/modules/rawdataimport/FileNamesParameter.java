@@ -51,7 +51,7 @@ public class FileNamesParameter implements Parameter<List<File>> {
     }
 
     @Override
-    public FileNamesParameter cloneParameter() {
+    public FileNamesParameter clone() {
         FileNamesParameter copy = new FileNamesParameter();
         copy.setValue(this.getValue());
         return copy;
@@ -87,6 +87,30 @@ public class FileNamesParameter implements Parameter<List<File>> {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public Class<?> getType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getCategory() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getDescription() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void setValue(Object newValue) {
+        // TODO Auto-generated method stub
+        
     }
 
 }

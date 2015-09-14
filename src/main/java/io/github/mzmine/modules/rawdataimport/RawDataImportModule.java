@@ -21,6 +21,7 @@ package io.github.mzmine.modules.rawdataimport;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -36,7 +37,6 @@ import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.taskcontrol.MSDKTask;
-import io.github.mzmine.util.ExitCode;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
@@ -63,13 +63,12 @@ public class RawDataImportModule implements MZmineProcessingModule {
     }
 
     @Override
-    @Nonnull
-    public ExitCode runModule(@Nonnull MZmineProject project,
+    public void runModule(@Nonnull MZmineProject project,
             @Nonnull ParameterSet parameters,
             @Nonnull Collection<Task<?>> tasks) {
 
-        List<File> fileNames = parameters
-                .getParameter(RawDataImportParameters.fileNames).getValue();
+        List<File> fileNames = Collections.emptyList(); 
+        // parameters        .getParameter(RawDataImportParameters.fileNames).getValue();
 
         for (File fileName : fileNames) {
 
@@ -78,7 +77,7 @@ public class RawDataImportModule implements MZmineProcessingModule {
                 // "
                 // + fileName);
                 logger.warning("Cannot read file " + fileName);
-                return ExitCode.ERROR;
+                return;
             }
 
             DataPointStore dataStore;
@@ -106,23 +105,22 @@ public class RawDataImportModule implements MZmineProcessingModule {
             if (newTask == null) {
                 logger.warning(
                         "Cannot determine file type of file " + fileName);
-                return ExitCode.ERROR;
+                return ;
             }
 
             tasks.add(newTask);
         }
 
-        return ExitCode.OK;
     }
 
     @Override
     public @Nonnull MZmineModuleCategory getModuleCategory() {
         return MZmineModuleCategory.RAWDATA;
     }
-
-    @Override
-    public @Nonnull Class<? extends ParameterSet> getParameterSetClass() {
-        return RawDataImportParameters.class;
+    
+    private RawDataImportParameters params = new RawDataImportParameters();
+    
+    public @Nonnull ParameterSet getParameters() {
+        return params;
     }
-
 }

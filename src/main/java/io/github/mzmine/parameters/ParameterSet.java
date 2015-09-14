@@ -20,40 +20,70 @@
 package io.github.mzmine.parameters;
 
 import java.util.Collection;
+import java.util.Optional;
+import java.util.logging.Logger;
 
-import javafx.stage.Stage;
-
+import org.controlsfx.control.PropertySheet;
 import org.w3c.dom.Element;
 
-import io.github.mzmine.util.ExitCode;
+import io.github.mzmine.main.MZmineCore;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 
 /**
- * This class represents a general parameter set of a module. Typical module
- * will use a SimpleParameterSet instance.
- * 
- * @param <T>
+ * Simple storage for the parameters. A typical MZmine module will inherit this
+ * class and define the parameters for the constructor.
  */
-public interface ParameterSet {
+public class ParameterSet implements Cloneable {
 
-    public Parameter[] getParameters();
+    private static Logger logger = Logger.getLogger(MZmineCore.class.getName());
 
-    public <T extends Parameter> T getParameter(T parameter);
+    private static final String parameterElement = "parameter";
+    private static final String nameAttribute = "name";
 
-    public void loadValuesFromXML(Element element);
+    protected final ObservableList<PropertySheet.Item> parameters = FXCollections.observableArrayList();
 
-    public void saveValuesToXML(Element element);
 
-    public boolean checkUserParameterValues(Collection<String> errorMessages);
+    public void loadValuesFromXML(Element xmlElement) {
+        
+    }
 
-    public boolean checkAllParameterValues(Collection<String> errorMessages);
-
-    public ParameterSet cloneParameterSet();
+    public void saveValuesToXML(Element xmlElement) {
+        
+    }
 
     /**
      * Represent method's parameters and their values in human-readable format
      */
-    public String toString();
+    public String toString() {
 
-    public ExitCode showSetupDialog();
+                return super.toString();
+    }
+
+    /**
+     * Make a deep copy
+     */
+    public ParameterSet clone() {
+        return this;
+    }
+
+    public ObservableList<PropertySheet.Item> getParameters() {
+        return parameters;
+        
+    }
+    
+    public ButtonType showSetupDialog() {
+        ParameterSetupDialog dialog = new ParameterSetupDialog(this);
+        Optional<ButtonType> result = dialog.showAndWait();
+        return result.get();
+    }
+
+
+    public boolean checkParameterValues(Collection<String> errorMessages) {
+        return true;
+    }
 
 }

@@ -19,21 +19,99 @@
 
 package io.github.mzmine.parameters.parametertypes;
 
-import java.util.Optional;
+import java.util.Collection;
 
-import javax.annotation.Nonnull;
+import org.w3c.dom.Element;
 
-import org.controlsfx.control.spreadsheet.SpreadsheetCellEditor.TextAreaEditor;
-import org.controlsfx.property.editor.Editors;
-import org.controlsfx.property.editor.PropertyEditor;
+import io.github.mzmine.parameters.Parameter;
 
-import com.sun.activation.viewers.TextEditor;
+public class StringParameter implements Parameter<String> {
 
-public class StringParameter extends AbstractParameter {
+    private String name, description, value;
 
-    public StringParameter(@Nonnull String name, @Nonnull String category,
-            @Nonnull String description) {
-        super(name, category, description, String.class);
+    public StringParameter(String name, String description) {
+        this(name, description, null);
     }
+
+    public StringParameter(String name, String description,
+            String defaultValue) {
+        this.name = name;
+        this.description = description;
+        this.value = defaultValue;
+    }
+
+    /**
+     * @see net.sf.mzmine.data.Parameter#getName()
+     */
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @see net.sf.mzmine.data.Parameter#getDescription()
+     */
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    @Override
+    public void setValue(Object value) {
+        this.value = (String) value;
+    }
+
+    @Override
+    public StringParameter clone() {
+        StringParameter copy = new StringParameter(name, description);
+        copy.setValue(this.getValue());
+        return copy;
+    }
+
+    @Override
+    public boolean isEditable() {
+        return true;
+    }
+    
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    @Override
+    public void loadValueFromXML(Element xmlElement) {
+        value = xmlElement.getTextContent();
+    }
+
+    @Override
+    public void saveValueToXML(Element xmlElement) {
+        if (value == null)
+            return;
+        xmlElement.setTextContent(value);
+    }
+
+    @Override
+    public boolean checkValue(Collection<String> errorMessages) {
+        if ((value == null) || (value.trim().length() == 0)) {
+            errorMessages.add(name + " is not set properly");
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Class<?> getType() {
+        return String.class;
+    }
+
+    @Override
+    public String getCategory() {
+        return "categ";
+    }
+
 
 }

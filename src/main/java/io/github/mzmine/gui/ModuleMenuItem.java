@@ -23,32 +23,71 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.main.MZmineModules;
 import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineProject;
-import io.github.mzmine.util.ExitCode;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.MenuItem;
 import javafx.concurrent.Task;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.MenuItem;
 
 /**
  * 
  */
-public final class ModuleMenuItem extends MenuItem
-        implements EventHandler<ActionEvent> {
+public final class ModuleMenuItem extends MenuItem {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    private StringProperty moduleClass = new SimpleStringProperty();
+    private final StringProperty moduleClass = new SimpleStringProperty();
 
     public ModuleMenuItem() {
-        setOnAction(this);
+        setOnAction(event -> {
+            logger.info("Menu item activated: "  +event);
+            Class<? extends MZmineModule> moduleJavaClass;
+            try {
+                moduleJavaClass = (Class<? extends MZmineModule>) Class
+                        .forName(moduleClass.get());
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                MZmineGUI.displayMessage(
+                        "Cannot find module class " + moduleClass.get());
+                return;
+            }
+
+            MZmineModule module = MZmineModules
+                    .getModuleInstance(moduleJavaClass);
+
+            if (module == null) {
+                MZmineGUI.displayMessage(
+                        "Cannot find module of class " + moduleClass.get());
+                return;
+            }
+
+            if (!(module instanceof MZmineRunnableModule)) {
+                MZmineGUI.displayMessage("Cannot run module " + module.getName()
+                        + ", because it does not implement the MZmineRunnableModule interface");
+                return;
+            }
+
+            MZmineRunnableModule runnableModule = (MZmineRunnableModule) module;
+            ParameterSet moduleParameters = runnableModule.getParameters();
+
+            System.out.println(moduleParameters);
+            logger.info("Setting parameters for module " + module.getName());
+            ButtonType exitCode = moduleParameters.showSetupDialog();
+            if (exitCode == ButtonType.OK) {
+                ParameterSet parametersCopy = moduleParameters.clone();
+                logger.finest("Starting module " + module.getName()
+                        + " with parameters " + parametersCopy);
+                List<Task<?>> tasks = new ArrayList<>();
+                MZmineProject project = MZmineGUI.getCurrentProject();
+                runnableModule.runModule(project, parametersCopy, tasks);
+                MZmineGUI.submitTasks(tasks);
+            }
+        });
     }
 
     public String getModuleClass() {
@@ -61,54 +100,6 @@ public final class ModuleMenuItem extends MenuItem
 
     public StringProperty moduleClassProperty() {
         return moduleClass;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void handle(ActionEvent event) {
-
-        Class<? extends MZmineModule> moduleJavaClass;
-        try {
-            moduleJavaClass = (Class<? extends MZmineModule>) Class
-                    .forName(moduleClass.get());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            MZmineGUI.displayMessage(
-                    "Cannot find module class " + moduleClass.get());
-            return;
-        }
-
-        MZmineModule module = MZmineModules.getModuleInstance(moduleJavaClass);
-
-        if (module == null) {
-            MZmineGUI.displayMessage(
-                    "Cannot instantiate module of class " + moduleClass.get());
-            return;
-        }
-
-        if (!(module instanceof MZmineRunnableModule)) {
-            MZmineGUI.displayMessage("Cannot run module " + module.getName()
-                    + ", because it does not implement the MZmineRunnableModule interface");
-            return;
-        }
-
-        MZmineRunnableModule runnableModule = (MZmineRunnableModule) module;
-        ParameterSet moduleParameters = MZmineCore.getConfiguration()
-                .getModuleParameters(moduleJavaClass);
-
-        logger.finest("Setting parameters for module " + module.getName());
-        ExitCode exitCode = moduleParameters.showSetupDialog();
-        if (exitCode == ExitCode.OK) {
-            ParameterSet parametersCopy = moduleParameters.cloneParameterSet();
-            logger.finest("Starting module " + module.getName()
-                    + " with parameters " + parametersCopy);
-            List<Task<?>> tasks = new ArrayList<>();
-            MZmineProject project = MZmineGUI.getCurrentProject();
-            runnableModule.runModule(project, parametersCopy, tasks);
-            MZmineGUI.submitTasks(tasks);
-        }
-        return;
-
     }
 
 }
