@@ -192,9 +192,9 @@
 		<Menu text="Settings" />
 		<Menu text="Help">
 			<items>
-				<MenuItem text="Tutorials" />
-				<MenuItem text="Support" />
-				<MenuItem text="Report Problem" />
+				<MenuItem text="Tutorials" onAction="#openLink" />
+				<MenuItem text="Support" onAction="#openLink" />
+				<MenuItem text="Report Problem" onAction="#openLink" />
 				<SeparatorMenuItem />
 				<MenuItem text="Check for Updates" />
 				<SeparatorMenuItem />

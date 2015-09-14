@@ -19,10 +19,15 @@
 
 package io.github.mzmine.gui;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.MenuItem;
 
 /**
  * The controller class for conf/mainmenu.fxml
@@ -35,5 +40,44 @@ public class MainMenuController {
     @FXML
     protected void exitApplication(ActionEvent event) {
         MZmineGUI.requestQuit();
+    }
+
+    @FXML
+    protected void openLink(ActionEvent event) {
+        String url = "";
+
+        // Link for menu item
+        MenuItem item = (MenuItem) event.getSource();
+        switch (item.getText()) {
+        case "Tutorials":
+            url = "http://mzmine.github.io/documentation.html";
+            break;
+        case "Support":
+            url = "http://mzmine.github.io/support.html";
+            break;
+        case "Report Problem":
+            url = "https://github.com/mzmine/mzmine3/issues";
+            break;
+        }
+
+        // Open link in browser
+        if (Desktop.isDesktopSupported()) {
+            Desktop desktop = Desktop.getDesktop();
+            try {
+                desktop.browse(new URI(url));
+            } catch (IOException | URISyntaxException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } else {
+            Runtime runtime = Runtime.getRuntime();
+            try {
+                runtime.exec("xdg-open " + url);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
     }
 }
