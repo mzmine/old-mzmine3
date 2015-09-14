@@ -24,13 +24,13 @@ import javax.annotation.Nonnull;
 public interface FeatureTable {
 
     /**
-     * @return Short descriptive name for the peak list
+     * @return Short descriptive name for the feature table
      */
     @Nonnull
     String getName();
 
     /**
-     * Change the name of this peak list
+     * Change the name of this feature table
      */
     void setName(@Nonnull String name);
 
@@ -41,12 +41,12 @@ public interface FeatureTable {
     List<FeatureTableColumn<?>> getColumns();
 
     /**
-     * Add a new column to the peak list
+     * Add a new column to the feature table
      */
     void addColumn(@Nonnull FeatureTableColumn<?> col);
 
     /**
-     * Removes a column from this peak list
+     * Removes a column from this feature table
      * 
      */
     void removeColumn(@Nonnull FeatureTableColumn<?> col);
@@ -58,24 +58,24 @@ public interface FeatureTable {
     List<FeatureTableRow> getRows();
 
     /**
-     * Add a new row to the peak list
+     * Add a new row to the feature table
      */
     void addRow(@Nonnull FeatureTableRow row);
 
     /**
-     * Removes a row from this peak list
+     * Removes a row from this feature table
      * 
      */
     void removeRow(@Nonnull FeatureTableRow row);
 
     /**
-     * Shortcut to return an immutable list of samples found in this peak list.
+     * Shortcut to return an immutable list of samples found in this feature table
      */
     @Nonnull
     List<Sample> getSamples();
 
     /**
-     * Remove all data associated to this peak list from the disk.
+     * Remove all data associated to this feature table from the disk
      */
     void dispose();
 

@@ -67,8 +67,8 @@ class ShutDownHook implements Runnable {
             for (RawDataFile dataFile : currentProject.getRawDataFiles()) {
                 dataFile.dispose();
             }
-            for (FeatureTable peakList : currentProject.getPeakLists()) {
-                peakList.dispose();
+            for (FeatureTable featureTable : currentProject.getFeatureTables()) {
+                featureTable.dispose();
             }
         }
 

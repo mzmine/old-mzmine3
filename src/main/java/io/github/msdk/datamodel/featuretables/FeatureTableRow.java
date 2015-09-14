@@ -25,11 +25,11 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 public interface FeatureTableRow {
 
     /**
-     * Returns the peak list where this peak list row belongs. Each peak list
-     * row is assigned to exactly one peak list.
+     * Returns the feature table where this feature table row belongs. Each
+     * feature table row is assigned to exactly one feature table.
      */
     @Nonnull
-    FeatureTable getPeakList();
+    FeatureTable getFeatureTable();
 
     /**
      * Shortcut to return the ID column value of this row

@@ -52,7 +52,7 @@ public class MZmineProject {
 
     private final TreeItem<RawDataTreeItem> rawDataRootItem;
 
-    private final List<FeatureTable> peakLists = new ArrayList<>();
+    private final List<FeatureTable> featureTables = new ArrayList<>();
 
     public MZmineProject() {
         rawDataRootItem = new TreeItem<>(new RawDataTreeItem());
@@ -78,8 +78,8 @@ public class MZmineProject {
     @Nonnull
     public List<Sample> getSamples() {
         final ArrayList<Sample> allSamples = new ArrayList<>();
-        synchronized (peakLists) {
-            for (FeatureTable peakList : peakLists) {
+        synchronized (featureTables) {
+            for (FeatureTable peakList : featureTables) {
                 for (Sample s : peakList.getSamples()) {
                     if (!allSamples.contains(s))
                         allSamples.add(s);
@@ -117,25 +117,25 @@ public class MZmineProject {
         return ImmutableList.copyOf(dataFiles);
     }
 
-    public void addFeatureTable(FeatureTable peakList) {
-        synchronized (peakLists) {
-            peakLists.add(peakList);
+    public void addFeatureTable(FeatureTable featureTable) {
+        synchronized (featureTables) {
+            featureTables.add(featureTable);
         }
     }
 
-    public void removePeakList(FeatureTable peakList) {
-        synchronized (peakLists) {
-            peakLists.remove(peakList);
+    public void removePeakList(FeatureTable featureTable) {
+        synchronized (featureTables) {
+            featureTables.remove(featureTable);
         }
     }
 
     @SuppressWarnings("null")
 
     @Nonnull
-    public List<FeatureTable> getPeakLists() {
+    public List<FeatureTable> getFeatureTables() {
         final List<FeatureTable> snapShot;
-        synchronized (peakLists) {
-            snapShot = ImmutableList.copyOf(peakLists);
+        synchronized (featureTables) {
+            snapShot = ImmutableList.copyOf(featureTables);
         }
         return snapShot;
     }

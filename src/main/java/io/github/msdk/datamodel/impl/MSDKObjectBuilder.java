@@ -48,13 +48,13 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 public class MSDKObjectBuilder {
 
     /**
-     * Common columns for peak lists
+     * Common columns for feature tables
      */
-    private static final @Nonnull SimpleFeatureTableColumn<Integer> IdPeakListColumn = new SimpleFeatureTableColumn<Integer>(
+    private static final @Nonnull SimpleFeatureTableColumn<Integer> IdFeatureTableColumn = new SimpleFeatureTableColumn<Integer>(
             "Id", Integer.class, null);
-    private static final @Nonnull SimpleFeatureTableColumn<Double> MzPeakListColumn = new SimpleFeatureTableColumn<Double>(
+    private static final @Nonnull SimpleFeatureTableColumn<Double> MzFeatureTableColumn = new SimpleFeatureTableColumn<Double>(
             "m/z", Double.class, null);
-    private static final @Nonnull SimpleFeatureTableColumn<ChromatographyInfo> ChromatographyInfoPeakListColumn = new SimpleFeatureTableColumn<ChromatographyInfo>(
+    private static final @Nonnull SimpleFeatureTableColumn<ChromatographyInfo> ChromatographyInfoFeatureTableColumn = new SimpleFeatureTableColumn<ChromatographyInfo>(
             "Chromatography Info", ChromatographyInfo.class, null);
 
     /**
@@ -201,26 +201,27 @@ public class MSDKObjectBuilder {
     }
 
     /**
-     * Creates a new PeakListColumn instance.
+     * Creates a new FeatureTableColumn instance.
      * 
-     * @return new SimplePeakListColumn
+     * @return new SimpleFeatureTableColumn
      */
-    public static @Nonnull <DataType> FeatureTableColumn<DataType> getPeakListColumn(
+    public static @Nonnull <DataType> FeatureTableColumn<DataType> getFeatureTableColumn(
             @Nonnull String name, @Nonnull Class<DataType> dataTypeClass,
             @Nullable Sample sample) {
-        return new SimpleFeatureTableColumn<DataType>(name, dataTypeClass, sample);
+        return new SimpleFeatureTableColumn<DataType>(name, dataTypeClass,
+                sample);
     }
 
-    public static @Nonnull FeatureTableColumn<Double> getMzPeakListColumn() {
-        return MzPeakListColumn;
+    public static @Nonnull FeatureTableColumn<Double> getMzFeatureTableColumn() {
+        return MzFeatureTableColumn;
     }
 
-    public static @Nonnull FeatureTableColumn<ChromatographyInfo> getChromatographyInfoPeakListColumn() {
-        return ChromatographyInfoPeakListColumn;
+    public static @Nonnull FeatureTableColumn<ChromatographyInfo> getChromatographyInfoFeatureTableColumn() {
+        return ChromatographyInfoFeatureTableColumn;
     }
 
-    public static @Nonnull FeatureTableColumn<Integer> getIdPeakListColumn() {
-        return IdPeakListColumn;
+    public static @Nonnull FeatureTableColumn<Integer> getIdFeatureTableColumn() {
+        return IdFeatureTableColumn;
     }
 
     /**

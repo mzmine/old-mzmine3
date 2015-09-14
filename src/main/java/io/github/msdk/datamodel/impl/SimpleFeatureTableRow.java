@@ -26,24 +26,24 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
- * Implementation of PeakListRow
+ * Implementation of FeatureTableRow
  */
 class SimpleFeatureTableRow implements FeatureTableRow {
 
     private int rowId;
-    private @Nonnull FeatureTable peaklist;
+    private @Nonnull FeatureTable featureTable;
     private @Nonnull Hashtable<FeatureTableColumn<?>, Object> rowData;
 
-    SimpleFeatureTableRow(@Nonnull FeatureTable peaklist, int rowId) {
-        Preconditions.checkNotNull(peaklist);
-        this.peaklist = peaklist;
+    SimpleFeatureTableRow(@Nonnull FeatureTable featureTable, int rowId) {
+        Preconditions.checkNotNull(featureTable);
+        this.featureTable = featureTable;
         this.rowId = rowId;
         rowData = new Hashtable<>();
     }
 
     @Override
-    public @Nonnull FeatureTable getPeakList() {
-        return peaklist;
+    public @Nonnull FeatureTable getFeatureTable() {
+        return featureTable;
     }
 
     @Override
@@ -53,12 +53,12 @@ class SimpleFeatureTableRow implements FeatureTableRow {
 
     @Override
     public Double getMz() {
-        return getData(MSDKObjectBuilder.getMzPeakListColumn());
+        return getData(MSDKObjectBuilder.getMzFeatureTableColumn());
     }
 
     @Override
     public ChromatographyInfo getChromatographyInfo() {
-        return getData(MSDKObjectBuilder.getChromatographyInfoPeakListColumn());
+        return getData(MSDKObjectBuilder.getChromatographyInfoFeatureTableColumn());
     }
 
     @Override

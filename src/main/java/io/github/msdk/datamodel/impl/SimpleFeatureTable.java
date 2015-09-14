@@ -30,22 +30,23 @@ import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 
 /**
- * Implementation of the PeakList interface.
+ * Implementation of the FeatureTable interface.
  */
 class SimpleFeatureTable implements FeatureTable {
 
     private @Nonnull String name;
     private @Nonnull DataPointStore dataPointStore;
-    private @Nullable ArrayList<FeatureTableRow> peakListRows;
-    private @Nullable ArrayList<FeatureTableColumn<?>> peakListColumns;
+    private @Nullable ArrayList<FeatureTableRow> featureTableRows;
+    private @Nullable ArrayList<FeatureTableColumn<?>> featureTableColumns;
 
-    SimpleFeatureTable(@Nonnull String name, @Nonnull DataPointStore dataPointStore) {
+    SimpleFeatureTable(@Nonnull String name,
+            @Nonnull DataPointStore dataPointStore) {
         Preconditions.checkNotNull(name);
         Preconditions.checkNotNull(dataPointStore);
         this.name = name;
         this.dataPointStore = dataPointStore;
-        peakListRows = new ArrayList<FeatureTableRow>();
-        peakListColumns = new ArrayList<FeatureTableColumn<?>>();
+        featureTableRows = new ArrayList<FeatureTableRow>();
+        featureTableColumns = new ArrayList<FeatureTableColumn<?>>();
     }
 
     @Override
@@ -62,47 +63,48 @@ class SimpleFeatureTable implements FeatureTable {
     @SuppressWarnings("null")
     @Override
     public @Nonnull List<FeatureTableRow> getRows() {
-        List<FeatureTableRow> peakListRowCopy = ImmutableList.copyOf(peakListRows);
-        return peakListRowCopy;
+        List<FeatureTableRow> featureTableRowCopy = ImmutableList
+                .copyOf(featureTableRows);
+        return featureTableRowCopy;
     }
 
     @Override
     public void addRow(@Nonnull FeatureTableRow row) {
-        Preconditions.checkNotNull( row);
-        synchronized (peakListRows) {
-            peakListRows.add(row);
+        Preconditions.checkNotNull(row);
+        synchronized (featureTableRows) {
+            featureTableRows.add(row);
         }
     }
 
     @Override
     public void removeRow(@Nonnull FeatureTableRow row) {
-        Preconditions.checkNotNull( row);
-        synchronized (peakListRows) {
-            peakListRows.remove(row);
+        Preconditions.checkNotNull(row);
+        synchronized (featureTableRows) {
+            featureTableRows.remove(row);
         }
     }
 
     @SuppressWarnings("null")
     @Override
     public @Nonnull List<FeatureTableColumn<?>> getColumns() {
-        List<FeatureTableColumn<?>> peakListColumnsCopy = ImmutableList
-                .copyOf(peakListColumns);
-        return peakListColumnsCopy;
+        List<FeatureTableColumn<?>> featureTableColumnsCopy = ImmutableList
+                .copyOf(featureTableColumns);
+        return featureTableColumnsCopy;
     }
 
     @Override
     public void addColumn(@Nonnull FeatureTableColumn<?> col) {
         Preconditions.checkNotNull(col);
-        synchronized (peakListColumns) {
-            peakListColumns.add(col);
+        synchronized (featureTableColumns) {
+            featureTableColumns.add(col);
         }
     }
 
     @Override
     public void removeColumn(@Nonnull FeatureTableColumn<?> col) {
         Preconditions.checkNotNull(col);
-        synchronized (peakListColumns) {
-            peakListColumns.remove(col);
+        synchronized (featureTableColumns) {
+            featureTableColumns.remove(col);
         }
     }
 
@@ -110,8 +112,8 @@ class SimpleFeatureTable implements FeatureTable {
     @Override
     public @Nonnull List<Sample> getSamples() {
         ArrayList<Sample> sampleList = new ArrayList<Sample>();
-        synchronized (peakListColumns) {
-            for (FeatureTableColumn<?> col : peakListColumns) {
+        synchronized (featureTableColumns) {
+            for (FeatureTableColumn<?> col : featureTableColumns) {
                 Sample s = col.getSample();
                 if (s != null)
                     sampleList.add(s);

@@ -25,12 +25,12 @@ import javax.annotation.Nullable;
 public interface FeatureTableColumn<DataType> {
 
     /**
-     * @return Short descriptive name for the peak list column
+     * @return Short descriptive name for the feature table column
      */
     @Nonnull String getName();
 
     /**
-     * Change the name of this peak list column
+     * Change the name of this feature table column
      */
     void setName(@Nonnull String name);
 

@@ -23,7 +23,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.Sample;
 
 /**
- * Implementation of PeakListColumn
+ * Implementation of FeatureTableColumn
  */
 class SimpleFeatureTableColumn<DataType> implements FeatureTableColumn<DataType> {
 
