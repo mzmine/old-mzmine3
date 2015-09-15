@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 3 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -17,8 +17,9 @@
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.parameters.parametertypes;
+package io.github.mzmine.gui.preferences;
 
+import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -26,31 +27,27 @@ import org.controlsfx.property.editor.PropertyEditor;
 import org.w3c.dom.Element;
 
 import io.github.mzmine.parameters.Parameter;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 
-public class StringParameter implements Parameter<String> {
+/**
+ * Simple Parameter implementation
+ * 
+ * 
+ */
+public class NumberFormatParameter implements Parameter<DecimalFormat> {
 
-    private final String name, description, category;
-    private final EventHandler<ActionEvent> autoSetAction;
-    private String value;
+    private String name, description;
+    private boolean showExponentOption;
+    private DecimalFormat value;
 
-    public StringParameter(String name, String description) {
-        this(name, description, null, null, null);
-    }
+    public NumberFormatParameter(String name, String description,
+            boolean showExponentOption, DecimalFormat defaultValue) {
 
-    public StringParameter(String name, String description, String category,
-            String defaultValue) {
-        this(name, description, category, defaultValue, null);
-    }
+        assert defaultValue != null;
 
-    public StringParameter(String name, String description, String category,
-            String defaultValue, EventHandler<ActionEvent> autoSetAction) {
         this.name = name;
         this.description = description;
-        this.category = category;
+        this.showExponentOption = showExponentOption;
         this.value = defaultValue;
-        this.autoSetAction = autoSetAction;
     }
 
     /**
@@ -70,59 +67,48 @@ public class StringParameter implements Parameter<String> {
     }
 
     @Override
-    public String getCategory() {
-        return category;
-    }
-
-    @Override
-    public Class<?> getType() {
-        return String.class;
-    }
-
-    public String getValue() {
+    public DecimalFormat getValue() {
         return value;
     }
 
     @Override
     public void setValue(Object value) {
-        this.value = (String) value;
+        this.value = (DecimalFormat) value;
     }
 
     @Override
-    public StringParameter clone() {
-        StringParameter copy = new StringParameter(name, description, category,
-                value, autoSetAction);
-        return copy;
+    public NumberFormatParameter clone() {
+        return this;
     }
 
     @Override
     public void loadValueFromXML(Element xmlElement) {
-        value = xmlElement.getTextContent();
+        String newPattern = xmlElement.getTextContent();
+        value.applyPattern(newPattern);
     }
 
     @Override
     public void saveValueToXML(Element xmlElement) {
-        if (value == null)
-            return;
-        xmlElement.setTextContent(value);
+        xmlElement.setTextContent(value.toPattern());
     }
 
     @Override
     public boolean checkValue(Collection<String> errorMessages) {
-        if ((value == null) || (value.trim().length() == 0)) {
-            errorMessages.add(name + " is not set properly");
-            return false;
-        }
         return true;
     }
 
     @Override
-    public Optional<Class<? extends PropertyEditor<?>>> getPropertyEditorClass() {
-        return Optional.of(StringEditor.class);
+    public Class<?> getType() {
+        return DecimalFormat.class;
     }
 
-    public EventHandler<ActionEvent> getAutoSetAction() {
-        return autoSetAction;
+    @Override
+    public Optional<Class<? extends PropertyEditor<?>>> getPropertyEditorClass() {
+        return Optional.of(NumberFormatEditor.class);
+    }
+
+    public boolean isShowExponentEnabled() {
+        return showExponentOption;
     }
 
 }

@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
 
-import io.github.mzmine.conf.MZmineConfiguration;
 import io.github.mzmine.project.MZmineProject;
 
 /**

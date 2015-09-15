@@ -76,7 +76,6 @@ public final class ModuleMenuItem extends MenuItem {
             MZmineRunnableModule runnableModule = (MZmineRunnableModule) module;
             ParameterSet moduleParameters = runnableModule.getParameters();
 
-            System.out.println(moduleParameters);
             logger.info("Setting parameters for module " + module.getName());
             ButtonType exitCode = moduleParameters.showSetupDialog();
             if (exitCode == ButtonType.OK) {
@@ -85,6 +84,7 @@ public final class ModuleMenuItem extends MenuItem {
                         + " with parameters " + parametersCopy);
                 List<Task<?>> tasks = new ArrayList<>();
                 MZmineProject project = MZmineGUI.getCurrentProject();
+                logger.info("Starting module " + module.getName());
                 runnableModule.runModule(project, parametersCopy, tasks);
                 MZmineGUI.submitTasks(tasks);
             }

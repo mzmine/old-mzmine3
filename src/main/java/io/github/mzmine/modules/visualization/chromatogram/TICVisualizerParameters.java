@@ -28,7 +28,7 @@ public class TICVisualizerParameters extends PropertySheet {
     /**
      * Windows size and position
      */
-    private final StringParameter param1 = new StringParameter("aaa", "bbb", "ccC");
+    private final StringParameter param1 = new StringParameter("aaa", "bbb");
 
     /**
      * Create the parameter set.

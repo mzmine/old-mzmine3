@@ -20,37 +20,25 @@
 package io.github.mzmine.parameters.parametertypes;
 
 import java.util.Collection;
-import java.util.Optional;
 
-import org.controlsfx.property.editor.PropertyEditor;
 import org.w3c.dom.Element;
 
 import io.github.mzmine.parameters.Parameter;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 
-public class StringParameter implements Parameter<String> {
+public class BooleanParameter implements Parameter<Boolean> {
 
-    private final String name, description, category;
-    private final EventHandler<ActionEvent> autoSetAction;
-    private String value;
+    private final String name, description;
+    private Boolean value;
 
-    public StringParameter(String name, String description) {
-        this(name, description, null, null, null);
+    public BooleanParameter(String name, String description) {
+        this(name, description, null);
     }
 
-    public StringParameter(String name, String description, String category,
-            String defaultValue) {
-        this(name, description, category, defaultValue, null);
-    }
-
-    public StringParameter(String name, String description, String category,
-            String defaultValue, EventHandler<ActionEvent> autoSetAction) {
+    public BooleanParameter(String name, String description,
+            Boolean defaultValue) {
         this.name = name;
         this.description = description;
-        this.category = category;
         this.value = defaultValue;
-        this.autoSetAction = autoSetAction;
     }
 
     /**
@@ -70,59 +58,52 @@ public class StringParameter implements Parameter<String> {
     }
 
     @Override
-    public String getCategory() {
-        return category;
-    }
-
-    @Override
     public Class<?> getType() {
-        return String.class;
+        return Boolean.class;
     }
 
-    public String getValue() {
+    public Boolean getValue() {
         return value;
     }
 
     @Override
     public void setValue(Object value) {
-        this.value = (String) value;
+        this.value = (Boolean) value;
     }
 
     @Override
-    public StringParameter clone() {
-        StringParameter copy = new StringParameter(name, description, category,
-                value, autoSetAction);
+    public BooleanParameter clone() {
+        BooleanParameter copy = new BooleanParameter(name, description, value);
         return copy;
     }
 
     @Override
+    public String toString() {
+        return name;
+    }
+
+    @Override
     public void loadValueFromXML(Element xmlElement) {
-        value = xmlElement.getTextContent();
+        String rangeString = xmlElement.getTextContent();
+        if (rangeString.length() == 0)
+            return;
+        this.value = Boolean.valueOf(rangeString);
     }
 
     @Override
     public void saveValueToXML(Element xmlElement) {
         if (value == null)
             return;
-        xmlElement.setTextContent(value);
+        xmlElement.setTextContent(value.toString());
     }
 
     @Override
     public boolean checkValue(Collection<String> errorMessages) {
-        if ((value == null) || (value.trim().length() == 0)) {
+        if (value == null) {
             errorMessages.add(name + " is not set properly");
             return false;
         }
         return true;
-    }
-
-    @Override
-    public Optional<Class<? extends PropertyEditor<?>>> getPropertyEditorClass() {
-        return Optional.of(StringEditor.class);
-    }
-
-    public EventHandler<ActionEvent> getAutoSetAction() {
-        return autoSetAction;
     }
 
 }

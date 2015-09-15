@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 3 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -17,33 +17,24 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.parameters;
+package io.github.mzmine.gui.preferences;
 
-import java.util.Collection;
-
-import org.controlsfx.control.PropertySheet.Item;
-import org.w3c.dom.Element;
+import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.parameters.parametertypes.StringParameter;
 
 /**
- * Parameter interface, represents parameters or variables used in the project
+ * Proxy server settings
  */
-public interface Parameter<ValueType> extends Item, Cloneable {
+public class ProxySettings extends ParameterSet {
 
-    ValueType getValue();
+    public static final StringParameter proxyAddress = new StringParameter(
+            "Proxy adress", "Internet address of a proxy server");
 
-    void setValue(Object newValue);
+    public static final StringParameter proxyPort = new StringParameter(
+            "Proxy port", "TCP port of proxy server");
 
-    boolean checkValue(Collection<String> errorMessages);
-
-    void loadValueFromXML(Element xmlElement);
-
-    void saveValueToXML(Element xmlElement);
-
-    Parameter<ValueType> clone();
-
-    @Override
-    default String getCategory() {
-        return null;
+    public ProxySettings() {
+        super(proxyAddress, proxyPort);
     }
 
 }

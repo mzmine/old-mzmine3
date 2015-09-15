@@ -21,7 +21,6 @@ package io.github.mzmine.main;
 
 import java.util.logging.Logger;
 
-import io.github.mzmine.conf.MZmineConfiguration;
 import io.github.mzmine.project.MZmineProject;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -37,7 +36,7 @@ class ShutDownHook implements Runnable {
     @Override
     public void run() {
 
-        logger.finest("Running post-shutdown code");
+        logger.info("Running post-shutdown code");
 
         // Cancel all running tasks - this is important because tasks can spawn
         // additional processes (such as ThermoRawDump.exe on Windows) and these

@@ -30,9 +30,8 @@ import io.github.mzmine.util.InetUtils;
  */
 public class NewVersionCheck implements Runnable {
 
-    private static String urlAddress = "http://mzmine.github.io/version.txt";
-    private static String currentVersion = MZmineCore.getMZmineVersion();
-    private String newestVersion;
+    private static final String urlAddress = "http://mzmine.github.io/version.txt";
+    private static final String currentVersion = MZmineCore.getMZmineVersion();
 
     public enum CheckType {
         DESKTOP, MENU
@@ -52,6 +51,7 @@ public class NewVersionCheck implements Runnable {
         }
 
         // Get version from URL
+        String newestVersion;
         try {
             final URL newestVersionURL = new URL(urlAddress);
             newestVersion = InetUtils.retrieveData(newestVersionURL);

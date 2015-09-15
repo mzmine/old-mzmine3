@@ -70,8 +70,6 @@ public class RawDataImportModule implements MZmineProcessingModule {
             @Nonnull ParameterSet parameters,
             @Nonnull Collection<Task<?>> tasks) {
 
-        System.out.println("param values:\n" + parameters.toString());
-
         final List<File> fileNames = parameters
                 .getParameter(RawDataImportParameters.fileNames).getValue();
         final String removePrefix = parameters

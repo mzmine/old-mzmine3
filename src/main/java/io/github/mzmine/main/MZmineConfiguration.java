@@ -17,7 +17,7 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.conf;
+package io.github.mzmine.main;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -44,7 +44,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import io.github.mzmine.main.MZmineModules;
 import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.parameters.ParameterSet;
 
@@ -57,8 +56,6 @@ public class MZmineConfiguration {
             .getLogger(MZmineConfiguration.class.getName());
 
     public static final File CONFIG_FILE = new File("conf/config.xml");
-
-    private static final Map<Class<? extends MZmineModule>, ParameterSet> moduleParameters = new Hashtable<>();
 
     public MZmineConfiguration() {
         // preferences = new MZminePreferences();
