@@ -26,10 +26,10 @@ import com.google.common.collect.ImmutableList;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.RawDataFileType;
 
 /**
  * Implementation of the RawDataFile interface.
@@ -38,14 +38,14 @@ class SimpleRawDataFile implements RawDataFile {
 
     private @Nonnull String rawDataFileName;
     private @Nullable File originalRawDataFile;
-    private @Nonnull RawDataFileType rawDataFileType;
+    private @Nonnull FileType rawDataFileType;
     private @Nonnull ArrayList<MsScan> scans;
     private @Nonnull ArrayList<Chromatogram> chromatograms;
     private @Nonnull DataPointStore dataPointStore;
 
     SimpleRawDataFile(@Nonnull String rawDataFileName,
             @Nullable File originalRawDataFile,
-            @Nonnull RawDataFileType rawDataFileType,
+            @Nonnull FileType rawDataFileType,
             @Nonnull DataPointStore dataPointStore) {
         Preconditions.checkNotNull(rawDataFileType);
         Preconditions.checkNotNull(dataPointStore);
@@ -80,12 +80,12 @@ class SimpleRawDataFile implements RawDataFile {
     }
 
     @Override
-    public @Nonnull RawDataFileType getRawDataFileType() {
+    public @Nonnull FileType getRawDataFileType() {
         return rawDataFileType;
     }
 
     @Override
-    public void setRawDataFileType(@Nonnull RawDataFileType rawDataFileType) {
+    public void setRawDataFileType(@Nonnull FileType rawDataFileType) {
         Preconditions.checkNotNull(rawDataFileType);
         this.rawDataFileType = rawDataFileType;
     }

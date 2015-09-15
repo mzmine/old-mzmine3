@@ -12,12 +12,12 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.rawdata;
+package io.github.msdk.datamodel.files;
 
 /**
  * Enum of supported raw data file formats
  */
-public enum RawDataFileType {
+public enum FileType {
 
     /**
      * mzML format. See Martens L, Chambers M, Sturm M, Kessner D, Levander F,
@@ -84,6 +84,11 @@ public enum RawDataFileType {
      * exported to any format.
      */
     MSDK_INTERNAL,
+
+    /**
+     * mzTab format. Standard format for sharing feature tables.
+     */
+    MZTAB,
 
     /**
      * Unknown or unsupported format.

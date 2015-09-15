@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.files.FileType;
 
 /**
  * Raw data file, typically obtained by loading data from one of the supported
@@ -70,7 +71,7 @@ public interface RawDataFile {
      * @return Raw data file type
      */
     @Nonnull
-    RawDataFileType getRawDataFileType();
+    FileType getRawDataFileType();
 
     /**
      * Sets the file type of this raw data file.
@@ -78,7 +79,7 @@ public interface RawDataFile {
      * @param rawDataFileType
      *          Raw data file type
      */
-    void setRawDataFileType(@Nonnull RawDataFileType rawDataFileType);
+    void setRawDataFileType(@Nonnull FileType rawDataFileType);
     
     /**
      * Returns all MS functions found in this raw data file.

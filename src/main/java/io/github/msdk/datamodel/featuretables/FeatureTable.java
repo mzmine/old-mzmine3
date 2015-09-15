@@ -17,6 +17,7 @@ package io.github.msdk.datamodel.featuretables;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * This data structure is not thread-safe.
@@ -39,6 +40,12 @@ public interface FeatureTable {
      */
     @Nonnull
     List<FeatureTableColumn<?>> getColumns();
+
+    /**
+     * Returns an immutable list of columns
+     */
+    @Nullable
+    FeatureTableColumn<?> getColumn(@Nonnull String columnName, Sample sample);
 
     /**
      * Add a new column to the feature table

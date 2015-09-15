@@ -23,10 +23,10 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import uk.ac.ebi.pride.tools.mzxml_parser.MzXMLFile;
 
 /**
@@ -36,7 +36,7 @@ import uk.ac.ebi.pride.tools.mzxml_parser.MzXMLFile;
 class MzXMLRawDataFile implements RawDataFile {
 
     private final @Nonnull File sourceFile;
-    private final @Nonnull RawDataFileType fileType;
+    private final @Nonnull FileType fileType;
     private @Nullable MzXMLFile parser;
 
     private final @Nonnull List<MsFunction> msFunctions;
@@ -47,7 +47,7 @@ class MzXMLRawDataFile implements RawDataFile {
 
     @SuppressWarnings("null")
     public MzXMLRawDataFile(@Nonnull File sourceFile,
-            @Nonnull RawDataFileType fileType, @Nonnull MzXMLFile parser,
+            @Nonnull FileType fileType, @Nonnull MzXMLFile parser,
             List<MsFunction> msFunctions, List<MsScan> msScans,
             List<Chromatogram> chromatograms) {
         this.sourceFile = sourceFile;
@@ -78,7 +78,7 @@ class MzXMLRawDataFile implements RawDataFile {
 
     @Override
     @Nonnull
-    public RawDataFileType getRawDataFileType() {
+    public FileType getRawDataFileType() {
         return fileType;
     }
 
@@ -123,7 +123,7 @@ class MzXMLRawDataFile implements RawDataFile {
     }
 
     @Override
-    public void setRawDataFileType(@Nonnull RawDataFileType rawDataFileType) {
+    public void setRawDataFileType(@Nonnull FileType rawDataFileType) {
         throw new UnsupportedOperationException();
     }
 

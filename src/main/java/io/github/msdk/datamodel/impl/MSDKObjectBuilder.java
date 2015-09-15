@@ -29,8 +29,12 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.featuretables.ColumnName;
+import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.Sample;
+import io.github.msdk.datamodel.files.FileType;
+import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
@@ -39,7 +43,6 @@ import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
@@ -56,6 +59,8 @@ public class MSDKObjectBuilder {
             "m/z", Double.class, null);
     private static final @Nonnull SimpleFeatureTableColumn<ChromatographyInfo> ChromatographyInfoFeatureTableColumn = new SimpleFeatureTableColumn<ChromatographyInfo>(
             "Chromatography Info", ChromatographyInfo.class, null);
+    private static final @Nonnull SimpleFeatureTableColumn<IonAnnotation> IonAnnotationFeatureTableColumn = new SimpleFeatureTableColumn<IonAnnotation>(
+            "Ion Annotation", IonAnnotation.class, null);
 
     /**
      * The number of MS functions used in a project is typically small, but each
@@ -126,10 +131,16 @@ public class MSDKObjectBuilder {
 
     public static final @Nonnull RawDataFile getRawDataFile(
             @Nonnull String rawDataFileName, @Nullable File originalRawDataFile,
-            @Nonnull RawDataFileType rawDataFileType,
+            @Nonnull FileType rawDataFileType,
             @Nonnull DataPointStore dataPointStore) {
         return new SimpleRawDataFile(rawDataFileName, originalRawDataFile,
                 rawDataFileType, dataPointStore);
+    }
+
+    public static final @Nonnull FeatureTable getFeatureTable(
+            @Nonnull String featureTableName,
+            @Nonnull DataPointStore dataPointStore) {
+        return new SimpleFeatureTable(featureTableName, dataPointStore);
     }
 
     public static final @Nonnull MsScan getMsScan(
@@ -205,11 +216,28 @@ public class MSDKObjectBuilder {
      * 
      * @return new SimpleFeatureTableColumn
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static @Nonnull <DataType> FeatureTableColumn<DataType> getFeatureTableColumn(
+            @Nonnull ColumnName columnName, @Nullable Sample sample) {
+        return new SimpleFeatureTableColumn<DataType>(columnName.getName(),
+                (Class) columnName.getDataTypeClass(), sample);
+    }
+
     public static @Nonnull <DataType> FeatureTableColumn<DataType> getFeatureTableColumn(
             @Nonnull String name, @Nonnull Class<DataType> dataTypeClass,
             @Nullable Sample sample) {
         return new SimpleFeatureTableColumn<DataType>(name, dataTypeClass,
                 sample);
+    }
+
+    /**
+     * Creates a new FeatureTableRow instance.
+     * 
+     * @return new SimpleFeatureTableRow
+     */
+    public static @Nonnull SimpleFeatureTableRow getFeatureTableRow(
+            @Nonnull FeatureTable featureTable, int rowId) {
+        return new SimpleFeatureTableRow(featureTable, rowId);
     }
 
     public static @Nonnull FeatureTableColumn<Double> getMzFeatureTableColumn() {
@@ -222,6 +250,10 @@ public class MSDKObjectBuilder {
 
     public static @Nonnull FeatureTableColumn<Integer> getIdFeatureTableColumn() {
         return IdFeatureTableColumn;
+    }
+
+    public static @Nonnull FeatureTableColumn<IonAnnotation> getIonAnnotationFeatureTableColumn() {
+        return IonAnnotationFeatureTableColumn;
     }
 
     /**
@@ -257,6 +289,29 @@ public class MSDKObjectBuilder {
         IsolationInfo newFunc = new SimpleIsolationInfo(isolationMzRange,
                 ionInjectTime, precursorMz, precursorCharge, activationInfo);
         return newFunc;
+    }
+
+    /**
+     * Creates a new SimpleSample reference.
+     * 
+     * @param sampleName
+     * @return new SimpleSample
+     */
+    public static final @Nonnull SimpleSample getSimpleSample(
+            @Nonnull String sampleName) {
+        SimpleSample newSample = new SimpleSample(sampleName);
+        return newSample;
+    }
+
+    /**
+     * Creates a new SimpleSample reference.
+     * 
+     * @param sampleName
+     * @return new SimpleSample
+     */
+    public static final @Nonnull SimpleIonAnnotation getSimpleIonAnnotation() {
+        SimpleIonAnnotation ionAnnotation = new SimpleIonAnnotation();
+        return ionAnnotation;
     }
 
 }

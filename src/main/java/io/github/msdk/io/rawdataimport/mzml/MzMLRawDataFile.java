@@ -23,15 +23,15 @@ import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 class MzMLRawDataFile implements RawDataFile {
 
-    private static final @Nonnull RawDataFileType fileType = RawDataFileType.MZML;
+    private static final @Nonnull FileType fileType = FileType.MZML;
 
     private final @Nonnull File sourceFile;
     private @Nullable MzMLUnmarshaller parser;
@@ -73,7 +73,7 @@ class MzMLRawDataFile implements RawDataFile {
 
     @Override
     @Nonnull
-    public RawDataFileType getRawDataFileType() {
+    public FileType getRawDataFileType() {
         return fileType;
     }
 
@@ -118,7 +118,7 @@ class MzMLRawDataFile implements RawDataFile {
     }
 
     @Override
-    public void setRawDataFileType(@Nonnull RawDataFileType rawDataFileType) {
+    public void setRawDataFileType(@Nonnull FileType rawDataFileType) {
         throw new UnsupportedOperationException();
     }
 

@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.files.FileType;
 
 /**
  * A writable raw data file.
@@ -39,10 +40,10 @@ public interface WritableRawDataFile extends RawDataFile {
     /**
      * Updates the file type of this raw data file.
      * 
-     * @param RawDataFileType
+     * @param FileType
      *            New file type
      */
-    void setRawDataFileType(@Nonnull RawDataFileType rawDataFileType);
+    void setRawDataFileType(@Nonnull FileType rawDataFileType);
     
     /**
      * Adds a new scan to this file.

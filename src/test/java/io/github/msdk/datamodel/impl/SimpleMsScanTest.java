@@ -27,6 +27,7 @@ import com.google.common.collect.Range;
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
+import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.rawdata.ActivationInfo;
 import io.github.msdk.datamodel.rawdata.ActivationType;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -36,7 +37,6 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
@@ -107,13 +107,13 @@ public class SimpleMsScanTest {
 
         // Change raw data file
         final @Nonnull RawDataFile newRawDataFile = MSDKObjectBuilder
-                .getRawDataFile("Sample B1", null, RawDataFileType.MZML,
+                .getRawDataFile("Sample B1", null, FileType.MZML,
                         dataPointStore);
         msScan1.setRawDataFile(newRawDataFile);
 
         // Verify raw data file
         Assert.assertEquals("Sample B1", msScan1.getRawDataFile().getName());
-        Assert.assertEquals(RawDataFileType.MZML,
+        Assert.assertEquals(FileType.MZML,
                 msScan1.getRawDataFile().getRawDataFileType());
     }
 

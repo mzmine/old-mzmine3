@@ -29,6 +29,7 @@ import com.google.common.collect.Range;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
@@ -40,7 +41,6 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.MsScanType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import io.github.msdk.datamodel.util.MsSpectrumUtil;
 import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionMethod;
 import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
@@ -55,7 +55,7 @@ public class MzXMLFileImportMethod implements MSDKMethod<RawDataFile> {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final @Nonnull File sourceFile;
-    private final @Nonnull RawDataFileType fileType = RawDataFileType.MZXML;
+    private final @Nonnull FileType fileType = FileType.MZXML;
 
     private boolean canceled = false;
 

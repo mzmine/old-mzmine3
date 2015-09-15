@@ -28,16 +28,16 @@ import org.slf4j.LoggerFactory;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.RawDataFileType;
 
 public class WatersRawImportMethod implements MSDKMethod<RawDataFile> {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final @Nonnull File sourceFile;
-    private final @Nonnull RawDataFileType fileType = RawDataFileType.WATERS_RAW;
+    private final @Nonnull FileType fileType = FileType.WATERS_RAW;
     private final @Nonnull DataPointStore dataStore;
 
     private RawDataFile newRawFile;

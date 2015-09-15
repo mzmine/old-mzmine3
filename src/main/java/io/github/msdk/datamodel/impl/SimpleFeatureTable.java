@@ -93,6 +93,22 @@ class SimpleFeatureTable implements FeatureTable {
     }
 
     @Override
+    public FeatureTableColumn<?> getColumn(@Nonnull String columnName,
+            Sample sample) {
+        for (FeatureTableColumn<?> column : featureTableColumns) {
+            if (column.getName().equals(columnName)) {
+                if (sample == null & column.getSample() == null) {
+                    return column;
+                }
+                else if (column.getSample().equals(sample)) {
+                    return column;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
     public void addColumn(@Nonnull FeatureTableColumn<?> col) {
         Preconditions.checkNotNull(col);
         synchronized (featureTableColumns) {
@@ -115,7 +131,7 @@ class SimpleFeatureTable implements FeatureTable {
         synchronized (featureTableColumns) {
             for (FeatureTableColumn<?> col : featureTableColumns) {
                 Sample s = col.getSample();
-                if (s != null)
+                if (s != null && !sampleList.contains(s))
                     sampleList.add(s);
             }
         }

@@ -72,7 +72,7 @@ public class NewVersionCheck implements Runnable {
         } else if (currentVersion.equals(newestVersion)
                 || currentVersion.equals("0.0")) {
             if (checkType.equals(CheckType.MENU)) {
-                final String msg = "No updated version of MZmine is available.";
+                final String msg = "No updates were found - your version is up to date!";
                 logger.info(msg);
                 MZmineGUI.displayMessage(msg);
             }

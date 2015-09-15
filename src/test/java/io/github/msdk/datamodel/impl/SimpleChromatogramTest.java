@@ -29,9 +29,9 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
+import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 
 /**
@@ -60,14 +60,14 @@ public class SimpleChromatogramTest {
 
         // Change raw data file
         final @Nonnull RawDataFile newRawDataFile = MSDKObjectBuilder
-                .getRawDataFile("Sample A1", null, RawDataFileType.NETCDF,
+                .getRawDataFile("Sample A1", null, FileType.NETCDF,
                         dataPointStore);
         chromatogram1.setRawDataFile(newRawDataFile);
 
         // Verify raw data file
         Assert.assertEquals("Sample A1",
                 chromatogram1.getRawDataFile().getName());
-        Assert.assertEquals(RawDataFileType.NETCDF,
+        Assert.assertEquals(FileType.NETCDF,
                 chromatogram1.getRawDataFile().getRawDataFileType());
     }
 

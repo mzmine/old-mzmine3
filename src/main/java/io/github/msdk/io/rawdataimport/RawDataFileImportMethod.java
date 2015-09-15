@@ -22,8 +22,8 @@ import javax.annotation.Nullable;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import io.github.msdk.io.filetypedetection.FileTypeDetectionMethod;
 import io.github.msdk.io.rawdataimport.mzdata.MzDataFileImportMethod;
 import io.github.msdk.io.rawdataimport.mzml.MzMLFileImportMethod;
@@ -32,8 +32,8 @@ import io.github.msdk.io.rawdataimport.netcdf.NetCDFFileImportMethod;
 
 /**
  * This class detects the type of the given data file using the
- * RawDataFileTypeDetectionAlgorithm and then imports the raw data by performing
- * the right import algorithm.
+ * FileTypeDetectionAlgorithm and then imports the raw data by performing the
+ * right import algorithm.
  */
 public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
 
@@ -62,7 +62,7 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
 
         FileTypeDetectionMethod typeDetector = new FileTypeDetectionMethod(
                 sourceFile);
-        RawDataFileType fileType = typeDetector.execute();
+        FileType fileType = typeDetector.execute();
 
         if (fileType == null)
             throw new MSDKException("Unknown file type of file " + sourceFile);

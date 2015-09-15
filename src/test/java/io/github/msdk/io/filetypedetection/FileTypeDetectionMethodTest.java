@@ -20,7 +20,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.rawdata.RawDataFileType;
+import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.io.filetypedetection.FileTypeDetectionMethod;
 
 public class FileTypeDetectionMethodTest {
@@ -40,8 +40,8 @@ public class FileTypeDetectionMethodTest {
         for (File fileName : inputFiles) {
             FileTypeDetectionMethod method = new FileTypeDetectionMethod(
                     fileName);
-            RawDataFileType fileType = method.execute();
-            Assert.assertEquals(RawDataFileType.NETCDF, fileType);
+            FileType fileType = method.execute();
+            Assert.assertEquals(FileType.NETCDF, fileType);
         }
     }
 
@@ -58,8 +58,8 @@ public class FileTypeDetectionMethodTest {
         for (File fileName : inputFiles) {
             FileTypeDetectionMethod method = new FileTypeDetectionMethod(
                     fileName);
-            RawDataFileType fileType = method.execute();
-            Assert.assertEquals(RawDataFileType.MZXML, fileType);
+            FileType fileType = method.execute();
+            Assert.assertEquals(FileType.MZXML, fileType);
         }
     }
 
@@ -76,8 +76,8 @@ public class FileTypeDetectionMethodTest {
         for (File fileName : inputFiles) {
             FileTypeDetectionMethod method = new FileTypeDetectionMethod(
                     fileName);
-            RawDataFileType fileType = method.execute();
-            Assert.assertEquals(RawDataFileType.MZML, fileType);
+            FileType fileType = method.execute();
+            Assert.assertEquals(FileType.MZML, fileType);
         }
     }
 
@@ -94,8 +94,8 @@ public class FileTypeDetectionMethodTest {
         for (File fileName : inputFiles) {
             FileTypeDetectionMethod method = new FileTypeDetectionMethod(
                     fileName);
-            RawDataFileType fileType = method.execute();
-            Assert.assertEquals(RawDataFileType.MZDATA, fileType);
+            FileType fileType = method.execute();
+            Assert.assertEquals(FileType.MZDATA, fileType);
         }
     }
 
@@ -112,8 +112,8 @@ public class FileTypeDetectionMethodTest {
         for (File fileName : inputFiles) {
             FileTypeDetectionMethod method = new FileTypeDetectionMethod(
                     fileName);
-            RawDataFileType fileType = method.execute();
-            Assert.assertEquals(RawDataFileType.THERMO_RAW, fileType);
+            FileType fileType = method.execute();
+            Assert.assertEquals(FileType.THERMO_RAW, fileType);
         }
     }
 
@@ -130,8 +130,28 @@ public class FileTypeDetectionMethodTest {
         for (File fileName : inputFiles) {
             FileTypeDetectionMethod method = new FileTypeDetectionMethod(
                     fileName);
-            RawDataFileType fileType = method.execute();
-            Assert.assertEquals(RawDataFileType.WATERS_RAW, fileType);
+            FileType fileType = method.execute();
+            Assert.assertEquals(FileType.WATERS_RAW, fileType);
+        }
+    }
+
+    @SuppressWarnings("null")
+    @Test
+    public void testMzTAB() throws MSDKException {
+
+        File testPath = new File(TEST_DATA_PATH + "mztab");
+        File inputFiles[] = testPath.listFiles();
+
+        Assert.assertNotNull(inputFiles);
+        Assert.assertNotEquals(0, inputFiles.length);
+
+        for (File fileName : inputFiles) {
+            System.out.println(fileName);
+            FileTypeDetectionMethod method = new FileTypeDetectionMethod(
+                    fileName);
+            FileType fileType = method.execute();
+            System.out.println(fileType);
+            Assert.assertEquals(FileType.MZTAB, fileType);
         }
     }
 

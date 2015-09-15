@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
@@ -33,7 +34,6 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.RawDataFileType;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionMethod;
 import ucar.ma2.Array;
@@ -56,7 +56,7 @@ public class NetCDFFileImportMethod implements MSDKMethod<RawDataFile> {
     private float scanRetentionTimes[];
 
     private final @Nonnull File sourceFile;
-    private final @Nonnull RawDataFileType fileType = RawDataFileType.NETCDF;
+    private final @Nonnull FileType fileType = FileType.NETCDF;
     private final @Nonnull DataPointStore dataStore;
 
     private RawDataFile newRawFile;

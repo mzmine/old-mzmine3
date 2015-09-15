@@ -15,8 +15,8 @@
 package io.github.msdk.io.filetypedetection;
 
 import io.github.msdk.MSDKMethod;
+import io.github.msdk.datamodel.files.FileType;
 import io.github.msdk.MSDKException;
-import io.github.msdk.datamodel.rawdata.RawDataFileType;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 /**
  * Detector of raw data file format
  */
-public class FileTypeDetectionMethod implements MSDKMethod<RawDataFileType> {
+public class FileTypeDetectionMethod implements MSDKMethod<FileType> {
 
     /*
      * See
@@ -59,8 +59,13 @@ public class FileTypeDetectionMethod implements MSDKMethod<RawDataFileType> {
             .valueOf(new char[] { 0x01, 0xA1, 'F', 0, 'i', 0, 'n', 0, 'n', 0,
                     'i', 0, 'g', 0, 'a', 0, 'n', 0 });
 
+    /*
+     * See "http://www.psidev.info/mztab#mzTab_1_0"
+     */
+    private static final String MZTAB_HEADER = "mzTab-version";
+
     private @Nonnull File fileName;
-    private @Nullable RawDataFileType result = null;
+    private @Nullable FileType result = null;
     private @Nullable Float finishedPercentage = null;
 
     /**
@@ -73,7 +78,7 @@ public class FileTypeDetectionMethod implements MSDKMethod<RawDataFileType> {
     }
 
     @Override
-    public RawDataFileType execute() throws MSDKException {
+    public FileType execute() throws MSDKException {
 
         try {
             result = detectDataFileType(fileName);
@@ -85,14 +90,13 @@ public class FileTypeDetectionMethod implements MSDKMethod<RawDataFileType> {
 
     }
 
-    private RawDataFileType detectDataFileType(File fileName)
-            throws IOException {
+    private FileType detectDataFileType(File fileName) throws IOException {
 
         if (fileName.isDirectory()) {
             // To check for Waters .raw directory, we look for _FUNC[0-9]{3}.DAT
             for (File f : fileName.listFiles()) {
                 if (f.isFile() && f.getName().matches("_FUNC[0-9]{3}.DAT"))
-                    return RawDataFileType.WATERS_RAW;
+                    return FileType.WATERS_RAW;
             }
             // We don't recognize any other directory type than Waters
             return null;
@@ -107,21 +111,24 @@ public class FileTypeDetectionMethod implements MSDKMethod<RawDataFileType> {
         String fileHeader = new String(buffer);
 
         if (fileHeader.startsWith(THERMO_HEADER)) {
-            return RawDataFileType.THERMO_RAW;
+            return FileType.THERMO_RAW;
         }
 
         if (fileHeader.startsWith(CDF_HEADER)) {
-            return RawDataFileType.NETCDF;
+            return FileType.NETCDF;
         }
 
         if (fileHeader.contains(MZML_HEADER))
-            return RawDataFileType.MZML;
+            return FileType.MZML;
 
         if (fileHeader.contains(MZDATA_HEADER))
-            return RawDataFileType.MZDATA;
+            return FileType.MZDATA;
 
         if (fileHeader.contains(MZXML_HEADER))
-            return RawDataFileType.MZXML;
+            return FileType.MZXML;
+
+        if (fileHeader.contains(MZTAB_HEADER))
+            return FileType.MZTAB;
 
         return null;
 
@@ -134,7 +141,7 @@ public class FileTypeDetectionMethod implements MSDKMethod<RawDataFileType> {
 
     @Override
     @Nullable
-    public RawDataFileType getResult() {
+    public FileType getResult() {
         return result;
     }
 

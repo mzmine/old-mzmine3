@@ -17,6 +17,7 @@
 		<controlsfx.version>8.40.9</controlsfx.version>
 		<jfreechart.version>1.0.19</jfreechart.version>
 		<junit.version>4.12</junit.version>
+		<jmztab.version>3.0.2</jmztab.version>
 	</properties>
 
 	<mailingLists>
@@ -220,6 +221,17 @@
 			<groupId>org.dockfx</groupId>
 			<artifactId>dockfx</artifactId>
 			<version>0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>uk.ac.ebi.pride</groupId>
+			<artifactId>jmztab-modular-model</artifactId>
+			<version>${jmztab.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.ac.ebi.pride</groupId>
+			<artifactId>jmztab-modular-util</artifactId>
+			<version>${jmztab.version}</version>
 		</dependency>
 	</dependencies>
 
