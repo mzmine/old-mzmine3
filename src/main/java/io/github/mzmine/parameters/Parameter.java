@@ -39,4 +39,6 @@ public interface Parameter<ValueType> extends Item, Cloneable {
 
     public void saveValueToXML(Element xmlElement);
 
+    public Parameter<ValueType> clone();
+
 }

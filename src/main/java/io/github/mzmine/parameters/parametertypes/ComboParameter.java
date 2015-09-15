@@ -20,37 +20,33 @@
 package io.github.mzmine.parameters.parametertypes;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.controlsfx.property.editor.PropertyEditor;
 import org.w3c.dom.Element;
 
 import io.github.mzmine.parameters.Parameter;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
-public class StringParameter implements Parameter<String> {
+public class ComboParameter<Type> implements Parameter<Type> {
 
     private final String name, description, category;
-    private final EventHandler<ActionEvent> autoSetAction;
-    private String value;
+    private ObservableList<Type> options; 
+    private Type value;
 
-    public StringParameter(String name, String description, String category) {
+    public ComboParameter(String name, String description, String category) {
         this(name, description, category, null, null);
     }
 
-    public StringParameter(String name, String description, String category,
-            String defaultValue) {
-        this(name, description, category, defaultValue, null);
-    }
-
-    public StringParameter(String name, String description, String category,
-            String defaultValue, EventHandler<ActionEvent> autoSetAction) {
+    public ComboParameter(String name, String description, String category,
+            List<Type> options, Type defaultValue) {
         this.name = name;
         this.description = description;
         this.category = category;
+        this.options = FXCollections.observableList(options);
         this.value = defaultValue;
-        this.autoSetAction = autoSetAction;
     }
 
     /**
@@ -79,25 +75,20 @@ public class StringParameter implements Parameter<String> {
         return String.class;
     }
 
-    public String getValue() {
+    public Type getValue() {
         return value;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void setValue(Object value) {
-        this.value = (String) value;
+        this.value = (Type) value;
     }
 
     @Override
-    public StringParameter clone() {
-        StringParameter copy = new StringParameter(name, description, category,
-                value, autoSetAction);
+    public ComboParameter<Type> clone() {
+        ComboParameter<Type> copy = new ComboParameter<Type>(name, description, category, options, value);
         return copy;
-    }
-
-    @Override
-    public boolean isEditable() {
-        return true;
     }
 
     @Override
@@ -107,32 +98,34 @@ public class StringParameter implements Parameter<String> {
 
     @Override
     public void loadValueFromXML(Element xmlElement) {
-        value = xmlElement.getTextContent();
+        //value = xmlElement.getTextContent();
     }
 
     @Override
     public void saveValueToXML(Element xmlElement) {
         if (value == null)
             return;
-        xmlElement.setTextContent(value);
+        //xmlElement.setTextContent(value);
     }
 
     @Override
     public boolean checkValue(Collection<String> errorMessages) {
-        if ((value == null) || (value.trim().length() == 0)) {
+        if (value == null) {
             errorMessages.add(name + " is not set properly");
             return false;
         }
         return true;
     }
-
+    
     @Override
     public Optional<Class<? extends PropertyEditor<?>>> getPropertyEditorClass() {
-        return Optional.of(StringEditor.class);
+        return Optional.of(ComboEditor.class);
+    }
+    
+    ObservableList<Type> getOptions() {
+        return options;
     }
 
-    public EventHandler<ActionEvent> getAutoSetAction() {
-        return autoSetAction;
-    }
+
 
 }

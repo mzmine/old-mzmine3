@@ -21,25 +21,25 @@ package io.github.mzmine.modules.rawdataimport;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
+
+import com.google.common.base.Strings;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.rawdataimport.RawDataFileImportMethod;
+import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.modules.MZmineModuleCategory;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 
 /**
  * Raw data import module
@@ -49,6 +49,8 @@ public class RawDataImportModule implements MZmineProcessingModule {
     private Logger logger = Logger.getLogger(this.getClass().getName());
     private static final String MODULE_NAME = "Raw data import";
     private static final String MODULE_DESCRIPTION = "This module imports raw data into the project.";
+
+    private final RawDataImportParameters parameters = new RawDataImportParameters();
 
     @SuppressWarnings("null")
     @Override
@@ -62,23 +64,32 @@ public class RawDataImportModule implements MZmineProcessingModule {
         return MODULE_DESCRIPTION;
     }
 
+    @SuppressWarnings("null")
     @Override
     public void runModule(@Nonnull MZmineProject project,
             @Nonnull ParameterSet parameters,
             @Nonnull Collection<Task<?>> tasks) {
 
-        List<File> fileNames = Collections.emptyList();
-        // parameters
-        // .getParameter(RawDataImportParameters.fileNames).getValue();
+        System.out.println("param values:\n" + parameters.toString());
+
+        final List<File> fileNames = parameters
+                .getParameter(RawDataImportParameters.fileNames).getValue();
+        final String removePrefix = parameters
+                .getParameter(RawDataImportParameters.removePrefix).getValue();
+        final String removeSuffix = parameters
+                .getParameter(RawDataImportParameters.removeSuffix).getValue();
+
+        if (fileNames == null) {
+            logger.warning("Raw data import module started with no filenames");
+            return;
+        }
 
         for (File fileName : fileNames) {
 
             if ((!fileName.exists()) || (!fileName.canRead())) {
-                // MZmineCore.getDesktop().displayErrorMessage("Cannot read file
-                // "
-                // + fileName);
+                MZmineGUI.displayMessage("Cannot read file " + fileName);
                 logger.warning("Cannot read file " + fileName);
-                return;
+                continue;
             }
 
             DataPointStore dataStore;
@@ -89,27 +100,35 @@ public class RawDataImportModule implements MZmineProcessingModule {
                         fileName, dataStore);
                 newTask = new MSDKTask("Importing raw data file",
                         fileName.getName(), method);
+                newTask.setOnSucceeded(e -> {
+                    RawDataFile rawDataFile = method.getResult();
+                    if (rawDataFile == null)
+                        return;
 
-                EventHandler<WorkerStateEvent> succesEvent = new EventHandler<WorkerStateEvent>() {
-                    @Override
-                    public void handle(WorkerStateEvent workerEvent) {
-                        RawDataFile rawDataFile = method.getResult();
-                        project.addFile(rawDataFile);
+                    // Remove common prefix
+                    if (!Strings.isNullOrEmpty(removePrefix)) {
+                        String name = rawDataFile.getName();
+                        if (name.startsWith(removePrefix))
+                            name = name.substring(removePrefix.length());
+                        rawDataFile.setName(name);
                     }
-                };
-                newTask.setOnSucceeded(succesEvent);
+
+                    // Remove common suffix
+                    if (!Strings.isNullOrEmpty(removeSuffix)) {
+                        String name = rawDataFile.getName();
+                        if (name.endsWith(removeSuffix))
+                            name = name.substring(0,
+                                    name.length() - removeSuffix.length());
+                        rawDataFile.setName(name);
+                    }
+
+                    project.addFile(rawDataFile);
+                });
+                tasks.add(newTask);
+
             } catch (MSDKException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
-            if (newTask == null) {
-                logger.warning(
-                        "Cannot determine file type of file " + fileName);
-                return;
-            }
-
-            tasks.add(newTask);
         }
 
     }
@@ -119,9 +138,8 @@ public class RawDataImportModule implements MZmineProcessingModule {
         return MZmineModuleCategory.RAWDATA;
     }
 
-    private RawDataImportParameters params = new RawDataImportParameters();
-
+    @SuppressWarnings("null")
     public @Nonnull ParameterSet getParameters() {
-        return params;
+        return parameters;
     }
 }

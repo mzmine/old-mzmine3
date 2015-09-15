@@ -19,18 +19,18 @@
 
 package io.github.mzmine.parameters;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.controlsfx.control.PropertySheet;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import io.github.mzmine.main.MZmineCore;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 
 /**
@@ -44,15 +44,13 @@ public class ParameterSet implements Cloneable {
     private static final String parameterElement = "parameter";
     private static final String nameAttribute = "name";
 
-    protected final ObservableList<PropertySheet.Item> parameters = FXCollections.observableArrayList();
+    private final List<Parameter<?>> parameters = new ArrayList<>();
 
-
-    public void loadValuesFromXML(Element xmlElement) {
-        
-    }
-
-    public void saveValuesToXML(Element xmlElement) {
-        
+    public ParameterSet(Parameter<?>... items) {
+        for (Parameter<?> p : items) {
+            Parameter<?> clone = p.clone();
+            parameters.add(clone);
+        }
     }
 
     /**
@@ -60,30 +58,106 @@ public class ParameterSet implements Cloneable {
      */
     public String toString() {
 
-                return super.toString();
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < parameters.size(); i++) {
+            Parameter<?> param = parameters.get(i);
+            Object value = param.getValue();
+            s.append(param.getName());
+            s.append(": ");
+            s.append(String.valueOf(value));
+            if (i < parameters.size() - 1)
+                s.append(", ");
+        }
+        return s.toString();
     }
 
     /**
      * Make a deep copy
      */
     public ParameterSet clone() {
-        return this;
+        // Do not make a new instance of ParameterSet, but instead
+        // clone the runtime class of this instance - runtime type may be
+        // inherited class. This is important in order to keep the proper
+        // behavior of showSetupDialog(xxx) method for cloned classes
+
+        ParameterSet newSet;
+        try {
+            newSet = this.getClass().newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+        for (Parameter<?> param : parameters) {
+            Object value = param.getValue();
+            Parameter<?> newParam = newSet.getParameter(param);
+            if (newParam == null)
+                throw new IllegalStateException(
+                        "Cannot clone parameter set of type "
+                                + this.getClass());
+            newParam.setValue(value);
+        }
+        return newSet;
     }
 
-    public ObservableList<PropertySheet.Item> getParameters() {
+    public List<Parameter<?>> getParameters() {
         return parameters;
-        
     }
-    
+
     public ButtonType showSetupDialog() {
         ParameterSetupDialog dialog = new ParameterSetupDialog(this);
         Optional<ButtonType> result = dialog.showAndWait();
         return result.get();
     }
 
-
     public boolean checkParameterValues(Collection<String> errorMessages) {
-        return true;
+        boolean allParametersOK = true;
+        for (Parameter<?> p : parameters) {
+            boolean pOK = p.checkValue(errorMessages);
+            if (!pOK)
+                allParametersOK = false;
+        }
+        return allParametersOK;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Parameter<?>> T getParameter(T parameter) {
+        for (Parameter<?> p : parameters) {
+            if (p.getName().equals(parameter.getName()))
+                return (T) p;
+        }
+        throw new IllegalArgumentException(
+                "Parameter " + parameter.getName() + " does not exist");
+    }
+
+    public void loadValuesFromXML(Element xmlElement) {
+        NodeList list = xmlElement.getElementsByTagName(parameterElement);
+        for (int i = 0; i < list.getLength(); i++) {
+            Element nextElement = (Element) list.item(i);
+            String paramName = nextElement.getAttribute(nameAttribute);
+            for (Parameter<?> param : parameters) {
+                if (param.getName().equals(paramName)) {
+                    try {
+                        param.loadValueFromXML(nextElement);
+                    } catch (Exception e) {
+                        logger.log(Level.WARNING,
+                                "Error while loading parameter values for "
+                                        + param.getName(),
+                                e);
+                    }
+                }
+            }
+        }
+    }
+
+    public void saveValuesToXML(Element xmlElement) {
+        Document parentDocument = xmlElement.getOwnerDocument();
+        for (Parameter<?> param : parameters) {
+            Element paramElement = parentDocument
+                    .createElement(parameterElement);
+            paramElement.setAttribute(nameAttribute, param.getName());
+            xmlElement.appendChild(paramElement);
+            param.saveValueToXML(paramElement);
+        }
     }
 
 }
