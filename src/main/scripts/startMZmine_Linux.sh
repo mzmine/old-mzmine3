@@ -48,7 +48,7 @@ echo Java maximum heap size set to $HEAP_SIZE MB
 # Java specific commands
 # **********************
 
-JAVA_PARAMETERS="-showversion -classpath lib/\* -XX:+UseParallelGC -Djava.io.tmpdir=$TMP_FILE_DIRECTORY -Xms1024m -Xmx${HEAP_SIZE}m
+JAVA_PARAMETERS="-showversion -classpath lib/\* -XX:+UseG1GC -Djava.io.tmpdir=$TMP_FILE_DIRECTORY -Xms1024m -Xmx${HEAP_SIZE}m
 MAIN_CLASS=io.github.mzmine.main.MZmineMain
 
 # Make sure we are in the correct directory
