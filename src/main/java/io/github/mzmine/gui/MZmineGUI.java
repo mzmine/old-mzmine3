@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.logging.Logger;
 
+import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.TaskProgressView;
 import org.dockfx.DockNode;
 import org.dockfx.DockPane;
@@ -181,12 +182,14 @@ public final class MZmineGUI extends Application {
     }
 
     public static void displayMessage(String msg) {
-        Dialog<ButtonType> dialog = new Dialog<>();
-        // dialog.initOwner(stage);
-        dialog.setTitle("Message");
-        dialog.setContentText(msg);
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-        dialog.showAndWait();
+        Platform.runLater(() -> {
+            Dialog<ButtonType> dialog = new Dialog<>();
+            // dialog.initOwner(stage);
+            dialog.setTitle("Message");
+            dialog.setContentText(msg);
+            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+            dialog.showAndWait();
+        });
     }
 
     public static MZmineProject getCurrentProject() {
@@ -197,7 +200,13 @@ public final class MZmineGUI extends Application {
         for (Task<?> task : tasks) {
             mainWindowController.addTask(task);
         }
+    }
 
+    public static void setStatusBarMessage(String message) {
+        Platform.runLater(() -> {
+            StatusBar statusBar = mainWindowController.getStatusBar();
+            statusBar.setText(message); 
+        });
     }
 
 }

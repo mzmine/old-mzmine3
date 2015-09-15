@@ -44,7 +44,7 @@ public final class MZmineCore {
         try {
             ClassLoader myClassLoader = MZmineCore.class.getClassLoader();
             InputStream inStream = myClassLoader.getResourceAsStream(
-                    "META-INF/maven/net.sf.mzmine/mzmine/pom.properties");
+                    "META-INF/maven/io.github.mzmine/mzmine/pom.properties");
             if (inStream == null)
                 return "0.0";
             Properties properties = new Properties();

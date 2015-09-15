@@ -257,6 +257,10 @@ public class MainWindowController implements Initializable {
         executor.execute(task);
     }
 
+    public StatusBar getStatusBar() {
+        return statusBar;
+    }
+
     @FXML
     protected void handleShowTIC(ActionEvent event) {
         System.out.println("show tic event " + event);

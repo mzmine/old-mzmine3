@@ -136,9 +136,9 @@
 			<items>
 				<Menu text="Feature Detection">
 					<items>
-						<MenuItem text="Smoothing" />
 						<MenuItem text="Chromatogram Deconvolution" />
 						<MenuItem text="Feature Extender" />
+						<MenuItem text="Smoothing" />
 					</items>
 				</Menu>
 				<Menu text="Isotopes">
@@ -149,8 +149,8 @@
 				<Menu text="Filtering">
 					<items>
 						<MenuItem text="Duplicate Feature Filter (Move to Rows Filter)" />
-						<MenuItem text="Rows Filter" />
 						<MenuItem text="Feature Filter" />
+						<MenuItem text="Row Filter" />
 					</items>
 				</Menu>
 				<Menu text="Gap Filling">
@@ -167,8 +167,8 @@
 				</Menu>
 				<Menu text="Normalization">
 					<items>
-						<MenuItem text="Retention Time Normalizer" />
 						<MenuItem text="Linear Normalizer" />
+						<MenuItem text="Retention Time Normalizer" />
 						<MenuItem text="Standard Compound Normalizer" />
 					</items>
 				</Menu>
@@ -252,7 +252,7 @@
 				<MenuItem text="Support" onAction="#openLink" />
 				<MenuItem text="Report Problem" onAction="#openLink" />
 				<SeparatorMenuItem />
-				<MenuItem text="Check for Updates" />
+				<MenuItem text="Check for Updates" onAction="#versionCheck" />
 				<SeparatorMenuItem />
 				<MenuItem text="About" />
 			</items>
