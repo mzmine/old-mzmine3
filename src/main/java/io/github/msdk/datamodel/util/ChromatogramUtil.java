@@ -29,7 +29,7 @@ public class ChromatogramUtil {
             .getChromatogramDataPointList();
 
     /**
-     * Returns the range of ChromatographyInfo of all data points in this peak.
+     * Returns the range of ChromatographyInfo of all data points in this feature.
      */
     @SuppressWarnings("null")
     @Nonnull
@@ -45,7 +45,7 @@ public class ChromatogramUtil {
     }
 
     /**
-     * Returns the range of intensity values of all data points in this peak.
+     * Returns the range of intensity values of all data points in this feature.
      */
     @SuppressWarnings("null")
     @Nonnull
@@ -60,7 +60,7 @@ public class ChromatogramUtil {
     }
 
     /**
-     * Returns the number of data points for this peak.
+     * Returns the number of data points for this feature.
      */
     @SuppressWarnings("null")
     public static int getNumberOfDataPoints(

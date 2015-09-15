@@ -114,7 +114,7 @@ public interface Chromatogram extends Cloneable {
 
     /**
      * Updates the data points of this chromatogram. If this Chromatogram has
-     * been added to a raw data file or a peak list, the data points will be
+     * been added to a raw data file or a feature table, the data points will be
      * immediately stored in a temporary file. Therefore, the DataPointList in
      * the parameter can be reused for other purposes.
      * 

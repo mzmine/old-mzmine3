@@ -18,8 +18,8 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 /**
- * Represents the chromatography information of an MS scan or a detected feature
- * (peak). For convenience, this interface is immutable, so it can be passed by
+ * Represents the chromatography information of an MS scan or a detected
+ * feature. For convenience, this interface is immutable, so it can be passed by
  * reference and safely used by multiple threads. This interface also extends
  * Comparable, so we can use the Range class to define ranges of retention times
  * etc. The comparator method should compare two instances by retention time,

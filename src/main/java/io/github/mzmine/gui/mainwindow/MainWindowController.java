@@ -152,8 +152,8 @@ public class MainWindowController implements Initializable {
 
         featureTree.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
-        TreeItem<Object> peakListsRootItem = new TreeItem<>("Peak lists");
-        featureTree.setRoot(peakListsRootItem);
+        TreeItem<Object> featureTableRootItem = new TreeItem<>("Feature Tables");
+        featureTree.setRoot(featureTableRootItem);
 
         // featureTree.setCellFactory(TextFieldTreeCell.forTreeView());
 
@@ -173,9 +173,9 @@ public class MainWindowController implements Initializable {
          * rawDataTree.getRoot().getChildren().addAll(df1, group1, df2, df3);
          */
 
-        TreeItem<Object> item1 = new TreeItem<>("Peak list 1");
-        TreeItem<Object> item2 = new TreeItem<>("Peak list 2");
-        TreeItem<Object> item3 = new TreeItem<>("Peak list 3");
+        TreeItem<Object> item1 = new TreeItem<>("Feature Table 1");
+        TreeItem<Object> item2 = new TreeItem<>("Feature Table 2");
+        TreeItem<Object> item3 = new TreeItem<>("Feature Table 3");
         featureTree.getRoot().getChildren().addAll(item1, item2, item3);
 
         statusBar.setText("Welcome to MZmine " + MZmineCore.getMZmineVersion());

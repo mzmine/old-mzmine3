@@ -123,7 +123,7 @@ public class MZmineProject {
         }
     }
 
-    public void removePeakList(FeatureTable featureTable) {
+    public void removeFeatureTable(FeatureTable featureTable) {
         synchronized (featureTables) {
             featureTables.remove(featureTable);
         }

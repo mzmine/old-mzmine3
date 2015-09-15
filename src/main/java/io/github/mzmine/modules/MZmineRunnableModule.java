@@ -61,11 +61,12 @@ public interface MZmineRunnableModule extends MZmineModule {
      *            Tasks, if it creates any.
      */
     public void runModule(@Nonnull MZmineProject project,
-            @Nonnull ParameterSet parameters, @Nonnull Collection<Task<?>> tasks);
+            @Nonnull ParameterSet parameters,
+            @Nonnull Collection<Task<?>> tasks);
 
     /**
-     * Returns the category of the module (e.g. raw data processing, peak
-     * picking etc.). A menu item for this module will be created according to
+     * Returns the category of the module (e.g. raw data processing, feature
+     * detection etc.). A menu item for this module will be created according to
      * the category.
      */
     @Nonnull

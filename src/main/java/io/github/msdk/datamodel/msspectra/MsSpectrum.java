@@ -79,7 +79,7 @@ public interface MsSpectrum {
 
     /**
      * Updates the data points of this mass spectrum. If this MassSpectrum has
-     * been added to a raw data file or a peak list, the data points will be
+     * been added to a raw data file or a feature table, the data points will be
      * immediately stored in a temporary file. Therefore, the DataPointList in
      * the parameter can be reused for other purposes.
      * 

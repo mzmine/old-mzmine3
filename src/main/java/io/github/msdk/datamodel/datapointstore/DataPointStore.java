@@ -21,7 +21,7 @@ import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 
 /**
  * Represents a storage mechanism for data points represented by DataPointList.
- * Each RawDataFile and PeakList will use this mechanism to store their data
+ * Each RawDataFile and FeatureTable will use this mechanism to store their data
  * points somewhere, to avoid consuming too much memory. Multiple
  * implementations of this interface may be provided, depending on the method of
  * serialization and storage.
