@@ -24,6 +24,7 @@ import java.text.DecimalFormat;
 import org.controlsfx.control.PropertySheet;
 import org.controlsfx.property.editor.PropertyEditor;
 
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Spinner;
@@ -42,6 +43,10 @@ public class NumberFormatEditor extends HBox
         if (!(parameter instanceof NumberFormatParameter))
             throw new IllegalArgumentException();
 
+        // HBox properties
+        setSpacing(10);
+        setAlignment(Pos.CENTER_LEFT);
+        
         this.numFormatParameter = (NumberFormatParameter) parameter;
 
         getChildren().add(new Text("Decimals"));

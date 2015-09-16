@@ -23,11 +23,15 @@ import java.net.URL;
 import java.util.List;
 
 import org.controlsfx.control.PropertySheet;
+import org.controlsfx.control.PropertySheet.Item;
+import org.controlsfx.property.editor.DefaultPropertyEditorFactory;
+import org.controlsfx.property.editor.PropertyEditor;
 
 import io.github.mzmine.gui.helpwindow.HelpWindow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -64,10 +68,22 @@ public class ParameterSetupDialog extends Alert {
         sheet.setSearchBoxVisible(false);
         sheet.setMode(PropertySheet.Mode.NAME);
         sheet.setPrefSize(600.0, 500.0);
+        EditorFactory fac;
+        sheet.setPropertyEditorFactory(new EditorFactory());
         getDialogPane().setContent(sheet);
+        
+        Button okButton = (Button) getDialogPane()
+                .lookupButton(ButtonType.OK);
+        okButton.setOnAction(e -> {
+            for (Node n : sheet.getChildrenUnmodifiable()) {
+                System.out.println("node " + n);
+            }
+            
+            System.out.println("ok clicked " + parameters);
+        });
 
     }
-
+    
     private void setupHelpButton(URL helpURL) {
 
         // Add a Help button
@@ -106,5 +122,13 @@ public class ParameterSetupDialog extends Alert {
         });
 
     }
+    
+    private class EditorFactory extends DefaultPropertyEditorFactory {
+        @Override public PropertyEditor<?> call(Item item) {
+            PropertyEditor<?> editor = super.call(item);
+            
+            return editor;
+        }
+    };
 
 }

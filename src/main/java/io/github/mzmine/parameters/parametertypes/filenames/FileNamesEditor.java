@@ -57,10 +57,6 @@ public class FileNamesEditor extends BorderPane
         // The text area
         this.textArea = new TextArea();
         textArea.setPrefHeight(100);
-        textArea.textProperty().addListener(e -> {
-            List<File> value = getValue();
-            fileNamesParameter.setValue(value);
-        });
         setCenter(textArea);
 
         // The Add button

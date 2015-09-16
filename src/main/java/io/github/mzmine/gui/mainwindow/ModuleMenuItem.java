@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import io.github.mzmine.gui.MZmineGUI;
+import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.main.MZmineModules;
 import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.modules.MZmineRunnableModule;
@@ -83,10 +84,10 @@ public final class ModuleMenuItem extends MenuItem {
                 logger.finest("Starting module " + module.getName()
                         + " with parameters " + parametersCopy);
                 List<Task<?>> tasks = new ArrayList<>();
-                MZmineProject project = MZmineGUI.getCurrentProject();
+                MZmineProject project = MZmineCore.getCurrentProject();
                 logger.info("Starting module " + module.getName());
                 runnableModule.runModule(project, parametersCopy, tasks);
-                MZmineGUI.submitTasks(tasks);
+                MZmineCore.submitTasks(tasks);
             }
         });
     }

@@ -22,7 +22,6 @@ package io.github.mzmine.gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.logging.Logger;
 
 import org.controlsfx.control.StatusBar;
@@ -36,7 +35,6 @@ import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.project.MZmineProject;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
@@ -63,12 +61,8 @@ public final class MZmineGUI extends Application {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     private static MainWindowController mainWindowController;
-    private static MZmineProject currentProject;
 
     public void start(Stage stage) {
-
-        // Create an empty project
-        currentProject = new MZmineProject();
 
         try {
             // Load the main window
@@ -192,21 +186,15 @@ public final class MZmineGUI extends Application {
         });
     }
 
-    public static MZmineProject getCurrentProject() {
-        return currentProject;
-    }
-
-    public static void submitTasks(Collection<Task<?>> tasks) {
-        for (Task<?> task : tasks) {
-            mainWindowController.addTask(task);
-        }
-    }
-
     public static void setStatusBarMessage(String message) {
         Platform.runLater(() -> {
             StatusBar statusBar = mainWindowController.getStatusBar();
-            statusBar.setText(message); 
+            statusBar.setText(message);
         });
+    }
+
+    public static MainWindowController getMainWindowController() {
+        return mainWindowController;
     }
 
 }

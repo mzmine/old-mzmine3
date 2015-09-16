@@ -51,10 +51,6 @@ public class FileNameEditor extends BorderPane implements PropertyEditor<File> {
 
         // The text field
         this.textField = new TextField();
-        textField.textProperty().addListener(e -> {
-            File value = getValue();
-            parameter.setValue(value);
-        });
         setCenter(textField);
 
         // The Browse button

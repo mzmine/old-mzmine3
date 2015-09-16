@@ -25,19 +25,21 @@ import java.util.Optional;
 import org.controlsfx.property.editor.PropertyEditor;
 import org.w3c.dom.Element;
 
+import com.google.common.base.Strings;
+
+import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.parameters.Parameter;
 
-public class NumOfThreadsParameter implements Parameter<Integer> {
+public class NumOfThreadsParameter implements Parameter<NumOfThreadsValue> {
 
-    private String name, description;
-    private boolean automatic;
-    private Integer value;
+    private static final String name = "Number of parallel tasks";
+    private static final String description = "Maximum number of tasks running simultaneously";
+
+    // Provide a default value
+    private NumOfThreadsValue value = new NumOfThreadsValue(true, 4);
 
     public NumOfThreadsParameter() {
-        this.name = "Number of concurrently running tasks";
-        this.description = "Maximum number of tasks running simultaneously";
-        this.value = Runtime.getRuntime().availableProcessors();
-        this.automatic = true;
+        this.value = null;
     }
 
     /**
@@ -57,17 +59,20 @@ public class NumOfThreadsParameter implements Parameter<Integer> {
     }
 
     @Override
-    public Integer getValue() {
+    public NumOfThreadsValue getValue() {
         return value;
-    }
-
-    public boolean isAutomatic() {
-        return automatic;
     }
 
     @Override
     public void setValue(Object value) {
-        this.value = (Integer) value;
+        this.value = (NumOfThreadsValue) value;
+
+        if (this.value != null) {
+            // Update the thread pool executor
+            int threadPoolSize = this.value.getNumberOfThreads();
+            MZmineCore.getTaskExecutor().setCorePoolSize(threadPoolSize);
+        }
+
     }
 
     @Override
@@ -78,19 +83,24 @@ public class NumOfThreadsParameter implements Parameter<Integer> {
     @Override
     public void loadValueFromXML(Element xmlElement) {
         String attrValue = xmlElement.getAttribute("isautomatic");
+        boolean automatic = true;
         if (attrValue.length() > 0) {
-            this.automatic = Boolean.valueOf(attrValue);
+            automatic = Boolean.valueOf(attrValue);
         }
-
+        int manualValue = 4;
         String textContent = xmlElement.getTextContent();
-        if (textContent.length() > 0) {
-            this.value = Integer.valueOf(textContent);
+        if (!Strings.isNullOrEmpty(textContent)) {
+            manualValue = Integer.valueOf(textContent);
         }
+        this.value = new NumOfThreadsValue(automatic, manualValue);
     }
 
     @Override
     public void saveValueToXML(Element xmlElement) {
-        xmlElement.setAttribute("isautomatic", String.valueOf(automatic));
+        if (value == null)
+            return;
+        xmlElement.setAttribute("isautomatic",
+                String.valueOf(value.isAutomatic()));
         xmlElement.setTextContent(value.toString());
     }
 

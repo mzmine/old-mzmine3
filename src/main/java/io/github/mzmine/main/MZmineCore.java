@@ -20,11 +20,16 @@
 package io.github.mzmine.main;
 
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Properties;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.annotation.Nonnull;
 
+import io.github.mzmine.gui.MZmineGUI;
+import io.github.mzmine.gui.mainwindow.MainWindowController;
 import io.github.mzmine.project.MZmineProject;
+import javafx.concurrent.Task;
 
 /**
  * MZmine core functions for modules
@@ -32,13 +37,17 @@ import io.github.mzmine.project.MZmineProject;
 public final class MZmineCore {
 
     private static final MZmineConfiguration configuration = new MZmineConfiguration();
-    
+
+    private static final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(
+            2);
+
+    private static @Nonnull MZmineProject currentProject = new MZmineProject();;
+
     public static MZmineConfiguration getConfiguration() {
         return configuration;
     }
 
-    @Nonnull
-    public static String getMZmineVersion() {
+    public static @Nonnull String getMZmineVersion() {
         try {
             ClassLoader myClassLoader = MZmineCore.class.getClassLoader();
             InputStream inStream = myClassLoader.getResourceAsStream(
@@ -54,8 +63,23 @@ public final class MZmineCore {
         }
     }
 
-    static MZmineProject getCurrentProject() {
-        return MZmineCore.getCurrentProject();
+    public static @Nonnull MZmineProject getCurrentProject() {
+        return currentProject;
+    }
+
+    public static void submitTasks(@Nonnull Collection<Task<?>> tasks) {
+
+        for (Task<?> task : tasks) {
+            MainWindowController mwc = MZmineGUI.getMainWindowController();
+            if (mwc != null) {
+                mwc.getTaskTable().getTasks().add(task);
+            }
+            executor.execute(task);
+        }
+    }
+
+    public static @Nonnull ScheduledThreadPoolExecutor getTaskExecutor() {
+        return executor;
     }
 
 }

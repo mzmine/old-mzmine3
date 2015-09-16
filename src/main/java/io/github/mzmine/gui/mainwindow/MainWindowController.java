@@ -23,7 +23,6 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
@@ -34,7 +33,6 @@ import org.dockfx.DockNode;
 import org.dockfx.DockPane;
 import org.dockfx.DockPos;
 
-import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.animation.Animation;
@@ -65,9 +63,6 @@ public class MainWindowController implements Initializable {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
-    private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(
-            2);
-
     @FXML
     private DockPane mainDockPane;
     private DockNode visualizerDock;
@@ -96,7 +91,7 @@ public class MainWindowController implements Initializable {
         rawDataTree.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
         rawDataTree.setShowRoot(false);
-        rawDataTree.setRoot(MZmineGUI.getCurrentProject().getRawDataRootItem());
+        rawDataTree.setRoot(MZmineCore.getCurrentProject().getRawDataRootItem());
 
         // Add mouse clicked event handler
         rawDataTree.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -248,14 +243,11 @@ public class MainWindowController implements Initializable {
         return featureTree;
     }
 
-    public TaskProgressView<?> getTaskTable() {
+    public TaskProgressView<Task<?>> getTaskTable() {
         return tasksView;
     }
 
-    public void addTask(Task<?> task) {
-        tasksView.getTasks().add(task);
-        executor.execute(task);
-    }
+
 
     public StatusBar getStatusBar() {
         return statusBar;

@@ -25,16 +25,16 @@ import org.controlsfx.property.editor.PropertyEditor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 
-public class OptionalModuleEditor extends BorderPane
+public class OptionalModuleEditor extends FlowPane
         implements PropertyEditor<Boolean> {
 
     private final CheckBox checkBox;
     private final Button setButton;
-    
+
     private final OptionalModuleParameter optionalModuleParameter;
-    
+
     public OptionalModuleEditor(PropertySheet.Item parameter) {
 
         if (!(parameter instanceof OptionalModuleParameter))
@@ -42,12 +42,21 @@ public class OptionalModuleEditor extends BorderPane
 
         this.optionalModuleParameter = (OptionalModuleParameter) parameter;
 
-        checkBox = new CheckBox();
-        setLeft(checkBox);
-
         setButton = new Button("Setup..");
         setButton.setDisable(true);
-        setCenter(setButton);
+        setButton.setOnAction(e -> {
+            optionalModuleParameter.getEmbeddedParameters().showSetupDialog();
+        });
+
+        checkBox = new CheckBox();
+        checkBox.setOnAction(e -> {
+            setButton.setDisable(!checkBox.isSelected());
+        });
+
+        // FLowPane setting
+        setHgap(10);
+
+        getChildren().addAll(checkBox, setButton);
 
     }
 

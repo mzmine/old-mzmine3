@@ -47,10 +47,6 @@ public class StringEditor extends BorderPane implements PropertyEditor<String> {
 
         // The text field
         this.textField = new TextField();
-        textField.textProperty().addListener(e -> {
-            String value = getValue();
-            parameter.setValue(value);
-        });
         setCenter(textField);
 
         // The Add button

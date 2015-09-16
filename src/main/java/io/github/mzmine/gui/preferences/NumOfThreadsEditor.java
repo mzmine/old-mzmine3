@@ -26,13 +26,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Spinner;
 import javafx.scene.layout.BorderPane;
 
 public class NumOfThreadsEditor extends BorderPane
-        implements PropertyEditor<Integer> {
-
-    private final NumOfThreadsParameter numThrParameter;
+        implements PropertyEditor<NumOfThreadsValue> {
 
     private static final ObservableList<String> options = FXCollections
             .observableArrayList(
@@ -40,18 +38,21 @@ public class NumOfThreadsEditor extends BorderPane
                             + Runtime.getRuntime().availableProcessors() + ")",
                     "Set manually");
 
-    private ComboBox<String> optionCombo;
-    private TextField numField;
+    private final ComboBox<String> optionCombo;
+    private final Spinner<Integer> numField;
 
     public NumOfThreadsEditor(PropertySheet.Item parameter) {
 
-        this.numThrParameter = (NumOfThreadsParameter) parameter;
+        numField = new Spinner<>(1, 50, 4);
+        numField.setDisable(true);
+        setCenter(numField);
 
         optionCombo = new ComboBox<>(options);
+        optionCombo.setOnAction(e -> {
+            numField.setDisable(
+                    optionCombo.getSelectionModel().getSelectedIndex() == 0);
+        });
         setLeft(optionCombo);
-
-        numField = new TextField();
-        setCenter(numField);
 
     }
 
@@ -60,19 +61,26 @@ public class NumOfThreadsEditor extends BorderPane
         return this;
     }
 
+    @SuppressWarnings("null")
     @Override
-    public Integer getValue() {
-        if (numThrParameter.isAutomatic())
-            return Runtime.getRuntime().availableProcessors();
-        else
-            return Integer.parseInt(numField.getText());
+    public NumOfThreadsValue getValue() {
+        Boolean automatic = (optionCombo.getSelectionModel()
+                .getSelectedIndex() == 0);
+        Integer manualValue = numField.getValue();
+        return new NumOfThreadsValue(automatic, manualValue);
     }
 
     @Override
-    public void setValue(Integer value) {
-        if (value != null)
-            numField.setText(String.valueOf(value));
-
+    public void setValue(NumOfThreadsValue value) {
+        if (value != null) {
+            if (value.isAutomatic())
+                optionCombo.getSelectionModel().select(0);
+            else
+                optionCombo.getSelectionModel().select(1);
+            numField.getValueFactory().setValue(value.getManualValue());
+        } else {
+            optionCombo.getSelectionModel().select(0);
+        }
     }
 
 }

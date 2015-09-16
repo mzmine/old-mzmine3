@@ -78,11 +78,6 @@ public class BooleanParameter implements Parameter<Boolean> {
     }
 
     @Override
-    public String toString() {
-        return name;
-    }
-
-    @Override
     public void loadValueFromXML(Element xmlElement) {
         String rangeString = xmlElement.getTextContent();
         if (rangeString.length() == 0)
