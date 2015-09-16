@@ -35,6 +35,7 @@ public class ComboEditor extends ChoiceBox<Object>
     private final ComboParameter<?> comboParameter;
 
     public ComboEditor(PropertySheet.Item parameter) {
+        
         if (!(parameter instanceof ComboParameter))
             throw new IllegalArgumentException();
 

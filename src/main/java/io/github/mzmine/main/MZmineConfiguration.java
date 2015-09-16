@@ -22,10 +22,7 @@ package io.github.mzmine.main;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Hashtable;
-import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -44,8 +41,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import io.github.mzmine.gui.preferences.MZminePreferences;
 import io.github.mzmine.modules.MZmineModule;
-import io.github.mzmine.parameters.ParameterSet;
 
 /**
  * MZmine configuration interface
@@ -57,26 +54,27 @@ public class MZmineConfiguration {
 
     public static final File CONFIG_FILE = new File("conf/config.xml");
 
+    private final MZminePreferences preferences;
+
     public MZmineConfiguration() {
-        // preferences = new MZminePreferences();
+        preferences = new MZminePreferences();
+    }
+
+    public MZminePreferences getPreferences() {
+        return preferences;
     }
 
     public NumberFormat getIntensityFormat() {
-        return DecimalFormat.getNumberInstance();
-        // return
-        // preferences.getParameter(MZminePreferences.intensityFormat).getValue();
+        return preferences.getParameter(MZminePreferences.intensityFormat)
+                .getValue();
     }
 
     public NumberFormat getMZFormat() {
-        return DecimalFormat.getNumberInstance();
-        // return
-        // preferences.getParameter(MZminePreferences.mzFormat).getValue();
+        return preferences.getParameter(MZminePreferences.mzFormat).getValue();
     }
 
     public NumberFormat getRTFormat() {
-        return DecimalFormat.getNumberInstance();
-        // return
-        // preferences.getParameter(MZminePreferences.rtFormat).getValue();
+        return preferences.getParameter(MZminePreferences.rtFormat).getValue();
     }
 
     public static void loadConfiguration(File file) throws IOException {
@@ -115,9 +113,11 @@ public class MZmineConfiguration {
 
                 Element moduleElement = (Element) nodes.item(0);
 
-                /*ParameterSet moduleParameters = getModuleParameters(
-                        module.getClass());
-                moduleParameters.loadValuesFromXML(moduleElement);*/
+                /*
+                 * ParameterSet moduleParameters = getModuleParameters(
+                 * module.getClass());
+                 * moduleParameters.loadValuesFromXML(moduleElement);
+                 */
             }
 
             logger.info("Loaded configuration from file " + file);
@@ -156,9 +156,11 @@ public class MZmineConfiguration {
                         .createElement("parameters");
                 moduleElement.appendChild(paramElement);
 
-              /*  ParameterSet moduleParameters = getModuleParameters(
-                        module.getClass());
-                moduleParameters.saveValuesToXML(paramElement);*/
+                /*
+                 * ParameterSet moduleParameters = getModuleParameters(
+                 * module.getClass());
+                 * moduleParameters.saveValuesToXML(paramElement);
+                 */
 
             }
 

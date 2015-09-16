@@ -46,7 +46,7 @@ public class FileNamesEditor extends BorderPane
 
     private final FileNamesParameter fileNamesParameter;
     private final TextArea textArea;
-    private final Button addButton, clearButton;
+    private final Button browseButton, clearButton;
 
     public FileNamesEditor(PropertySheet.Item parameter) {
         if (!(parameter instanceof FileNamesParameter))
@@ -64,8 +64,8 @@ public class FileNamesEditor extends BorderPane
         setCenter(textArea);
 
         // The Add button
-        addButton = new Button("Add");
-        addButton.setOnAction(e -> {
+        browseButton = new Button("Browse");
+        browseButton.setOnAction(e -> {
             List<FileChooser.ExtensionFilter> extensions = fileNamesParameter
                     .getExtensions();
             FileChooser fileChooser = new FileChooser();
@@ -98,7 +98,7 @@ public class FileNamesEditor extends BorderPane
 
         // The button bar
         VBox bar = new VBox(10);
-        bar.getChildren().addAll(addButton, clearButton);
+        bar.getChildren().addAll(browseButton, clearButton);
         setRight(bar);
         setMargin(bar, new Insets(10.0));
 

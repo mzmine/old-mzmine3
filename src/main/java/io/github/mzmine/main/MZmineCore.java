@@ -21,7 +21,6 @@ package io.github.mzmine.main;
 
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
 
@@ -32,10 +31,10 @@ import io.github.mzmine.project.MZmineProject;
  */
 public final class MZmineCore {
 
-    private static Logger logger = Logger.getLogger(MZmineCore.class.getName());
-
+    private static final MZmineConfiguration configuration = new MZmineConfiguration();
+    
     public static MZmineConfiguration getConfiguration() {
-        return null;
+        return configuration;
     }
 
     @Nonnull
@@ -56,7 +55,7 @@ public final class MZmineCore {
     }
 
     static MZmineProject getCurrentProject() {
-        return null;
+        return MZmineCore.getCurrentProject();
     }
 
 }

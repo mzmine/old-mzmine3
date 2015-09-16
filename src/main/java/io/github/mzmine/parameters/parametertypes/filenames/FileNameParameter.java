@@ -1,28 +1,26 @@
 /*
  * Copyright 2006-2015 The MZmine 3 Development Team
  * 
- * This file is part of MZmine 3.
+ * This file is part of MZmine 2.
  * 
- * MZmine 3 is free software; you can redistribute it and/or modify it under the
+ * MZmine 2 is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
  * version.
  * 
- * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY
+ * MZmine 2 is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with
- * MZmine 3; if not, write to the Free Software Foundation, Inc., 51 Franklin St,
- * Fifth Floor, Boston, MA 02110-1301 USA
+ * MZmine 2; if not, write to the Free Software Foundation, Inc., 51 Franklin
+ * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 package io.github.mzmine.parameters.parametertypes.filenames;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 import org.controlsfx.property.editor.PropertyEditor;
@@ -31,38 +29,41 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 
 import io.github.mzmine.parameters.Parameter;
-import javafx.stage.FileChooser;
 
-/**
- * This parameter stores filenames
- */
-public class FileNamesParameter implements Parameter<List<File>> {
+public class FileNameParameter implements Parameter<File> {
 
     private static final String fileNameElement = "filename";
     private static final String lastOpenPathElement = "lastdirectory";
 
-    private List<File> value;
-
     private final String name, description, category;
-    private final List<FileChooser.ExtensionFilter> extensions;
+    private File value;
     private File lastOpenPath;
 
-    public FileNamesParameter(String name, String description, String category,
-            List<FileChooser.ExtensionFilter> extensions) {
+    public FileNameParameter(String name, String description) {
+        this(name, description, null, null);
+    }
+
+    public FileNameParameter(String name, String description, String category,
+            File defaultValue) {
         this.name = name;
         this.description = description;
         this.category = category;
-        this.extensions = ImmutableList.copyOf(extensions);
+        this.value = defaultValue;
     }
 
+    /**
+     * @see net.sf.mzmine.data.Parameter#getName()
+     */
     @Override
     public String getName() {
         return name;
     }
 
+    /**
+     * @see net.sf.mzmine.data.Parameter#getDescription()
+     */
     @Override
     public String getDescription() {
         return description;
@@ -75,48 +76,38 @@ public class FileNamesParameter implements Parameter<List<File>> {
 
     @Override
     public Class<?> getType() {
-        return List.class;
+        return String.class;
     }
 
-    @Override
-    public List<File> getValue() {
+    public File getValue() {
         return value;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public void setValue(Object newValue) {
-        this.value = (List<File>) newValue;
+    public void setValue(Object value) {
+        this.value = (File) value;
     }
 
     @Override
-    public FileNamesParameter clone() {
-        FileNamesParameter copy = new FileNamesParameter(name, description,
-                category, extensions);
-        if (value != null)
-            copy.setValue(ImmutableList.copyOf(value));
+    public FileNameParameter clone() {
+        FileNameParameter copy = new FileNameParameter(name, description,
+                category, value);
         return copy;
     }
 
     @Override
     public void loadValueFromXML(Element xmlElement) {
         NodeList list = xmlElement.getElementsByTagName(fileNameElement);
-        this.value = new ArrayList<>();
         for (int i = 0; i < list.getLength(); i++) {
             Element nextElement = (Element) list.item(i);
             String textValue = nextElement.getTextContent();
-            if (!Strings.isNullOrEmpty(textValue)) {
-                File newFile = new File(textValue);
-                value.add(newFile);
-            }
+            if (!Strings.isNullOrEmpty(textValue))
+                value = new File(textValue);
         }
         list = xmlElement.getElementsByTagName(lastOpenPathElement);
         for (int i = 0; i < list.getLength(); i++) {
             Element nextElement = (Element) list.item(i);
-            String textValue = nextElement.getTextContent();
-            if (!Strings.isNullOrEmpty(textValue)) {
-                lastOpenPath = new File(textValue);
-            }
+            lastOpenPath = new File(nextElement.getTextContent());
         }
     }
 
@@ -124,12 +115,9 @@ public class FileNamesParameter implements Parameter<List<File>> {
     public void saveValueToXML(Element xmlElement) {
         final Document parentDocument = xmlElement.getOwnerDocument();
         if (value != null) {
-            for (File f : value) {
-                Element newElement = parentDocument
-                        .createElement(fileNameElement);
-                newElement.setTextContent(f.getPath());
-                xmlElement.appendChild(newElement);
-            }
+            Element newElement = parentDocument.createElement(fileNameElement);
+            newElement.setTextContent(value.getPath());
+            xmlElement.appendChild(newElement);
         }
         if (lastOpenPath != null) {
             Element newElement = parentDocument
@@ -137,13 +125,12 @@ public class FileNamesParameter implements Parameter<List<File>> {
             newElement.setTextContent(lastOpenPath.getPath());
             xmlElement.appendChild(newElement);
         }
-
     }
 
     @Override
     public boolean checkValue(Collection<String> errorMessages) {
-        if ((value == null) || (value.size() == 0)) {
-            errorMessages.add("File names are not set");
+        if (value == null) {
+            errorMessages.add(name + " is not set properly");
             return false;
         }
         return true;
@@ -151,11 +138,7 @@ public class FileNamesParameter implements Parameter<List<File>> {
 
     @Override
     public Optional<Class<? extends PropertyEditor<?>>> getPropertyEditorClass() {
-        return Optional.of(FileNamesEditor.class);
-    }
-
-    public List<FileChooser.ExtensionFilter> getExtensions() {
-        return extensions;
+        return Optional.of(FileNameEditor.class);
     }
 
     public File getLastOpenPath() {

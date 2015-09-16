@@ -37,7 +37,8 @@
 				<SeparatorMenuItem />
 				<Menu text="Import...">
 					<items>
-						<ModuleMenuItem text="Raw Data" moduleClass="io.github.mzmine.modules.rawdataimport.RawDataImportModule" />
+						<ModuleMenuItem text="Raw Data"
+							moduleClass="io.github.mzmine.modules.rawdataimport.RawDataImportModule" />
 						<MenuItem text="Feature Table" />
 					</items>
 				</Menu>
@@ -104,27 +105,31 @@
 					<items>
 						<SeparatorMenuItem>
 							<content>
-								<Text text=" MS"  styleClass="textSeparator" />
+								<Text text=" MS" styleClass="textSeparator" />
 							</content>
 						</SeparatorMenuItem>
 						<MenuItem text="Chromatoram Builder" />
 						<MenuItem text="Targeted Feature Detection" />
 						<MenuItem text="GridMass - 2D Feature Detection" />
 						<SeparatorMenuItem>
-							<content><Text text="" /></content>
+							<content>
+								<Text text="" />
+							</content>
 						</SeparatorMenuItem>
 						<SeparatorMenuItem>
 							<content>
-								<Text text=" MS/MS"  styleClass="textSeparator" />
+								<Text text=" MS/MS" styleClass="textSeparator" />
 							</content>
 						</SeparatorMenuItem>
 						<MenuItem text="MS/MS Feature List Builder" />
 						<SeparatorMenuItem>
-							<content><Text text="" /></content>
+							<content>
+								<Text text="" />
+							</content>
 						</SeparatorMenuItem>
 						<SeparatorMenuItem>
 							<content>
-								<Text text=" SRM"  styleClass="textSeparator" />
+								<Text text=" SRM" styleClass="textSeparator" />
 							</content>
 						</SeparatorMenuItem>
 						<MenuItem text="SRM Feature List Builder" />
@@ -201,11 +206,13 @@
 				<MenuItem text="MS/MS Plot" />
 				<MenuItem text="Neutral Loss Plot" />
 				<SeparatorMenuItem>
-					<content><Text text="" /></content>
+					<content>
+						<Text text="" />
+					</content>
 				</SeparatorMenuItem>
 				<SeparatorMenuItem>
 					<content>
-						<Text text=" Feature Data"  styleClass="textSeparator" />
+						<Text text=" Feature Data" styleClass="textSeparator" />
 					</content>
 				</SeparatorMenuItem>
 				<MenuItem text="Scatter Plot" />
@@ -218,34 +225,42 @@
 			<items>
 				<SeparatorMenuItem>
 					<content>
-						<Text text=" Bubble Plots"  styleClass="textSeparator" />
+						<Text text=" Bubble Plots" styleClass="textSeparator" />
 					</content>
 				</SeparatorMenuItem>
 				<MenuItem text="Coefficient of Variation Plot" />
 				<MenuItem text="Logratio Analysis" />
 				<SeparatorMenuItem>
-					<content><Text text="" /></content>
+					<content>
+						<Text text="" />
+					</content>
 				</SeparatorMenuItem>
 				<SeparatorMenuItem>
 					<content>
-						<Text text=" Dimensionality Reduction"  styleClass="textSeparator" />
+						<Text text=" Dimensionality Reduction" styleClass="textSeparator" />
 					</content>
 				</SeparatorMenuItem>
 				<MenuItem text="Principal Component Analysis (PCA)" />
 				<MenuItem text="Curvilinear Distance Analysis (CDA)" />
 				<MenuItem text="Sammon's Projection" />
 				<SeparatorMenuItem>
-					<content><Text text="" /></content>
+					<content>
+						<Text text="" />
+					</content>
 				</SeparatorMenuItem>
 				<SeparatorMenuItem>
 					<content>
-						<Text text=" Clustering"  styleClass="textSeparator" />
+						<Text text=" Clustering" styleClass="textSeparator" />
 					</content>
-				</SeparatorMenuItem>				
+				</SeparatorMenuItem>
 				<MenuItem text="Clustering" />
 			</items>
 		</Menu>
-		<Menu text="Settings" />
+		<Menu text="Settings">
+			<items>
+				<MenuItem text="Set Preferences" onAction="#setPreferences"/>
+			</items>
+		</Menu>
 		<Menu text="Help">
 			<items>
 				<MenuItem text="Tutorials" onAction="#openLink" />

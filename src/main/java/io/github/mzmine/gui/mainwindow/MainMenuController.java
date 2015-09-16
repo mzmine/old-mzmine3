@@ -21,13 +21,12 @@ package io.github.mzmine.gui.mainwindow;
 
 import java.awt.Desktop;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.logging.Logger;
 
 import io.github.mzmine.gui.MZmineGUI;
+import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.main.NewVersionCheck;
 import io.github.mzmine.main.NewVersionCheck.CheckType;
 import javafx.event.ActionEvent;
@@ -88,10 +87,18 @@ public class MainMenuController {
     @FXML
     protected void versionCheck(ActionEvent event) {
         // Check for new version of MZmine
+        logger.info("Checking for new MZmine version");
         NewVersionCheck NVC = new NewVersionCheck(CheckType.MENU);
         Thread nvcThread = new Thread(NVC);
         nvcThread.setPriority(Thread.MIN_PRIORITY);
         nvcThread.start();
+    }
+    
+    @FXML
+    protected void setPreferences(ActionEvent event) {
+        // Show the Preferences dialog
+        logger.info("Showing the Preferences dialog");
+        MZmineCore.getConfiguration().getPreferences().showSetupDialog();
     }
 
 }

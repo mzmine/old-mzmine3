@@ -19,13 +19,15 @@
 
 package io.github.mzmine.gui.preferences;
 
-import java.awt.Window;
 import java.text.DecimalFormat;
 
 import org.w3c.dom.Element;
 
-import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.parameters.parametertypes.BooleanParameter;
+import io.github.mzmine.parameters.parametertypes.OptionalModuleParameter;
+import io.github.mzmine.parameters.parametertypes.filenames.FileNameParameter;
+import javafx.scene.control.ButtonType;
 
 public class MZminePreferences extends ParameterSet {
 
@@ -56,26 +58,26 @@ public class MZminePreferences extends ParameterSet {
             "Allow MZmine to send anonymous statistics on the module usage?",
             true);
 
-    public static final WindowSettingsParameter windowSetttings = new WindowSettingsParameter();
+    // public static final WindowSettingsParameter windowSetttings = new
+    // WindowSettingsParameter();
 
     public MZminePreferences() {
-        super( mzFormat, rtFormat, intensityFormat,
-                numOfThreads, proxySettings, rExecPath, sendStatistics,
-                windowSetttings );
+        super(mzFormat, rtFormat, intensityFormat, numOfThreads, proxySettings,
+                rExecPath, sendStatistics);
     }
 
     @Override
-    public void showSetupDialog(Window parent, boolean valueCheckRequired) {
+    public ButtonType showSetupDialog() {
 
-        ExitCode retVal = super.showSetupDialog(parent, valueCheckRequired);
+        ButtonType retVal = super.showSetupDialog();
 
-        if (retVal == ExitCode.OK) {
+        if (retVal == ButtonType.OK) {
 
             // Update proxy settings
             updateSystemProxySettings();
 
             // Repaint windows to update number formats
-            MZmineCore.getDesktop().getMainWindow().repaint();
+            // TODO: MZmineCore..getDesktop().getMainWindow().repaint();
         }
 
         return retVal;
