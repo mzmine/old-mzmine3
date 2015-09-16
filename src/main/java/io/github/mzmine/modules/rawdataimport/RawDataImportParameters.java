@@ -45,7 +45,8 @@ public class RawDataImportParameters extends ParameterSet {
             new ExtensionFilter("NetCDF files", "*.cdf", "*.nc"),
             new ExtensionFilter("Waters RAW folders", "*.raw"),
             new ExtensionFilter("XCalibur RAW files", "*.raw"),
-            new ExtensionFilter("XML files", "*.xml") };
+            new ExtensionFilter("XML files", "*.xml"),
+            new ExtensionFilter("All files", "*.*") };
 
     public static final FileNamesParameter fileNames = new FileNamesParameter(
             "File names", "Add raw data files", Arrays.asList(filters));
@@ -74,6 +75,8 @@ public class RawDataImportParameters extends ParameterSet {
                 for (PropertySheet.Item item : sheet.getItems()) {
                     if (item instanceof FileNamesParameter) {
                         List<File> fileNames = (List<File>) item.getValue();
+                        if (fileNames == null)
+                            return;
                         String commonPrefix = FileNameUtil
                                 .findCommonPrefix(fileNames);
                         editor.setValue(commonPrefix);
