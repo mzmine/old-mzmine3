@@ -56,12 +56,15 @@ public class MSDKObjectBuilder {
     private static final @Nonnull SimpleFeatureTableColumn<Integer> IdFeatureTableColumn = new SimpleFeatureTableColumn<Integer>(
             "Id", Integer.class, null);
     private static final @Nonnull SimpleFeatureTableColumn<Double> MzFeatureTableColumn = new SimpleFeatureTableColumn<Double>(
-            "m/z", Double.class, null);
+            ColumnName.MZ.getName(), Double.class, null);
     private static final @Nonnull SimpleFeatureTableColumn<ChromatographyInfo> ChromatographyInfoFeatureTableColumn = new SimpleFeatureTableColumn<ChromatographyInfo>(
             "Chromatography Info", ChromatographyInfo.class, null);
     private static final @Nonnull SimpleFeatureTableColumn<IonAnnotation> IonAnnotationFeatureTableColumn = new SimpleFeatureTableColumn<IonAnnotation>(
             "Ion Annotation", IonAnnotation.class, null);
+    private static final @Nonnull SimpleFeatureTableColumn<Integer> ChargeFeatureTableColumn = new SimpleFeatureTableColumn<Integer>(
+            ColumnName.CHARGE.getName(), Integer.class, null);
 
+    
     /**
      * The number of MS functions used in a project is typically small, but each
      * scan has to be annotated with its MS function. So we take advantage of
@@ -77,7 +80,6 @@ public class MSDKObjectBuilder {
      * @param msLevel
      * @return
      */
-    @SuppressWarnings("null")
     public static final @Nonnull MsFunction getMsFunction(@Nonnull String name,
             @Nullable Integer msLevel) {
 
@@ -254,6 +256,10 @@ public class MSDKObjectBuilder {
 
     public static @Nonnull FeatureTableColumn<IonAnnotation> getIonAnnotationFeatureTableColumn() {
         return IonAnnotationFeatureTableColumn;
+    }
+
+    public static @Nonnull FeatureTableColumn<Integer> getChargeFeatureTableColumn() {
+        return ChargeFeatureTableColumn;
     }
 
     /**

@@ -99,15 +99,15 @@ public interface IonAnnotation {
     void setIdentificationMethod(@Nullable String identificationMethod);
 
     /**
-     * @return ID in a database, if this annotation comes from a database.
+     * @return The id of this annotation..
      */
     @Nullable
-    String getDataBaseId();
+    String getAnnotationId();
 
     /**
-     * Sets a new identification method to this annotation.
+     * Sets a new annotation id this annotation.
      */
-    void setDataBaseId(@Nullable String dataBaseId);
+    void setAnnotationId(@Nullable String annotationId);
 
     /**
      * @return Accession URL for a database, if this annotation comes from a

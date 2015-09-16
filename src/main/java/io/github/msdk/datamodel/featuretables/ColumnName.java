@@ -29,14 +29,14 @@ public enum ColumnName {
     MZ("m/z", Double.class),
     RT("RT", ChromatographyInfo.class),
     RTRANGE("RT Range", Range.class),
-    DURATION("Duration", Float.class),
-    AREA("Area", Float.class),
-    HEIGHT("Height", Float.class),
+    DURATION("Duration", Double.class),
+    AREA("Area", Double.class),
+    HEIGHT("Height", Double.class),
     CHARGE("Charge", Integer.class),
     NUMBEROFDATAPOINTS("# Data Points", Integer.class),
-    FWHM("FWHM", Float.class),
-    TAILINGFACTOR("Tailing Factor", Float.class),
-    ASYMMETRYFACTOR("Asymmetry Factor", Float.class);
+    FWHM("FWHM", Double.class),
+    TAILINGFACTOR("Tailing Factor", Double.class),
+    ASYMMETRYFACTOR("Asymmetry Factor", Double.class);
 
     @Nonnull private final String name;
     @Nonnull private final Class<?> dataTypeClass;

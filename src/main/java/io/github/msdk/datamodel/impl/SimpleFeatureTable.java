@@ -97,13 +97,17 @@ class SimpleFeatureTable implements FeatureTable {
             Sample sample) {
         for (FeatureTableColumn<?> column : featureTableColumns) {
             if (column.getName().equals(columnName)) {
-                if (sample == null & column.getSample() == null) {
-                    return column;
+                
+                if (column.getSample() == null) {
+                    if (sample == null)
+                        return column;
                 }
                 else if (column.getSample().equals(sample)) {
                     return column;
                 }
+
             }
+
         }
         return null;
     }

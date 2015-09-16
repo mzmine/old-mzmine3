@@ -35,7 +35,7 @@ class SimpleIonAnnotation implements IonAnnotation {
     private @Nullable Double expectedMz;
     private @Nullable String description;
     private @Nullable String identificationMethod;
-    private @Nullable String dataBaseId;
+    private @Nullable String annotationId;
     private @Nullable URL accessionURL;
 
     @Override
@@ -107,13 +107,13 @@ class SimpleIonAnnotation implements IonAnnotation {
 
     @Override
     @Nullable
-    public String getDataBaseId() {
-        return dataBaseId;
+    public String getAnnotationId() {
+        return annotationId;
     }
 
     @Override
-    public void setDataBaseId(@Nullable String dataBaseId) {
-        this.dataBaseId = dataBaseId;
+    public void setAnnotationId(@Nullable String annotationId) {
+        this.annotationId = annotationId;
     }
 
     @Override
