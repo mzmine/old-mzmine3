@@ -19,16 +19,19 @@
 
 package io.github.mzmine.parameters.parametertypes;
 
-import org.controlsfx.control.PropertySheet;
-import org.controlsfx.property.editor.PropertyEditor;
+import javax.annotation.Nullable;
 
+import org.controlsfx.control.PropertySheet;
+
+import io.github.mzmine.parameters.ParameterEditor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Control;
 import javafx.scene.layout.FlowPane;
 
 public class OptionalModuleEditor extends FlowPane
-        implements PropertyEditor<Boolean> {
+        implements ParameterEditor<Boolean> {
 
     private final CheckBox checkBox;
     private final Button setButton;
@@ -42,15 +45,19 @@ public class OptionalModuleEditor extends FlowPane
 
         this.optionalModuleParameter = (OptionalModuleParameter) parameter;
 
+        checkBox = new CheckBox();
         setButton = new Button("Setup..");
+
+        checkBox.setOnAction(e -> {
+            setButton.setDisable(!checkBox.isSelected());
+        });
+
         setButton.setDisable(true);
         setButton.setOnAction(e -> {
             optionalModuleParameter.getEmbeddedParameters().showSetupDialog();
-        });
-
-        checkBox = new CheckBox();
-        checkBox.setOnAction(e -> {
-            setButton.setDisable(!checkBox.isSelected());
+            // Fire the checkBox to update the validation decorations
+            checkBox.setSelected(false);
+            checkBox.setSelected(true);
         });
 
         // FLowPane setting
@@ -74,6 +81,12 @@ public class OptionalModuleEditor extends FlowPane
     public void setValue(Boolean value) {
         if (value != null)
             checkBox.setSelected(value);
+    }
+
+    @Override
+    @Nullable
+    public Control getMainControl() {
+        return checkBox;
     }
 
 }

@@ -26,6 +26,7 @@ import org.w3c.dom.Element;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.BooleanParameter;
 import io.github.mzmine.parameters.parametertypes.OptionalModuleParameter;
+import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.filenames.FileNameParameter;
 import javafx.scene.control.ButtonType;
 
@@ -51,19 +52,24 @@ public class MZminePreferences extends ParameterSet {
 
     public static final FileNameParameter rExecPath = new FileNameParameter(
             "R executable path",
-            "Full R executable file path (If left blank, MZmine will try to find out automatically). On Windows, this should point to your R.exe file.");
+            "Full R executable file path (If left blank, MZmine will try to find out automatically). On Windows, this should point to your R.exe file.",
+            FileNameParameter.Type.OPEN);
 
     public static final BooleanParameter sendStatistics = new BooleanParameter(
             "Send anonymous statistics",
             "Allow MZmine to send anonymous statistics on the module usage?",
             true);
 
+    public static final StringParameter testParam = new StringParameter(
+            "Send anonymous statistics",
+            "Allow MZmine to send anonymous statistics on the module usage?");
+
     // public static final WindowSettingsParameter windowSetttings = new
     // WindowSettingsParameter();
 
     public MZminePreferences() {
         super(mzFormat, rtFormat, intensityFormat, numOfThreads, proxySettings,
-                rExecPath, sendStatistics);
+                rExecPath, sendStatistics, testParam);
     }
 
     @Override

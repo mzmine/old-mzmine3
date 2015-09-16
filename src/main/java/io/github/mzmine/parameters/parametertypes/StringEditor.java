@@ -20,20 +20,22 @@
 package io.github.mzmine.parameters.parametertypes;
 
 import org.controlsfx.control.PropertySheet;
-import org.controlsfx.property.editor.PropertyEditor;
 
+import io.github.mzmine.parameters.ParameterEditor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 
 /**
  * This parameter stores filenames
  */
-public class StringEditor extends BorderPane implements PropertyEditor<String> {
+public class StringEditor extends BorderPane
+        implements ParameterEditor<String> {
 
     private final StringParameter stringParameter;
     private final TextField textField;
@@ -76,6 +78,13 @@ public class StringEditor extends BorderPane implements PropertyEditor<String> {
     @Override
     public void setValue(String value) {
         textField.setText(value);
+    }
+
+   
+    @Override
+    public Control getMainControl() {
+        // TODO Auto-generated method stub
+        return textField;
     }
 
 }

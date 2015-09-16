@@ -22,13 +22,14 @@ package io.github.mzmine.parameters.parametertypes.filenames;
 import java.io.File;
 
 import org.controlsfx.control.PropertySheet;
-import org.controlsfx.property.editor.PropertyEditor;
 
 import com.google.common.base.Strings;
 
+import io.github.mzmine.parameters.ParameterEditor;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
@@ -37,7 +38,8 @@ import javafx.stage.Window;
 /**
  * This parameter stores filenames
  */
-public class FileNameEditor extends BorderPane implements PropertyEditor<File> {
+public class FileNameEditor extends BorderPane
+        implements ParameterEditor<File> {
 
     private final FileNameParameter fileNameParameter;
     private final TextField textField;
@@ -64,7 +66,13 @@ public class FileNameEditor extends BorderPane implements PropertyEditor<File> {
                 fileChooser.setInitialDirectory(lastOpenPath);
             fileChooser.setTitle("Find file");
             Window parentWindow = this.getScene().getWindow();
-            File selectedFile = fileChooser.showSaveDialog(parentWindow);
+            File selectedFile;
+
+            if (fileNameParameter
+                    .getFileNameParameterType() == FileNameParameter.Type.OPEN)
+                selectedFile = fileChooser.showOpenDialog(parentWindow);
+            else
+                selectedFile = fileChooser.showSaveDialog(parentWindow);
             if (selectedFile != null) {
                 textField.setText(selectedFile.getPath());
                 File parentDir = selectedFile.getParentFile();
@@ -94,6 +102,11 @@ public class FileNameEditor extends BorderPane implements PropertyEditor<File> {
             textField.setText(value.getPath());
         else
             textField.clear();
+    }
+
+    @Override
+    public Control getMainControl() {
+        return textField;
     }
 
 }

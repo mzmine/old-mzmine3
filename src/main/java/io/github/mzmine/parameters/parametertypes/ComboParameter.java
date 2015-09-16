@@ -19,9 +19,11 @@
 
 package io.github.mzmine.parameters.parametertypes;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.controlsfx.property.editor.PropertyEditor;
 import org.w3c.dom.Element;
@@ -32,19 +34,18 @@ import javafx.collections.ObservableList;
 
 public class ComboParameter<Type> implements Parameter<Type> {
 
-    private final String name, description, category;
-    private ObservableList<Type> options; 
+    private final @Nonnull String name, description;
+    private ObservableList<Type> options;
     private Type value;
 
-    public ComboParameter(String name, String description, String category) {
-        this(name, description, category, null, null);
+    public ComboParameter(@Nonnull String name, @Nonnull String description) {
+        this(name, description, null, null);
     }
 
-    public ComboParameter(String name, String description, String category,
+    public ComboParameter(@Nonnull String name, @Nonnull String description,
             List<Type> options, Type defaultValue) {
         this.name = name;
         this.description = description;
-        this.category = category;
         this.options = FXCollections.observableList(options);
         this.value = defaultValue;
     }
@@ -53,7 +54,7 @@ public class ComboParameter<Type> implements Parameter<Type> {
      * @see net.sf.mzmine.data.Parameter#getName()
      */
     @Override
-    public String getName() {
+    public @Nonnull String getName() {
         return name;
     }
 
@@ -61,13 +62,8 @@ public class ComboParameter<Type> implements Parameter<Type> {
      * @see net.sf.mzmine.data.Parameter#getDescription()
      */
     @Override
-    public String getDescription() {
+    public @Nonnull String getDescription() {
         return description;
-    }
-
-    @Override
-    public String getCategory() {
-        return category;
     }
 
     @Override
@@ -81,13 +77,14 @@ public class ComboParameter<Type> implements Parameter<Type> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void setValue(Object value) {
+    public void setValue(@Nullable Object value) {
         this.value = (Type) value;
     }
 
     @Override
-    public ComboParameter<Type> clone() {
-        ComboParameter<Type> copy = new ComboParameter<Type>(name, description, category, options, value);
+    public @Nonnull ComboParameter<Type> clone() {
+        ComboParameter<Type> copy = new ComboParameter<Type>(name, description,
+                options, value);
         return copy;
     }
 
@@ -97,35 +94,24 @@ public class ComboParameter<Type> implements Parameter<Type> {
     }
 
     @Override
-    public void loadValueFromXML(Element xmlElement) {
-        //value = xmlElement.getTextContent();
+    public void loadValueFromXML(@Nonnull Element xmlElement) {
+        // value = xmlElement.getTextContent();
     }
 
     @Override
-    public void saveValueToXML(Element xmlElement) {
+    public void saveValueToXML(@Nonnull Element xmlElement) {
         if (value == null)
             return;
-        //xmlElement.setTextContent(value);
+        // xmlElement.setTextContent(value);
     }
 
-    @Override
-    public boolean checkValue(Collection<String> errorMessages) {
-        if (value == null) {
-            errorMessages.add(name + " is not set properly");
-            return false;
-        }
-        return true;
-    }
-    
     @Override
     public Optional<Class<? extends PropertyEditor<?>>> getPropertyEditorClass() {
         return Optional.of(ComboEditor.class);
     }
-    
+
     ObservableList<Type> getOptions() {
         return options;
     }
-
-
 
 }

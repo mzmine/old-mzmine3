@@ -48,18 +48,16 @@ public class RawDataImportParameters extends ParameterSet {
             new ExtensionFilter("XML files", "*.xml") };
 
     public static final FileNamesParameter fileNames = new FileNamesParameter(
-            "File names", "Add raw data files", "Files",
-            Arrays.asList(filters));
+            "File names", "Add raw data files", Arrays.asList(filters));
 
     public static final ComboParameter<RawDataImportMode> importMode = new ComboParameter<>(
             "Import mode", "Select how the raw data points will be handled",
-            "Files", Arrays.asList(RawDataImportMode.values()),
+            Arrays.asList(RawDataImportMode.values()),
             RawDataImportMode.TRANSPARENT);
 
     @SuppressWarnings({ "unchecked", "null", })
     public static final StringParameter removePrefix = new StringParameter(
-            "Remove prefix", "Prefix to be removed from filenames", "Files",
-            null, e -> {
+            "Remove prefix", "Prefix to be removed from filenames", null, e -> {
                 StringEditor editor = null;
                 PropertySheet sheet = null;
                 Node src = (Node) e.getSource();
@@ -85,8 +83,7 @@ public class RawDataImportParameters extends ParameterSet {
 
     @SuppressWarnings({ "unchecked", "null", })
     public static final StringParameter removeSuffix = new StringParameter(
-            "Remove suffix", "Suffix to be removed from filenames", "Files",
-            null, e -> {
+            "Remove suffix", "Suffix to be removed from filenames", null, e -> {
                 StringEditor editor = null;
                 PropertySheet sheet = null;
                 Node src = (Node) e.getSource();
@@ -103,6 +100,8 @@ public class RawDataImportParameters extends ParameterSet {
                 for (PropertySheet.Item item : sheet.getItems()) {
                     if (item instanceof FileNamesParameter) {
                         List<File> fileNames = (List<File>) item.getValue();
+                        if (fileNames == null)
+                            continue;
                         String commonSuffix = FileNameUtil
                                 .findCommonSuffix(fileNames);
                         editor.setValue(commonSuffix);

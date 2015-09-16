@@ -19,18 +19,22 @@
 
 package io.github.mzmine.gui.preferences;
 
-import org.controlsfx.control.PropertySheet;
-import org.controlsfx.property.editor.PropertyEditor;
+import javax.annotation.Nullable;
 
+import org.controlsfx.control.PropertySheet;
+
+import io.github.mzmine.parameters.ParameterEditor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.Spinner;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 
-public class NumOfThreadsEditor extends BorderPane
-        implements PropertyEditor<NumOfThreadsValue> {
+public class NumOfThreadsEditor extends HBox
+        implements ParameterEditor<NumOfThreadsValue> {
 
     private static final ObservableList<String> options = FXCollections
             .observableArrayList(
@@ -43,16 +47,20 @@ public class NumOfThreadsEditor extends BorderPane
 
     public NumOfThreadsEditor(PropertySheet.Item parameter) {
 
+        // HBox properties
+        setSpacing(10);
+        setAlignment(Pos.CENTER_LEFT);
+
         numField = new Spinner<>(1, 50, 4);
         numField.setDisable(true);
-        setCenter(numField);
 
         optionCombo = new ComboBox<>(options);
         optionCombo.setOnAction(e -> {
             numField.setDisable(
                     optionCombo.getSelectionModel().getSelectedIndex() == 0);
         });
-        setLeft(optionCombo);
+
+        getChildren().addAll(optionCombo, numField);
 
     }
 
@@ -81,6 +89,12 @@ public class NumOfThreadsEditor extends BorderPane
         } else {
             optionCombo.getSelectionModel().select(0);
         }
+    }
+
+    @Override
+    @Nullable
+    public Control getMainControl() {
+        return null;
     }
 
 }

@@ -19,8 +19,10 @@
 
 package io.github.mzmine.gui.preferences;
 
-import java.util.Collection;
 import java.util.Optional;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.controlsfx.property.editor.PropertyEditor;
 import org.w3c.dom.Element;
@@ -32,8 +34,8 @@ import io.github.mzmine.parameters.Parameter;
 
 public class NumOfThreadsParameter implements Parameter<NumOfThreadsValue> {
 
-    private static final String name = "Number of parallel tasks";
-    private static final String description = "Maximum number of tasks running simultaneously";
+    private static final @Nonnull String name = "Number of parallel tasks";
+    private static final @Nonnull String description = "Maximum number of tasks running simultaneously";
 
     // Provide a default value
     private NumOfThreadsValue value = new NumOfThreadsValue(true, 4);
@@ -46,7 +48,7 @@ public class NumOfThreadsParameter implements Parameter<NumOfThreadsValue> {
      * @see net.sf.mzmine.data.Parameter#getName()
      */
     @Override
-    public String getName() {
+    public @Nonnull String getName() {
         return name;
     }
 
@@ -54,7 +56,7 @@ public class NumOfThreadsParameter implements Parameter<NumOfThreadsValue> {
      * @see net.sf.mzmine.data.Parameter#getDescription()
      */
     @Override
-    public String getDescription() {
+    public @Nonnull String getDescription() {
         return description;
     }
 
@@ -64,7 +66,7 @@ public class NumOfThreadsParameter implements Parameter<NumOfThreadsValue> {
     }
 
     @Override
-    public void setValue(Object value) {
+    public void setValue(@Nullable Object value) {
         this.value = (NumOfThreadsValue) value;
 
         if (this.value != null) {
@@ -76,12 +78,12 @@ public class NumOfThreadsParameter implements Parameter<NumOfThreadsValue> {
     }
 
     @Override
-    public NumOfThreadsParameter clone() {
+    public @Nonnull NumOfThreadsParameter clone() {
         return this;
     }
 
     @Override
-    public void loadValueFromXML(Element xmlElement) {
+    public void loadValueFromXML(@Nonnull Element xmlElement) {
         String attrValue = xmlElement.getAttribute("isautomatic");
         boolean automatic = true;
         if (attrValue.length() > 0) {
@@ -96,21 +98,12 @@ public class NumOfThreadsParameter implements Parameter<NumOfThreadsValue> {
     }
 
     @Override
-    public void saveValueToXML(Element xmlElement) {
+    public void saveValueToXML(@Nonnull Element xmlElement) {
         if (value == null)
             return;
         xmlElement.setAttribute("isautomatic",
                 String.valueOf(value.isAutomatic()));
         xmlElement.setTextContent(value.toString());
-    }
-
-    @Override
-    public boolean checkValue(Collection<String> errorMessages) {
-        if (value == null) {
-            errorMessages.add(name + " is not set");
-            return false;
-        }
-        return true;
     }
 
     @Override

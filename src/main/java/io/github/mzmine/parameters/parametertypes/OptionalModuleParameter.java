@@ -19,61 +19,63 @@
 
 package io.github.mzmine.parameters.parametertypes;
 
-import java.util.Collection;
 import java.util.Optional;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.controlsfx.property.editor.PropertyEditor;
 import org.w3c.dom.Element;
 
 import io.github.mzmine.parameters.Parameter;
 import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.parameters.ParameterValidator;
 
 /**
  * Parameter represented by check box with additional sub-parameters
  * 
  */
-public class OptionalModuleParameter implements
-	Parameter<Boolean> {
+public class OptionalModuleParameter implements Parameter<Boolean> {
 
-    private final String name, description;
+    private final @Nonnull String name, description;
     private final ParameterSet embeddedParameters;
     private Boolean value;
 
-    public OptionalModuleParameter(String name, String description,
-	    ParameterSet embeddedParameters) {
-	this.name = name;
-	this.description = description;
-	this.embeddedParameters = embeddedParameters;
+    public OptionalModuleParameter(@Nonnull String name,
+            @Nonnull String description, ParameterSet embeddedParameters) {
+        this.name = name;
+        this.description = description;
+        this.embeddedParameters = embeddedParameters;
     }
 
     public ParameterSet getEmbeddedParameters() {
-	return embeddedParameters;
+        return embeddedParameters;
     }
 
     /**
      * @see net.sf.mzmine.data.Parameter#getName()
      */
     @Override
-    public String getName() {
-	return name;
+    public @Nonnull String getName() {
+        return name;
     }
 
     /**
      * @see net.sf.mzmine.data.Parameter#getDescription()
      */
     @Override
-    public String getDescription() {
-	return description;
+    public @Nonnull String getDescription() {
+        return description;
     }
 
     @Override
     public Boolean getValue() {
-	return value;
+        return value;
     }
 
     @Override
-    public void setValue(Object value) {
-	this.value = (Boolean) value;
+    public void setValue(@Nullable Object value) {
+        this.value = (Boolean) value;
     }
 
     @Override
@@ -82,46 +84,52 @@ public class OptionalModuleParameter implements
     }
 
     @Override
-    public OptionalModuleParameter clone() {
-	final ParameterSet embeddedParametersClone = embeddedParameters
-		.clone();
-	final OptionalModuleParameter copy = new OptionalModuleParameter(name,
-		description, embeddedParametersClone);
-	copy.setValue(this.getValue());
-	return copy;
-    }
-
-
-
-    @Override
-    public void loadValueFromXML(Element xmlElement) {
-	embeddedParameters.loadValuesFromXML(xmlElement);
-	String selectedAttr = xmlElement.getAttribute("selected");
-	this.value = Boolean.valueOf(selectedAttr);
+    public @Nonnull OptionalModuleParameter clone() {
+        final ParameterSet embeddedParametersClone = embeddedParameters.clone();
+        final OptionalModuleParameter copy = new OptionalModuleParameter(name,
+                description, embeddedParametersClone);
+        copy.setValue(this.getValue());
+        return copy;
     }
 
     @Override
-    public void saveValueToXML(Element xmlElement) {
-	if (value != null)
-	    xmlElement.setAttribute("selected", value.toString());
-	embeddedParameters.saveValuesToXML(xmlElement);
+    public void loadValueFromXML(@Nonnull Element xmlElement) {
+        embeddedParameters.loadValuesFromXML(xmlElement);
+        String selectedAttr = xmlElement.getAttribute("selected");
+        this.value = Boolean.valueOf(selectedAttr);
     }
 
     @Override
-    public boolean checkValue(Collection<String> errorMessages) {
-	if (value == null) {
-	    errorMessages.add(name + " is not set properly");
-	    return false;
-	}
-	if (value == true) {
-	    return embeddedParameters.checkParameterValues(errorMessages);
-	}
-	return true;
+    public void saveValueToXML(@Nonnull Element xmlElement) {
+        if (value != null)
+            xmlElement.setAttribute("selected", value.toString());
+        embeddedParameters.saveValuesToXML(xmlElement);
     }
-    
+
     @Override
     public Optional<Class<? extends PropertyEditor<?>>> getPropertyEditorClass() {
         return Optional.of(OptionalModuleEditor.class);
+    }
+
+    @Override
+    @Nullable
+    public ParameterValidator<Boolean> getValidator() {
+
+        return (val, msg) -> {
+            // If we are selected, we have to check the validity of embedded
+            // parameters
+            if (val) {
+                for (Parameter<?> par : embeddedParameters.getParameters()) {
+                    ParameterValidator p = par.getValidator();
+                    if (p == null)
+                        continue;
+                    boolean result = p.checkValue(par.getValue(), msg);
+                    if (!result)
+                        return false;
+                }
+            }
+            return true;
+        };
     }
 
 }

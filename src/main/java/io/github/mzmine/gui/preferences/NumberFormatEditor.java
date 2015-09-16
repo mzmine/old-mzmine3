@@ -46,7 +46,7 @@ public class NumberFormatEditor extends HBox
         // HBox properties
         setSpacing(10);
         setAlignment(Pos.CENTER_LEFT);
-        
+
         this.numFormatParameter = (NumberFormatParameter) parameter;
 
         getChildren().add(new Text("Decimals"));

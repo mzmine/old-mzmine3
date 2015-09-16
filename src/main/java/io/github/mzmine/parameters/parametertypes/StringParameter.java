@@ -19,36 +19,40 @@
 
 package io.github.mzmine.parameters.parametertypes;
 
-import java.util.Collection;
 import java.util.Optional;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.controlsfx.property.editor.PropertyEditor;
 import org.w3c.dom.Element;
 
+import com.google.common.base.Strings;
+
 import io.github.mzmine.parameters.Parameter;
+import io.github.mzmine.parameters.ParameterValidator;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 public class StringParameter implements Parameter<String> {
 
-    private final String name, description, category;
+    private final @Nonnull String name, description;
     private final EventHandler<ActionEvent> autoSetAction;
     private String value;
 
-    public StringParameter(String name, String description) {
-        this(name, description, null, null, null);
+    public StringParameter(@Nonnull String name, @Nonnull String description) {
+        this(name, description, null, null);
     }
 
-    public StringParameter(String name, String description, String category,
+    public StringParameter(@Nonnull String name, @Nonnull String description,
             String defaultValue) {
-        this(name, description, category, defaultValue, null);
+        this(name, description, defaultValue, null);
     }
 
-    public StringParameter(String name, String description, String category,
+    public StringParameter(@Nonnull String name, @Nonnull String description,
             String defaultValue, EventHandler<ActionEvent> autoSetAction) {
         this.name = name;
         this.description = description;
-        this.category = category;
         this.value = defaultValue;
         this.autoSetAction = autoSetAction;
     }
@@ -57,7 +61,7 @@ public class StringParameter implements Parameter<String> {
      * @see net.sf.mzmine.data.Parameter#getName()
      */
     @Override
-    public String getName() {
+    public @Nonnull String getName() {
         return name;
     }
 
@@ -65,13 +69,8 @@ public class StringParameter implements Parameter<String> {
      * @see net.sf.mzmine.data.Parameter#getDescription()
      */
     @Override
-    public String getDescription() {
+    public @Nonnull String getDescription() {
         return description;
-    }
-
-    @Override
-    public String getCategory() {
-        return category;
     }
 
     @Override
@@ -84,36 +83,27 @@ public class StringParameter implements Parameter<String> {
     }
 
     @Override
-    public void setValue(Object value) {
+    public void setValue(@Nullable Object value) {
         this.value = (String) value;
     }
 
     @Override
-    public StringParameter clone() {
-        StringParameter copy = new StringParameter(name, description, category,
-                value, autoSetAction);
+    public @Nonnull StringParameter clone() {
+        StringParameter copy = new StringParameter(name, description, value,
+                autoSetAction);
         return copy;
     }
 
     @Override
-    public void loadValueFromXML(Element xmlElement) {
+    public void loadValueFromXML(@Nonnull Element xmlElement) {
         value = xmlElement.getTextContent();
     }
 
     @Override
-    public void saveValueToXML(Element xmlElement) {
+    public void saveValueToXML(@Nonnull Element xmlElement) {
         if (value == null)
             return;
         xmlElement.setTextContent(value);
-    }
-
-    @Override
-    public boolean checkValue(Collection<String> errorMessages) {
-        if ((value == null) || (value.trim().length() == 0)) {
-            errorMessages.add(name + " is not set properly");
-            return false;
-        }
-        return true;
     }
 
     @Override
@@ -123,6 +113,12 @@ public class StringParameter implements Parameter<String> {
 
     public EventHandler<ActionEvent> getAutoSetAction() {
         return autoSetAction;
+    }
+
+    public ParameterValidator<String> getValidator() {
+        return (val, msg) -> {
+            return !Strings.isNullOrEmpty(val);
+        };
     }
 
 }

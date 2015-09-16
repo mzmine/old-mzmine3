@@ -21,9 +21,11 @@ package io.github.mzmine.parameters.parametertypes.filenames;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.controlsfx.property.editor.PropertyEditor;
 import org.w3c.dom.Document;
@@ -46,31 +48,25 @@ public class FileNamesParameter implements Parameter<List<File>> {
 
     private List<File> value;
 
-    private final String name, description, category;
+    private final @Nonnull String name, description;
     private final List<FileChooser.ExtensionFilter> extensions;
     private File lastOpenPath;
 
-    public FileNamesParameter(String name, String description, String category,
+    public FileNamesParameter(@Nonnull String name, @Nonnull String description,
             List<FileChooser.ExtensionFilter> extensions) {
         this.name = name;
         this.description = description;
-        this.category = category;
         this.extensions = ImmutableList.copyOf(extensions);
     }
 
     @Override
-    public String getName() {
+    public @Nonnull String getName() {
         return name;
     }
 
     @Override
-    public String getDescription() {
+    public @Nonnull String getDescription() {
         return description;
-    }
-
-    @Override
-    public String getCategory() {
-        return category;
     }
 
     @Override
@@ -85,21 +81,21 @@ public class FileNamesParameter implements Parameter<List<File>> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void setValue(Object newValue) {
+    public void setValue(@Nullable Object newValue) {
         this.value = (List<File>) newValue;
     }
 
     @Override
-    public FileNamesParameter clone() {
+    public @Nonnull FileNamesParameter clone() {
         FileNamesParameter copy = new FileNamesParameter(name, description,
-                category, extensions);
+                extensions);
         if (value != null)
             copy.setValue(ImmutableList.copyOf(value));
         return copy;
     }
 
     @Override
-    public void loadValueFromXML(Element xmlElement) {
+    public void loadValueFromXML(@Nonnull Element xmlElement) {
         NodeList list = xmlElement.getElementsByTagName(fileNameElement);
         this.value = new ArrayList<>();
         for (int i = 0; i < list.getLength(); i++) {
@@ -121,7 +117,7 @@ public class FileNamesParameter implements Parameter<List<File>> {
     }
 
     @Override
-    public void saveValueToXML(Element xmlElement) {
+    public void saveValueToXML(@Nonnull Element xmlElement) {
         final Document parentDocument = xmlElement.getOwnerDocument();
         if (value != null) {
             for (File f : value) {
@@ -138,15 +134,6 @@ public class FileNamesParameter implements Parameter<List<File>> {
             xmlElement.appendChild(newElement);
         }
 
-    }
-
-    @Override
-    public boolean checkValue(Collection<String> errorMessages) {
-        if ((value == null) || (value.size() == 0)) {
-            errorMessages.add("File names are not set");
-            return false;
-        }
-        return true;
     }
 
     @Override

@@ -20,7 +20,6 @@
 package io.github.mzmine.parameters;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -109,7 +108,7 @@ public class ParameterSet implements Cloneable {
         return result.get();
     }
 
-    public boolean checkParameterValues(Collection<String> errorMessages) {
+   /* public boolean checkParameterValues(Collection<String> errorMessages) {
         boolean allParametersOK = true;
         for (Parameter<?> p : parameters) {
             boolean pOK = p.checkValue(errorMessages);
@@ -117,7 +116,7 @@ public class ParameterSet implements Cloneable {
                 allParametersOK = false;
         }
         return allParametersOK;
-    }
+    }*/
 
     @SuppressWarnings("unchecked")
     public <T extends Parameter<?>> T getParameter(T parameter) {

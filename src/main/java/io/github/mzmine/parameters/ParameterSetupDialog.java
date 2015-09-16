@@ -24,14 +24,16 @@ import java.util.List;
 
 import org.controlsfx.control.PropertySheet;
 import org.controlsfx.control.PropertySheet.Item;
-import org.controlsfx.property.editor.DefaultPropertyEditorFactory;
 import org.controlsfx.property.editor.PropertyEditor;
+import org.controlsfx.validation.ValidationMessage;
+import org.controlsfx.validation.ValidationResult;
+import org.controlsfx.validation.ValidationSupport;
 
+import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.gui.helpwindow.HelpWindow;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -47,6 +49,10 @@ public class ParameterSetupDialog extends Alert {
      * the Help button.
      */
     private HelpWindow helpWindow = null;
+    
+    private final ValidationSupport validationSupport;
+
+    private final ParameterEditorFactory editorFactory;
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     ParameterSetupDialog(ParameterSet parameters) {
@@ -68,22 +74,41 @@ public class ParameterSetupDialog extends Alert {
         sheet.setSearchBoxVisible(false);
         sheet.setMode(PropertySheet.Mode.NAME);
         sheet.setPrefSize(600.0, 500.0);
-        EditorFactory fac;
-        sheet.setPropertyEditorFactory(new EditorFactory());
         getDialogPane().setContent(sheet);
+
+        // Validation support
+        validationSupport = new ValidationSupport();
+        ParameterValidationDecorator decorator = new ParameterValidationDecorator();
+        validationSupport.setValidationDecorator(decorator);
         
-        Button okButton = (Button) getDialogPane()
-                .lookupButton(ButtonType.OK);
-        okButton.setOnAction(e -> {
-            for (Node n : sheet.getChildrenUnmodifiable()) {
-                System.out.println("node " + n);
+        // Set editor factory to keep track of which editing component belongs
+        // to which parameter
+        editorFactory = new ParameterEditorFactory(validationSupport);
+        sheet.setPropertyEditorFactory(editorFactory);
+
+        Button okButton = (Button) getDialogPane().lookupButton(ButtonType.OK);
+        okButton.addEventFilter(ActionEvent.ACTION, e -> {
+            for (Item item : sheet.getItems()) {
+                PropertyEditor<?> editor = editorFactory.getEditorForItem(item);
+                Object value = editor.getValue();
+                item.setValue(value);
             }
-            
-            System.out.println("ok clicked " + parameters);
+            if (validationSupport.isInvalid()) {
+                e.consume();
+                ValidationResult vr = validationSupport.getValidationResult();
+                StringBuilder message = new StringBuilder(
+                        "Please check the parameter settings:\n\n");
+                for (ValidationMessage m : vr.getMessages()) {
+                    message.append(m.toString());
+                    message.append("\n");
+                }
+                MZmineGUI.displayMessage(message.toString());
+            }
+
         });
 
     }
-    
+
     private void setupHelpButton(URL helpURL) {
 
         // Add a Help button
@@ -122,13 +147,5 @@ public class ParameterSetupDialog extends Alert {
         });
 
     }
-    
-    private class EditorFactory extends DefaultPropertyEditorFactory {
-        @Override public PropertyEditor<?> call(Item item) {
-            PropertyEditor<?> editor = super.call(item);
-            
-            return editor;
-        }
-    };
 
 }

@@ -19,7 +19,8 @@
 
 package io.github.mzmine.parameters.parametertypes;
 
-import java.util.Collection;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.w3c.dom.Element;
 
@@ -27,14 +28,14 @@ import io.github.mzmine.parameters.Parameter;
 
 public class BooleanParameter implements Parameter<Boolean> {
 
-    private final String name, description;
+    private final @Nonnull String name, description;
     private Boolean value;
 
-    public BooleanParameter(String name, String description) {
+    public BooleanParameter(@Nonnull String name, @Nonnull String description) {
         this(name, description, null);
     }
 
-    public BooleanParameter(String name, String description,
+    public BooleanParameter(@Nonnull String name, @Nonnull String description,
             Boolean defaultValue) {
         this.name = name;
         this.description = description;
@@ -45,7 +46,7 @@ public class BooleanParameter implements Parameter<Boolean> {
      * @see net.sf.mzmine.data.Parameter#getName()
      */
     @Override
-    public String getName() {
+    public @Nonnull String getName() {
         return name;
     }
 
@@ -53,7 +54,7 @@ public class BooleanParameter implements Parameter<Boolean> {
      * @see net.sf.mzmine.data.Parameter#getDescription()
      */
     @Override
-    public String getDescription() {
+    public @Nonnull String getDescription() {
         return description;
     }
 
@@ -67,18 +68,18 @@ public class BooleanParameter implements Parameter<Boolean> {
     }
 
     @Override
-    public void setValue(Object value) {
+    public void setValue(@Nullable Object value) {
         this.value = (Boolean) value;
     }
 
     @Override
-    public BooleanParameter clone() {
+    public @Nonnull BooleanParameter clone() {
         BooleanParameter copy = new BooleanParameter(name, description, value);
         return copy;
     }
 
     @Override
-    public void loadValueFromXML(Element xmlElement) {
+    public void loadValueFromXML(@Nonnull Element xmlElement) {
         String rangeString = xmlElement.getTextContent();
         if (rangeString.length() == 0)
             return;
@@ -86,19 +87,10 @@ public class BooleanParameter implements Parameter<Boolean> {
     }
 
     @Override
-    public void saveValueToXML(Element xmlElement) {
+    public void saveValueToXML(@Nonnull Element xmlElement) {
         if (value == null)
             return;
         xmlElement.setTextContent(value.toString());
-    }
-
-    @Override
-    public boolean checkValue(Collection<String> errorMessages) {
-        if (value == null) {
-            errorMessages.add(name + " is not set properly");
-            return false;
-        }
-        return true;
     }
 
 }

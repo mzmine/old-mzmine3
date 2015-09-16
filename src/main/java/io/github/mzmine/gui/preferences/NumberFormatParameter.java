@@ -20,8 +20,10 @@
 package io.github.mzmine.gui.preferences;
 
 import java.text.DecimalFormat;
-import java.util.Collection;
 import java.util.Optional;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.controlsfx.property.editor.PropertyEditor;
 import org.w3c.dom.Element;
@@ -35,12 +37,13 @@ import io.github.mzmine.parameters.Parameter;
  */
 public class NumberFormatParameter implements Parameter<DecimalFormat> {
 
-    private String name, description;
+    private final @Nonnull String name, description;
     private boolean showExponentOption;
     private DecimalFormat value;
 
-    public NumberFormatParameter(String name, String description,
-            boolean showExponentOption, DecimalFormat defaultValue) {
+    public NumberFormatParameter(@Nonnull String name,
+            @Nonnull String description, boolean showExponentOption,
+            DecimalFormat defaultValue) {
 
         assert defaultValue != null;
 
@@ -54,7 +57,7 @@ public class NumberFormatParameter implements Parameter<DecimalFormat> {
      * @see net.sf.mzmine.data.Parameter#getName()
      */
     @Override
-    public String getName() {
+    public @Nonnull String getName() {
         return name;
     }
 
@@ -62,7 +65,7 @@ public class NumberFormatParameter implements Parameter<DecimalFormat> {
      * @see net.sf.mzmine.data.Parameter#getDescription()
      */
     @Override
-    public String getDescription() {
+    public @Nonnull String getDescription() {
         return description;
     }
 
@@ -72,29 +75,24 @@ public class NumberFormatParameter implements Parameter<DecimalFormat> {
     }
 
     @Override
-    public void setValue(Object value) {
+    public void setValue(@Nullable Object value) {
         this.value = (DecimalFormat) value;
     }
 
     @Override
-    public NumberFormatParameter clone() {
+    public @Nonnull NumberFormatParameter clone() {
         return this;
     }
 
     @Override
-    public void loadValueFromXML(Element xmlElement) {
+    public void loadValueFromXML(@Nonnull Element xmlElement) {
         String newPattern = xmlElement.getTextContent();
         value.applyPattern(newPattern);
     }
 
     @Override
-    public void saveValueToXML(Element xmlElement) {
+    public void saveValueToXML(@Nonnull Element xmlElement) {
         xmlElement.setTextContent(value.toPattern());
-    }
-
-    @Override
-    public boolean checkValue(Collection<String> errorMessages) {
-        return true;
     }
 
     @Override

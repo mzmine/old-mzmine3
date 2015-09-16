@@ -19,7 +19,8 @@
 
 package io.github.mzmine.parameters;
 
-import java.util.Collection;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.controlsfx.control.PropertySheet.Item;
 import org.w3c.dom.Element;
@@ -29,20 +30,34 @@ import org.w3c.dom.Element;
  */
 public interface Parameter<ValueType> extends Item, Cloneable {
 
-    ValueType getValue();
-
-    void setValue(Object newValue);
-
-    boolean checkValue(Collection<String> errorMessages);
-
-    void loadValueFromXML(Element xmlElement);
-
-    void saveValueToXML(Element xmlElement);
-
-    Parameter<ValueType> clone();
+    @Override
+    @Nonnull
+    String getName();
 
     @Override
-    default String getCategory() {
+    @Nonnull
+    String getDescription();
+
+    @Override
+    @Nullable
+    ValueType getValue();
+
+    @Override
+    void setValue(@Nullable Object newValue);
+
+    void loadValueFromXML(@Nonnull Element xmlElement);
+
+    void saveValueToXML(@Nonnull Element xmlElement);
+
+    @Nonnull
+    Parameter<ValueType> clone();
+
+    default @Nullable ParameterValidator<ValueType> getValidator() {
+        return null;
+    }
+
+    @Override
+    default @Nullable String getCategory() {
         return null;
     }
 
