@@ -52,12 +52,12 @@ public class NumOfThreadsEditor extends HBox
         setAlignment(Pos.CENTER_LEFT);
 
         numField = new Spinner<>(1, 50, 4);
-        numField.setDisable(true);
+        numField.setVisible(false);
 
         optionCombo = new ComboBox<>(options);
         optionCombo.setOnAction(e -> {
-            numField.setDisable(
-                    optionCombo.getSelectionModel().getSelectedIndex() == 0);
+            numField.setVisible(
+                    optionCombo.getSelectionModel().getSelectedIndex() == 1);
         });
 
         getChildren().addAll(optionCombo, numField);
