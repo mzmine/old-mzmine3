@@ -39,13 +39,13 @@
 					<items>
 						<ModuleMenuItem text="Raw Data"
 							moduleClass="io.github.mzmine.modules.rawdataimport.RawDataImportModule" />
-						<MenuItem text="Feature Table" />
+						<MenuItem text="Feature Tables" />
 					</items>
 				</Menu>
 				<Menu text="Export...">
 					<items>
 						<MenuItem text="Raw Data" />
-						<MenuItem text="Feature Table" />
+						<MenuItem text="Feature Tables" />
 					</items>
 				</Menu>
 				<SeparatorMenuItem />
