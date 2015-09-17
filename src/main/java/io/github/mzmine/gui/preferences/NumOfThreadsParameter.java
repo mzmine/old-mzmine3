@@ -34,11 +34,11 @@ public class NumOfThreadsParameter
     private static final @Nonnull String description = "Maximum number of tasks running simultaneously";
     private static final @Nonnull String category = "Parallel tasks";
 
-    // Provide a default value
-    private NumOfThreadsValue value = new NumOfThreadsValue(true, 4);
-
     public NumOfThreadsParameter() {
         super(name, description, category, NumOfThreadsEditor.class, null);
+
+        // Provide a default value
+        setValue(new NumOfThreadsValue(true, 4));
     }
 
     @Override
@@ -58,11 +58,12 @@ public class NumOfThreadsParameter
         if (!Strings.isNullOrEmpty(textContent)) {
             manualValue = Integer.valueOf(textContent);
         }
-        this.value = new NumOfThreadsValue(automatic, manualValue);
+        setValue(new NumOfThreadsValue(automatic, manualValue));
     }
 
     @Override
     public void saveValueToXML(@Nonnull Element xmlElement) {
+        NumOfThreadsValue value = getValue();
         if (value == null)
             return;
         xmlElement.setAttribute("isautomatic",
