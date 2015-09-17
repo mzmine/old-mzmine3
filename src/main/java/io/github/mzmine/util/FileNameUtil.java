@@ -17,7 +17,7 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.rawdataimport;
+package io.github.mzmine.util;
 
 import java.io.File;
 import java.util.List;
@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
 /**
  * File name utilities
  */
-class FileNameUtil {
+public class FileNameUtil {
 
     @SuppressWarnings("null")
     public static @Nonnull String findCommonPrefix(

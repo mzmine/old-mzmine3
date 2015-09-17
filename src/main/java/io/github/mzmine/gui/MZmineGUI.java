@@ -32,7 +32,6 @@ import org.dockfx.DockPos;
 
 import io.github.mzmine.gui.mainwindow.MainWindowController;
 import io.github.mzmine.main.MZmineCore;
-import io.github.mzmine.project.MZmineProject;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -61,6 +60,7 @@ public final class MZmineGUI extends Application {
     private final Logger logger = Logger.getLogger(this.getClass().getName());
 
     private static MainWindowController mainWindowController;
+    private static TabPane tabs = new TabPane();
 
     public void start(Stage stage) {
 
@@ -91,7 +91,6 @@ public final class MZmineGUI extends Application {
         TaskProgressView<?> tasksView = mainWindowController.getTaskTable();
 
         // Add raw data file and feature table trees to tabs
-        TabPane tabs = new TabPane();
         Tab fileTab = new Tab("Raw Data", rawDataTree);
         fileTab.setClosable(false);
         Tab featureTab = new Tab("Feature Tables", featureTableTree);
@@ -197,4 +196,17 @@ public final class MZmineGUI extends Application {
         return mainWindowController;
     }
 
+    public static void setSelectedTab(String tabName) {
+        switch (tabName) {
+        case "RawData":
+            tabs.getSelectionModel().select(0);
+            break;
+        case "FeatureTable":
+            tabs.getSelectionModel().select(1);
+            break;
+        default:
+            tabs.getSelectionModel().select(0);
+            break;
+        }
+    }
 }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules>
 	<module>io.github.mzmine.modules.rawdataimport.RawDataImportModule</module>
+	<module>io.github.mzmine.modules.featuretableimport.FeatureTableImportModule</module>
 </modules>

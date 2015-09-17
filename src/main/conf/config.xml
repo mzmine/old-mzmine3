@@ -2,6 +2,9 @@
 <configuration>
     <preferences/>
     <modules>
+        <module class="io.github.mzmine.modules.featuretableimport.FeatureTableImportModule">
+            <parameters/>
+        </module>
         <module class="io.github.mzmine.modules.rawdataimport.RawDataImportModule">
             <parameters/>
         </module>

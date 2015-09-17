@@ -17,7 +17,7 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.rawdataimport;
+package io.github.mzmine.modules.featuretableimport;
 
 import java.io.File;
 import java.util.Arrays;
@@ -26,7 +26,6 @@ import java.util.List;
 import org.controlsfx.control.PropertySheet;
 
 import io.github.mzmine.parameters.ParameterSet;
-import io.github.mzmine.parameters.parametertypes.ComboParameter;
 import io.github.mzmine.parameters.parametertypes.StringEditor;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.filenames.FileNamesParameter;
@@ -34,28 +33,15 @@ import io.github.mzmine.util.FileNameUtil;
 import javafx.scene.Node;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-public class RawDataImportParameters extends ParameterSet {
+public class FeatureTableImportParameters extends ParameterSet {
 
     private static final ExtensionFilter filters[] = new ExtensionFilter[] {
-            new ExtensionFilter("All raw data files", "*.csv", "*.cdf", "*.nc",
-                    "*.mzData", "*.mzML", "*.mzXML", "*.raw", "*.xml"),
-            new ExtensionFilter("Agilent CSV files", "*.csv"),
-            new ExtensionFilter("mzData files", "*.mzData"),
-            new ExtensionFilter("mzML files", "*.mzML"),
-            new ExtensionFilter("mzXML files", "*.mzXML"),
-            new ExtensionFilter("NetCDF files", "*.cdf", "*.nc"),
-            new ExtensionFilter("Waters RAW folders", "*.raw"),
-            new ExtensionFilter("XCalibur RAW files", "*.raw"),
-            new ExtensionFilter("XML files", "*.xml"),
+            new ExtensionFilter("All feature table files", "*.mzTab"),
+            new ExtensionFilter("mzTab files", "*.mzTab"),
             new ExtensionFilter("All files", "*.*") };
 
     public static final FileNamesParameter fileNames = new FileNamesParameter(
-            "File names", "Add raw data files", Arrays.asList(filters));
-
-    public static final ComboParameter<RawDataImportMode> importMode = new ComboParameter<>(
-            "Import mode", "Select how the raw data points will be handled",
-            Arrays.asList(RawDataImportMode.values()),
-            RawDataImportMode.TRANSPARENT);
+            "File names", "Add feature table files", Arrays.asList(filters));
 
     @SuppressWarnings({ "unchecked", "null", })
     public static final StringParameter removePrefix = new StringParameter(
@@ -113,8 +99,8 @@ public class RawDataImportParameters extends ParameterSet {
                 }
             });
 
-    public RawDataImportParameters() {
-        super(fileNames, importMode, removePrefix, removeSuffix);
+    public FeatureTableImportParameters() {
+        super(fileNames, removePrefix, removeSuffix);
     }
 
 }

@@ -31,6 +31,8 @@ import com.google.common.collect.ImmutableList;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.mzmine.gui.MZmineGUI;
+import io.github.mzmine.gui.mainwindow.FeatureTableTreeItem;
 import io.github.mzmine.gui.mainwindow.RawDataTreeItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
@@ -42,7 +44,7 @@ import javafx.scene.image.ImageView;
 public class MZmineProject {
 
     private static final Image rawDataFilesIcon = new Image("icons/xicicon.png");
-    private static final Image peakListsIcon = new Image("icons/peaklistsicon.png");
+    private static final Image featureTablesIcon = new Image("icons/peaklistsicon.png");
     private static final Image groupIcon = new Image("icons/groupicon.png");
     private static final Image fileIcon = new Image("icons/fileicon.png");
     private static final Image peakListIcon = new Image(
@@ -51,6 +53,7 @@ public class MZmineProject {
     private @Nullable File projectFile;
 
     private final TreeItem<RawDataTreeItem> rawDataRootItem;
+    private final TreeItem<FeatureTableTreeItem> featureTableRootItem;
 
     private final List<FeatureTable> featureTables = new ArrayList<>();
 
@@ -58,6 +61,10 @@ public class MZmineProject {
         rawDataRootItem = new TreeItem<>(new RawDataTreeItem());
         rawDataRootItem.setGraphic(new ImageView(rawDataFilesIcon));
         rawDataRootItem.setExpanded(true);
+
+        featureTableRootItem = new TreeItem<>(new FeatureTableTreeItem());
+        featureTableRootItem.setGraphic(new ImageView(featureTablesIcon));
+        featureTableRootItem.setExpanded(true);
     }
 
     @Nullable
@@ -74,7 +81,6 @@ public class MZmineProject {
     }
 
     @SuppressWarnings("null")
-
     @Nonnull
     public List<Sample> getSamples() {
         final ArrayList<Sample> allSamples = new ArrayList<>();
@@ -94,6 +100,7 @@ public class MZmineProject {
         TreeItem<RawDataTreeItem> df1 = new TreeItem<>(wrap);
         df1.setGraphic(new ImageView(fileIcon));
         rawDataRootItem.getChildren().add(df1);
+        MZmineGUI.setSelectedTab("RawData");
     }
 
     public void removeFile(final RawDataFile rawDataFile) {
@@ -117,27 +124,37 @@ public class MZmineProject {
         return ImmutableList.copyOf(dataFiles);
     }
 
-    public void addFeatureTable(FeatureTable featureTable) {
-        synchronized (featureTables) {
-            featureTables.add(featureTable);
+    public void addFeatureTable(final FeatureTable featureTable) {
+        FeatureTableTreeItem wrap = new FeatureTableTreeItem(featureTable);
+        TreeItem<FeatureTableTreeItem> df1 = new TreeItem<>(wrap);
+        df1.setGraphic(new ImageView(peakListIcon));
+        featureTableRootItem.getChildren().add(df1);
+        MZmineGUI.setSelectedTab("FeatureTable");
+    }
+
+    public void removeFeatureTable(final FeatureTable featureTable) {
+        for (TreeItem<?> df1 : featureTableRootItem.getChildren()) {
+            if (df1.getValue() == featureTable) {
+                featureTableRootItem.getChildren().remove(df1);
+                break;
+            }
         }
     }
 
-    public void removeFeatureTable(FeatureTable featureTable) {
-        synchronized (featureTables) {
-            featureTables.remove(featureTable);
-        }
+    public TreeItem<FeatureTableTreeItem> getFeatureTableRootItem() {
+        return featureTableRootItem;
     }
 
     @SuppressWarnings("null")
-
     @Nonnull
     public List<FeatureTable> getFeatureTables() {
-        final List<FeatureTable> snapShot;
-        synchronized (featureTables) {
-            snapShot = ImmutableList.copyOf(featureTables);
+        List<FeatureTable> featureTables = new ArrayList<>();
+        for (TreeItem<?> df1 : featureTableRootItem.getChildren()) {
+            if (df1.getValue() instanceof FeatureTable) {
+                featureTables.add((FeatureTable) df1.getValue());
+            }
         }
-        return snapShot;
+        return ImmutableList.copyOf(featureTables);
     }
 
 }

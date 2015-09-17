@@ -39,7 +39,8 @@
 					<items>
 						<ModuleMenuItem text="Raw Data"
 							moduleClass="io.github.mzmine.modules.rawdataimport.RawDataImportModule" />
-						<MenuItem text="Feature Tables" />
+						<ModuleMenuItem text="Feature Tables"
+							moduleClass="io.github.mzmine.modules.featuretableimport.FeatureTableImportModule" />
 					</items>
 				</Menu>
 				<Menu text="Export...">
@@ -258,7 +259,7 @@
 		</Menu>
 		<Menu text="Settings">
 			<items>
-				<MenuItem text="Set Preferences" onAction="#setPreferences"/>
+				<MenuItem text="Set Preferences" onAction="#setPreferences" />
 			</items>
 		</Menu>
 		<Menu text="Help">
