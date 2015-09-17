@@ -19,6 +19,9 @@
 
 package io.github.mzmine.main;
 
+import java.io.InputStream;
+import java.util.Locale;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import io.github.mzmine.gui.MZmineGUI;
@@ -32,6 +35,27 @@ public final class MZmineMain {
     private static Logger logger = Logger.getLogger(MZmineMain.class.getName());
 
     public static void main(String args[]) {
+
+        /*
+         * In the beginning, set the default locale to English, to avoid
+         * problems with conversion of numbers etc. (e.g. decimal separator may
+         * be . or , depending on the locale)
+         */
+        Locale.setDefault(new Locale("en", "US"));
+
+        /*
+         * Configure the logging properties before we start logging
+         */
+        try {
+            ClassLoader cl = MZmineCore.class.getClassLoader();
+            InputStream loggingProperties = cl
+                    .getResourceAsStream("logging.properties");
+            LogManager logMan = LogManager.getLogManager();
+            logMan.readConfiguration(loggingProperties);
+            loggingProperties.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         /*
          * Cleanup old temporary files on a new thread

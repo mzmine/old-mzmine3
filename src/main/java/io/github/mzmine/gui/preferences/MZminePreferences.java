@@ -20,9 +20,11 @@
 package io.github.mzmine.gui.preferences;
 
 import java.text.DecimalFormat;
+import java.util.logging.Logger;
 
 import org.w3c.dom.Element;
 
+import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.BooleanParameter;
 import io.github.mzmine.parameters.parametertypes.OptionalModuleParameter;
@@ -31,6 +33,8 @@ import javafx.scene.control.ButtonType;
 
 public class MZminePreferences extends ParameterSet {
 
+    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    
     public static final NumberFormatParameter mzFormat = new NumberFormatParameter(
             "m/z value format", "Format of m/z values", "Number formatting",
             false, new DecimalFormat("0.0000"));
@@ -83,11 +87,16 @@ public class MZminePreferences extends ParameterSet {
     @Override
     public ButtonType showSetupDialog() {
 
+        java.util.logging.Logger l = Logger.getLogger("test");
+        l.severe("test severe");
+        l.info("test info");
+        l.fine("test fine");
+        
         ButtonType retVal = super.showSetupDialog();
         if (retVal == ButtonType.OK) {
 
-            // Update proxy settings
-            updateSystemProxySettings();
+            // Update system settings
+            updateSystemSettings();
 
             // Repaint windows to update number formats
             // TODO: MZmineCore..getDesktop().getMainWindow().repaint();
@@ -98,10 +107,11 @@ public class MZminePreferences extends ParameterSet {
 
     public void loadValuesFromXML(Element xmlElement) {
         super.loadValuesFromXML(xmlElement);
-        updateSystemProxySettings();
+        updateSystemSettings();
     }
 
-    private void updateSystemProxySettings() {
+    private void updateSystemSettings() {
+
         // Update system proxy settings
         Boolean proxyEnabled = getParameter(proxySettings).getValue();
         if ((proxyEnabled != null) && (proxyEnabled)) {
@@ -119,6 +129,15 @@ public class MZminePreferences extends ParameterSet {
             System.clearProperty("http.proxyHost");
             System.clearProperty("http.proxyPort");
         }
+
+        NumOfThreadsValue numOfThreadsValue = getParameter(numOfThreads)
+                .getValue();
+        if (numOfThreadsValue != null) {
+            int threadPoolSize = numOfThreadsValue.getNumberOfThreads();
+            logger.finest("Setting the thread pool size to " + threadPoolSize);
+            MZmineCore.getTaskExecutor().setCorePoolSize(threadPoolSize);
+        }
+
     }
 
 }

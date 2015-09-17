@@ -233,12 +233,25 @@
 			<groupId>uk.ac.ebi.pride</groupId>
 			<artifactId>jmztab-modular-model</artifactId>
 			<version>${jmztab.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>logback-classic</artifactId>
+					<groupId>ch.qos.logback</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>uk.ac.ebi.pride</groupId>
 			<artifactId>jmztab-modular-util</artifactId>
 			<version>${jmztab.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>logback-classic</artifactId>
+					<groupId>ch.qos.logback</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
+		
 	</dependencies>
 
 </project>
