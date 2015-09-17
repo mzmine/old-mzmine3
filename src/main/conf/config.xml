@@ -13,16 +13,6 @@
         <parameter name="Send anonymous statistics">true</parameter>
     </preferences>
     <modules>
-        <module class="io.github.mzmine.modules.featuretableimport.FeatureTableImportModule">
-            <parameters>
-                <parameter name="File names">
-                    <filename>C:\MZmine\Sample-2.3.mzTab</filename>
-                    <lastdirectory>C:\MZmine</lastdirectory>
-                </parameter>
-                <parameter name="Remove prefix"/>
-                <parameter name="Remove suffix"/>
-            </parameters>
-        </module>
         <module class="io.github.mzmine.modules.rawdataimport.RawDataImportModule">
             <parameters>
                 <parameter name="File names">
@@ -35,6 +25,16 @@
                 <parameter name="Import mode">Access the file transparently, if possible</parameter>
                 <parameter name="Remove prefix">centroided</parameter>
                 <parameter name="Remove suffix">.mzML</parameter>
+            </parameters>
+        </module>
+        <module class="io.github.mzmine.modules.featuretableimport.FeatureTableImportModule">
+            <parameters>
+                <parameter name="File names">
+                    <filename>C:\MZmine\Sample-2.3.mzTab</filename>
+                    <lastdirectory>C:\MZmine</lastdirectory>
+                </parameter>
+                <parameter name="Remove prefix"/>
+                <parameter name="Remove suffix"/>
             </parameters>
         </module>
     </modules>
