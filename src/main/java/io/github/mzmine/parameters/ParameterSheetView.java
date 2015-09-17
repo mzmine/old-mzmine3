@@ -19,13 +19,9 @@
 
 package io.github.mzmine.parameters;
 
-import java.util.List;
-
 import org.controlsfx.control.PropertySheet;
 import org.controlsfx.property.editor.PropertyEditor;
 import org.controlsfx.validation.ValidationSupport;
-
-import javafx.collections.FXCollections;
 
 /**
  * Parameter sheet view
@@ -35,11 +31,10 @@ public class ParameterSheetView extends PropertySheet {
     private final ParameterSet parameters;
     private final ParameterEditorFactory editorFactory;
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     public ParameterSheetView(ParameterSet parameters,
             ValidationSupport validationSupport) {
 
-        super(FXCollections.observableList((List) parameters.getParameters()));
+        this.parameters = parameters;
 
         setModeSwitcherVisible(false);
         setSearchBoxVisible(false);
@@ -51,7 +46,12 @@ public class ParameterSheetView extends PropertySheet {
         this.editorFactory = new ParameterEditorFactory(validationSupport);
         setPropertyEditorFactory(editorFactory);
 
-        this.parameters = parameters;
+        for (Parameter<?> p : parameters) {
+            getItems().add(p);
+        }
+
+        // TODO: initially the decorations are missing?
+        validationSupport.redecorate();
 
     }
 

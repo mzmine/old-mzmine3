@@ -34,7 +34,7 @@ import javafx.scene.control.ButtonType;
 public class MZminePreferences extends ParameterSet {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
-    
+
     public static final NumberFormatParameter mzFormat = new NumberFormatParameter(
             "m/z value format", "Format of m/z values", "Number formatting",
             false, new DecimalFormat("0.0000"));
@@ -87,11 +87,6 @@ public class MZminePreferences extends ParameterSet {
     @Override
     public ButtonType showSetupDialog() {
 
-        java.util.logging.Logger l = Logger.getLogger("test");
-        l.severe("test severe");
-        l.info("test info");
-        l.fine("test fine");
-        
         ButtonType retVal = super.showSetupDialog();
         if (retVal == ButtonType.OK) {
 
