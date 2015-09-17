@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 The MZmine 3 Development Team
+ * Copyright 2006-2015 The MZmine 2 Development Team
  * 
  * This file is part of MZmine 2.
  * 
@@ -17,25 +17,31 @@
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.parameters;
+package io.github.mzmine.util;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import org.controlsfx.control.decoration.Decoration;
-import org.controlsfx.validation.decoration.GraphicValidationDecoration;
-
-import javafx.scene.control.Control;
+import javafx.scene.Node;
 
 /**
- * Simple modification of the GraphicValidationDecoration from controlsfx
+ * JavaFX related utilities
  */
-public class ParameterValidationDecorator extends GraphicValidationDecoration {
+public class JavaFXUtil {
 
-    @Override
-    protected Collection<Decoration> createRequiredDecorations(Control target) {
-        // Do not add decorations to required values
-        return Collections.emptyList();
+    /**
+     * Convenience method for searching above comp in the component hierarchy
+     * and returns the first object of class c it finds.
+     * 
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <Type> Type getAncestorOfClass(Class<Type> c, Node node) {
+
+        while (node != null) {
+            if (c.isInstance(node)) {
+                return (Type) node;
+            }
+            node = node.getParent();
+        }
+
+        return null;
     }
-
 }

@@ -53,8 +53,6 @@ public class FeatureTableImportModule implements MZmineProcessingModule {
     @Nonnull
     private static final String MODULE_DESCRIPTION = "This module imports feature tables into the project.";
 
-    private final FeatureTableImportParameters parameters = new FeatureTableImportParameters();
-
     @Override
     public @Nonnull String getName() {
         return MODULE_NAME;
@@ -142,8 +140,8 @@ public class FeatureTableImportModule implements MZmineProcessingModule {
         return MZmineModuleCategory.RAWDATA;
     }
 
-    @SuppressWarnings("null")
-    public @Nonnull ParameterSet getParameters() {
-        return parameters;
+    @Override
+    public @Nonnull Class<? extends ParameterSet> getParameterSetClass() {
+        return FeatureTableImportParameters.class;
     }
 }

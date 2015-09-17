@@ -22,12 +22,10 @@ package io.github.mzmine.parameters.parametertypes.filenames;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.controlsfx.property.editor.PropertyEditor;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -35,60 +33,36 @@ import org.w3c.dom.NodeList;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 
-import io.github.mzmine.parameters.Parameter;
+import io.github.mzmine.parameters.ParameterValidator;
+import io.github.mzmine.parameters.parametertypes.AbstractParameter;
 import javafx.stage.FileChooser;
 
 /**
  * This parameter stores filenames
  */
-public class FileNamesParameter implements Parameter<List<File>> {
+public class FileNamesParameter extends AbstractParameter<List<File>> {
 
     private static final String fileNameElement = "filename";
     private static final String lastOpenPathElement = "lastdirectory";
 
-    private List<File> value;
-
-    private final @Nonnull String name, description;
-    private final List<FileChooser.ExtensionFilter> extensions;
+    private final @Nonnull List<FileChooser.ExtensionFilter> extensions;
     private File lastOpenPath;
 
+    @SuppressWarnings("null")
     public FileNamesParameter(@Nonnull String name, @Nonnull String description,
-            List<FileChooser.ExtensionFilter> extensions) {
-        this.name = name;
-        this.description = description;
+            @Nonnull String category,
+            @Nullable ParameterValidator<List<File>> validator,
+            @Nonnull List<FileChooser.ExtensionFilter> extensions) {
+        super(name, description, category, FileNamesEditor.class,
+                validator);
         this.extensions = ImmutableList.copyOf(extensions);
     }
 
     @Override
-    public @Nonnull String getName() {
-        return name;
-    }
-
-    @Override
-    public @Nonnull String getDescription() {
-        return description;
-    }
-
-    @Override
-    public Class<?> getType() {
-        return List.class;
-    }
-
-    @Override
-    public List<File> getValue() {
-        return value;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void setValue(@Nullable Object newValue) {
-        this.value = (List<File>) newValue;
-    }
-
-    @Override
     public @Nonnull FileNamesParameter clone() {
-        FileNamesParameter copy = new FileNamesParameter(name, description,
-                extensions);
+        FileNamesParameter copy = new FileNamesParameter(getName(),
+                getDescription(), getCategory(), getValidator(), extensions);
+        List<File> value = getValue();
         if (value != null)
             copy.setValue(ImmutableList.copyOf(value));
         return copy;
@@ -97,7 +71,7 @@ public class FileNamesParameter implements Parameter<List<File>> {
     @Override
     public void loadValueFromXML(@Nonnull Element xmlElement) {
         NodeList list = xmlElement.getElementsByTagName(fileNameElement);
-        this.value = new ArrayList<>();
+        List<File> value = new ArrayList<>();
         for (int i = 0; i < list.getLength(); i++) {
             Element nextElement = (Element) list.item(i);
             String textValue = nextElement.getTextContent();
@@ -106,6 +80,7 @@ public class FileNamesParameter implements Parameter<List<File>> {
                 value.add(newFile);
             }
         }
+        setValue(value);
         list = xmlElement.getElementsByTagName(lastOpenPathElement);
         for (int i = 0; i < list.getLength(); i++) {
             Element nextElement = (Element) list.item(i);
@@ -119,6 +94,7 @@ public class FileNamesParameter implements Parameter<List<File>> {
     @Override
     public void saveValueToXML(@Nonnull Element xmlElement) {
         final Document parentDocument = xmlElement.getOwnerDocument();
+        List<File> value = getValue();
         if (value != null) {
             for (File f : value) {
                 Element newElement = parentDocument
@@ -134,11 +110,6 @@ public class FileNamesParameter implements Parameter<List<File>> {
             xmlElement.appendChild(newElement);
         }
 
-    }
-
-    @Override
-    public Optional<Class<? extends PropertyEditor<?>>> getPropertyEditorClass() {
-        return Optional.of(FileNamesEditor.class);
     }
 
     public List<FileChooser.ExtensionFilter> getExtensions() {

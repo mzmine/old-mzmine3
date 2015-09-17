@@ -26,57 +26,64 @@ import org.w3c.dom.Element;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.BooleanParameter;
 import io.github.mzmine.parameters.parametertypes.OptionalModuleParameter;
-import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.filenames.FileNameParameter;
 import javafx.scene.control.ButtonType;
 
 public class MZminePreferences extends ParameterSet {
 
     public static final NumberFormatParameter mzFormat = new NumberFormatParameter(
-            "m/z value format", "Format of m/z values", false,
-            new DecimalFormat("0.0000"));
+            "m/z value format", "Format of m/z values", "Number formatting",
+            false, new DecimalFormat("0.0000"));
 
     public static final NumberFormatParameter rtFormat = new NumberFormatParameter(
-            "Retention time value format", "Format of retention time values",
-            false, new DecimalFormat("0.0"));
+            "Retention time format", "Format of retention time values",
+            "Number formatting", false, new DecimalFormat("0.0"));
 
     public static final NumberFormatParameter intensityFormat = new NumberFormatParameter(
-            "Intensity format", "Format of intensity values", true,
-            new DecimalFormat("0.0E0"));
+            "Intensity format", "Format of intensity values",
+            "Number formatting", true, new DecimalFormat("0.0E0"));
 
     public static final NumOfThreadsParameter numOfThreads = new NumOfThreadsParameter();
 
     public static final OptionalModuleParameter proxySettings = new OptionalModuleParameter(
-            "Use proxy", "Use proxy for internet connection?",
+            "Use proxy", "Use proxy for internet connection?", "Proxy",
             new ProxySettings());
 
     public static final FileNameParameter rExecPath = new FileNameParameter(
             "R executable path",
             "Full R executable file path (If left blank, MZmine will try to find out automatically). On Windows, this should point to your R.exe file.",
-            FileNameParameter.Type.OPEN);
+            "R support", (value, messages) -> {
+                if (value == null)
+                    return true;
+                if (!value.exists()) {
+                    messages.add("File does not exist");
+                    return false;
+                }
+                if (!value.canExecute()) {
+                    messages.add("File is not executable");
+                    return false;
+                }
+                return true;
+
+            } , FileNameParameter.Type.OPEN);
 
     public static final BooleanParameter sendStatistics = new BooleanParameter(
             "Send anonymous statistics",
             "Allow MZmine to send anonymous statistics on the module usage?",
-            true);
-
-    public static final StringParameter testParam = new StringParameter(
-            "Send anonymous statistics",
-            "Allow MZmine to send anonymous statistics on the module usage?");
+            "Statistics", true);
 
     // public static final WindowSettingsParameter windowSetttings = new
     // WindowSettingsParameter();
 
     public MZminePreferences() {
         super(mzFormat, rtFormat, intensityFormat, numOfThreads, proxySettings,
-                rExecPath, sendStatistics, testParam);
+                rExecPath, sendStatistics);
     }
 
     @Override
     public ButtonType showSetupDialog() {
 
         ButtonType retVal = super.showSetupDialog();
-
         if (retVal == ButtonType.OK) {
 
             // Update proxy settings

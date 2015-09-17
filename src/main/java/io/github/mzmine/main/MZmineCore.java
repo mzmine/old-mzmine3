@@ -36,14 +36,14 @@ import javafx.concurrent.Task;
  */
 public final class MZmineCore {
 
-    private static final MZmineConfiguration configuration = new MZmineConfiguration();
+    private static final @Nonnull MZmineConfiguration configuration = new MZmineConfiguration();
 
-    private static final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(
+    private static final @Nonnull ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(
             2);
 
-    private static @Nonnull MZmineProject currentProject = new MZmineProject();;
+    private static @Nonnull MZmineProject currentProject = new MZmineProject();
 
-    public static MZmineConfiguration getConfiguration() {
+    public static @Nonnull MZmineConfiguration getConfiguration() {
         return configuration;
     }
 
@@ -56,7 +56,11 @@ public final class MZmineCore {
                 return "0.0";
             Properties properties = new Properties();
             properties.load(inStream);
-            return properties.getProperty("version");
+            String value = properties.getProperty("version");
+            if (value == null)
+                return "0.0";
+            else
+                return value;
         } catch (Exception e) {
             e.printStackTrace();
             return "0.0";

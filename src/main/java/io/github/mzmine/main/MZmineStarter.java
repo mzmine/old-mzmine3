@@ -37,11 +37,12 @@ import org.w3c.dom.NodeList;
 import com.google.common.collect.ImmutableList;
 
 import io.github.mzmine.modules.MZmineModule;
+import io.github.mzmine.parameters.ParameterSet;
 
 /**
- * MZmine main class
+ * MZmine modules support class
  */
-public final class MZmineModules implements Runnable {
+public final class MZmineStarter implements Runnable {
 
     private static final File MODULES_FILE = new File("conf/Modules.xml");
 
@@ -53,10 +54,11 @@ public final class MZmineModules implements Runnable {
     @Override
     public void run() {
 
-        logger.finest("Loading modules");
+        logger.info("Loading modules");
 
         try {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+                    .newInstance();
             Document modulesDocument = null;
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             modulesDocument = dBuilder.parse(MODULES_FILE);
@@ -68,11 +70,10 @@ public final class MZmineModules implements Runnable {
                     continue;
                 String moduleClassName = moduleNode.getTextContent();
                 try {
-                    @SuppressWarnings("unchecked")
-                    Class<? extends MZmineModule> moduleClass = (Class<? extends MZmineModule>) Class
-                            .forName(moduleClassName);
-                    MZmineModule newModule = moduleClass.newInstance();
-                    initializedModules.put(moduleClass, newModule);
+
+                    // Start up the module
+                    startModule(moduleClassName);
+
                 } catch (Exception e) {
                     logger.warning("Failed to initialize module class "
                             + moduleClassName + ": " + e);
@@ -85,6 +86,36 @@ public final class MZmineModules implements Runnable {
             System.exit(1);
         }
 
+        try {
+            logger.info("Loading configuration");
+            MZmineCore.getConfiguration()
+                    .loadConfiguration(MZmineConfiguration.CONFIG_FILE);
+        } catch (Exception e) {
+            logger.severe("Could not load configuration from "
+                    + MZmineConfiguration.CONFIG_FILE);
+        }
+
+    }
+
+    private void startModule(final String moduleClassName)
+            throws ClassNotFoundException, InstantiationException,
+            IllegalAccessException {
+
+        logger.info("Starting module class " + moduleClassName);
+
+        // Create an instance of the module
+        @SuppressWarnings("unchecked")
+        Class<? extends MZmineModule> moduleClass = (Class<? extends MZmineModule>) Class
+                .forName(moduleClassName);
+        MZmineModule newModule = moduleClass.newInstance();
+        initializedModules.put(moduleClass, newModule);
+
+        // Create a parameter set
+        Class<? extends ParameterSet> parameterSetClass = newModule
+                .getParameterSetClass();
+        ParameterSet newParameterSet = parameterSetClass.newInstance();
+        MZmineCore.getConfiguration().setModuleParameters(moduleClass,
+                newParameterSet);
     }
 
     public static List<MZmineModule> getAllModules() {

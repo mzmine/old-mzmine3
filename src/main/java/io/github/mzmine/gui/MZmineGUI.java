@@ -30,8 +30,11 @@ import org.dockfx.DockNode;
 import org.dockfx.DockPane;
 import org.dockfx.DockPos;
 
+import io.github.mzmine.gui.mainwindow.FeatureTableTreeItem;
 import io.github.mzmine.gui.mainwindow.MainWindowController;
+import io.github.mzmine.gui.mainwindow.RawDataTreeItem;
 import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.project.MZmineGUIProject;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -96,6 +99,9 @@ public final class MZmineGUI extends Application {
         Tab featureTab = new Tab("Feature Tables", featureTableTree);
         featureTab.setClosable(false);
         tabs.getTabs().addAll(fileTab, featureTab);
+        
+        
+        
         DockNode tabsDock = new DockNode(tabs);
         tabsDock.setDockTitleBar(null); // Disable undocking
         tabsDock.setPrefSize(200, 400);
@@ -152,9 +158,14 @@ public final class MZmineGUI extends Application {
             requestQuit();
             e.consume();
         });
+        
+        // Activate new GUI-supported project
+        MZmineGUIProject project = new MZmineGUIProject();
+        MZmineGUI.activateProject(project);
 
         stage.show();
         DockPane.initializeDefaultUserAgentStylesheet();
+        
 
     }
 
@@ -209,4 +220,14 @@ public final class MZmineGUI extends Application {
             break;
         }
     }
+    
+    public static void activateProject(MZmineGUIProject project) {
+        TreeView<RawDataTreeItem> rawDataTree = mainWindowController.getRawDataTree();
+        rawDataTree.setRoot(project.getRawDataRootItem());
+        
+        TreeView<FeatureTableTreeItem> featureTree=mainWindowController.getFeatureTree();
+        featureTree.setRoot(project.getFeatureTableRootItem());
+        
+    }
+    
 }

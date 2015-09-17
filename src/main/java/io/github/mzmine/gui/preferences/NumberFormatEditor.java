@@ -21,18 +21,21 @@ package io.github.mzmine.gui.preferences;
 
 import java.text.DecimalFormat;
 
-import org.controlsfx.control.PropertySheet;
-import org.controlsfx.property.editor.PropertyEditor;
+import javax.annotation.Nullable;
 
+import org.controlsfx.control.PropertySheet;
+
+import io.github.mzmine.parameters.ParameterEditor;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 public class NumberFormatEditor extends HBox
-        implements PropertyEditor<DecimalFormat> {
+        implements ParameterEditor<DecimalFormat> {
 
     private final NumberFormatParameter numFormatParameter;
     private final Spinner<Integer> decimalsSpinner;
@@ -52,6 +55,7 @@ public class NumberFormatEditor extends HBox
         getChildren().add(new Text("Decimals"));
 
         decimalsSpinner = new Spinner<>(1, 20, 3);
+        decimalsSpinner.setPrefWidth(80.0);
         getChildren().add(decimalsSpinner);
 
         if (numFormatParameter.isShowExponentEnabled()) {
@@ -72,6 +76,7 @@ public class NumberFormatEditor extends HBox
 
     @Override
     public void setValue(DecimalFormat newValue) {
+        if (newValue == null) return;
         final int decimals = newValue.getMinimumFractionDigits();
         boolean showExponent = newValue.toPattern().contains("E");
         decimalsSpinner.getValueFactory().setValue(decimals);
@@ -101,6 +106,12 @@ public class NumberFormatEditor extends HBox
             pattern += "E0";
         }
         return new DecimalFormat(pattern);
+    }
+
+    @Override
+    @Nullable
+    public Control getMainControl() {
+        return decimalsSpinner;
     }
 
 }

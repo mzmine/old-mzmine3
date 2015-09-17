@@ -49,9 +49,9 @@ public final class MZmineMain {
         Runtime.getRuntime().addShutdownHook(shutDownThread);
 
         /*
-         * Load modules on a new thread
+         * Load modules on a new thread after the GUI has started
          */
-        MZmineModules moduleStarter = new MZmineModules();
+        MZmineStarter moduleStarter = new MZmineStarter();
         Thread moduleStarterThread = new Thread(moduleStarter);
         moduleStarterThread.setPriority(Thread.MIN_PRIORITY);
         moduleStarterThread.start();
@@ -61,6 +61,7 @@ public final class MZmineMain {
          */
         logger.info("Starting MZmine GUI");
         Application.launch(MZmineGUI.class, args);
+
     }
 
 }

@@ -1,12 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <configuration>
-    <preferences/>
+    <preferences>
+        <parameter name="m/z value format">#0.0000</parameter>
+        <parameter name="Retention time format">#0.0</parameter>
+        <parameter name="Intensity format">0.0E0</parameter>
+        <parameter isautomatic="true" name="Number of parallel tasks">4</parameter>
+        <parameter name="Use proxy" selected="false">
+            <parameter name="Proxy address"/>
+            <parameter name="Proxy port"/>
+        </parameter>
+        <parameter name="R executable path"/>
+        <parameter name="Send anonymous statistics">true</parameter>
+    </preferences>
     <modules>
         <module class="io.github.mzmine.modules.featuretableimport.FeatureTableImportModule">
-            <parameters/>
+            <parameters>
+                <parameter name="File names"/>
+                <parameter name="Remove prefix"/>
+                <parameter name="Remove suffix"/>
+            </parameters>
         </module>
         <module class="io.github.mzmine.modules.rawdataimport.RawDataImportModule">
-            <parameters/>
+            <parameters>
+                <parameter name="File names">
+                    <filename>C:\MZmine\0028_LIP1p_20150629_017_NIST-1950_1_1.mzML</filename>
+                    <filename>C:\MZmine\0028_LIP1p_20150629_018_NIST-1950_1_2.mzML</filename>
+                    <filename>C:\MZmine\0028_LIP1p_20150629_019_NIST-1950_1_3.mzML</filename>
+                    <lastdirectory>C:\MZmine</lastdirectory>
+                </parameter>
+                <parameter name="Import mode">Access the file transparently, if possible</parameter>
+                <parameter name="Remove prefix">0028_LIP1p_20150629_01</parameter>
+                <parameter name="Remove suffix">.mzML</parameter>
+            </parameters>
         </module>
     </modules>
 </configuration>

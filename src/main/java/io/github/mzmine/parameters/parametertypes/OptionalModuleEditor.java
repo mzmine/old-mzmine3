@@ -47,6 +47,7 @@ public class OptionalModuleEditor extends FlowPane
 
         checkBox = new CheckBox();
         setButton = new Button("Setup..");
+        setButton.setFocusTraversable(false);
 
         checkBox.setOnAction(e -> {
             setButton.setDisable(!checkBox.isSelected());

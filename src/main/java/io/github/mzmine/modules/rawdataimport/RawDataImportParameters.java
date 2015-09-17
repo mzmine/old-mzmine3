@@ -23,14 +23,16 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import org.controlsfx.control.PropertySheet;
+import org.controlsfx.property.editor.PropertyEditor;
 
 import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.parameters.ParameterSheetView;
+import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.ComboParameter;
-import io.github.mzmine.parameters.parametertypes.StringEditor;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.filenames.FileNamesParameter;
 import io.github.mzmine.util.FileNameUtil;
+import io.github.mzmine.util.JavaFXUtil;
 import javafx.scene.Node;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -49,72 +51,67 @@ public class RawDataImportParameters extends ParameterSet {
             new ExtensionFilter("XML files", "*.xml"),
             new ExtensionFilter("All files", "*.*") };
 
+    @SuppressWarnings("null")
     public static final FileNamesParameter fileNames = new FileNamesParameter(
-            "File names", "Add raw data files", Arrays.asList(filters));
+            "File names", "Add raw data files", "Input files",
+            ParameterValidator.createNonEmptyValidator(),
+            Arrays.asList(filters));
 
+    @SuppressWarnings("null")
     public static final ComboParameter<RawDataImportMode> importMode = new ComboParameter<>(
             "Import mode", "Select how the raw data points will be handled",
-            Arrays.asList(RawDataImportMode.values()),
+            "Mode", Arrays.asList(RawDataImportMode.values()),
             RawDataImportMode.TRANSPARENT);
 
-    @SuppressWarnings({ "unchecked", "null", })
     public static final StringParameter removePrefix = new StringParameter(
-            "Remove prefix", "Prefix to be removed from file names", null, e -> {
-                StringEditor editor = null;
-                PropertySheet sheet = null;
-                Node src = (Node) e.getSource();
-                while (src != null) {
-                    if (src instanceof StringEditor)
-                        editor = (StringEditor) src;
-                    if (src instanceof PropertySheet) {
-                        sheet = (PropertySheet) src;
-                        break;
-                    }
-                    src = src.getParent();
+            "Remove prefix", "Prefix to be removed from file names",
+            "Prefixes");
 
-                }
-                for (PropertySheet.Item item : sheet.getItems()) {
-                    if (item instanceof FileNamesParameter) {
-                        List<File> fileNames = (List<File>) item.getValue();
-                        if (fileNames == null)
-                            return;
-                        String commonPrefix = FileNameUtil
-                                .findCommonPrefix(fileNames);
-                        editor.setValue(commonPrefix);
-                    }
-                }
-            });
-
-    @SuppressWarnings({ "unchecked", "null", })
     public static final StringParameter removeSuffix = new StringParameter(
-            "Remove suffix", "Suffix to be removed from file names", null, e -> {
-                StringEditor editor = null;
-                PropertySheet sheet = null;
-                Node src = (Node) e.getSource();
-                while (src != null) {
-                    if (src instanceof StringEditor)
-                        editor = (StringEditor) src;
-                    if (src instanceof PropertySheet) {
-                        sheet = (PropertySheet) src;
-                        break;
-                    }
-                    src = src.getParent();
-
-                }
-                for (PropertySheet.Item item : sheet.getItems()) {
-                    if (item instanceof FileNamesParameter) {
-                        List<File> fileNames = (List<File>) item.getValue();
-                        if (fileNames == null)
-                            continue;
-                        String commonSuffix = FileNameUtil
-                                .findCommonSuffix(fileNames);
-                        editor.setValue(commonSuffix);
-                    }
-                }
-            });
+            "Remove suffix", "Suffix to be removed from file names",
+            "Prefixes");
 
     public RawDataImportParameters() {
+
         super(fileNames, importMode, removePrefix, removeSuffix);
+
+        removePrefix.setAutoSetAction(e -> {
+
+            ParameterSheetView sheet = JavaFXUtil.getAncestorOfClass(
+                    ParameterSheetView.class, (Node) e.getSource());
+            PropertyEditor<List<File>> fileNamesEditor = sheet
+                    .getEditorForParameter(fileNames);
+            PropertyEditor<String> prefixEditor = sheet
+                    .getEditorForParameter(removePrefix);
+
+            List<File> fileNames = fileNamesEditor.getValue();
+            if (fileNames == null) {
+                prefixEditor.setValue("");
+            } else {
+                String commonPrefix = FileNameUtil.findCommonPrefix(fileNames);
+                prefixEditor.setValue(commonPrefix);
+            }
+
+        });
+
+        removeSuffix.setAutoSetAction(e -> {
+
+            ParameterSheetView sheet = JavaFXUtil.getAncestorOfClass(
+                    ParameterSheetView.class, (Node) e.getSource());
+            PropertyEditor<List<File>> fileNamesEditor = sheet
+                    .getEditorForParameter(fileNames);
+            PropertyEditor<String> suffixEditor = sheet
+                    .getEditorForParameter(removeSuffix);
+
+            List<File> fileNames = fileNamesEditor.getValue();
+            if (fileNames == null) {
+                suffixEditor.setValue("");
+            } else {
+                String commonSuffix = FileNameUtil.findCommonSuffix(fileNames);
+                suffixEditor.setValue(commonSuffix);
+            }
+
+        });
     }
 
 }

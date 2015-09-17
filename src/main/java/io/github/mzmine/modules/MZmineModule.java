@@ -38,7 +38,7 @@ public interface MZmineModule {
     public String getName();
 
     @Nonnull
-    public ParameterSet getParameters();
+    public Class<? extends ParameterSet> getParameterSetClass();
     
     
 }

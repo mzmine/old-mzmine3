@@ -19,12 +19,11 @@
 
 package io.github.mzmine.parameters.parametertypes;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import org.controlsfx.property.editor.PropertyEditor;
 import org.w3c.dom.Element;
 
 import io.github.mzmine.parameters.Parameter;
@@ -35,59 +34,53 @@ import io.github.mzmine.parameters.ParameterValidator;
  * Parameter represented by check box with additional sub-parameters
  * 
  */
-public class OptionalModuleParameter implements Parameter<Boolean> {
+public class OptionalModuleParameter extends AbstractParameter<Boolean> {
 
-    private final @Nonnull String name, description;
     private final ParameterSet embeddedParameters;
-    private Boolean value;
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public OptionalModuleParameter(@Nonnull String name,
-            @Nonnull String description, ParameterSet embeddedParameters) {
-        this.name = name;
-        this.description = description;
+            @Nonnull String description, @Nonnull String category,
+            ParameterSet embeddedParameters) {
+        super(name, description, category, OptionalModuleEditor.class, null);
+
         this.embeddedParameters = embeddedParameters;
+
+        setValidator((currentValue, messages) -> {
+            // If we are selected, we have to check the validity of embedded
+            // parameters
+            if (currentValue) {
+                List<String> voidMsgs = new ArrayList<>();
+                for (Parameter<?> embeddedParam : embeddedParameters
+                        .getParameters()) {
+                    ParameterValidator embeddedValidator = embeddedParam
+                            .getValidator();
+                    if (embeddedValidator == null)
+                        continue;
+                    Object value = embeddedParam.getValue();
+                    boolean result = embeddedValidator.checkValue(value,
+                            voidMsgs);
+                    if (!result) {
+                        messages.add("Parameters not set properly");
+                        return false;
+                    }
+
+                }
+            }
+            return true;
+        });
     }
 
     public ParameterSet getEmbeddedParameters() {
         return embeddedParameters;
     }
 
-    /**
-     * @see net.sf.mzmine.data.Parameter#getName()
-     */
-    @Override
-    public @Nonnull String getName() {
-        return name;
-    }
-
-    /**
-     * @see net.sf.mzmine.data.Parameter#getDescription()
-     */
-    @Override
-    public @Nonnull String getDescription() {
-        return description;
-    }
-
-    @Override
-    public Boolean getValue() {
-        return value;
-    }
-
-    @Override
-    public void setValue(@Nullable Object value) {
-        this.value = (Boolean) value;
-    }
-
-    @Override
-    public Class<?> getType() {
-        return Boolean.class;
-    }
-
     @Override
     public @Nonnull OptionalModuleParameter clone() {
         final ParameterSet embeddedParametersClone = embeddedParameters.clone();
-        final OptionalModuleParameter copy = new OptionalModuleParameter(name,
-                description, embeddedParametersClone);
+        final OptionalModuleParameter copy = new OptionalModuleParameter(
+                getName(), getDescription(), getCategory(),
+                embeddedParametersClone);
         copy.setValue(this.getValue());
         return copy;
     }
@@ -96,40 +89,15 @@ public class OptionalModuleParameter implements Parameter<Boolean> {
     public void loadValueFromXML(@Nonnull Element xmlElement) {
         embeddedParameters.loadValuesFromXML(xmlElement);
         String selectedAttr = xmlElement.getAttribute("selected");
-        this.value = Boolean.valueOf(selectedAttr);
+        setValue(Boolean.valueOf(selectedAttr));
     }
 
     @Override
     public void saveValueToXML(@Nonnull Element xmlElement) {
+        Boolean value = getValue();
         if (value != null)
             xmlElement.setAttribute("selected", value.toString());
         embeddedParameters.saveValuesToXML(xmlElement);
-    }
-
-    @Override
-    public Optional<Class<? extends PropertyEditor<?>>> getPropertyEditorClass() {
-        return Optional.of(OptionalModuleEditor.class);
-    }
-
-    @Override
-    @Nullable
-    public ParameterValidator<Boolean> getValidator() {
-
-        return (val, msg) -> {
-            // If we are selected, we have to check the validity of embedded
-            // parameters
-            if (val) {
-                for (Parameter<?> par : embeddedParameters.getParameters()) {
-                    ParameterValidator p = par.getValidator();
-                    if (p == null)
-                        continue;
-                    boolean result = p.checkValue(par.getValue(), msg);
-                    if (!result)
-                        return false;
-                }
-            }
-            return true;
-        };
     }
 
 }

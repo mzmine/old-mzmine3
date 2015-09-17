@@ -20,63 +20,31 @@
 package io.github.mzmine.gui.preferences;
 
 import java.text.DecimalFormat;
-import java.util.Optional;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import org.controlsfx.property.editor.PropertyEditor;
 import org.w3c.dom.Element;
 
-import io.github.mzmine.parameters.Parameter;
+import io.github.mzmine.parameters.parametertypes.AbstractParameter;
 
 /**
- * Simple Parameter implementation
- * 
- * 
+ * Parameter for number formatting setting
  */
-public class NumberFormatParameter implements Parameter<DecimalFormat> {
+public class NumberFormatParameter extends AbstractParameter<DecimalFormat> {
 
-    private final @Nonnull String name, description;
     private boolean showExponentOption;
     private DecimalFormat value;
 
     public NumberFormatParameter(@Nonnull String name,
-            @Nonnull String description, boolean showExponentOption,
-            DecimalFormat defaultValue) {
+            @Nonnull String description, @Nonnull String category,
+            boolean showExponentOption, DecimalFormat defaultValue) {
+
+        super(name, description, category, NumberFormatEditor.class, null);
 
         assert defaultValue != null;
 
-        this.name = name;
-        this.description = description;
         this.showExponentOption = showExponentOption;
         this.value = defaultValue;
-    }
-
-    /**
-     * @see net.sf.mzmine.data.Parameter#getName()
-     */
-    @Override
-    public @Nonnull String getName() {
-        return name;
-    }
-
-    /**
-     * @see net.sf.mzmine.data.Parameter#getDescription()
-     */
-    @Override
-    public @Nonnull String getDescription() {
-        return description;
-    }
-
-    @Override
-    public DecimalFormat getValue() {
-        return value;
-    }
-
-    @Override
-    public void setValue(@Nullable Object value) {
-        this.value = (DecimalFormat) value;
     }
 
     @Override
@@ -93,16 +61,6 @@ public class NumberFormatParameter implements Parameter<DecimalFormat> {
     @Override
     public void saveValueToXML(@Nonnull Element xmlElement) {
         xmlElement.setTextContent(value.toPattern());
-    }
-
-    @Override
-    public Class<?> getType() {
-        return DecimalFormat.class;
-    }
-
-    @Override
-    public Optional<Class<? extends PropertyEditor<?>>> getPropertyEditorClass() {
-        return Optional.of(NumberFormatEditor.class);
     }
 
     public boolean isShowExponentEnabled() {

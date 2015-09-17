@@ -20,77 +20,49 @@
 package io.github.mzmine.parameters.parametertypes;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.controlsfx.property.editor.PropertyEditor;
 import org.w3c.dom.Element;
 
-import io.github.mzmine.parameters.Parameter;
+import io.github.mzmine.parameters.ParameterValidator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class ComboParameter<Type> implements Parameter<Type> {
+public class ComboParameter<ValueType> extends AbstractParameter<ValueType> {
 
-    private final @Nonnull String name, description;
-    private ObservableList<Type> options;
-    private Type value;
+    private @Nonnull ObservableList<ValueType> options;
 
-    public ComboParameter(@Nonnull String name, @Nonnull String description) {
-        this(name, description, null, null);
+    public ComboParameter(@Nonnull String name, @Nonnull String description,
+            @Nonnull String category, @Nonnull List<ValueType> options) {
+        this(name, description, category, null, options, null);
     }
 
     public ComboParameter(@Nonnull String name, @Nonnull String description,
-            List<Type> options, Type defaultValue) {
-        this.name = name;
-        this.description = description;
+            @Nonnull String category, @Nonnull List<ValueType> options,
+            @Nullable ValueType defaultValue) {
+        this(name, description, category, null, options, defaultValue);
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes", "null" })
+    public ComboParameter(@Nonnull String name, @Nonnull String description,
+            @Nonnull String category,
+            @Nullable ParameterValidator<ValueType> validator,
+            @Nonnull List<ValueType> options,
+            @Nullable ValueType defaultValue) {
+        super(name, description, category, (Class) ComboEditor.class,
+                validator);
         this.options = FXCollections.observableList(options);
-        this.value = defaultValue;
-    }
-
-    /**
-     * @see net.sf.mzmine.data.Parameter#getName()
-     */
-    @Override
-    public @Nonnull String getName() {
-        return name;
-    }
-
-    /**
-     * @see net.sf.mzmine.data.Parameter#getDescription()
-     */
-    @Override
-    public @Nonnull String getDescription() {
-        return description;
+        setValue(defaultValue);
     }
 
     @Override
-    public Class<?> getType() {
-        return String.class;
-    }
-
-    public Type getValue() {
-        return value;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void setValue(@Nullable Object value) {
-        this.value = (Type) value;
-    }
-
-    @Override
-    public @Nonnull ComboParameter<Type> clone() {
-        ComboParameter<Type> copy = new ComboParameter<Type>(name, description,
-                options, value);
+    public @Nonnull ComboParameter<ValueType> clone() {
+        ComboParameter<ValueType> copy = new ComboParameter<>(getName(),
+                getDescription(), getCategory(), getValidator(), options,
+                getValue());
         return copy;
-    }
-
-    @Override
-    public String toString() {
-        return name;
     }
 
     @Override
@@ -100,17 +72,12 @@ public class ComboParameter<Type> implements Parameter<Type> {
 
     @Override
     public void saveValueToXML(@Nonnull Element xmlElement) {
-        if (value == null)
+        if (getValue() == null)
             return;
-        // xmlElement.setTextContent(value);
+        xmlElement.setTextContent(getValue().toString());
     }
 
-    @Override
-    public Optional<Class<? extends PropertyEditor<?>>> getPropertyEditorClass() {
-        return Optional.of(ComboEditor.class);
-    }
-
-    ObservableList<Type> getOptions() {
+    ObservableList<ValueType> getOptions() {
         return options;
     }
 

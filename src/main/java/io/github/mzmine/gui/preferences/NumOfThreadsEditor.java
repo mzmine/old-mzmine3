@@ -52,6 +52,7 @@ public class NumOfThreadsEditor extends HBox
         setAlignment(Pos.CENTER_LEFT);
 
         numField = new Spinner<>(1, 50, 4);
+        numField.setPrefWidth(80.0);
         numField.setVisible(false);
 
         optionCombo = new ComboBox<>(options);

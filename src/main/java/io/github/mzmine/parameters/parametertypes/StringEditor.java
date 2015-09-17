@@ -59,6 +59,7 @@ public class StringEditor extends BorderPane
             setRight(autoButton);
             setMargin(autoButton, new Insets(0, 0, 0, 10.0));
             autoButton.setOnAction(autoSetAction);
+            autoButton.setFocusTraversable(false);
         } else {
             autoButton = null;
         }

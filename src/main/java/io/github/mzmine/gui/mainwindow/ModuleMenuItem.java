@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
-import io.github.mzmine.main.MZmineModules;
+import io.github.mzmine.main.MZmineStarter;
 import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
@@ -45,9 +45,10 @@ public final class ModuleMenuItem extends MenuItem {
 
     private final StringProperty moduleClass = new SimpleStringProperty();
 
+    @SuppressWarnings({ "unchecked", "null" })
     public ModuleMenuItem() {
         setOnAction(event -> {
-            logger.info("Menu item activated: "  +event);
+            logger.info("Menu item activated: " + event);
             Class<? extends MZmineModule> moduleJavaClass;
             try {
                 moduleJavaClass = (Class<? extends MZmineModule>) Class
@@ -59,7 +60,7 @@ public final class ModuleMenuItem extends MenuItem {
                 return;
             }
 
-            MZmineModule module = MZmineModules
+            MZmineModule module = MZmineStarter
                     .getModuleInstance(moduleJavaClass);
 
             if (module == null) {
@@ -75,7 +76,8 @@ public final class ModuleMenuItem extends MenuItem {
             }
 
             MZmineRunnableModule runnableModule = (MZmineRunnableModule) module;
-            ParameterSet moduleParameters = runnableModule.getParameters();
+            ParameterSet moduleParameters = MZmineCore.getConfiguration()
+                    .getModuleParameters(moduleJavaClass);
 
             logger.info("Setting parameters for module " + module.getName());
             ButtonType exitCode = moduleParameters.showSetupDialog();

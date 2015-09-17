@@ -24,73 +24,50 @@ import javax.annotation.Nullable;
 
 import org.w3c.dom.Element;
 
-import io.github.mzmine.parameters.Parameter;
+import com.google.common.base.Strings;
 
-public class BooleanParameter implements Parameter<Boolean> {
+import io.github.mzmine.parameters.ParameterValidator;
 
-    private final @Nonnull String name, description;
-    private Boolean value;
+public class BooleanParameter extends AbstractParameter<Boolean> {
 
-    public BooleanParameter(@Nonnull String name, @Nonnull String description) {
-        this(name, description, null);
+    public BooleanParameter(@Nonnull String name, @Nonnull String description,
+            @Nonnull String category) {
+        this(name, description, category, null, null);
     }
 
     public BooleanParameter(@Nonnull String name, @Nonnull String description,
-            Boolean defaultValue) {
-        this.name = name;
-        this.description = description;
-        this.value = defaultValue;
+            @Nonnull String category, @Nullable Boolean defaultValue) {
+        this(name, description, category, null, defaultValue);
     }
 
-    /**
-     * @see net.sf.mzmine.data.Parameter#getName()
-     */
-    @Override
-    public @Nonnull String getName() {
-        return name;
-    }
-
-    /**
-     * @see net.sf.mzmine.data.Parameter#getDescription()
-     */
-    @Override
-    public @Nonnull String getDescription() {
-        return description;
-    }
-
-    @Override
-    public Class<?> getType() {
-        return Boolean.class;
-    }
-
-    public Boolean getValue() {
-        return value;
-    }
-
-    @Override
-    public void setValue(@Nullable Object value) {
-        this.value = (Boolean) value;
+    public BooleanParameter(@Nonnull String name, @Nonnull String description,
+            @Nonnull String category,
+            @Nullable ParameterValidator<Boolean> validator,
+            @Nullable Boolean defaultValue) {
+        super(name, description, category, BooleanEditor.class, validator);
+        setValue(defaultValue);
     }
 
     @Override
     public @Nonnull BooleanParameter clone() {
-        BooleanParameter copy = new BooleanParameter(name, description, value);
+        BooleanParameter copy = new BooleanParameter(getName(),
+                getDescription(), getCategory(), getValidator(), getValue());
         return copy;
     }
 
     @Override
     public void loadValueFromXML(@Nonnull Element xmlElement) {
-        String rangeString = xmlElement.getTextContent();
-        if (rangeString.length() == 0)
+        String content = xmlElement.getTextContent();
+        if (Strings.isNullOrEmpty(content))
             return;
-        this.value = Boolean.valueOf(rangeString);
+        setValue(Boolean.valueOf(content));
     }
 
     @Override
     public void saveValueToXML(@Nonnull Element xmlElement) {
-        if (value == null)
+        if (getValue() == null)
             return;
-        xmlElement.setTextContent(value.toString());
+        xmlElement.setTextContent(String.valueOf(getValue()));
     }
 
 }

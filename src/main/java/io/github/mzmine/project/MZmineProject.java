@@ -31,41 +31,16 @@ import com.google.common.collect.ImmutableList;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.mzmine.gui.MZmineGUI;
-import io.github.mzmine.gui.mainwindow.FeatureTableTreeItem;
-import io.github.mzmine.gui.mainwindow.RawDataTreeItem;
-import javafx.scene.control.TreeItem;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 /**
  * Simple implementation of the MZmineProject interface.
  */
 public class MZmineProject {
 
-    private static final Image rawDataFilesIcon = new Image("icons/xicicon.png");
-    private static final Image featureTablesIcon = new Image("icons/peaklistsicon.png");
-    private static final Image groupIcon = new Image("icons/groupicon.png");
-    private static final Image fileIcon = new Image("icons/fileicon.png");
-    private static final Image peakListIcon = new Image(
-            "icons/peaklisticon_single.png");
-
     private @Nullable File projectFile;
 
-    private final TreeItem<RawDataTreeItem> rawDataRootItem;
-    private final TreeItem<FeatureTableTreeItem> featureTableRootItem;
-
+    private final List<RawDataFile> rawDataFiles = new ArrayList<>();
     private final List<FeatureTable> featureTables = new ArrayList<>();
-
-    public MZmineProject() {
-        rawDataRootItem = new TreeItem<>(new RawDataTreeItem());
-        rawDataRootItem.setGraphic(new ImageView(rawDataFilesIcon));
-        rawDataRootItem.setExpanded(true);
-
-        featureTableRootItem = new TreeItem<>(new FeatureTableTreeItem());
-        featureTableRootItem.setGraphic(new ImageView(featureTablesIcon));
-        featureTableRootItem.setExpanded(true);
-    }
 
     @Nullable
     public File getProjectFile() {
@@ -74,10 +49,6 @@ public class MZmineProject {
 
     public void setProjectFile(@Nullable File projectFile) {
         this.projectFile = projectFile;
-    }
-
-    public TreeItem<RawDataTreeItem> getRawDataRootItem() {
-        return rawDataRootItem;
     }
 
     @SuppressWarnings("null")
@@ -96,65 +67,43 @@ public class MZmineProject {
     }
 
     public void addFile(final RawDataFile rawDataFile) {
-        RawDataTreeItem wrap = new RawDataTreeItem(rawDataFile);
-        TreeItem<RawDataTreeItem> df1 = new TreeItem<>(wrap);
-        df1.setGraphic(new ImageView(fileIcon));
-        rawDataRootItem.getChildren().add(df1);
-        MZmineGUI.setSelectedTab("RawData");
+        synchronized (rawDataFiles) {
+            rawDataFiles.add(rawDataFile);
+        }
     }
 
     public void removeFile(final RawDataFile rawDataFile) {
-        for (TreeItem<?> df1 : rawDataRootItem.getChildren()) {
-            if (df1.getValue() == rawDataFile) {
-                rawDataRootItem.getChildren().remove(df1);
-                break;
-            }
+        synchronized (rawDataFiles) {
+            rawDataFiles.remove(rawDataFile);
         }
     }
 
     @SuppressWarnings("null")
     @Nonnull
     public List<RawDataFile> getRawDataFiles() {
-        List<RawDataFile> dataFiles = new ArrayList<>();
-        for (TreeItem<?> df1 : rawDataRootItem.getChildren()) {
-            if (df1.getValue() instanceof RawDataFile) {
-                dataFiles.add((RawDataFile) df1.getValue());
-            }
+        synchronized (rawDataFiles) {
+            return ImmutableList.copyOf(rawDataFiles);
         }
-        return ImmutableList.copyOf(dataFiles);
     }
 
     public void addFeatureTable(final FeatureTable featureTable) {
-        FeatureTableTreeItem wrap = new FeatureTableTreeItem(featureTable);
-        TreeItem<FeatureTableTreeItem> df1 = new TreeItem<>(wrap);
-        df1.setGraphic(new ImageView(peakListIcon));
-        featureTableRootItem.getChildren().add(df1);
-        MZmineGUI.setSelectedTab("FeatureTable");
-    }
-
-    public void removeFeatureTable(final FeatureTable featureTable) {
-        for (TreeItem<?> df1 : featureTableRootItem.getChildren()) {
-            if (df1.getValue() == featureTable) {
-                featureTableRootItem.getChildren().remove(df1);
-                break;
-            }
+        synchronized (featureTables) {
+            featureTables.add(featureTable);
         }
     }
 
-    public TreeItem<FeatureTableTreeItem> getFeatureTableRootItem() {
-        return featureTableRootItem;
+    public void removeFeatureTable(final FeatureTable featureTable) {
+        synchronized (featureTables) {
+            featureTables.remove(featureTable);
+        }
     }
 
     @SuppressWarnings("null")
     @Nonnull
     public List<FeatureTable> getFeatureTables() {
-        List<FeatureTable> featureTables = new ArrayList<>();
-        for (TreeItem<?> df1 : featureTableRootItem.getChildren()) {
-            if (df1.getValue() instanceof FeatureTable) {
-                featureTables.add((FeatureTable) df1.getValue());
-            }
+        synchronized (featureTables) {
+            return ImmutableList.copyOf(featureTables);
         }
-        return ImmutableList.copyOf(featureTables);
     }
 
 }

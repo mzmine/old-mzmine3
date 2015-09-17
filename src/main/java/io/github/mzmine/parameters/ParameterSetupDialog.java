@@ -20,10 +20,7 @@
 package io.github.mzmine.parameters;
 
 import java.net.URL;
-import java.util.List;
 
-import org.controlsfx.control.PropertySheet;
-import org.controlsfx.control.PropertySheet.Item;
 import org.controlsfx.property.editor.PropertyEditor;
 import org.controlsfx.validation.ValidationMessage;
 import org.controlsfx.validation.ValidationResult;
@@ -31,8 +28,6 @@ import org.controlsfx.validation.ValidationSupport;
 
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.gui.helpwindow.HelpWindow;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -49,12 +44,7 @@ public class ParameterSetupDialog extends Alert {
      * the Help button.
      */
     private HelpWindow helpWindow = null;
-    
-    private final ValidationSupport validationSupport;
 
-    private final ParameterEditorFactory editorFactory;
-
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     ParameterSetupDialog(ParameterSet parameters) {
 
         super(AlertType.CONFIRMATION);
@@ -63,35 +53,27 @@ public class ParameterSetupDialog extends Alert {
         setHeaderText("Please set parameter values");
         setResizable(true);
 
+        // Add Help button
         final URL helpURL = parameters.getClass().getResource("help/help.html");
         setupHelpButton(helpURL);
 
-        // Add PropertySheet to edit the parameters
-        List<Parameter<?>> parametersList = parameters.getParameters();
-        ObservableList obsList = FXCollections.observableList(parametersList);
-        PropertySheet sheet = new PropertySheet(obsList);
-        sheet.setModeSwitcherVisible(false);
-        sheet.setSearchBoxVisible(false);
-        sheet.setMode(PropertySheet.Mode.NAME);
-        sheet.setPrefSize(600.0, 500.0);
+        // Add validation support
+        ValidationSupport validationSupport = new ValidationSupport();
+
+        // Add ParmeterSheetView to edit the parameters
+        ParameterSheetView sheet = new ParameterSheetView(parameters,
+                validationSupport);
         getDialogPane().setContent(sheet);
 
-        // Validation support
-        validationSupport = new ValidationSupport();
-        ParameterValidationDecorator decorator = new ParameterValidationDecorator();
-        validationSupport.setValidationDecorator(decorator);
-        
-        // Set editor factory to keep track of which editing component belongs
-        // to which parameter
-        editorFactory = new ParameterEditorFactory(validationSupport);
-        sheet.setPropertyEditorFactory(editorFactory);
-
+        // When the user presses the OK button, we need to commit all the
+        // changes in the editors to the actual parameters
         Button okButton = (Button) getDialogPane().lookupButton(ButtonType.OK);
         okButton.addEventFilter(ActionEvent.ACTION, e -> {
-            for (Item item : sheet.getItems()) {
-                PropertyEditor<?> editor = editorFactory.getEditorForItem(item);
+            for (Parameter<?> parameter : parameters) {
+                PropertyEditor<?> editor = sheet
+                        .getEditorForParameter(parameter);
                 Object value = editor.getValue();
-                item.setValue(value);
+                parameter.setValue(value);
             }
             if (validationSupport.isInvalid()) {
                 e.consume();
@@ -99,7 +81,7 @@ public class ParameterSetupDialog extends Alert {
                 StringBuilder message = new StringBuilder(
                         "Please check the parameter settings:\n\n");
                 for (ValidationMessage m : vr.getMessages()) {
-                    message.append(m.toString());
+                    message.append(m.getText());
                     message.append("\n");
                 }
                 MZmineGUI.displayMessage(message.toString());

@@ -23,12 +23,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import org.controlsfx.control.PropertySheet;
 import org.controlsfx.control.PropertySheet.Item;
 import org.controlsfx.property.editor.DefaultPropertyEditorFactory;
 import org.controlsfx.property.editor.PropertyEditor;
+import org.controlsfx.validation.ValidationMessage;
+import org.controlsfx.validation.ValidationResult;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
@@ -44,46 +45,69 @@ class ParameterEditorFactory extends DefaultPropertyEditorFactory {
         this.editorsMap = new HashMap<>();
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
     public PropertyEditor<?> call(PropertySheet.Item item) {
 
         if (!(item instanceof Parameter))
             throw new IllegalArgumentException(
                     "This ParameterEditorFactory can be only used for Parameter instances");
+
         PropertyEditor<?> editor = super.call(item);
 
+        // Save the reference for the editor
         editorsMap.put(item, editor);
 
-        Parameter<?> p = (Parameter<?>) item;
-        if ((p.getValidator() != null) && (editor instanceof ParameterEditor)) {
-            ParameterValidator mainValidator = p.getValidator();
-            ParameterEditor<?> ve = (ParameterEditor<?>) editor;
-            Control c = ve.getMainControl();
-
-            if (c != null && mainValidator != null) {
-
-                List<String> errors = new ArrayList<>();
-                Predicate myValidator = val -> {
-                    Object currentVal = ve.getValue();
-                    return mainValidator.checkValue(currentVal, errors);
-                };
-                Validator<?> v = Validator.createPredicateValidator(myValidator,
-                        p.getName() + " is not set properly");
-                validationSupport.registerValidator(c, v);
-
-            }
+        // Add a validator to the editor
+        if (editor instanceof ParameterEditor) {
+            addValidator(validationSupport, (Parameter<?>) item,
+                    (ParameterEditor<?>) editor);
         }
 
         return editor;
     }
 
-    PropertyEditor<?> getEditorForItem(Item item) {
-        return editorsMap.get(item);
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private void addValidator(ValidationSupport validationSupport,
+            Parameter<?> p, ParameterEditor<?> pe) {
+
+        ParameterValidator pv = p.getValidator();
+        if (pv == null)
+            return;
+
+        Control mainControl = pe.getMainControl();
+        if (mainControl == null)
+            return;
+
+        if (mainControl != null && pv != null) {
+
+            // Create the official validator
+            Validator<?> validator = (control, value) -> {
+                ValidationResult result = new ValidationResult();
+                Object currentVal = pe.getValue();
+                List<String> errors = new ArrayList<>();
+                if (pv.checkValue(currentVal, errors))
+                    return result;
+                // IF no message was produced, add our own message
+                if (errors.isEmpty())
+                    errors.add(p.getName() + " is not set properly");
+                // Copy the messages to the result
+                for (String er : errors) {
+                    String m = p.getName() + ": " + er;
+                    ValidationMessage msg = ValidationMessage.error(control, m);
+                    result.add(msg);
+                }
+                return result;
+            };
+
+            // Register the validator
+            validationSupport.registerValidator(mainControl, false, validator);
+
+        }
     }
 
-    ValidationSupport getValidationSupport() {
-        return validationSupport;
+    @SuppressWarnings("unchecked")
+    <ValueType> PropertyEditor<ValueType> getEditorForItem(Item item) {
+        return (PropertyEditor<ValueType>) editorsMap.get(item);
     }
 
 }

@@ -19,62 +19,26 @@
 
 package io.github.mzmine.gui.preferences;
 
-import java.util.Optional;
-
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import org.controlsfx.property.editor.PropertyEditor;
 import org.w3c.dom.Element;
 
 import com.google.common.base.Strings;
 
-import io.github.mzmine.main.MZmineCore;
-import io.github.mzmine.parameters.Parameter;
+import io.github.mzmine.parameters.parametertypes.AbstractParameter;
 
-public class NumOfThreadsParameter implements Parameter<NumOfThreadsValue> {
+public class NumOfThreadsParameter
+        extends AbstractParameter<NumOfThreadsValue> {
 
     private static final @Nonnull String name = "Number of parallel tasks";
     private static final @Nonnull String description = "Maximum number of tasks running simultaneously";
+    private static final @Nonnull String category = "Parallel tasks";
 
     // Provide a default value
     private NumOfThreadsValue value = new NumOfThreadsValue(true, 4);
 
     public NumOfThreadsParameter() {
-        this.value = null;
-    }
-
-    /**
-     * @see net.sf.mzmine.data.Parameter#getName()
-     */
-    @Override
-    public @Nonnull String getName() {
-        return name;
-    }
-
-    /**
-     * @see net.sf.mzmine.data.Parameter#getDescription()
-     */
-    @Override
-    public @Nonnull String getDescription() {
-        return description;
-    }
-
-    @Override
-    public NumOfThreadsValue getValue() {
-        return value;
-    }
-
-    @Override
-    public void setValue(@Nullable Object value) {
-        this.value = (NumOfThreadsValue) value;
-
-        if (this.value != null) {
-            // Update the thread pool executor
-            int threadPoolSize = this.value.getNumberOfThreads();
-            MZmineCore.getTaskExecutor().setCorePoolSize(threadPoolSize);
-        }
-
+        super(name, description, category, NumOfThreadsEditor.class, null);
     }
 
     @Override
@@ -103,17 +67,7 @@ public class NumOfThreadsParameter implements Parameter<NumOfThreadsValue> {
             return;
         xmlElement.setAttribute("isautomatic",
                 String.valueOf(value.isAutomatic()));
-        xmlElement.setTextContent(value.toString());
-    }
-
-    @Override
-    public Optional<Class<? extends PropertyEditor<?>>> getPropertyEditorClass() {
-        return Optional.of(NumOfThreadsEditor.class);
-    }
-
-    @Override
-    public Class<?> getType() {
-        return Integer.class;
+        xmlElement.setTextContent(value.getManualValue().toString());
     }
 
 }

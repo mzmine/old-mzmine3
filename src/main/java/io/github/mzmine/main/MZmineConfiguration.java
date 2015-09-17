@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -43,25 +45,56 @@ import org.w3c.dom.NodeList;
 
 import io.github.mzmine.gui.preferences.MZminePreferences;
 import io.github.mzmine.modules.MZmineModule;
+import io.github.mzmine.parameters.ParameterSet;
 
 /**
  * MZmine configuration interface
  */
-public class MZmineConfiguration {
+public final class MZmineConfiguration {
 
     private static final Logger logger = Logger
             .getLogger(MZmineConfiguration.class.getName());
 
     public static final File CONFIG_FILE = new File("conf/config.xml");
 
+    private final Map<Class<? extends MZmineModule>, ParameterSet> moduleParameters;
     private final MZminePreferences preferences;
 
     public MZmineConfiguration() {
+        moduleParameters = new Hashtable<Class<? extends MZmineModule>, ParameterSet>();
         preferences = new MZminePreferences();
     }
 
     public MZminePreferences getPreferences() {
         return preferences;
+    }
+
+    public ParameterSet getModuleParameters(
+            Class<? extends MZmineModule> moduleClass) {
+        ParameterSet parameters = moduleParameters.get(moduleClass);
+        if (parameters == null) {
+            throw new IllegalArgumentException("Module " + moduleClass
+                    + " does not have any parameter set instance");
+        }
+        return parameters;
+    }
+
+    public void setModuleParameters(Class<? extends MZmineModule> moduleClass,
+            ParameterSet parameters) {
+        assert moduleClass != null;
+        assert parameters != null;
+        MZmineModule moduleInstance = MZmineStarter
+                .getModuleInstance(moduleClass);
+        Class<? extends ParameterSet> parametersClass = moduleInstance
+                .getParameterSetClass();
+        if (!parametersClass.isInstance(parameters)) {
+            throw new IllegalArgumentException(
+                    "Given parameter set is an instance of "
+                            + parameters.getClass() + " instead of "
+                            + parametersClass);
+        }
+        moduleParameters.put(moduleClass, parameters);
+
     }
 
     public NumberFormat getIntensityFormat() {
@@ -77,7 +110,7 @@ public class MZmineConfiguration {
         return preferences.getParameter(MZminePreferences.rtFormat).getValue();
     }
 
-    public static void loadConfiguration(File file) throws IOException {
+    public void loadConfiguration(File file) throws IOException {
 
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory
@@ -89,19 +122,19 @@ public class MZmineConfiguration {
             XPathFactory factory = XPathFactory.newInstance();
             XPath xpath = factory.newXPath();
 
-            logger.finest("Loading desktop configuration");
+            logger.info("Loading desktop configuration");
 
             XPathExpression expr = xpath.compile("//configuration/preferences");
             NodeList nodes = (NodeList) expr.evaluate(configuration,
                     XPathConstants.NODESET);
             if (nodes.getLength() == 1) {
                 Element preferencesElement = (Element) nodes.item(0);
-                // preferences.loadValuesFromXML(preferencesElement);
+                preferences.loadValuesFromXML(preferencesElement);
             }
 
-            logger.finest("Loading modules configuration");
+            logger.info("Loading modules configuration");
 
-            for (MZmineModule module : MZmineModules.getAllModules()) {
+            for (MZmineModule module : MZmineStarter.getAllModules()) {
 
                 String className = module.getClass().getName();
                 expr = xpath.compile("//configuration/modules/module[@class='"
@@ -113,11 +146,9 @@ public class MZmineConfiguration {
 
                 Element moduleElement = (Element) nodes.item(0);
 
-                /*
-                 * ParameterSet moduleParameters = getModuleParameters(
-                 * module.getClass());
-                 * moduleParameters.loadValuesFromXML(moduleElement);
-                 */
+                ParameterSet moduleParameters = getModuleParameters(
+                        module.getClass());
+                moduleParameters.loadValuesFromXML(moduleElement);
             }
 
             logger.info("Loaded configuration from file " + file);
@@ -138,13 +169,13 @@ public class MZmineConfiguration {
 
             Element prefElement = configuration.createElement("preferences");
             configRoot.appendChild(prefElement);
-            // preferences.saveValuesToXML(prefElement);
+            preferences.saveValuesToXML(prefElement);
 
             Element modulesElement = configuration.createElement("modules");
             configRoot.appendChild(modulesElement);
 
             // traverse modules
-            for (MZmineModule module : MZmineModules.getAllModules()) {
+            for (MZmineModule module : MZmineStarter.getAllModules()) {
 
                 String className = module.getClass().getName();
 
@@ -156,11 +187,9 @@ public class MZmineConfiguration {
                         .createElement("parameters");
                 moduleElement.appendChild(paramElement);
 
-                /*
-                 * ParameterSet moduleParameters = getModuleParameters(
-                 * module.getClass());
-                 * moduleParameters.saveValuesToXML(paramElement);
-                 */
+                ParameterSet moduleParameters = getModuleParameters(
+                        module.getClass());
+                moduleParameters.saveValuesToXML(paramElement);
 
             }
 

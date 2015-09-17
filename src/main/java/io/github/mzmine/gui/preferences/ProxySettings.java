@@ -20,6 +20,7 @@
 package io.github.mzmine.gui.preferences;
 
 import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 
 /**
@@ -28,10 +29,12 @@ import io.github.mzmine.parameters.parametertypes.StringParameter;
 public class ProxySettings extends ParameterSet {
 
     public static final StringParameter proxyAddress = new StringParameter(
-            "Proxy adress", "Internet address of a proxy server");
+            "Proxy address", "Internet address of a proxy server", "Proxy",
+            ParameterValidator.createNonEmptyValidator());
 
     public static final StringParameter proxyPort = new StringParameter(
-            "Proxy port", "TCP port of proxy server");
+            "Proxy port", "TCP port of proxy server", "Proxy",
+            ParameterValidator.createNonEmptyValidator());
 
     public ProxySettings() {
         super(proxyAddress, proxyPort);

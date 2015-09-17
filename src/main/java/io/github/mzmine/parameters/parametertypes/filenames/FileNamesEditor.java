@@ -26,12 +26,15 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.controlsfx.control.PropertySheet;
-import org.controlsfx.property.editor.PropertyEditor;
+import javax.annotation.Nullable;
 
+import org.controlsfx.control.PropertySheet;
+
+import io.github.mzmine.parameters.ParameterEditor;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
@@ -42,7 +45,7 @@ import javafx.stage.Window;
  * This parameter stores filenames
  */
 public class FileNamesEditor extends BorderPane
-        implements PropertyEditor<List<File>> {
+        implements ParameterEditor<List<File>> {
 
     private final FileNamesParameter fileNamesParameter;
     private final TextArea textArea;
@@ -61,6 +64,7 @@ public class FileNamesEditor extends BorderPane
 
         // The Add button
         browseButton = new Button("Browse");
+        browseButton.setFocusTraversable(false);
         browseButton.setOnAction(e -> {
             List<FileChooser.ExtensionFilter> extensions = fileNamesParameter
                     .getExtensions();
@@ -133,6 +137,12 @@ public class FileNamesEditor extends BorderPane
                 textArea.appendText(f.getPath() + "\n");
             }
         }
+    }
+
+    @Override
+    @Nullable
+    public Control getMainControl() {
+        return textArea;
     }
 
 }

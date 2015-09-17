@@ -19,106 +19,71 @@
 
 package io.github.mzmine.parameters.parametertypes;
 
-import java.util.Optional;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.controlsfx.property.editor.PropertyEditor;
 import org.w3c.dom.Element;
 
-import com.google.common.base.Strings;
-
-import io.github.mzmine.parameters.Parameter;
 import io.github.mzmine.parameters.ParameterValidator;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
-public class StringParameter implements Parameter<String> {
+public class StringParameter extends AbstractParameter<String> {
 
-    private final @Nonnull String name, description;
-    private final EventHandler<ActionEvent> autoSetAction;
-    private String value;
+    private EventHandler<ActionEvent> autoSetAction;
 
-    public StringParameter(@Nonnull String name, @Nonnull String description) {
-        this(name, description, null, null);
+    public StringParameter(@Nonnull String name, @Nonnull String description,
+            @Nonnull String category) {
+        this(name, description, category, null, null, null);
     }
 
     public StringParameter(@Nonnull String name, @Nonnull String description,
-            String defaultValue) {
-        this(name, description, defaultValue, null);
+            @Nonnull String category, String defaultValue) {
+        this(name, description, category, null, defaultValue, null);
     }
 
     public StringParameter(@Nonnull String name, @Nonnull String description,
-            String defaultValue, EventHandler<ActionEvent> autoSetAction) {
-        this.name = name;
-        this.description = description;
-        this.value = defaultValue;
+            @Nonnull String category,
+            @Nullable ParameterValidator<String> validator) {
+        this(name, description, category, validator, null, null);
+    }
+
+    public StringParameter(@Nonnull String name, @Nonnull String description,
+            @Nonnull String category,
+            @Nullable ParameterValidator<String> validator,
+            @Nullable String defaultValue,
+            @Nullable EventHandler<ActionEvent> autoSetAction) {
+        super(name, description, category, StringEditor.class, validator);
+        setValue(defaultValue);
         this.autoSetAction = autoSetAction;
-    }
-
-    /**
-     * @see net.sf.mzmine.data.Parameter#getName()
-     */
-    @Override
-    public @Nonnull String getName() {
-        return name;
-    }
-
-    /**
-     * @see net.sf.mzmine.data.Parameter#getDescription()
-     */
-    @Override
-    public @Nonnull String getDescription() {
-        return description;
-    }
-
-    @Override
-    public Class<?> getType() {
-        return String.class;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    @Override
-    public void setValue(@Nullable Object value) {
-        this.value = (String) value;
     }
 
     @Override
     public @Nonnull StringParameter clone() {
-        StringParameter copy = new StringParameter(name, description, value,
-                autoSetAction);
+        StringParameter copy = new StringParameter(getName(), getDescription(),
+                getCategory(), getValidator(), getValue(), autoSetAction);
         return copy;
     }
 
     @Override
     public void loadValueFromXML(@Nonnull Element xmlElement) {
-        value = xmlElement.getTextContent();
+        String content = xmlElement.getTextContent();
+        setValue(content);
     }
 
     @Override
     public void saveValueToXML(@Nonnull Element xmlElement) {
-        if (value == null)
+        if (getValue() == null)
             return;
-        xmlElement.setTextContent(value);
-    }
-
-    @Override
-    public Optional<Class<? extends PropertyEditor<?>>> getPropertyEditorClass() {
-        return Optional.of(StringEditor.class);
+        xmlElement.setTextContent(getValue());
     }
 
     public EventHandler<ActionEvent> getAutoSetAction() {
         return autoSetAction;
     }
 
-    public ParameterValidator<String> getValidator() {
-        return (val, msg) -> {
-            return !Strings.isNullOrEmpty(val);
-        };
+    public void setAutoSetAction(EventHandler<ActionEvent> autoSetAction) {
+        this.autoSetAction = autoSetAction;
     }
 
 }

@@ -21,11 +21,42 @@ package io.github.mzmine.parameters;
 
 import java.util.Collection;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public interface ParameterValidator<ValueType> {
 
     /**
      * If value is not valid, add a message to the collection and return false.
      */
-    boolean checkValue(ValueType value, Collection<String> messages);
+    @Nonnull
+    Boolean checkValue(@Nullable ValueType value,
+            @Nonnull Collection<String> messages);
 
+    /**
+     * Simple validator that checks whether value is present
+     */
+    static <T> ParameterValidator<T> createNonEmptyValidator() {
+        return (value, messages) -> {
+            if (value == null) {
+                messages.add("Value is not set");
+                return false;
+            }
+            if (value instanceof String) {
+                String strValue = (String) value;
+                if (strValue.trim().length() == 0) {
+                    messages.add("Value is empty");
+                    return false;
+                }
+            }
+            if (value instanceof Collection) {
+                Collection<?> collectionValue = (Collection<?>) value;
+                if (collectionValue.size() == 0) {
+                    messages.add("Value is empty");
+                    return false;
+                }
+            }
+            return true;
+        };
+    };
 }

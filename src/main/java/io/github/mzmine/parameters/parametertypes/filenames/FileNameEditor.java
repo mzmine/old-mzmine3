@@ -57,6 +57,7 @@ public class FileNameEditor extends BorderPane
 
         // The Browse button
         browseButton = new Button("Browse");
+        browseButton.setFocusTraversable(false);
         setRight(browseButton);
         setMargin(browseButton, new Insets(0, 0, 0, 10.0));
         browseButton.setOnAction(e -> {

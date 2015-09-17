@@ -24,38 +24,33 @@ import javax.annotation.Nullable;
 import org.controlsfx.control.PropertySheet;
 
 import io.github.mzmine.parameters.ParameterEditor;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
 
 /**
- * Combo parameter editor
+ * Boolean parameter editor
  */
-public class ComboEditor<ValueType> extends ChoiceBox<ValueType>
-        implements ParameterEditor<ValueType> {
+public class BooleanEditor extends CheckBox
+        implements ParameterEditor<Boolean> {
 
-    private final ComboParameter<ValueType> comboParameter;
-
-    @SuppressWarnings("unchecked")
-    public ComboEditor(PropertySheet.Item parameter) {
-        
-        if (!(parameter instanceof ComboParameter))
-            throw new IllegalArgumentException();
-
-        this.comboParameter = (ComboParameter<ValueType>) parameter;
-
-        ObservableList<ValueType> optionsList = (ObservableList<ValueType>) comboParameter
-                .getOptions();
-        
-        if (optionsList != null)
-            setItems(optionsList);
-
+    public BooleanEditor(PropertySheet.Item parameter) {
     }
 
     @Override
     public Node getEditor() {
         return this;
+    }
+
+    @Override
+    public Boolean getValue() {
+        return isSelected();
+    }
+
+    @Override
+    public void setValue(Boolean value) {
+        if (value != null)
+            setSelected(value);
     }
 
     @Override

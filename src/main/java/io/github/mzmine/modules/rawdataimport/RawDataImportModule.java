@@ -50,8 +50,6 @@ public class RawDataImportModule implements MZmineProcessingModule {
     private static final String MODULE_NAME = "Raw data import";
     private static final String MODULE_DESCRIPTION = "This module imports raw data into the project.";
 
-    private final RawDataImportParameters parameters = new RawDataImportParameters();
-
     @SuppressWarnings("null")
     @Override
     public @Nonnull String getName() {
@@ -136,8 +134,8 @@ public class RawDataImportModule implements MZmineProcessingModule {
         return MZmineModuleCategory.RAWDATA;
     }
 
-    @SuppressWarnings("null")
-    public @Nonnull ParameterSet getParameters() {
-        return parameters;
+    @Override
+    public @Nonnull Class<? extends ParameterSet> getParameterSetClass() {
+        return RawDataImportParameters.class;
     }
 }

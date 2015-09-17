@@ -20,6 +20,7 @@
 package io.github.mzmine.parameters;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -36,7 +37,7 @@ import javafx.scene.control.ButtonType;
  * Simple storage for the parameters. A typical MZmine module will inherit this
  * class and define the parameters for the constructor.
  */
-public class ParameterSet implements Cloneable {
+public class ParameterSet implements Iterable<Parameter<?>>, Cloneable {
 
     private static Logger logger = Logger.getLogger(MZmineCore.class.getName());
 
@@ -47,8 +48,7 @@ public class ParameterSet implements Cloneable {
 
     public ParameterSet(Parameter<?>... items) {
         for (Parameter<?> p : items) {
-            Parameter<?> clone = p.clone();
-            parameters.add(clone);
+            parameters.add(p);
         }
     }
 
@@ -108,16 +108,6 @@ public class ParameterSet implements Cloneable {
         return result.get();
     }
 
-   /* public boolean checkParameterValues(Collection<String> errorMessages) {
-        boolean allParametersOK = true;
-        for (Parameter<?> p : parameters) {
-            boolean pOK = p.checkValue(errorMessages);
-            if (!pOK)
-                allParametersOK = false;
-        }
-        return allParametersOK;
-    }*/
-
     @SuppressWarnings("unchecked")
     public <T extends Parameter<?>> T getParameter(T parameter) {
         for (Parameter<?> p : parameters) {
@@ -157,6 +147,11 @@ public class ParameterSet implements Cloneable {
             xmlElement.appendChild(paramElement);
             param.saveValueToXML(paramElement);
         }
+    }
+
+    @Override
+    public Iterator<Parameter<?>> iterator() {
+        return parameters.iterator();
     }
 
 }

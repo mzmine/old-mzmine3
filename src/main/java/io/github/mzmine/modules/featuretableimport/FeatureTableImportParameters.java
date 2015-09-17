@@ -26,6 +26,7 @@ import java.util.List;
 import org.controlsfx.control.PropertySheet;
 
 import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.StringEditor;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.filenames.FileNamesParameter;
@@ -41,11 +42,14 @@ public class FeatureTableImportParameters extends ParameterSet {
             new ExtensionFilter("All files", "*.*") };
 
     public static final FileNamesParameter fileNames = new FileNamesParameter(
-            "File names", "Add feature table files", Arrays.asList(filters));
+            "File names", "Add feature table files", "Input files",
+            ParameterValidator.createNonEmptyValidator(),
+            Arrays.asList(filters));
 
     @SuppressWarnings({ "unchecked", "null", })
     public static final StringParameter removePrefix = new StringParameter(
-            "Remove prefix", "Prefix to be removed from file names", null, e -> {
+            "Remove prefix", "Prefix to be removed from file names", "Prefixes",
+            null, null, e -> {
                 StringEditor editor = null;
                 PropertySheet sheet = null;
                 Node src = (Node) e.getSource();
@@ -73,7 +77,8 @@ public class FeatureTableImportParameters extends ParameterSet {
 
     @SuppressWarnings({ "unchecked", "null", })
     public static final StringParameter removeSuffix = new StringParameter(
-            "Remove suffix", "Suffix to be removed from file names", null, e -> {
+            "Remove suffix", "Suffix to be removed from file names", "Prefixes",
+            null, null, e -> {
                 StringEditor editor = null;
                 PropertySheet sheet = null;
                 Node src = (Node) e.getSource();

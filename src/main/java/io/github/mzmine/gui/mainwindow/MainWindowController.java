@@ -91,7 +91,6 @@ public class MainWindowController implements Initializable {
         rawDataTree.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
         rawDataTree.setShowRoot(false);
-        rawDataTree.setRoot(MZmineCore.getCurrentProject().getRawDataRootItem());
 
         // Add mouse clicked event handler
         rawDataTree.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -148,7 +147,6 @@ public class MainWindowController implements Initializable {
         featureTree.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
         featureTree.setShowRoot(false);
-        featureTree.setRoot(MZmineCore.getCurrentProject().getFeatureTableRootItem());
 
         statusBar.setText("Welcome to MZmine " + MZmineCore.getMZmineVersion());
 
@@ -216,15 +214,13 @@ public class MainWindowController implements Initializable {
         return rawDataTree;
     }
 
-    public TreeView<?> getFeatureTree() {
+    public TreeView<FeatureTableTreeItem> getFeatureTree() {
         return featureTree;
     }
 
     public TaskProgressView<Task<?>> getTaskTable() {
         return tasksView;
     }
-
-
 
     public StatusBar getStatusBar() {
         return statusBar;

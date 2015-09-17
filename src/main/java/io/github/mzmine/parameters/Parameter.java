@@ -39,6 +39,10 @@ public interface Parameter<ValueType> extends Item, Cloneable {
     String getDescription();
 
     @Override
+    @Nonnull
+    String getCategory();
+
+    @Override
     @Nullable
     ValueType getValue();
 
@@ -52,13 +56,7 @@ public interface Parameter<ValueType> extends Item, Cloneable {
     @Nonnull
     Parameter<ValueType> clone();
 
-    default @Nullable ParameterValidator<ValueType> getValidator() {
-        return null;
-    }
-
-    @Override
-    default @Nullable String getCategory() {
-        return null;
-    }
+    @Nullable
+    ParameterValidator<ValueType> getValidator();
 
 }
