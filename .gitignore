@@ -1,5 +1,6 @@
-.settings/
 target/
+src/main/conf/config.xml
 .DS_Store
 .project
 .classpath
+.settings/
