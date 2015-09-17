@@ -13,35 +13,29 @@
         <parameter name="Send anonymous statistics">true</parameter>
     </preferences>
     <modules>
-<<<<<<< Upstream, based on origin/master
         <module class="io.github.mzmine.modules.featuretableimport.FeatureTableImportModule">
             <parameters>
-                <parameter name="File names"/>
+                <parameter name="File names">
+                    <filename>C:\MZmine\Sample-2.3.mzTab</filename>
+                    <lastdirectory>C:\MZmine</lastdirectory>
+                </parameter>
                 <parameter name="Remove prefix"/>
                 <parameter name="Remove suffix"/>
             </parameters>
-=======
-        <module class="io.github.mzmine.modules.rawdataimport.RawDataImportModule">
-            <parameters/>
->>>>>>> 5c9ffa6 Initial work on feature tables
         </module>
-<<<<<<< Upstream, based on origin/master
         <module class="io.github.mzmine.modules.rawdataimport.RawDataImportModule">
             <parameters>
                 <parameter name="File names">
-                    <filename>C:\MZmine\0028_LIP1p_20150629_017_NIST-1950_1_1.mzML</filename>
-                    <filename>C:\MZmine\0028_LIP1p_20150629_018_NIST-1950_1_2.mzML</filename>
-                    <filename>C:\MZmine\0028_LIP1p_20150629_019_NIST-1950_1_3.mzML</filename>
+                    <filename>C:\MZmine\centroided1.mzML</filename>
+                    <filename>C:\MZmine\centroided2.mzML</filename>
+                    <filename>C:\MZmine\centroided3.mzML</filename>
+                    <filename>C:\MZmine\centroided4.mzML</filename>
                     <lastdirectory>C:\MZmine</lastdirectory>
                 </parameter>
                 <parameter name="Import mode">Access the file transparently, if possible</parameter>
-                <parameter name="Remove prefix">0028_LIP1p_20150629_01</parameter>
+                <parameter name="Remove prefix">centroided</parameter>
                 <parameter name="Remove suffix">.mzML</parameter>
             </parameters>
-=======
-        <module class="io.github.mzmine.modules.featuretableimport.FeatureTableImportModule">
-            <parameters/>
->>>>>>> 5c9ffa6 Initial work on feature tables
         </module>
     </modules>
 </configuration>

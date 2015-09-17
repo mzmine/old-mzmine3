@@ -71,6 +71,10 @@ public final class MZmineCore {
         return currentProject;
     }
 
+    public static void setCurrentProject(@Nonnull MZmineProject newProject) {
+        currentProject = newProject;
+    }
+
     public static void submitTasks(@Nonnull Collection<Task<?>> tasks) {
 
         for (Task<?> task : tasks) {

@@ -122,7 +122,7 @@ public class FeatureTableImportModule implements MZmineProcessingModule {
                                     name.length() - removeSuffix.length());
                         featureTable.setName(name);
                     }
-
+System.out.println(featureTable.getName());
                     project.addFeatureTable(featureTable);
                 });
 

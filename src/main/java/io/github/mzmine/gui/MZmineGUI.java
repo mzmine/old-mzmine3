@@ -222,6 +222,8 @@ public final class MZmineGUI extends Application {
     }
     
     public static void activateProject(MZmineGUIProject project) {
+        MZmineCore.setCurrentProject(project);
+
         TreeView<RawDataTreeItem> rawDataTree = mainWindowController.getRawDataTree();
         rawDataTree.setRoot(project.getRawDataRootItem());
         
