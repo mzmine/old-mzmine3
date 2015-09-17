@@ -101,8 +101,16 @@ public class MZmineProject {
     @SuppressWarnings("null")
     @Nonnull
     public List<FeatureTable> getFeatureTables() {
+<<<<<<< Upstream, based on origin/master
         synchronized (featureTables) {
             return ImmutableList.copyOf(featureTables);
+=======
+        List<FeatureTable> featureTables = new ArrayList<>();
+        for (TreeItem<FeatureTableTreeItem> df1 : featureTableRootItem.getChildren()) {
+            if (df1.getValue().getFeatureTable() instanceof FeatureTable) {
+                featureTables.add((FeatureTable) df1.getValue().getFeatureTable());
+            }
+>>>>>>> 5c9ffa6 Initial work on feature tables
         }
     }
 

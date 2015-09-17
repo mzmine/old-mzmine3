@@ -29,29 +29,42 @@ import javax.annotation.Nonnull;
 
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.TaskProgressView;
+import org.controlsfx.control.spreadsheet.GridBase;
+import org.controlsfx.control.spreadsheet.SpreadsheetCell;
+import org.controlsfx.control.spreadsheet.SpreadsheetCellType;
+import org.controlsfx.control.spreadsheet.SpreadsheetView;
 import org.dockfx.DockNode;
 import org.dockfx.DockPane;
 import org.dockfx.DockPos;
 
+import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.modules.featuretable.Table;
 import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
 
@@ -147,6 +160,44 @@ public class MainWindowController implements Initializable {
         featureTree.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
         featureTree.setShowRoot(false);
+
+        // Add mouse clicked event handler
+        featureTree.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getClickCount() == 2) {
+
+                    // FeatureTable
+                    FeatureTable featureTable = MZmineCore.getCurrentProject().getFeatureTables().get(0);
+
+                    // New feature table
+                    TableView table = Table.getFeatureTable(featureTable);
+                    SpreadsheetView table2 = Table.getFeatureTable2(featureTable);
+
+                    // New test dock
+                    final DockNode testDock = new DockNode(table,
+                            "Example Table");
+
+                    // Add default button
+                    ToggleButton DefaultButton;
+                    DefaultButton = new ToggleButton();
+                    DefaultButton.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            System.out.println("Selected property: "
+                                    + DefaultButton.selectedProperty());
+                        }
+                    });
+                    DefaultButton.setMinSize(16, 20);
+                    DefaultButton.setMaxSize(16, 20);
+                    testDock.getDockTitleBar().getChildren().add(DefaultButton);
+
+                    testDock.dock(mainDockPane, DockPos.RIGHT);
+                    // testDock.setFloating(true);
+
+                }
+            }
+        });
 
         statusBar.setText("Welcome to MZmine " + MZmineCore.getMZmineVersion());
 

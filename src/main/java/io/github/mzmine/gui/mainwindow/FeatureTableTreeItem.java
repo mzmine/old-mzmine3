@@ -35,13 +35,13 @@ public class FeatureTableTreeItem {
         this.featureTable = featureTable;
     }
 
-    public FeatureTable getRawDataFile() {
+    public FeatureTable getFeatureTable() {
         return featureTable;
     }
 
     @Override
     public String toString() {
-        final FeatureTable df = getRawDataFile();
+        final FeatureTable df = getFeatureTable();
         if (df != null)
             return df.getName();
         return "Unnamed item";

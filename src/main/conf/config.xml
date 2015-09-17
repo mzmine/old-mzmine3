@@ -13,13 +13,19 @@
         <parameter name="Send anonymous statistics">true</parameter>
     </preferences>
     <modules>
+<<<<<<< Upstream, based on origin/master
         <module class="io.github.mzmine.modules.featuretableimport.FeatureTableImportModule">
             <parameters>
                 <parameter name="File names"/>
                 <parameter name="Remove prefix"/>
                 <parameter name="Remove suffix"/>
             </parameters>
+=======
+        <module class="io.github.mzmine.modules.rawdataimport.RawDataImportModule">
+            <parameters/>
+>>>>>>> 5c9ffa6 Initial work on feature tables
         </module>
+<<<<<<< Upstream, based on origin/master
         <module class="io.github.mzmine.modules.rawdataimport.RawDataImportModule">
             <parameters>
                 <parameter name="File names">
@@ -32,6 +38,10 @@
                 <parameter name="Remove prefix">0028_LIP1p_20150629_01</parameter>
                 <parameter name="Remove suffix">.mzML</parameter>
             </parameters>
+=======
+        <module class="io.github.mzmine.modules.featuretableimport.FeatureTableImportModule">
+            <parameters/>
+>>>>>>> 5c9ffa6 Initial work on feature tables
         </module>
     </modules>
 </configuration>
