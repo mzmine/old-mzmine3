@@ -170,7 +170,7 @@ public final class MZmineConfiguration {
             Element prefElement = configuration.createElement("preferences");
             configRoot.appendChild(prefElement);
             preferences.saveValuesToXML(prefElement);
-
+            
             Element modulesElement = configuration.createElement("modules");
             configRoot.appendChild(modulesElement);
 
@@ -206,6 +206,7 @@ public final class MZmineConfiguration {
             transformer.transform(source, result);
 
             logger.info("Saved configuration to file " + file);
+            
         } catch (Exception e) {
             throw new IOException(e);
         }

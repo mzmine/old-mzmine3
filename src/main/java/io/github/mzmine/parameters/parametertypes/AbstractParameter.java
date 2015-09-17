@@ -76,7 +76,7 @@ public abstract class AbstractParameter<ValueType>
     }
 
     @Override
-    public ValueType getValue() {
+    public @Nullable ValueType getValue() {
         return value;
     }
 

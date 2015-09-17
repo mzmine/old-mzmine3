@@ -33,18 +33,17 @@ import io.github.mzmine.parameters.parametertypes.AbstractParameter;
 public class NumberFormatParameter extends AbstractParameter<DecimalFormat> {
 
     private boolean showExponentOption;
-    private DecimalFormat value;
 
     public NumberFormatParameter(@Nonnull String name,
             @Nonnull String description, @Nonnull String category,
-            boolean showExponentOption, DecimalFormat defaultValue) {
+            boolean showExponentOption, @Nonnull DecimalFormat defaultValue) {
 
         super(name, description, category, NumberFormatEditor.class, null);
 
         assert defaultValue != null;
 
         this.showExponentOption = showExponentOption;
-        this.value = defaultValue;
+        setValue(defaultValue);
     }
 
     @Override
@@ -55,12 +54,19 @@ public class NumberFormatParameter extends AbstractParameter<DecimalFormat> {
     @Override
     public void loadValueFromXML(@Nonnull Element xmlElement) {
         String newPattern = xmlElement.getTextContent();
-        value.applyPattern(newPattern);
+        DecimalFormat format = getValue();
+        if (format == null)
+            return;
+        format.applyPattern(newPattern);
     }
 
     @Override
     public void saveValueToXML(@Nonnull Element xmlElement) {
-        xmlElement.setTextContent(value.toPattern());
+        DecimalFormat format = getValue();
+        if (format == null)
+            return;
+        String pattern = format.toPattern();
+        xmlElement.setTextContent(pattern);
     }
 
     public boolean isShowExponentEnabled() {
