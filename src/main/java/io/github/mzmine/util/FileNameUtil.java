@@ -24,6 +24,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.io.Files;
+
 /**
  * File name utilities
  */
@@ -54,8 +56,12 @@ public class FileNameUtil {
     @SuppressWarnings("null")
     public static @Nonnull String findCommonSuffix(
             @Nonnull List<File> fileNames) {
-        if (fileNames.size() < 2)
-            return "";
+        if (fileNames.size() < 2) {
+            // Return file extension
+            String ext = Files
+                    .getFileExtension(fileNames.get(0).getAbsolutePath());
+            return "." + ext;
+        }
 
         String firstName = fileNames.get(0).getName();
 

@@ -19,25 +19,27 @@
 
 package io.github.mzmine.modules.featuretable;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.controlsfx.control.spreadsheet.GridBase;
-import org.controlsfx.control.spreadsheet.SpreadsheetCell;
-import org.controlsfx.control.spreadsheet.SpreadsheetCellType;
-import org.controlsfx.control.spreadsheet.SpreadsheetView;
 
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
-import javafx.collections.FXCollections;
+import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.MapValueFactory;
+import javafx.util.Callback;
 
 public class Table {
 
@@ -47,7 +49,7 @@ public class Table {
         String mapChar;
         int totalColumns = 0;
         final List<FeatureTableColumn<?>> columns = featureTable.getColumns();
-        TableColumn<Map, String> tableColumn = null;
+        TableColumn<Map, Object> tableColumn = null;
         TableColumn sampleColumn = null;
         Sample prevSample = null, currentSample = null;
 
@@ -57,10 +59,58 @@ public class Table {
         // Common columns
         for (FeatureTableColumn<?> col : columns) {
             currentSample = col.getSample();
+            Class dataType = col.getDataTypeClass();
             if (currentSample == null) {
                 mapChar = String.valueOf(nextChar++);
                 tableColumn = new TableColumn<>(col.getName());
-                tableColumn.setCellValueFactory(new MapValueFactory(mapChar));
+                tableColumn.setCellValueFactory(
+                        new MapValueFactory<Object>(mapChar));
+
+                tableColumn.setCellFactory(new Callback<TableColumn<Map, Object>, TableCell<Map, Object>>() {
+
+                    @Override
+                    public TableCell<Map, Object> call(TableColumn<Map, Object> p) {
+                        return new TableCell<Map, Object>() {
+                            @Override
+                            public void updateItem(Object object, boolean empty) {
+                                super.updateItem(object, empty);
+                                if (object == null) {
+                                    setTooltip(null);
+                                    setText(null);
+                                } else {
+                                    // Tooltip
+                                    Tooltip tooltip = new Tooltip();
+                                    tooltip.setText("This is a tooltip");
+                                    setTooltip(tooltip);
+
+                                    // Format value
+                                    String dataTypeClass = object.getClass().getSimpleName();
+                                    String value = object.toString();
+                                    NumberFormat formatter = new DecimalFormat("#0.00");
+
+                                    switch (dataTypeClass) {
+                                        case "Double":
+                                            Double doubleValue = (Double) object;
+                                            value = formatter.format(doubleValue);
+                                            // object.toString();
+                                            break;
+                                        case "SimpleChromatographyInfo":
+                                            ChromatographyInfo chromatographyInfo = (ChromatographyInfo) object;
+                                            Float floatValue = chromatographyInfo.getRetentionTime();
+                                            value = formatter.format(floatValue);
+                                            break;
+                                        case "SimpleIonAnnotation":
+                                            IonAnnotation ionAnnotation = (IonAnnotation) object;
+                                            value = ionAnnotation.getDescription();
+                                    }
+                                    setText(value);
+                                }
+                            }
+                        };
+                    }
+
+                });
+
                 table.getColumns().add(tableColumn);
                 totalColumns++;
             }
@@ -76,8 +126,8 @@ public class Table {
                 if (prevSample != null && prevSample.equals(currentSample)) {
                     mapChar = String.valueOf(nextChar++);
                     tableColumn = new TableColumn<>(col.getName());
-                    tableColumn
-                            .setCellValueFactory(new MapValueFactory(mapChar));
+                    tableColumn.setCellValueFactory(
+                            new MapValueFactory<Object>(mapChar));
                     sampleColumn.getColumns().add(tableColumn);
                     totalColumns++;
                 } else { // Create sample header and sample columns
@@ -87,8 +137,8 @@ public class Table {
 
                     mapChar = String.valueOf(nextChar++);
                     tableColumn = new TableColumn<>(col.getName());
-                    tableColumn
-                            .setCellValueFactory(new MapValueFactory(mapChar));
+                    tableColumn.setCellValueFactory(
+                            new MapValueFactory<Object>(mapChar));
                     sampleColumn.getColumns().add(tableColumn);
                     totalColumns++;
                 }
@@ -103,16 +153,13 @@ public class Table {
         for (FeatureTableRow row : rows) {
             rowNr++;
             int columnNr = 0;
-            Map<String, String> dataRow = new HashMap<>();
+            Map<String, Object> dataRow = new HashMap<>();
 
             for (FeatureTableColumn<?> column : columns) {
-
                 String mapKey = Character.toString((char) ('A' + columnNr));
                 if (row.getData(column) != null) {
-                    String value1 = row.getData(column).toString();
+                    Object value1 = row.getData(column);
                     dataRow.put(mapKey, value1);
-                    // System.out.println(mapKey + ": " + value1 + ", " +
-                    // column.getName());
                 } else {
                     dataRow.put(mapKey, null);
                 }
@@ -125,35 +172,7 @@ public class Table {
 
         // Table preferences
         table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
-        return table;
-
-    }
-
-    public static SpreadsheetView getFeatureTable2(FeatureTable featureTable) {
-
-        final List<FeatureTableColumn<?>> featureColumns = featureTable
-                .getColumns();
-        final List<FeatureTableRow> featureRows = featureTable.getRows();
-
-        int rowCount = featureRows.size();
-        int columnCount = featureColumns.size();
-        GridBase grid = new GridBase(rowCount, columnCount);
-
-        ObservableList<ObservableList<SpreadsheetCell>> rows = FXCollections
-                .observableArrayList();
-        for (int row = 0; row < grid.getRowCount(); ++row) {
-            final ObservableList<SpreadsheetCell> list = FXCollections
-                    .observableArrayList();
-            for (int column = 0; column < grid.getColumnCount(); ++column) {
-                list.add(SpreadsheetCellType.STRING.createCell(row, column, 1,
-                        1, "value"));
-            }
-            rows.add(list);
-        }
-        grid.setRows(rows);
-
-        SpreadsheetView table = new SpreadsheetView(grid);
+        table.getSelectionModel().setCellSelectionEnabled(true);
 
         return table;
 

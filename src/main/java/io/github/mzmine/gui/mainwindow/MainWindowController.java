@@ -172,7 +172,6 @@ public class MainWindowController implements Initializable {
 
                     // New feature table
                     TableView table = Table.getFeatureTable(featureTable);
-                    SpreadsheetView table2 = Table.getFeatureTable2(featureTable);
 
                     // New test dock
                     final DockNode testDock = new DockNode(table,

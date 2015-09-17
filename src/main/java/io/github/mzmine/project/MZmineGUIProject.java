@@ -119,9 +119,9 @@ public class MZmineGUIProject extends MZmineProject {
     @Nonnull
     public List<FeatureTable> getFeatureTables() {
         List<FeatureTable> featureTables = new ArrayList<>();
-        for (TreeItem<?> df1 : featureTableRootItem.getChildren()) {
-            if (df1.getValue() instanceof FeatureTable) {
-                featureTables.add((FeatureTable) df1.getValue());
+        for (TreeItem<FeatureTableTreeItem> df1 : featureTableRootItem.getChildren()) {
+            if (df1.getValue().getFeatureTable() instanceof FeatureTable) {
+                featureTables.add((FeatureTable) df1.getValue().getFeatureTable());
             }
         }
         return ImmutableList.copyOf(featureTables);
