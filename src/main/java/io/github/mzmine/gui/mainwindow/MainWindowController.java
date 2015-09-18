@@ -20,7 +20,9 @@
 package io.github.mzmine.gui.mainwindow;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.annotation.Nonnull;
@@ -39,6 +41,8 @@ import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.modules.featuretable.Table;
 import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotModule;
+import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -158,12 +162,21 @@ public class MainWindowController implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 2) {
-                    
+
                     //System.out.println(event.getX() + ","+event.getY());
 
                     // FeatureTable
                     FeatureTable featureTable = MZmineCore.getCurrentProject()
                             .getFeatureTables().get(0);
+
+                    /final ModuleType moduleInstance = MZmineCore.getModuleInstance(moduleClass);
+                    //final ParameterSet moduleParameters = MZmineCore.getConfiguration()
+                    //        .getModuleParameters(moduleClass);
+                    //MZmineProject currentProject = MZmineCore.getCurrentProject();
+                    //List<Task<?>> newTasks = new ArrayList<>();
+                    //moduleInstance.runModule(MZmineCore.getCurrentProject(),
+                    //        moduleParameters, newTasks);
+                    //MZmineCore.submitTasks(newTasks);
 
                     // New feature table
                     TableView table = Table.getFeatureTable(featureTable);
