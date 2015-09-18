@@ -98,8 +98,7 @@ public class MZmineProject {
     }
 
     @SuppressWarnings("null")
-    @Nonnull
-    public List<FeatureTable> getFeatureTables() {
+    public @Nonnull List<FeatureTable> getFeatureTables() {
         synchronized (featureTables) {
             return ImmutableList.copyOf(featureTables);
         }

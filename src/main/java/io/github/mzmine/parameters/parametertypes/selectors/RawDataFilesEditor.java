@@ -25,6 +25,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.controlsfx.control.PropertySheet;
+
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.parameters.ParameterEditor;
@@ -32,6 +34,7 @@ import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.MultiChoiceParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import javafx.collections.FXCollections;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -50,8 +53,12 @@ public class RawDataFilesEditor extends HBox
     private List<RawDataFile> specificFiles;
     private String namePattern;
 
-    public RawDataFilesEditor() {
+    public RawDataFilesEditor(PropertySheet.Item parameter) {
 
+        // HBox properties
+        setSpacing(10);
+        setAlignment(Pos.CENTER_LEFT);
+        
         numFilesLabel = new Text();
 
         typeCombo = new ComboBox<>(FXCollections.observableList(
@@ -74,8 +81,9 @@ public class RawDataFilesEditor extends HBox
                     .getSelectedItem();
 
             if (type == RawDataFilesSelectionType.SPECIFIC_FILES) {
-               
-                final @Nonnull List<RawDataFile> allFiles = MZmineCore.getCurrentProject().getRawDataFiles();
+
+                final @Nonnull List<RawDataFile> allFiles = MZmineCore
+                        .getCurrentProject().getRawDataFiles();
                 final MultiChoiceParameter<RawDataFile> filesParameter = new MultiChoiceParameter<RawDataFile>(
                         "Select files", "Select files", "Files", allFiles,
                         specificFiles);
@@ -149,6 +157,7 @@ public class RawDataFilesEditor extends HBox
         typeCombo.getSelectionModel().select(value.getSelectionType());
         specificFiles = value.getSpecificFiles();
         namePattern = value.getNamePattern();
+        updateNumFiles();
     }
 
     @Override
