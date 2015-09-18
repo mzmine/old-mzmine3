@@ -80,8 +80,10 @@ public class OptionalModuleEditor extends FlowPane
 
     @Override
     public void setValue(Boolean value) {
-        if (value != null)
+        if (value != null) {
             checkBox.setSelected(value);
+            setButton.setDisable(! value);
+        }
     }
 
     @Override
