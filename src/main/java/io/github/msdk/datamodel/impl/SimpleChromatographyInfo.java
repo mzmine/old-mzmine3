@@ -64,13 +64,31 @@ class SimpleChromatographyInfo implements ChromatographyInfo {
 
         // 2. Compare secondary retention time
         if (returnValue == 0) {
-            returnValue = this.secondaryRetentionTime
-                    .compareTo(o.getSecondaryRetentionTime());
+            if (this.secondaryRetentionTime != null
+                    && o.getSecondaryRetentionTime() != null) {
+                returnValue = this.secondaryRetentionTime
+                        .compareTo(o.getSecondaryRetentionTime());
+            } else if (this.secondaryRetentionTime == null
+                    && o.getSecondaryRetentionTime() == null) {
+                returnValue = 0;
+            } else if (this.secondaryRetentionTime == null) {
+                returnValue = -1;
+            } else {
+                returnValue = 1;
+            }
         }
 
         // 3. Compare ion drift time
         if (returnValue == 0) {
-            returnValue = this.ionDriftTime.compareTo(o.getIonDriftTime());
+            if (this.ionDriftTime != null && o.getIonDriftTime() != null) {
+                returnValue = this.ionDriftTime.compareTo(o.getIonDriftTime());
+            } else if (this.ionDriftTime == null && o.getIonDriftTime() == null) {
+                returnValue = 0;
+            } else if (this.ionDriftTime == null) {
+                returnValue = -1;
+            } else {
+                returnValue = 1;
+            }
         }
 
         return returnValue;

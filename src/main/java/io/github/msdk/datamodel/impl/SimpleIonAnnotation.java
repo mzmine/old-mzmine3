@@ -127,4 +127,35 @@ class SimpleIonAnnotation implements IonAnnotation {
         this.accessionURL = accessionURL;
     }
 
+    @Override
+    public int compareTo(IonAnnotation i) {
+        int returnValue;
+
+        // 1. Compare description
+        if (this.description != null && i.getDescription() != null) {
+            returnValue = this.description.compareTo(i.getDescription());
+        } else if (this.description == null && i.getDescription() == null) {
+            returnValue = 0;
+        } else if (this.description == null) {
+            returnValue = 1;
+        } else {
+            returnValue = -1;
+        }
+
+        // 2. Compare annotation id
+        if (returnValue == 0) {
+            if (this.annotationId != null && i.getAnnotationId() != null) {
+                returnValue = this.annotationId.compareTo(i.getAnnotationId());
+            } else
+                if (this.annotationId == null && i.getAnnotationId() == null) {
+                returnValue = 0;
+            } else if (this.description == null) {
+                returnValue = 1;
+            } else {
+                returnValue = -1;
+            }
+        }
+
+        return returnValue;
+    }
 }
