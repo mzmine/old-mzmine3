@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.main.MZmineStarter;
 import io.github.mzmine.modules.featuretable.FeatureTableModule;
 import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotModule;
 import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotParameters;
@@ -143,26 +144,16 @@ public class MainWindowController implements Initializable {
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 2) {
 
-                    // System.out.println(event.getX() + ","+event.getY());
-                    MZmineGUI.setupAndRunModule(FeatureTableModule.class);
-
                     // FeatureTable
-                    FeatureTable featureTable = MZmineCore.getCurrentProject()
-                            .getFeatureTables().get(0);
+                    System.out.println(event.getX() + ","+event.getY());
+                    FeatureTable featureTable = MZmineCore.getCurrentProject().getFeatureTables().get(0);
 
-                    // final ModuleType moduleInstance =
-                    // MZmineCore.getModuleInstance(TableModule.class);
-                    // final ParameterSet moduleParameters =
-                    // MZmineCore.getConfiguration().getModuleParameters(TableModule.class);
-                    // MZmineProject currentProject =
-                    // MZmineCore.getCurrentProject();
-                    // List<Task<?>> newTasks = new ArrayList<>();
-                    // moduleInstance.runModule(MZmineCore.getCurrentProject(),moduleParameters,
-                    // newTasks);
-                    // MZmineCore.submitTasks(newTasks);
-
-                    // New feature table
-                    // TableView table = Table.getFeatureTable(featureTable);
+                    final FeatureTableModule moduleInstance = MZmineCore.getModuleInstance(FeatureTableModule.class);                    
+                    final ParameterSet moduleParameters = MZmineCore.getConfiguration().getModuleParameters(FeatureTableModule.class);
+                    MZmineProject currentProject = MZmineCore.getCurrentProject();
+                    List<Task<?>> newTasks = new ArrayList<>();
+                    moduleInstance.runModule(MZmineCore.getCurrentProject(),moduleParameters, newTasks);
+                    MZmineCore.submitTasks(newTasks);
 
                 }
             }

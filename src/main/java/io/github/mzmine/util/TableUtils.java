@@ -42,76 +42,108 @@ public class TableUtils {
      * 
      * @param table
      */
-    public static void addCopyHandler(TableView<?> table) {
-        table.setOnKeyPressed(new KeyEventHandler());
+    public static void addCopyHandler(TableView<?> table,
+            Map<Integer, TableColumn<Map, Object>> columnMap) {
+        table.setOnKeyPressed(new KeyEventHandler(columnMap));
     }
 
     /**
-     * Copy keyboard event handler.
+     * Copy event handler.
      */
     public static class KeyEventHandler implements EventHandler<KeyEvent> {
         KeyCodeCombination keyCodeCompination = new KeyCodeCombination(
                 KeyCode.C, KeyCombination.CONTROL_ANY);
 
+        Map<Integer, TableColumn<Map, Object>> columnMap;
+
+        KeyEventHandler(Map<Integer, TableColumn<Map, Object>> columnMap) {
+            this.columnMap = columnMap;
+        }
+
         public void handle(final KeyEvent keyEvent) {
             if (keyCodeCompination.match(keyEvent)) {
                 if (keyEvent.getSource() instanceof TableView) {
-                    // copy to clipboard
-                    copySelectionToClipboard(
-                            (TableView<?>) keyEvent.getSource());
+                    // Copy to clipboard
+                    copySelectionToClipboard((TableView<?>) keyEvent.getSource());
 
-                    // event is handled, consume it
+                    // Event is handled, consume it
                     keyEvent.consume();
                 }
             }
         }
 
-    }
+        /**
+         * Get table selection and copy it to the clipboard.
+         * 
+         * @param table
+         */
+        public void copySelectionToClipboard(TableView<?> table) {
+            StringBuilder clipboardString = new StringBuilder();
 
-    /**
-     * Get table selection and copy it to the clipboard.
-     * 
-     * @param table
-     */
-    public static void copySelectionToClipboard(TableView<?> table) {
-        StringBuilder clipboardString = new StringBuilder();
+            ObservableList<TablePosition> positionList = table
+                    .getSelectionModel().getSelectedCells();
+            int prevRow = -1;
 
-        ObservableList<TablePosition> positionList = table.getSelectionModel()
-                .getSelectedCells();
-        int prevRow = -1;
+            // Add sample headers
+            for (TablePosition position : positionList) {
+                int rowNr = position.getRow();
+                int columnNr = position.getColumn();
 
-        //Map<Integer, TableColumn<Map,Object>> columnMap = table.getColumnMap();
+                // Get the column from the map to avoid trouble with sample
+                // headers
+                TableColumn column = columnMap.get(columnNr);
 
-        // Add column headers
-        for (TablePosition position : positionList) {
-            int rowNr = position.getRow();
-            int columnNr = position.getColumn();
+                if (prevRow == rowNr || prevRow == -1) {
+                    String columnTitle;
+                    if (column.getParentColumn() != null) {
+                        columnTitle = column.getParentColumn().getText();
+                    } else {
+                        columnTitle = "";
+                    }
 
-            if (prevRow == rowNr || prevRow == -1) {
-                String columnTitle = table.getColumns().get(columnNr).getText();
-                clipboardString.append(columnTitle);
-                clipboardString.append('\t');
-            } else {
-                clipboardString.append('\n');
-                prevRow = -1;
-                break;
+                    clipboardString.append(columnTitle);
+                    clipboardString.append('\t');
+                } else {
+                    break;
+                }
+                prevRow = rowNr;
             }
-            prevRow = rowNr;
-        }
+            prevRow = -1;
+            clipboardString.append('\n');
 
-        // Add data
-        for (TablePosition position : positionList) {
+            // Add column headers
+            for (TablePosition position : positionList) {
+                int rowNr = position.getRow();
+                int columnNr = position.getColumn();
 
-            int rowNr = position.getRow();
-            int columnNr = position.getColumn();
-            TableColumn column = table.getColumns().get(columnNr);
-            int columnClildren = table.getColumns().get(columnNr).getColumns()
-                    .size();
-            String text = null;
+                // Get the column from the map to avoid trouble with sample
+                // headers
+                TableColumn column = columnMap.get(columnNr);
 
-            if (columnClildren == 0) {
-                Object object = (Object) table.getColumns().get(columnNr)
-                        .getCellData(rowNr);
+                if (prevRow == rowNr || prevRow == -1) {
+                    String columnTitle = column.getText();
+                    clipboardString.append(columnTitle);
+                    clipboardString.append('\t');
+                } else {
+                    break;
+                }
+                prevRow = rowNr;
+            }
+            prevRow = -1;
+            clipboardString.append('\n');
+
+            // Add data
+            for (TablePosition position : positionList) {
+
+                int rowNr = position.getRow();
+                int columnNr = position.getColumn();
+
+                // Get the column from the map to avoid trouble with sample
+                // headers
+                TableColumn column = columnMap.get(columnNr);
+
+                String text = null;
+                Object object = (Object) column.getCellData(rowNr);
                 if (object instanceof ChromatographyInfo) {
                     // Format to RT1, RT2
                     ChromatographyInfo chromatographyInfo = (ChromatographyInfo) object;
@@ -136,36 +168,28 @@ public class TableUtils {
                         text = object.toString();
                 }
 
-                // determine whether we advance in a row or a column
+                // Are we looping over a row or column?
                 if (prevRow == rowNr) {
                     clipboardString.append('\t');
                 } else if (prevRow != -1) {
                     clipboardString.append('\n');
                 }
 
-                // add new item to clipboard
+                if (text == null || text.equals("null"))
+                    text = "";
+
+                // Add new item to clipboard
                 clipboardString.append(text);
-            } else {
-                System.out.println(column.getText());
-                System.out.println(columnClildren);
 
-                // determine whether we advance in a row or a column
-                if (prevRow == rowNr) {
-                    clipboardString.append('\t');
-                } else if (prevRow != -1) {
-                    clipboardString.append('\n');
-                }
-
-                clipboardString.append("FIX");
+                // Remember previous
+                prevRow = rowNr;
             }
 
-            // remember previous
-            prevRow = rowNr;
+            // Set string to the clipboard
+            final ClipboardContent clipboardContent = new ClipboardContent();
+            clipboardContent.putString(clipboardString.toString());
+            Clipboard.getSystemClipboard().setContent(clipboardContent);
         }
-
-        // Set the clipboardString to the clipboard
-        final ClipboardContent clipboardContent = new ClipboardContent();
-        clipboardContent.putString(clipboardString.toString());
-        Clipboard.getSystemClipboard().setContent(clipboardContent);
     }
+
 }

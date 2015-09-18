@@ -169,7 +169,7 @@ public class FeatureTableModule implements MZmineRunnableModule {
         table.getSelectionModel().setCellSelectionEnabled(true);
 
         // Enable copy
-        TableUtils.addCopyHandler(table);
+        TableUtils.addCopyHandler(table, columnMap);
 
         // Add new window with table
         MZmineGUI.addWindow(table, featureTable.getName());
