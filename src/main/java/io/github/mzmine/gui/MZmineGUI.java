@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
 
@@ -33,6 +32,8 @@ import org.controlsfx.control.TaskProgressView;
 import org.dockfx.DockNode;
 import org.dockfx.DockPane;
 import org.dockfx.DockPos;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -71,7 +72,7 @@ public final class MZmineGUI extends Application {
 
     private static final File MENU_FILE = new File("conf/MainMenu.fxml");
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static MainWindowController mainWindowController;
     private static TabPane tabs = new TabPane();
@@ -93,7 +94,7 @@ public final class MZmineGUI extends Application {
 
         } catch (IOException e) {
             e.printStackTrace();
-            logger.severe("Error loading MZmine GUI from FXML: " + e);
+            logger.error("Error loading MZmine GUI from FXML: " + e);
             Platform.exit();
         }
 
@@ -275,7 +276,8 @@ public final class MZmineGUI extends Application {
     public static <ModuleType extends MZmineRunnableModule> void setupAndRunModule(
             Class<ModuleType> moduleClass) {
 
-        final ModuleType moduleInstance = MZmineCore.getModuleInstance(moduleClass);
+        final ModuleType moduleInstance = MZmineCore
+                .getModuleInstance(moduleClass);
         final ParameterSet moduleParameters = MZmineCore.getConfiguration()
                 .getModuleParameters(moduleClass);
         MZmineProject currentProject = MZmineCore.getCurrentProject();

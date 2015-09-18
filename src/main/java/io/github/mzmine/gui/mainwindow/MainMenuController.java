@@ -23,7 +23,9 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
@@ -39,8 +41,8 @@ import javafx.scene.control.MenuItem;
  */
 public class MainMenuController {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    
     @FXML
     protected void exitApplication(ActionEvent event) {
         MZmineGUI.requestQuit();

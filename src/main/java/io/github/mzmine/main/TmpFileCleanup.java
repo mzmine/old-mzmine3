@@ -24,17 +24,18 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class TmpFileCleanup implements Runnable {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public void run() {
 
-        logger.fine("Checking for old temporary files...");
+        logger.debug("Checking for old temporary files...");
         try {
 
             // Find all temporary files with the mask mzmine*.scans
@@ -62,15 +63,14 @@ class TmpFileCleanup implements Runnable {
                     if (lock != null) {
                         // We locked the file, which means nobody is using it
                         // anymore and it can be removed
-                        logger.finest("Removing unused temporary file "
+                        logger.debug("Removing unused temporary file "
                                 + remainingTmpFile);
                         remainingTmpFile.delete();
                     }
 
                 }
         } catch (IOException e) {
-            logger.log(Level.WARNING,
-                    "Error while checking for old temporary files", e);
+            logger.warn("Error while checking for old temporary files", e);
         }
 
     }

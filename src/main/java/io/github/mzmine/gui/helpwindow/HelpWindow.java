@@ -21,7 +21,9 @@ package io.github.mzmine.gui.helpwindow;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
@@ -37,14 +39,14 @@ import javafx.stage.Stage;
  */
 public class HelpWindow extends Stage {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public HelpWindow(String helpFileURL) {
 
         // Title
         setTitle("Loading help...");
 
-        logger.finest("Loading help file " + helpFileURL);
+        logger.debug("Loading help file " + helpFileURL);
 
         try {
             // Load the window FXML

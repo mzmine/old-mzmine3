@@ -19,7 +19,8 @@
 
 package io.github.mzmine.gui.helpwindow;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,14 +32,14 @@ import javafx.scene.web.WebView;
  */
 public class HelpWindowController {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @FXML
     private WebView helpWebView;
 
     @FXML
     protected void handleClose(ActionEvent event) {
-        logger.finest("Closing help window");
+        logger.debug("Closing help window");
         helpWebView.getScene().getWindow().hide();
     }
 

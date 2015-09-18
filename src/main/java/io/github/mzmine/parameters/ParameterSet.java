@@ -23,14 +23,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import io.github.mzmine.main.MZmineCore;
 import javafx.scene.control.ButtonType;
 
 /**
@@ -39,7 +38,7 @@ import javafx.scene.control.ButtonType;
  */
 public class ParameterSet implements Iterable<Parameter<?>>, Cloneable {
 
-    private static Logger logger = Logger.getLogger(MZmineCore.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final String parameterElement = "parameter";
     private static final String nameAttribute = "name";
@@ -128,10 +127,8 @@ public class ParameterSet implements Iterable<Parameter<?>>, Cloneable {
                     try {
                         param.loadValueFromXML(nextElement);
                     } catch (Exception e) {
-                        logger.log(Level.WARNING,
-                                "Error while loading parameter values for "
-                                        + param.getName(),
-                                e);
+                        logger.warn("Error while loading parameter values for "
+                                + param.getName(), e);
                     }
                 }
             }

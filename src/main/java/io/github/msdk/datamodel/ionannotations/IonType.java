@@ -14,10 +14,10 @@
 
 package io.github.msdk.datamodel.ionannotations;
 
-import io.github.msdk.datamodel.rawdata.PolarityType;
-
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+
+import io.github.msdk.datamodel.rawdata.PolarityType;
 
 /**
  * Annotation of ionization type

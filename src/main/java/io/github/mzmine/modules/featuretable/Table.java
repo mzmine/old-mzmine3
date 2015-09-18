@@ -19,6 +19,9 @@
 
 package io.github.mzmine.modules.featuretable;
 
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

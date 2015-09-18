@@ -24,11 +24,12 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -46,7 +47,7 @@ public final class MZmineStarter implements Runnable {
 
     private static final File MODULES_FILE = new File("conf/Modules.xml");
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static Map<Class<? extends MZmineModule>, MZmineModule> initializedModules = Collections
             .synchronizedMap(new Hashtable<>());
@@ -75,14 +76,14 @@ public final class MZmineStarter implements Runnable {
                     startModule(moduleClassName);
 
                 } catch (Exception e) {
-                    logger.warning("Failed to initialize module class "
+                    logger.warn("Failed to initialize module class "
                             + moduleClassName + ": " + e);
                     e.printStackTrace();
                 }
             }
 
         } catch (Exception e) {
-            logger.severe("Could not load modules from " + MODULES_FILE);
+            logger.error("Could not load modules from " + MODULES_FILE);
             System.exit(1);
         }
 
@@ -91,7 +92,7 @@ public final class MZmineStarter implements Runnable {
             MZmineCore.getConfiguration()
                     .loadConfiguration(MZmineConfiguration.CONFIG_FILE);
         } catch (Exception e) {
-            logger.severe("Could not load configuration from "
+            logger.error("Could not load configuration from "
                     + MZmineConfiguration.CONFIG_FILE);
         }
 

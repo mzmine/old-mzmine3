@@ -19,11 +19,12 @@
 
 package io.github.mzmine.main;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import io.github.mzmine.project.MZmineProject;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.mzmine.project.MZmineProject;
 
 /**
  * Shutdown hook - invoked on JRE shutdown. This method saves current
@@ -31,7 +32,7 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
  */
 class ShutDownHook implements Runnable {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public void run() {

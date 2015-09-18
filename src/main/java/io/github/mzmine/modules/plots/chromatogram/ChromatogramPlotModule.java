@@ -26,13 +26,11 @@ import javax.annotation.Nonnull;
 
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.mzmine.gui.MZmineGUI;
-import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.modules.MZmineModuleCategory;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineProject;
 import javafx.concurrent.Task;
-import uk.ac.ebi.jmzml.model.mzml.Scan;
 
 /**
  * TIC/XIC visualizer using JFreeChart library

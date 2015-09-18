@@ -22,7 +22,9 @@ package io.github.mzmine.main;
 import java.io.InputStream;
 import java.util.Locale;
 import java.util.logging.LogManager;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.github.mzmine.gui.MZmineGUI;
 import javafx.application.Application;
@@ -32,7 +34,8 @@ import javafx.application.Application;
  */
 public final class MZmineMain {
 
-    private static Logger logger = Logger.getLogger(MZmineMain.class.getName());
+    private static final Logger logger = LoggerFactory
+            .getLogger(MZmineMain.class);
 
     public static void main(String args[]) {
 

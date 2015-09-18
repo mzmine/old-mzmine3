@@ -14,10 +14,6 @@
 
 package io.github.msdk.io.filetypedetection;
 
-import io.github.msdk.MSDKMethod;
-import io.github.msdk.datamodel.files.FileType;
-import io.github.msdk.MSDKException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,6 +21,10 @@ import java.io.InputStreamReader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import io.github.msdk.MSDKException;
+import io.github.msdk.MSDKMethod;
+import io.github.msdk.datamodel.files.FileType;
 
 /**
  * Detector of raw data file format

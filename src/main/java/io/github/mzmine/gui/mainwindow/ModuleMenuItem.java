@@ -21,7 +21,9 @@ package io.github.mzmine.gui.mainwindow;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
@@ -37,7 +39,7 @@ import javafx.scene.control.MenuItem;
 
 public final class ModuleMenuItem extends MenuItem {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final StringProperty moduleClass = new SimpleStringProperty();
 
@@ -78,7 +80,7 @@ public final class ModuleMenuItem extends MenuItem {
             ButtonType exitCode = moduleParameters.showSetupDialog();
             if (exitCode == ButtonType.OK) {
                 ParameterSet parametersCopy = moduleParameters.clone();
-                logger.finest("Starting module " + module.getName()
+                logger.debug("Starting module " + module.getName()
                         + " with parameters " + parametersCopy);
                 List<Task<?>> tasks = new ArrayList<>();
                 MZmineProject project = MZmineCore.getCurrentProject();

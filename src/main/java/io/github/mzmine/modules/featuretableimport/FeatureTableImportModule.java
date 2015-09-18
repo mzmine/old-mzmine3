@@ -22,9 +22,11 @@ package io.github.mzmine.modules.featuretableimport;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
@@ -47,7 +49,7 @@ import javafx.concurrent.Task;
  */
 public class FeatureTableImportModule implements MZmineProcessingModule {
 
-    private Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Nonnull
     private static final String MODULE_NAME = "Feature table import";
     @Nonnull
@@ -78,7 +80,7 @@ public class FeatureTableImportModule implements MZmineProcessingModule {
                 .getParameter(RawDataImportParameters.removeSuffix).getValue();
 
         if (fileNames == null) {
-            logger.warning(
+            logger.warn(
                     "Feature table import module started with no filenames");
             return;
         }
@@ -87,7 +89,7 @@ public class FeatureTableImportModule implements MZmineProcessingModule {
 
             if ((!fileName.exists()) || (!fileName.canRead())) {
                 MZmineGUI.displayMessage("Cannot read file " + fileName);
-                logger.warning("Cannot read file " + fileName);
+                logger.warn("Cannot read file " + fileName);
                 continue;
             }
 

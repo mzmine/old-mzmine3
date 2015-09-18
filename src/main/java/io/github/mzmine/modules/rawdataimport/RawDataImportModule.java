@@ -22,9 +22,11 @@ package io.github.mzmine.modules.rawdataimport;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.annotation.Nonnull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
@@ -46,7 +48,7 @@ import javafx.concurrent.Task;
  */
 public class RawDataImportModule implements MZmineProcessingModule {
 
-    private Logger logger = Logger.getLogger(this.getClass().getName());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     private static final String MODULE_NAME = "Raw data import";
     private static final String MODULE_DESCRIPTION = "This module imports raw data into the project.";
 
@@ -76,7 +78,7 @@ public class RawDataImportModule implements MZmineProcessingModule {
                 .getParameter(RawDataImportParameters.removeSuffix).getValue();
 
         if (fileNames == null) {
-            logger.warning("Raw data import module started with no filenames");
+            logger.warn("Raw data import module started with no filenames");
             return;
         }
 
@@ -84,7 +86,7 @@ public class RawDataImportModule implements MZmineProcessingModule {
 
             if ((!fileName.exists()) || (!fileName.canRead())) {
                 MZmineGUI.displayMessage("Cannot read file " + fileName);
-                logger.warning("Cannot read file " + fileName);
+                logger.warn("Cannot read file " + fileName);
                 continue;
             }
 

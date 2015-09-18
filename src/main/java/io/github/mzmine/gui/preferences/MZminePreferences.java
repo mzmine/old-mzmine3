@@ -20,8 +20,9 @@
 package io.github.mzmine.gui.preferences;
 
 import java.text.DecimalFormat;
-import java.util.logging.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import io.github.mzmine.main.MZmineCore;
@@ -33,7 +34,7 @@ import javafx.scene.control.ButtonType;
 
 public class MZminePreferences extends ParameterSet {
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public static final NumberFormatParameter mzFormat = new NumberFormatParameter(
             "m/z value format", "Format of m/z values", "Number formatting",
@@ -129,7 +130,7 @@ public class MZminePreferences extends ParameterSet {
                 .getValue();
         if (numOfThreadsValue != null) {
             int threadPoolSize = numOfThreadsValue.getNumberOfThreads();
-            logger.finest("Setting the thread pool size to " + threadPoolSize);
+            logger.debug("Setting the thread pool size to " + threadPoolSize);
             MZmineCore.getTaskExecutor().setCorePoolSize(threadPoolSize);
         }
 

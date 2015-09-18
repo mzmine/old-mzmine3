@@ -14,14 +14,14 @@
 
 package io.github.msdk.identification;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Iterator;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Iterator;
 
 /**
  * This provides the system with easy access to query data from external

@@ -20,7 +20,9 @@
 package io.github.mzmine.main;
 
 import java.net.URL;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.util.InetUtils;
@@ -37,7 +39,7 @@ public class NewVersionCheck implements Runnable {
         DESKTOP, MENU
     };
 
-    private final Logger logger = Logger.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final CheckType checkType;
 
     public NewVersionCheck(CheckType type) {

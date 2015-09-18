@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -39,6 +38,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -52,8 +53,7 @@ import io.github.mzmine.parameters.ParameterSet;
  */
 public final class MZmineConfiguration {
 
-    private static final Logger logger = Logger
-            .getLogger(MZmineConfiguration.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public static final File CONFIG_FILE = new File("conf/config.xml");
 
@@ -170,7 +170,7 @@ public final class MZmineConfiguration {
             Element prefElement = configuration.createElement("preferences");
             configRoot.appendChild(prefElement);
             preferences.saveValuesToXML(prefElement);
-            
+
             Element modulesElement = configuration.createElement("modules");
             configRoot.appendChild(modulesElement);
 
@@ -206,7 +206,7 @@ public final class MZmineConfiguration {
             transformer.transform(source, result);
 
             logger.info("Saved configuration to file " + file);
-            
+
         } catch (Exception e) {
             throw new IOException(e);
         }
