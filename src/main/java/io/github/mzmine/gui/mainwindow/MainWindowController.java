@@ -20,6 +20,7 @@
 package io.github.mzmine.gui.mainwindow;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -43,6 +44,7 @@ import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotParameters;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelectionType;
+import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -145,7 +147,9 @@ public class MainWindowController implements Initializable {
                 if (event.getClickCount() == 2) {
 
                     // FeatureTable
-                    System.out.println(event.getX() + ","+event.getY());
+                    /*
+                     * TODO: Get feature table from clicked item
+                     */
                     FeatureTable featureTable = MZmineCore.getCurrentProject().getFeatureTables().get(0);
 
                     final FeatureTableModule moduleInstance = MZmineCore.getModuleInstance(FeatureTableModule.class);                    
