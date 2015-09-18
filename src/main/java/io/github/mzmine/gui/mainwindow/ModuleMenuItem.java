@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
-import io.github.mzmine.main.MZmineStarter;
 import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
@@ -36,9 +35,6 @@ import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 
-/**
- * 
- */
 public final class ModuleMenuItem extends MenuItem {
 
     private final Logger logger = Logger.getLogger(this.getClass().getName());
@@ -60,8 +56,7 @@ public final class ModuleMenuItem extends MenuItem {
                 return;
             }
 
-            MZmineModule module = MZmineStarter
-                    .getModuleInstance(moduleJavaClass);
+            MZmineModule module = MZmineCore.getModuleInstance(moduleJavaClass);
 
             if (module == null) {
                 MZmineGUI.displayMessage(

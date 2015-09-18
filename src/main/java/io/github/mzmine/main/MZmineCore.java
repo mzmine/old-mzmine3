@@ -28,6 +28,7 @@ import javax.annotation.Nonnull;
 
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.gui.mainwindow.MainWindowController;
+import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.project.MZmineProject;
 import javafx.concurrent.Task;
 
@@ -88,6 +89,11 @@ public final class MZmineCore {
 
     public static @Nonnull ScheduledThreadPoolExecutor getTaskExecutor() {
         return executor;
+    }
+
+    public static <ModuleType extends MZmineModule> ModuleType getModuleInstance(
+            Class<ModuleType> moduleClass) {
+        return MZmineStarter.getModuleInstance(moduleClass);
     }
 
 }

@@ -19,13 +19,13 @@
 
 package io.github.mzmine.modules.plots.chromatogram;
 
-public enum TICPlotType {
+public enum ChromatogramPlotType {
 
     BASEPEAK("Base peak intensity"), TIC("Total ion current (TIC/XIC)");
 
     private String type;
 
-    TICPlotType(String type) {
+    ChromatogramPlotType(String type) {
 	this.type = type;
     }
 

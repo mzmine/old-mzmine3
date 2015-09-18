@@ -2,4 +2,5 @@
 <modules>
 	<module>io.github.mzmine.modules.rawdataimport.RawDataImportModule</module>
 	<module>io.github.mzmine.modules.featuretableimport.FeatureTableImportModule</module>
+	<module>io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotModule</module>
 </modules>

@@ -40,9 +40,13 @@ import io.github.mzmine.gui.mainwindow.FeatureTableTreeItem;
 import io.github.mzmine.gui.mainwindow.MainWindowController;
 import io.github.mzmine.gui.mainwindow.RawDataTreeItem;
 import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.modules.MZmineRunnableModule;
+import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineGUIProject;
+import io.github.mzmine.project.MZmineProject;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
@@ -265,6 +269,20 @@ public final class MZmineGUI extends Application {
         }
 
         return list;
+
+    }
+
+    public static <ModuleType extends MZmineRunnableModule> void setupAndRunModule(
+            Class<ModuleType> moduleClass) {
+
+        final ModuleType moduleInstance = MZmineCore.getModuleInstance(moduleClass);
+        final ParameterSet moduleParameters = MZmineCore.getConfiguration()
+                .getModuleParameters(moduleClass);
+        MZmineProject currentProject = MZmineCore.getCurrentProject();
+        List<Task<?>> newTasks = new ArrayList<>();
+        moduleInstance.runModule(MZmineCore.getCurrentProject(),
+                moduleParameters, newTasks);
+        MZmineCore.submitTasks(newTasks);
 
     }
 

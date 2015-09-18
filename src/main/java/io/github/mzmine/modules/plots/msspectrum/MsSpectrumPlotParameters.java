@@ -17,14 +17,14 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.plots.chromatogram;
+package io.github.mzmine.modules.plots.msspectrum;
 
 import org.controlsfx.control.PropertySheet;
 
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
 
-public class TICVisualizerParameters extends PropertySheet {
+public class MsSpectrumPlotParameters extends PropertySheet {
 
     private final RawDataFilesParameter inputFiles = new RawDataFilesParameter();
 
@@ -34,7 +34,7 @@ public class TICVisualizerParameters extends PropertySheet {
     /**
      * Create the parameter set.
      */
-    public TICVisualizerParameters() {
+    public MsSpectrumPlotParameters() {
         getItems().addAll(inputFiles, param1);
     }
 

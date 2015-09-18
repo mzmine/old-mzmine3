@@ -118,7 +118,7 @@ public final class MZmineStarter implements Runnable {
                 newParameterSet);
     }
 
-    public static List<MZmineModule> getAllModules() {
+    static List<MZmineModule> getAllModules() {
         List<MZmineModule> list = ImmutableList
                 .copyOf(initializedModules.values());
         return list;
@@ -128,7 +128,7 @@ public final class MZmineStarter implements Runnable {
      * Returns the instance of a module of given class
      */
     @SuppressWarnings("unchecked")
-    public static <ModuleType extends MZmineModule> ModuleType getModuleInstance(
+    static <ModuleType extends MZmineModule> ModuleType getModuleInstance(
             Class<ModuleType> moduleClass) {
         return (ModuleType) initializedModules.get(moduleClass);
     }
