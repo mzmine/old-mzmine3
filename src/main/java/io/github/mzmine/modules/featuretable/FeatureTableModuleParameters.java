@@ -20,17 +20,16 @@
 package io.github.mzmine.modules.featuretable;
 
 import io.github.mzmine.parameters.ParameterSet;
-import io.github.mzmine.parameters.parametertypes.StringParameter;
-import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
+import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesParameter;
 
-public class TableModuleParameters extends ParameterSet {
+public class FeatureTableModuleParameters extends ParameterSet {
 
     public static final FeatureTablesParameter featureTables = new FeatureTablesParameter();
 
     /**
      * Create the parameter set.
      */
-    public TableModuleParameters() {
+    public FeatureTableModuleParameters() {
         super(featureTables);
     }
 

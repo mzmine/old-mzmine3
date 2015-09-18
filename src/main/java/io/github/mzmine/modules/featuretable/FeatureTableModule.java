@@ -34,6 +34,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
+import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.modules.MZmineModuleCategory;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
@@ -46,17 +47,17 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.MapValueFactory;
 
-public class TableModule implements MZmineRunnableModule {
+public class FeatureTableModule implements MZmineRunnableModule {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
     @Nonnull
     private static final String MODULE_NAME = "Feature Table";
-    
+
     @Nonnull
     private static final String MODULE_DESCRIPTION = "This module creates a TableView of a feature table.";
 
-    private static Map<Integer, TableColumn<Map,Object>> columnMap = new HashMap<Integer, TableColumn<Map,Object>>();
+    private static Map<Integer, TableColumn<Map, Object>> columnMap = new HashMap<Integer, TableColumn<Map, Object>>();
 
     @Override
     public @Nonnull String getName() {
@@ -73,8 +74,10 @@ public class TableModule implements MZmineRunnableModule {
             @Nonnull ParameterSet parameters,
             @Nonnull Collection<Task<?>> tasks) {
 
-        //FeatureTable featureTable
-        final List<FeatureTable> featureTables = parameters.getParameter(TableModuleParameters.featureTables).getValue();
+        // FeatureTable featureTable
+        final List<FeatureTable> featureTables = parameters
+                .getParameter(FeatureTableModuleParameters.featureTables)
+                .getValue().getMatchingFeatureTables();
         FeatureTable featureTable = featureTables.get(0);
 
         char nextChar = 'A';
@@ -167,20 +170,22 @@ public class TableModule implements MZmineRunnableModule {
 
         // Enable copy
         TableUtils.addCopyHandler(table);
-        //return table;
+
+        // Add new window with table
+        MZmineGUI.addWindow(table, featureTable.getName());
 
     }
 
-    private Map getColumnMap() {
+    public Map<Integer, TableColumn<Map, Object>> getColumnMap() {
         return columnMap;
     }
 
     @Override
     @Nonnull
     public Class<? extends ParameterSet> getParameterSetClass() {
-        return TableModuleParameters.class;
+        return FeatureTableModuleParameters.class;
     }
-    
+
     @Override
     @Nonnull
     public MZmineModuleCategory getModuleCategory() {
