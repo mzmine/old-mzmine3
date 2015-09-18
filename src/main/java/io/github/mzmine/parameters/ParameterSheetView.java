@@ -23,6 +23,9 @@ import org.controlsfx.control.PropertySheet;
 import org.controlsfx.property.editor.PropertyEditor;
 import org.controlsfx.validation.ValidationSupport;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 /**
  * Parameter sheet view
  */
@@ -31,8 +34,12 @@ public class ParameterSheetView extends PropertySheet {
     private final ParameterSet parameters;
     private final ParameterEditorFactory editorFactory;
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public ParameterSheetView(ParameterSet parameters,
             ValidationSupport validationSupport) {
+
+        super((ObservableList) FXCollections
+                .observableList(parameters.getParameters()));
 
         this.parameters = parameters;
 
@@ -45,13 +52,6 @@ public class ParameterSheetView extends PropertySheet {
         // to which parameter
         this.editorFactory = new ParameterEditorFactory(validationSupport);
         setPropertyEditorFactory(editorFactory);
-
-        for (Parameter<?> p : parameters) {
-            getItems().add(p);
-        }
-
-        // TODO: initially the decorations are missing?
-        validationSupport.redecorate();
 
     }
 

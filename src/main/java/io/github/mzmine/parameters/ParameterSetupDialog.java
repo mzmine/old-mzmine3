@@ -69,12 +69,6 @@ public class ParameterSetupDialog extends Alert {
         // changes in the editors to the actual parameters
         Button okButton = (Button) getDialogPane().lookupButton(ButtonType.OK);
         okButton.addEventFilter(ActionEvent.ACTION, e -> {
-            for (Parameter<?> parameter : parameters) {
-                PropertyEditor<?> editor = sheet
-                        .getEditorForParameter(parameter);
-                Object value = editor.getValue();
-                parameter.setValue(value);
-            }
             if (validationSupport.isInvalid()) {
                 e.consume();
                 ValidationResult vr = validationSupport.getValidationResult();
@@ -85,6 +79,14 @@ public class ParameterSetupDialog extends Alert {
                     message.append("\n");
                 }
                 MZmineGUI.displayMessage(message.toString());
+                return;
+            }
+            // If valid, commit the values
+            for (Parameter<?> parameter : parameters) {
+                PropertyEditor<?> editor = sheet
+                        .getEditorForParameter(parameter);
+                Object value = editor.getValue();
+                parameter.setValue(value);
             }
 
         });

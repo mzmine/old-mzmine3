@@ -79,8 +79,7 @@ public class MZmineProject {
     }
 
     @SuppressWarnings("null")
-    @Nonnull
-    public List<RawDataFile> getRawDataFiles() {
+    public @Nonnull List<RawDataFile> getRawDataFiles() {
         synchronized (rawDataFiles) {
             return ImmutableList.copyOf(rawDataFiles);
         }

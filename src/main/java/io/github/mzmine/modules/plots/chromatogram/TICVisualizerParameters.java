@@ -22,19 +22,20 @@ package io.github.mzmine.modules.plots.chromatogram;
 import org.controlsfx.control.PropertySheet;
 
 import io.github.mzmine.parameters.parametertypes.StringParameter;
+import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
 
 public class TICVisualizerParameters extends PropertySheet {
 
-    /**
-     * Windows size and position
-     */
-    private final StringParameter param1 = new StringParameter("aaa", "bbb", "ccc");
+    private final RawDataFilesParameter inputFiles = new RawDataFilesParameter();
+
+    private final StringParameter param1 = new StringParameter("aaa", "bbb",
+            "ccc");
 
     /**
      * Create the parameter set.
      */
     public TICVisualizerParameters() {
-        getItems().add(param1);
+        getItems().addAll(inputFiles, param1);
     }
 
 }

@@ -22,7 +22,11 @@ package io.github.mzmine.gui;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
+
+import javax.annotation.Nonnull;
 
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.TaskProgressView;
@@ -30,6 +34,8 @@ import org.dockfx.DockNode;
 import org.dockfx.DockPane;
 import org.dockfx.DockPos;
 
+import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.mzmine.gui.mainwindow.FeatureTableTreeItem;
 import io.github.mzmine.gui.mainwindow.MainWindowController;
 import io.github.mzmine.gui.mainwindow.RawDataTreeItem;
@@ -47,6 +53,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -99,9 +106,7 @@ public final class MZmineGUI extends Application {
         Tab featureTab = new Tab("Feature Tables", featureTableTree);
         featureTab.setClosable(false);
         tabs.getTabs().addAll(fileTab, featureTab);
-        
-        
-        
+
         DockNode tabsDock = new DockNode(tabs);
         tabsDock.setDockTitleBar(null); // Disable undocking
         tabsDock.setPrefSize(200, 400);
@@ -158,14 +163,13 @@ public final class MZmineGUI extends Application {
             requestQuit();
             e.consume();
         });
-        
+
         // Activate new GUI-supported project
         MZmineGUIProject project = new MZmineGUIProject();
         MZmineGUI.activateProject(project);
 
         stage.show();
         DockPane.initializeDefaultUserAgentStylesheet();
-        
 
     }
 
@@ -220,16 +224,48 @@ public final class MZmineGUI extends Application {
             break;
         }
     }
-    
+
     public static void activateProject(MZmineGUIProject project) {
         MZmineCore.setCurrentProject(project);
 
-        TreeView<RawDataTreeItem> rawDataTree = mainWindowController.getRawDataTree();
+        TreeView<RawDataTreeItem> rawDataTree = mainWindowController
+                .getRawDataTree();
         rawDataTree.setRoot(project.getRawDataRootItem());
-        
-        TreeView<FeatureTableTreeItem> featureTree=mainWindowController.getFeatureTree();
+
+        TreeView<FeatureTableTreeItem> featureTree = mainWindowController
+                .getFeatureTree();
         featureTree.setRoot(project.getFeatureTableRootItem());
-        
+
     }
-    
+
+    public static @Nonnull List<RawDataFile> getSelectedRawDataFiles() {
+
+        final ArrayList<RawDataFile> list = new ArrayList<>();
+        final TreeView<RawDataTreeItem> rawDataTree = mainWindowController
+                .getRawDataTree();
+        for (TreeItem<RawDataTreeItem> item : rawDataTree.getSelectionModel()
+                .getSelectedItems()) {
+            RawDataFile file = item.getValue().getRawDataFile();
+            list.add(file);
+        }
+
+        return list;
+
+    }
+
+    public static @Nonnull List<FeatureTable> getSelectedFeatureTables() {
+
+        final ArrayList<FeatureTable> list = new ArrayList<>();
+        final TreeView<FeatureTableTreeItem> featureTableTree = mainWindowController
+                .getFeatureTree();
+        for (TreeItem<FeatureTableTreeItem> item : featureTableTree
+                .getSelectionModel().getSelectedItems()) {
+            FeatureTable ft = item.getValue().getFeatureTable();
+            list.add(ft);
+        }
+
+        return list;
+
+    }
+
 }

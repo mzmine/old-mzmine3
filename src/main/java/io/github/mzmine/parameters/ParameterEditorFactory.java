@@ -41,8 +41,8 @@ class ParameterEditorFactory extends DefaultPropertyEditorFactory {
     private final ValidationSupport validationSupport;
 
     public ParameterEditorFactory(ValidationSupport validationSupport) {
-        this.validationSupport = validationSupport;
         this.editorsMap = new HashMap<>();
+        this.validationSupport = validationSupport;
     }
 
     @Override
@@ -57,13 +57,17 @@ class ParameterEditorFactory extends DefaultPropertyEditorFactory {
         // Save the reference for the editor
         editorsMap.put(item, editor);
 
-        // Add a validator to the editor
         if (editor instanceof ParameterEditor) {
             addValidator(validationSupport, (Parameter<?>) item,
                     (ParameterEditor<?>) editor);
         }
 
         return editor;
+    }
+
+    @SuppressWarnings("unchecked")
+    <ValueType> PropertyEditor<ValueType> getEditorForItem(Item item) {
+        return (PropertyEditor<ValueType>) editorsMap.get(item);
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -104,10 +108,4 @@ class ParameterEditorFactory extends DefaultPropertyEditorFactory {
 
         }
     }
-
-    @SuppressWarnings("unchecked")
-    <ValueType> PropertyEditor<ValueType> getEditorForItem(Item item) {
-        return (PropertyEditor<ValueType>) editorsMap.get(item);
-    }
-
 }

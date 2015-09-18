@@ -72,9 +72,10 @@ public class ComboParameter<ValueType> extends AbstractParameter<ValueType> {
 
     @Override
     public void saveValueToXML(@Nonnull Element xmlElement) {
-        if (getValue() == null)
+        Object value = getValue();
+        if (value == null)
             return;
-        xmlElement.setTextContent(getValue().toString());
+        xmlElement.setTextContent(value.toString());
     }
 
     ObservableList<ValueType> getOptions() {
