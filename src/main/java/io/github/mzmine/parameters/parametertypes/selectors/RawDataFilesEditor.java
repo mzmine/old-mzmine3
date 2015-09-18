@@ -58,7 +58,7 @@ public class RawDataFilesEditor extends HBox
         // HBox properties
         setSpacing(10);
         setAlignment(Pos.CENTER_LEFT);
-        
+
         numFilesLabel = new Text();
 
         typeCombo = new ComboBox<>(FXCollections.observableList(

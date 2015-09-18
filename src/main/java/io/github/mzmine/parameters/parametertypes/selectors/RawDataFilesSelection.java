@@ -43,15 +43,15 @@ public class RawDataFilesSelection implements Cloneable {
 
     public RawDataFilesSelection(RawDataFilesSelectionType selectionType,
             List<RawDataFile> specificFiles, String namePattern) {
-        
+
         Preconditions.checkNotNull(selectionType);
         this.selectionType = selectionType;
-        
+
         if (specificFiles != null)
             this.specificFiles = ImmutableList.copyOf(specificFiles);
         else
             this.specificFiles = null;
-        
+
         this.namePattern = namePattern;
     }
 
