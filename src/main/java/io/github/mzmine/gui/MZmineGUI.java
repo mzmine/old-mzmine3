@@ -48,7 +48,10 @@ import io.github.mzmine.project.MZmineProject;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -58,6 +61,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
@@ -228,6 +232,32 @@ public final class MZmineGUI extends Application {
             tabs.getSelectionModel().select(0);
             break;
         }
+    }
+
+    public static void addWindow(Node node, String title) {
+        
+        // New test dock
+        final DockNode testDock = new DockNode(node, title);
+
+        // Add default button
+        ToggleButton DefaultButton;
+        DefaultButton = new ToggleButton();
+        DefaultButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("Selected property: "
+                        + DefaultButton.selectedProperty());
+            }
+        });
+        DefaultButton.setMinSize(16, 20);
+        DefaultButton.setMaxSize(16, 20);
+        testDock.getDockTitleBar().getChildren().add(DefaultButton);
+
+        DockPane mainDockPane = mainWindowController.getMainDockPane();
+        
+        testDock.dock(mainDockPane, DockPos.RIGHT);
+        // testDock.setFloating(true);
+        
     }
 
     public static void activateProject(MZmineGUIProject project) {

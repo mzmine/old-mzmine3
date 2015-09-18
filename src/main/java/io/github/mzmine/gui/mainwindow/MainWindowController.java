@@ -1,48 +1,42 @@
 /*
  * Copyright 2006-2015 The MZmine 3 Development Team
  * 
- * This file is part of MZmine 2.
+ * This file is part of MZmine 3.
  * 
- * MZmine 2 is free software; you can redistribute it and/or modify it under the
+ * MZmine 3 is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
  * version.
  * 
- * MZmine 2 is distributed in the hope that it will be useful, but WITHOUT ANY
+ * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with
- * MZmine 2; if not, write to the Free Software Foundation, Inc., 51 Franklin
+ * MZmine 3; if not, write to the Free Software Foundation, Inc., 51 Franklin
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 package io.github.mzmine.gui.mainwindow;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.annotation.Nonnull;
-import javax.swing.tree.TreePath;
 
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.TaskProgressView;
 import org.dockfx.DockNode;
 import org.dockfx.DockPane;
-import org.dockfx.DockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
-import io.github.mzmine.modules.featuretable.Table;
 import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotModule;
-import io.github.mzmine.parameters.ParameterSet;
-import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -58,8 +52,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableView;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
@@ -129,26 +122,8 @@ public class MainWindowController implements Initializable {
                     series.getData().add(new XYChart.Data(12, 25));
                     lineChart.getData().addAll(series);
 
-                    // New test dock
-                    final DockNode testDock = new DockNode(lineChart,
-                            "Example Line Chart 2");
-
-                    // Add default button
-                    ToggleButton DefaultButton;
-                    DefaultButton = new ToggleButton();
-                    DefaultButton.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent event) {
-                            System.out.println("Selected property: "
-                                    + DefaultButton.selectedProperty());
-                        }
-                    });
-                    DefaultButton.setMinSize(16, 20);
-                    DefaultButton.setMaxSize(16, 20);
-                    testDock.getDockTitleBar().getChildren().add(DefaultButton);
-
-                    testDock.dock(mainDockPane, DockPos.RIGHT);
-                    // testDock.setFloating(true);
+                    // Add new window with chart
+                    MZmineGUI.addWindow(lineChart, "Example Line Chart 2");
                 }
             }
         });
@@ -169,7 +144,7 @@ public class MainWindowController implements Initializable {
                     FeatureTable featureTable = MZmineCore.getCurrentProject()
                             .getFeatureTables().get(0);
 
-                    /final ModuleType moduleInstance = MZmineCore.getModuleInstance(moduleClass);
+                    //final ModuleType moduleInstance = MZmineCore.getModuleInstance(moduleClass);
                     //final ParameterSet moduleParameters = MZmineCore.getConfiguration()
                     //        .getModuleParameters(moduleClass);
                     //MZmineProject currentProject = MZmineCore.getCurrentProject();
@@ -179,28 +154,7 @@ public class MainWindowController implements Initializable {
                     //MZmineCore.submitTasks(newTasks);
 
                     // New feature table
-                    TableView table = Table.getFeatureTable(featureTable);
-
-                    // New test dock
-                    final DockNode testDock = new DockNode(table,
-                            "Example Table");
-
-                    // Add default button
-                    ToggleButton DefaultButton;
-                    DefaultButton = new ToggleButton();
-                    DefaultButton.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent event) {
-                            System.out.println("Selected property: "
-                                    + DefaultButton.selectedProperty());
-                        }
-                    });
-                    DefaultButton.setMinSize(16, 20);
-                    DefaultButton.setMaxSize(16, 20);
-                    testDock.getDockTitleBar().getChildren().add(DefaultButton);
-
-                    testDock.dock(mainDockPane, DockPos.RIGHT);
-                    // testDock.setFloating(true);
+                    //TableView table = Table.getFeatureTable(featureTable);
 
                 }
             }
@@ -303,7 +257,7 @@ public class MainWindowController implements Initializable {
         System.out.println("Remove feature table " + event);
         List<TreeItem<FeatureTableTreeItem>> selectedItems = featureTree
                 .getSelectionModel().getSelectedItems();
-        //MZmineCore.getCurrentProject().removeFeatureTable(featureTable);
+        // MZmineCore.getCurrentProject().removeFeatureTable(featureTable);
 
     }
 
