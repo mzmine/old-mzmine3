@@ -119,22 +119,16 @@ public class RawDataFilesEditor extends HBox
 
     private void updateNumFiles() {
         RawDataFilesSelection currentValue = getValue();
-        if (currentValue
-                .getSelectionType() == RawDataFilesSelectionType.BATCH_LAST_FILES) {
-            numFilesLabel.setText("");
-            // numFilesLabel.setToolTipText("");
+        List<RawDataFile> files = currentValue.getMatchingRawDataFiles();
+        if (files.size() == 1) {
+            String fileName = files.get(0).getName();
+            if (fileName.length() > 22)
+                fileName = fileName.substring(0, 20) + "...";
+            numFilesLabel.setText(fileName);
         } else {
-            List<RawDataFile> files = currentValue.getMatchingRawDataFiles();
-            if (files.size() == 1) {
-                String fileName = files.get(0).getName();
-                if (fileName.length() > 22)
-                    fileName = fileName.substring(0, 20) + "...";
-                numFilesLabel.setText(fileName);
-            } else {
-                numFilesLabel.setText(files.size() + " selected");
-            }
-            // numFilesLabel.setToolTipText(currentValue.toString());
+            numFilesLabel.setText(files.size() + " selected");
         }
+        // numFilesLabel.setToolTipText(currentValue.toString());
     }
 
     @Override

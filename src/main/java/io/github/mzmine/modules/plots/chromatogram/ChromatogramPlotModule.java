@@ -69,7 +69,8 @@ public class ChromatogramPlotModule implements MZmineRunnableModule {
         }
 
         if (weHaveData) {
-
+            ChromatogramPlotWindow newWindow = new ChromatogramPlotWindow();
+            MZmineGUI.addWindow(newWindow, "Chromatogram");
         } else {
 
             MZmineGUI.displayMessage("No scans found");

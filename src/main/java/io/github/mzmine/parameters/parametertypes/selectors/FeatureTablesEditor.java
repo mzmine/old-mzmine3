@@ -119,22 +119,16 @@ public class FeatureTablesEditor extends HBox
 
     private void updateNumFeatureTables() {
         FeatureTablesSelection currentValue = getValue();
-        if (currentValue
-                .getSelectionType() == FeatureTablesSelectionType.BATCH_LAST_FEATURE_TABLES) {
-            numFeatureTablesLabel.setText("");
-            // numFeatureTablesLabel.setToolTipText("");
+        List<FeatureTable> files = currentValue.getMatchingFeatureTables();
+        if (files.size() == 1) {
+            String fileName = files.get(0).getName();
+            if (fileName.length() > 22)
+                fileName = fileName.substring(0, 20) + "...";
+            numFeatureTablesLabel.setText(fileName);
         } else {
-            List<FeatureTable> files = currentValue.getMatchingFeatureTables();
-            if (files.size() == 1) {
-                String fileName = files.get(0).getName();
-                if (fileName.length() > 22)
-                    fileName = fileName.substring(0, 20) + "...";
-                numFeatureTablesLabel.setText(fileName);
-            } else {
-                numFeatureTablesLabel.setText(files.size() + " selected");
-            }
-            // numFeatureTablesLabel.setToolTipText(currentValue.toString());
+            numFeatureTablesLabel.setText(files.size() + " selected");
         }
+        // numFeatureTablesLabel.setToolTipText(currentValue.toString());
     }
 
     @Override
