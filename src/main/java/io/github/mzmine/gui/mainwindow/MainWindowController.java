@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.ResourceBundle;
 
 import javax.annotation.Nonnull;
+import javax.swing.tree.TreePath;
 
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.TaskProgressView;
@@ -157,6 +158,8 @@ public class MainWindowController implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 2) {
+                    
+                    //System.out.println(event.getX() + ","+event.getY());
 
                     // FeatureTable
                     FeatureTable featureTable = MZmineCore.getCurrentProject()
@@ -272,6 +275,23 @@ public class MainWindowController implements Initializable {
     protected void handleShowTIC(ActionEvent event) {
         logger.debug("Activated Show chromatogram menu item");
         MZmineGUI.setupAndRunModule(ChromatogramPlotModule.class);
+    }
+
+    @FXML
+    protected void removeRawData(ActionEvent event) {
+        System.out.println("Remove raw data " + event);
+        List<TreeItem<RawDataTreeItem>> selectedItems = rawDataTree
+                .getSelectionModel().getSelectedItems();
+        // MZmineCore.getCurrentProject().removeFile(rawDataFile);
+    }
+
+    @FXML
+    protected void removeFeatureTable(ActionEvent event) {
+        System.out.println("Remove feature table " + event);
+        List<TreeItem<FeatureTableTreeItem>> selectedItems = featureTree
+                .getSelectionModel().getSelectedItems();
+        //MZmineCore.getCurrentProject().removeFeatureTable(featureTable);
+
     }
 
 }

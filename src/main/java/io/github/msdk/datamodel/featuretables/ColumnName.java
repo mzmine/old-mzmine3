@@ -26,6 +26,7 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
  */
 public enum ColumnName {
 
+    ID("Id", Integer.class),
     MZ("m/z", Double.class),
     RT("RT", ChromatographyInfo.class),
     RTRANGE("RT Range", Range.class),

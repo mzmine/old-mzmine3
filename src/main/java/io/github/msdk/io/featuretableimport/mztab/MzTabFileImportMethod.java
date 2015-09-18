@@ -294,6 +294,10 @@ public class MzTabFileImportMethod implements MSDKMethod<FeatureTable> {
             }
 
             // Add common data to columns
+            // Common column: Id
+            column = featureTable.getColumn(ColumnName.ID.getName(), null);
+            currentRow.setData(column, parsedRows);
+
             // Common column: m/z
             column = featureTable.getColumn(ColumnName.MZ.getName(), null);
             currentRow.setData(column, mzExp);

@@ -19,30 +19,42 @@
 
 package io.github.mzmine.modules.featuretable;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
+import javax.annotation.Nonnull;
+
+import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
-import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+import io.github.mzmine.modules.MZmineProcessingModule;
+import io.github.mzmine.modules.MZmineRunnableModule;
+import io.github.mzmine.util.TableUtils;
 import javafx.collections.ObservableList;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.MapValueFactory;
-import javafx.util.Callback;
 
-public class Table {
+public class Table implements MZmineRunnableModule {
 
+    private Logger logger = Logger.getLogger(this.getClass().getName());
+    
+    @Nonnull
+    private static final String MODULE_DESCRIPTION = "This module creates a TableView of a feature table.";
+
+    private static Map<Integer, TableColumn<Map,Object>> columnMap = new HashMap<Integer, TableColumn<Map,Object>>();
+
+    @Override
+    public @Nonnull String getDescription() {
+        return MODULE_DESCRIPTION;
+    }
+
+    
     public static TableView getFeatureTable(FeatureTable featureTable) {
 
         char nextChar = 'A';
@@ -65,53 +77,15 @@ public class Table {
                 tableColumn = new TableColumn<>(col.getName());
                 tableColumn.setCellValueFactory(
                         new MapValueFactory<Object>(mapChar));
-
-                tableColumn.setCellFactory(new Callback<TableColumn<Map, Object>, TableCell<Map, Object>>() {
-
-                    @Override
-                    public TableCell<Map, Object> call(TableColumn<Map, Object> p) {
-                        return new TableCell<Map, Object>() {
-                            @Override
-                            public void updateItem(Object object, boolean empty) {
-                                super.updateItem(object, empty);
-                                if (object == null) {
-                                    setTooltip(null);
-                                    setText(null);
-                                } else {
-                                    // Tooltip
-                                    Tooltip tooltip = new Tooltip();
-                                    tooltip.setText("This is a tooltip");
-                                    setTooltip(tooltip);
-
-                                    // Format value
-                                    String dataTypeClass = object.getClass().getSimpleName();
-                                    String value = object.toString();
-                                    NumberFormat formatter = new DecimalFormat("#0.00");
-
-                                    switch (dataTypeClass) {
-                                        case "Double":
-                                            Double doubleValue = (Double) object;
-                                            value = formatter.format(doubleValue);
-                                            // object.toString();
-                                            break;
-                                        case "SimpleChromatographyInfo":
-                                            ChromatographyInfo chromatographyInfo = (ChromatographyInfo) object;
-                                            Float floatValue = chromatographyInfo.getRetentionTime();
-                                            value = formatter.format(floatValue);
-                                            break;
-                                        case "SimpleIonAnnotation":
-                                            IonAnnotation ionAnnotation = (IonAnnotation) object;
-                                            value = ionAnnotation.getDescription();
-                                    }
-                                    setText(value);
-                                }
-                            }
-                        };
-                    }
-
-                });
-
+                tableColumn
+                        .setCellFactory(new CellFactoryCallback(col.getName()));
+                if (col.getName().equals(ColumnName.ID.getName())
+                        || col.getName().equals(ColumnName.MZ.getName())
+                        || col.getName().equals(ColumnName.CHARGE.getName())) {
+                    tableColumn.setStyle("-fx-alignment: CENTER;");
+                }
                 table.getColumns().add(tableColumn);
+                columnMap.put(totalColumns, tableColumn);
                 totalColumns++;
             }
         }
@@ -121,27 +95,24 @@ public class Table {
             currentSample = col.getSample();
 
             if (currentSample != null) {
-
-                // Creates sample columns
-                if (prevSample != null && prevSample.equals(currentSample)) {
-                    mapChar = String.valueOf(nextChar++);
-                    tableColumn = new TableColumn<>(col.getName());
-                    tableColumn.setCellValueFactory(
-                            new MapValueFactory<Object>(mapChar));
-                    sampleColumn.getColumns().add(tableColumn);
-                    totalColumns++;
-                } else { // Create sample header and sample columns
+                // Create sample header
+                if (prevSample == null || !prevSample.equals(currentSample)) {
                     sampleColumn = new TableColumn(currentSample.getName());
                     table.getColumns().add(sampleColumn);
                     prevSample = currentSample;
-
-                    mapChar = String.valueOf(nextChar++);
-                    tableColumn = new TableColumn<>(col.getName());
-                    tableColumn.setCellValueFactory(
-                            new MapValueFactory<Object>(mapChar));
-                    sampleColumn.getColumns().add(tableColumn);
-                    totalColumns++;
                 }
+
+                // Creates sample columns
+                mapChar = String.valueOf(nextChar++);
+                tableColumn = new TableColumn<>(col.getName());
+                tableColumn.setCellValueFactory(
+                        new MapValueFactory<Object>(mapChar));
+                tableColumn
+                        .setCellFactory(new CellFactoryCallback(col.getName()));
+                tableColumn.setStyle("-fx-alignment: CENTER;");
+                sampleColumn.getColumns().add(tableColumn);
+                columnMap.put(totalColumns, tableColumn);
+                totalColumns++;
             }
 
         }
@@ -174,8 +145,14 @@ public class Table {
         table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         table.getSelectionModel().setCellSelectionEnabled(true);
 
+        // Enable copy
+        TableUtils.addCopyHandler(table);
         return table;
 
+    }
+
+    private Map getColumnMap() {
+        return columnMap;
     }
 
 }

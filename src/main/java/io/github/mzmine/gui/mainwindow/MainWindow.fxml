@@ -22,11 +22,20 @@
 								<MenuItem text="Show TIC" onAction="#handleShowTIC" />
 								<MenuItem text="Export" />
 								<MenuItem text="Report" />
+								<MenuItem text="Remove" onAction="#removeRawData" />
 							</items>
 						</ContextMenu>
 					</contextMenu>
 				</TreeView>
-				<TreeView fx:id="featureTree" prefHeight="120" />
+				<TreeView fx:id="featureTree" prefHeight="120">
+					<contextMenu>
+						<ContextMenu>
+							<items>
+								<MenuItem text="Remove" onAction="#removeFeatureTable" />
+							</items>
+						</ContextMenu>
+					</contextMenu>
+				</TreeView>
 				<TaskProgressView fx:id="tasksView" prefHeight="120" />
 			</children>
 		</DockPane>
