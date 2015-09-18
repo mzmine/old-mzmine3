@@ -235,7 +235,7 @@ public final class MZmineGUI extends Application {
     }
 
     public static void addWindow(Node node, String title) {
-        
+
         // New test dock
         final DockNode testDock = new DockNode(node, title);
 
@@ -254,10 +254,10 @@ public final class MZmineGUI extends Application {
         testDock.getDockTitleBar().getChildren().add(DefaultButton);
 
         DockPane mainDockPane = mainWindowController.getMainDockPane();
-        
+
         testDock.dock(mainDockPane, DockPos.RIGHT);
         // testDock.setFloating(true);
-        
+
     }
 
     public static void activateProject(MZmineGUIProject project) {
@@ -310,11 +310,13 @@ public final class MZmineGUI extends Application {
                 .getModuleInstance(moduleClass);
         final ParameterSet moduleParameters = MZmineCore.getConfiguration()
                 .getModuleParameters(moduleClass);
-        MZmineProject currentProject = MZmineCore.getCurrentProject();
-        List<Task<?>> newTasks = new ArrayList<>();
-        moduleInstance.runModule(MZmineCore.getCurrentProject(),
-                moduleParameters, newTasks);
-        MZmineCore.submitTasks(newTasks);
+        ButtonType result = moduleParameters.showSetupDialog();
+        if (result == ButtonType.OK) {
+            List<Task<?>> newTasks = new ArrayList<>();
+            moduleInstance.runModule(MZmineCore.getCurrentProject(),
+                    moduleParameters, newTasks);
+            MZmineCore.submitTasks(newTasks);
+        }
 
     }
 

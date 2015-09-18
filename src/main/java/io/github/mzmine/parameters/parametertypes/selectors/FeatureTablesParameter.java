@@ -30,24 +30,24 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.base.Strings;
 
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.parameters.parametertypes.AbstractParameter;
 
-public class RawDataFilesParameter
-        extends AbstractParameter<RawDataFilesSelection> {
+public class FeatureTablesParameter
+        extends AbstractParameter<FeatureTablesSelection> {
 
-    private static final @Nonnull String NAME = "Raw data files";
-    private static final @Nonnull String DESCRIPTION = "Raw data files that this module will take as its input.";
+    private static final @Nonnull String NAME = "Feature tables";
+    private static final @Nonnull String DESCRIPTION = "Feature tables that this module will take as its input.";
     private static final @Nonnull String CATEGORY = "Input";
 
-    public RawDataFilesParameter() {
-        super(NAME, DESCRIPTION, CATEGORY, RawDataFilesEditor.class, null);
+    public FeatureTablesParameter() {
+        super(NAME, DESCRIPTION, CATEGORY, FeatureTablesEditor.class, null);
     }
 
     @Override
-    public @Nonnull RawDataFilesParameter clone() {
-        RawDataFilesParameter copy = new RawDataFilesParameter();
+    public @Nonnull FeatureTablesParameter clone() {
+        FeatureTablesParameter copy = new FeatureTablesParameter();
         copy.setValue(getValue());
         return copy;
     }
@@ -55,24 +55,24 @@ public class RawDataFilesParameter
     @Override
     public void loadValueFromXML(@Nonnull Element xmlElement) {
 
-        List<RawDataFile> currentDataFiles = MZmineCore.getCurrentProject()
-                .getRawDataFiles();
+        List<FeatureTable> currentDataFiles = MZmineCore.getCurrentProject()
+                .getFeatureTables();
 
-        RawDataFilesSelectionType selectionType;
+        FeatureTablesSelectionType selectionType;
         final String attrValue = xmlElement.getAttribute("type");
 
         if (Strings.isNullOrEmpty(attrValue))
-            selectionType = RawDataFilesSelectionType.GUI_SELECTED_FILES;
+            selectionType = FeatureTablesSelectionType.GUI_SELECTED_FEATURE_TABLES;
         else
-            selectionType = RawDataFilesSelectionType
+            selectionType = FeatureTablesSelectionType
                     .valueOf(xmlElement.getAttribute("type"));
 
-        List<RawDataFile> specificFiles = new ArrayList<>();
+        List<FeatureTable> specificFiles = new ArrayList<>();
 
         NodeList items = xmlElement.getElementsByTagName("specific_name");
         for (int i = 0; i < items.getLength(); i++) {
             String itemString = items.item(i).getTextContent();
-            for (RawDataFile df : currentDataFiles) {
+            for (FeatureTable df : currentDataFiles) {
                 if (df.getName().equals(itemString))
                     specificFiles.add(df);
             }
@@ -84,20 +84,20 @@ public class RawDataFilesParameter
             namePattern = items.item(i).getTextContent();
         }
 
-        setValue(new RawDataFilesSelection(selectionType, specificFiles,
+        setValue(new FeatureTablesSelection(selectionType, specificFiles,
                 namePattern));
     }
 
     @Override
     public void saveValueToXML(@Nonnull Element xmlElement) {
-        RawDataFilesSelection value = getValue();
+        FeatureTablesSelection value = getValue();
         if (value == null)
             return;
         Document parentDocument = xmlElement.getOwnerDocument();
         xmlElement.setAttribute("type", value.getSelectionType().name());
 
-        if (value.getSpecificFiles() != null) {
-            for (RawDataFile item : value.getSpecificFiles()) {
+        if (value.getSpecificFeatureTables() != null) {
+            for (FeatureTable item : value.getSpecificFeatureTables()) {
                 Element newElement = parentDocument
                         .createElement("specific_name");
                 newElement.setTextContent(item.getName());
