@@ -1,19 +1,14 @@
 .root {
-    -fx-font-size: 10pt;
+    -fx-font-size: 10.0pt;
 }
 
 #memoryBarLabel { 
-	-fx-font-size: 9pt; 
-	-fx-label-padding: 0 20 0 20; 
+	-fx-font-size: 9.0pt; 
+	-fx-label-padding: 0.0 20.0 0.0 20.0; 
 }
 
 .tooltip {
-    -fx-font-size: 10pt;
-}
-
-.textSeparator {
-	-fx-font-weight: bold;
-	-fx-font-size: 11pt;
+    -fx-font-size: 10.0pt;
 }
 
 /* Some useful CSS properties:

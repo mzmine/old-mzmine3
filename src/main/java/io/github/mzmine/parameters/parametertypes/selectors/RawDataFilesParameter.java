@@ -113,4 +113,15 @@ public class RawDataFilesParameter
 
     }
 
+    public void switchType(RawDataFilesSelectionType newType) {
+        RawDataFilesSelection curValue = getValue();
+        RawDataFilesSelection newValue;
+        if (curValue == null)
+            newValue = new RawDataFilesSelection(newType, null, null);
+        else
+            newValue = new RawDataFilesSelection(newType,
+                    curValue.getSpecificFiles(), curValue.getNamePattern());
+        setValue(newValue);
+    }
+
 }

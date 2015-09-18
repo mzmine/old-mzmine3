@@ -104,36 +104,23 @@
 				</Menu>
 				<Menu text="Feature Detection">
 					<items>
-						<SeparatorMenuItem>
-							<content>
-								<Text text=" MS" styleClass="textSeparator" />
-							</content>
-						</SeparatorMenuItem>
-						<MenuItem text="Chromatoram Builder" />
-						<MenuItem text="Targeted Feature Detection" />
-						<MenuItem text="GridMass - 2D Feature Detection" />
-						<SeparatorMenuItem>
-							<content>
-								<Text text="" />
-							</content>
-						</SeparatorMenuItem>
-						<SeparatorMenuItem>
-							<content>
-								<Text text=" MS/MS" styleClass="textSeparator" />
-							</content>
-						</SeparatorMenuItem>
-						<MenuItem text="MS/MS Feature List Builder" />
-						<SeparatorMenuItem>
-							<content>
-								<Text text="" />
-							</content>
-						</SeparatorMenuItem>
-						<SeparatorMenuItem>
-							<content>
-								<Text text=" SRM" styleClass="textSeparator" />
-							</content>
-						</SeparatorMenuItem>
-						<MenuItem text="SRM Feature List Builder" />
+						<Menu text="MS">
+							<items>
+								<MenuItem text="Chromatoram Builder" />
+								<MenuItem text="Targeted Feature Detection" />
+								<MenuItem text="GridMass - 2D Feature Detection" />
+							</items>
+						</Menu>
+						<Menu text="MS/MS">
+							<items>
+								<MenuItem text="MS/MS Feature List Builder" />
+							</items>
+						</Menu>
+						<Menu text="SRM">
+							<items>
+								<MenuItem text="SRM Feature List Builder" />
+							</items>
+						</Menu>
 					</items>
 				</Menu>
 			</items>
@@ -195,65 +182,42 @@
 		</Menu>
 		<Menu text="Plots">
 			<items>
-				<SeparatorMenuItem>
-					<content>
-						<Text text=" Raw Data" styleClass="textSeparator" />
-					</content>
-				</SeparatorMenuItem>
-				<MenuItem text="Spectra Plot" />
-				<MenuItem text="Chromatogram Plot" />
-				<MenuItem text="2D Plot" />
-				<MenuItem text="2D Plot" />
-				<MenuItem text="MS/MS Plot" />
-				<MenuItem text="Neutral Loss Plot" />
-				<SeparatorMenuItem>
-					<content>
-						<Text text="" />
-					</content>
-				</SeparatorMenuItem>
-				<SeparatorMenuItem>
-					<content>
-						<Text text=" Feature Data" styleClass="textSeparator" />
-					</content>
-				</SeparatorMenuItem>
-				<MenuItem text="Scatter Plot" />
-				<MenuItem text="Histogram Plot" />
-				<MenuItem text="Feature Plot" />
-				<MenuItem text="Heat Map Plot" />
+				<Menu text="Raw Data">
+					<items>
+						<MenuItem text="Spectra Plot" />
+						<ModuleMenuItem text="Chromatogram Plot"
+							moduleClass="io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotModule" />
+						<MenuItem text="2D Plot" />
+						<MenuItem text="2D Plot" />
+						<MenuItem text="MS/MS Plot" />
+						<MenuItem text="Neutral Loss Plot" />
+					</items>
+				</Menu>
+				<Menu text="Feature Data">
+					<items>
+						<MenuItem text="Scatter Plot" />
+						<MenuItem text="Histogram Plot" />
+						<MenuItem text="Feature Plot" />
+						<MenuItem text="Heat Map Plot" />
+					</items>
+				</Menu>
 			</items>
 		</Menu>
 		<Menu text="Data Analysis">
 			<items>
-				<SeparatorMenuItem>
-					<content>
-						<Text text=" Bubble Plots" styleClass="textSeparator" />
-					</content>
-				</SeparatorMenuItem>
-				<MenuItem text="Coefficient of Variation Plot" />
-				<MenuItem text="Logratio Analysis" />
-				<SeparatorMenuItem>
-					<content>
-						<Text text="" />
-					</content>
-				</SeparatorMenuItem>
-				<SeparatorMenuItem>
-					<content>
-						<Text text=" Dimensionality Reduction" styleClass="textSeparator" />
-					</content>
-				</SeparatorMenuItem>
-				<MenuItem text="Principal Component Analysis (PCA)" />
-				<MenuItem text="Curvilinear Distance Analysis (CDA)" />
-				<MenuItem text="Sammon's Projection" />
-				<SeparatorMenuItem>
-					<content>
-						<Text text="" />
-					</content>
-				</SeparatorMenuItem>
-				<SeparatorMenuItem>
-					<content>
-						<Text text=" Clustering" styleClass="textSeparator" />
-					</content>
-				</SeparatorMenuItem>
+				<Menu text="Bubble Plots">
+					<items>
+						<MenuItem text="Coefficient of Variation Plot" />
+						<MenuItem text="Logratio Analysis" />
+					</items>
+				</Menu>
+				<Menu text="Dimensionality Reduction">
+					<items>
+						<MenuItem text="Principal Component Analysis (PCA)" />
+						<MenuItem text="Curvilinear Distance Analysis (CDA)" />
+						<MenuItem text="Sammon's Projection" />
+					</items>
+				</Menu>
 				<MenuItem text="Clustering" />
 			</items>
 		</Menu>

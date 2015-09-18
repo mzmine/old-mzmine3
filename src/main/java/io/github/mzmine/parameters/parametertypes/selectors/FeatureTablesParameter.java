@@ -113,4 +113,15 @@ public class FeatureTablesParameter
 
     }
 
+    public void switchType(FeatureTablesSelectionType newType) {
+        FeatureTablesSelection curValue = getValue();
+        FeatureTablesSelection newValue;
+        if (curValue == null)
+            newValue = new FeatureTablesSelection(newType, null, null);
+        else
+            newValue = new FeatureTablesSelection(newType,
+                    curValue.getSpecificFeatureTables(),
+                    curValue.getNamePattern());
+        setValue(newValue);
+    }
 }
