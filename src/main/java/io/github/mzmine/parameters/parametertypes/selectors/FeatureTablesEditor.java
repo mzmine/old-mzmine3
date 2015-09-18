@@ -25,6 +25,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.controlsfx.control.PropertySheet;
+
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.parameters.ParameterEditor;
@@ -32,6 +34,7 @@ import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.MultiChoiceParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import javafx.collections.FXCollections;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -45,14 +48,18 @@ public class FeatureTablesEditor extends HBox
 
     private final ComboBox<FeatureTablesSelectionType> typeCombo;
     private final Button detailsButton;
-    private final Text numFilesLabel;
+    private final Text numFeatureTablesLabel;
 
-    private List<FeatureTable> specificFiles;
+    private List<FeatureTable> specificFeatureTables;
     private String namePattern;
 
-    public FeatureTablesEditor() {
+    public FeatureTablesEditor(PropertySheet.Item parameter) {
 
-        numFilesLabel = new Text();
+        // HBox properties
+        setSpacing(10);
+        setAlignment(Pos.CENTER_LEFT);
+
+        numFeatureTablesLabel = new Text();
 
         typeCombo = new ComboBox<>(FXCollections.observableList(
                 Arrays.asList(FeatureTablesSelectionType.values())));
@@ -66,7 +73,7 @@ public class FeatureTablesEditor extends HBox
             detailsButton.setDisable(
                     (type != FeatureTablesSelectionType.NAME_PATTERN)
                             && (type != FeatureTablesSelectionType.SPECIFIC_FEATURE_TABLES));
-            updateNumFiles();
+            updateNumFeatureTables();
         });
 
         detailsButton.setOnAction(e -> {
@@ -75,16 +82,16 @@ public class FeatureTablesEditor extends HBox
 
             if (type == FeatureTablesSelectionType.SPECIFIC_FEATURE_TABLES) {
 
-                final @Nonnull List<FeatureTable> allFiles = MZmineCore
+                final @Nonnull List<FeatureTable> allFeatureTables = MZmineCore
                         .getCurrentProject().getFeatureTables();
                 final MultiChoiceParameter<FeatureTable> filesParameter = new MultiChoiceParameter<FeatureTable>(
-                        "Select files", "Select files", "Files", allFiles,
-                        specificFiles);
+                        "Select files", "Select files", "FeatureTables",
+                        allFeatureTables, specificFeatureTables);
                 final ParameterSet paramSet = new ParameterSet(filesParameter);
                 final ButtonType exitCode = paramSet.showSetupDialog();
                 if (exitCode == ButtonType.OK) {
-                    specificFiles = paramSet.getParameter(filesParameter)
-                            .getValue();
+                    specificFeatureTables = paramSet
+                            .getParameter(filesParameter).getValue();
                 }
 
             }
@@ -103,30 +110,30 @@ public class FeatureTablesEditor extends HBox
 
             }
 
-            updateNumFiles();
+            updateNumFeatureTables();
 
         });
 
-        getChildren().addAll(numFilesLabel, typeCombo, detailsButton);
+        getChildren().addAll(numFeatureTablesLabel, typeCombo, detailsButton);
     }
 
-    private void updateNumFiles() {
+    private void updateNumFeatureTables() {
         FeatureTablesSelection currentValue = getValue();
         if (currentValue
                 .getSelectionType() == FeatureTablesSelectionType.BATCH_LAST_FEATURE_TABLES) {
-            numFilesLabel.setText("");
-            // numFilesLabel.setToolTipText("");
+            numFeatureTablesLabel.setText("");
+            // numFeatureTablesLabel.setToolTipText("");
         } else {
             List<FeatureTable> files = currentValue.getMatchingFeatureTables();
             if (files.size() == 1) {
                 String fileName = files.get(0).getName();
                 if (fileName.length() > 22)
                     fileName = fileName.substring(0, 20) + "...";
-                numFilesLabel.setText(fileName);
+                numFeatureTablesLabel.setText(fileName);
             } else {
-                numFilesLabel.setText(files.size() + " selected");
+                numFeatureTablesLabel.setText(files.size() + " selected");
             }
-            // numFilesLabel.setToolTipText(currentValue.toString());
+            // numFeatureTablesLabel.setToolTipText(currentValue.toString());
         }
     }
 
@@ -141,15 +148,16 @@ public class FeatureTablesEditor extends HBox
                 .getSelectedItem();
         if (selectionType == null)
             selectionType = FeatureTablesSelectionType.ALL_FEATURE_TABLES;
-        return new FeatureTablesSelection(selectionType, specificFiles,
+        return new FeatureTablesSelection(selectionType, specificFeatureTables,
                 namePattern);
     }
 
     @Override
     public void setValue(FeatureTablesSelection value) {
         typeCombo.getSelectionModel().select(value.getSelectionType());
-        specificFiles = value.getSpecificFeatureTables();
+        specificFeatureTables = value.getSpecificFeatureTables();
         namePattern = value.getNamePattern();
+        updateNumFeatureTables();
     }
 
     @Override
