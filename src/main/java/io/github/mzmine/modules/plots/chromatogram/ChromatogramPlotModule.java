@@ -33,7 +33,7 @@ import io.github.mzmine.project.MZmineProject;
 import javafx.concurrent.Task;
 
 /**
- * TIC/XIC visualizer using JFreeChart library
+ * Chromatogram plot
  */
 public class ChromatogramPlotModule implements MZmineRunnableModule {
 
@@ -65,8 +65,8 @@ public class ChromatogramPlotModule implements MZmineRunnableModule {
         boolean weHaveData = false;
         for (RawDataFile dataFile : dataFiles) {
             // TODO: check scans
-                weHaveData = true;
         }
+        weHaveData = true;
 
         if (weHaveData) {
             ChromatogramPlotWindow newWindow = new ChromatogramPlotWindow();

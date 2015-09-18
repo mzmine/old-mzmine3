@@ -59,39 +59,20 @@ public class JavaFXUtil {
         rect.setFill(Color.LIGHTBLUE.deriveColor(0, 1, 1, 0.5));
         final NumberAxis yAxis = (NumberAxis) chart.getYAxis();
         final NumberAxis xAxis = (NumberAxis) chart.getXAxis();
-
+        yAxis.setForceZeroInRange(true);
+        xAxis.setForceZeroInRange(false);
         StackPane pane = new StackPane();
         pane.getChildren().addAll(chart, rect);
 
-
         chart.setOnMousePressed(event -> {
-
-
-            Point2D xAxisInScene = xAxis.localToScene(0, 0);
-            Point2D mouseInScene = chart.localToScene(event.getX(), event.getY());
-            double xOffset = mouseInScene.getX() - xAxisInScene.getX();
-            double yOffset = xAxisInScene.getY() - mouseInScene.getY();
-            if (xOffset < 0) xOffset = 0;
-            if (yOffset < 0) yOffset = 0;
-            if (xOffset > xAxis.getWidth()) xOffset = xAxis.getWidth();
-            if (yOffset > yAxis.getHeight()) yOffset = yAxis.getHeight();
-            
-            double xAxisScale = xAxis.getScale();
-            double yAxisScale = yAxis.getScale();
-            
-            System.out.println("yOffset " + yOffset);
-            System.out.println("yAxisScale " + yAxisScale);
-            
-            if (event.getButton() != MouseButton.PRIMARY) return;
+            if (event.getButton() != MouseButton.PRIMARY)
+                return;
             rect.setX(event.getX());
             rect.setY(event.getY());
-            
- 
-            
-            
         });
         chart.setOnMouseDragged(event -> {
-            if (event.getButton() != MouseButton.PRIMARY) return;
+            if (event.getButton() != MouseButton.PRIMARY)
+                return;
             double mouseX = event.getX();
             double mouseY = event.getY();
             double rectX = rect.getX();
@@ -106,42 +87,63 @@ public class JavaFXUtil {
         });
 
         chart.setOnMouseReleased(event -> {
-            if (event.getButton() != MouseButton.PRIMARY) return;
-            if (!rect.isVisible()) {
-                System.out.println("mouse released, resetting zoom");
+            if (event.getButton() != MouseButton.PRIMARY)
+                return;
+
+            rect.setVisible(false);
+
+            double mouseX = event.getX();
+            double mouseY = event.getY();
+            double rectX = rect.getX();
+            double rectY = rect.getY();
+            if (mouseX < rectX && mouseY < rectY) {
                 xAxis.setAutoRanging(true);
                 yAxis.setAutoRanging(true);
                 return;
             }
+
+            if ((rect.getWidth() < 5) || (rect.getHeight() < 5)) {
+                return;
+            }
+
             xAxis.setAutoRanging(false);
             yAxis.setAutoRanging(false);
-            System.out.println(
-                    xAxis.getLowerBound() + " " + xAxis.getUpperBound());
             Point2D xAxisInScene = xAxis.localToScene(0, 0);
             Point2D mouseInScene = chart.localToScene(rect.getX(), rect.getY());
-            
+
             double xOffset = mouseInScene.getX() - xAxisInScene.getX();
             double yOffset = xAxisInScene.getY() - mouseInScene.getY();
-            if (xOffset < 0) xOffset = 0;
-            if (yOffset < 0) yOffset = 0;
-            if (xOffset > xAxis.getWidth()) xOffset = xAxis.getWidth();
-            if (yOffset > yAxis.getHeight()) yOffset = yAxis.getHeight();
-            
+            if (xOffset < 0)
+                xOffset = 0;
+            if (yOffset < 0)
+                yOffset = 0;
+            if (xOffset > xAxis.getWidth())
+                xOffset = xAxis.getWidth();
+            if (yOffset > yAxis.getHeight())
+                yOffset = yAxis.getHeight();
+
             double xAxisScale = xAxis.getScale();
             double yAxisScale = yAxis.getScale();
+
+            double newXLowerBound = xAxis.getLowerBound()
+                    + xOffset / xAxisScale;
+            double newXUpperBound = newXLowerBound
+                    + rect.getWidth() / xAxisScale;
+            double newYLowerBound = yAxis.getLowerBound()
+                    - (yOffset - rect.getHeight()) / yAxisScale;
+            double newYUpperBound = yAxis.getLowerBound()
+                    - yOffset / yAxisScale;
+            xAxis.setLowerBound(newXLowerBound);
+            xAxis.setUpperBound(newXUpperBound);
+            yAxis.setLowerBound(newYLowerBound);
+            yAxis.setUpperBound(newYUpperBound);
+
+            xAxis.setTickUnit((newXUpperBound - newXLowerBound) / 10);
+            yAxis.setTickUnit((newYUpperBound - newYLowerBound) / 10);
             
-            System.out.println("");
-            System.out.println("offset " + xOffset+":" +yOffset);
-            System.out.println("xAxisScale " + xAxisScale);
-            System.out.println("yAxisScale " + yAxisScale);
-            
-            xAxis.setLowerBound(xAxis.getLowerBound() + xOffset / xAxisScale);
-            xAxis.setUpperBound(xAxis.getLowerBound() + rect.getWidth() / xAxisScale);
-            yAxis.setLowerBound(yAxis.getLowerBound() - yOffset / yAxisScale);
-            yAxis.setUpperBound(yAxis.getLowerBound() - rect.getHeight() / yAxisScale);
-            System.out.println(
-                    yAxis.getLowerBound() + " " +yAxis.getUpperBound());
-            rect.setVisible(false);
+            rect.setWidth(0);
+            rect.setHeight(0);
+
 
         });
 
