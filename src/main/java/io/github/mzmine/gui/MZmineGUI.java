@@ -256,7 +256,8 @@ public final class MZmineGUI extends Application {
         DockPane mainDockPane = mainWindowController.getMainDockPane();
 
         testDock.dock(mainDockPane, DockPos.RIGHT);
-        // testDock.setFloating(true);
+        testDock.setFloatable(true);
+        //testDock.setFloating(true);
 
     }
 

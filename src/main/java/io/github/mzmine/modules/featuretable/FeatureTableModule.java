@@ -42,6 +42,7 @@ import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.util.TableUtils;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -57,7 +58,7 @@ public class FeatureTableModule implements MZmineRunnableModule {
     @Nonnull
     private static final String MODULE_DESCRIPTION = "This module creates a TableView of a feature table.";
 
-    private static Map<Integer, TableColumn<Map, Object>> columnMap = new HashMap<Integer, TableColumn<Map, Object>>();
+    private static Map<Integer, TableColumn<Map, Object>> columnMap;
 
     @Override
     public @Nonnull String getName() {
@@ -73,6 +74,8 @@ public class FeatureTableModule implements MZmineRunnableModule {
     public void runModule(@Nonnull MZmineProject project,
             @Nonnull ParameterSet parameters,
             @Nonnull Collection<Task<?>> tasks) {
+
+        columnMap = new HashMap<Integer, TableColumn<Map, Object>>();
 
         // FeatureTable featureTable
         final List<FeatureTable> featureTables = parameters
@@ -137,8 +140,14 @@ public class FeatureTableModule implements MZmineRunnableModule {
                 columnMap.put(totalColumns, tableColumn);
                 totalColumns++;
             }
-
         }
+
+        // Add blank column at the end of the table to make space for the scroll
+        // bar
+        tableColumn = new TableColumn<>("");
+        tableColumn.setPrefWidth(15);
+        table.getColumns().add(tableColumn);
+        columnMap.put(totalColumns, tableColumn);
 
         // Add rows
         final List<FeatureTableRow> rows = featureTable.getRows();
@@ -168,7 +177,7 @@ public class FeatureTableModule implements MZmineRunnableModule {
         table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         table.getSelectionModel().setCellSelectionEnabled(true);
 
-        // Enable copy
+        // Enable copy to clipboard
         TableUtils.addCopyHandler(table, columnMap);
 
         // Add new window with table

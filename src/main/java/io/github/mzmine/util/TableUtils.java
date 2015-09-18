@@ -92,7 +92,7 @@ public class TableUtils {
                 // Get the column from the map to avoid trouble with sample
                 // headers
                 TableColumn column = columnMap.get(columnNr);
-
+              
                 if (prevRow == rowNr || prevRow == -1) {
                     String columnTitle;
                     if (column.getParentColumn() != null) {

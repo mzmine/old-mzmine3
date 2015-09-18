@@ -29,8 +29,13 @@ import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.mzmine.main.MZmineCore;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 public class CellFactoryCallback
@@ -154,5 +159,6 @@ public class CellFactoryCallback
             }
         };
     }
+
 
 }
