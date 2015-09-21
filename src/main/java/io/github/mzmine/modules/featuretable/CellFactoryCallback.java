@@ -24,11 +24,13 @@ import java.text.NumberFormat;
 
 import com.google.common.collect.Range;
 
+import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.mzmine.main.MZmineCore;
+import javafx.scene.Node;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.util.Callback;
@@ -148,6 +150,10 @@ public class CellFactoryCallback implements
                             doubleValue = (Double) object;
                             value = doubleValue.toString();
                             break;
+                        case CHROMATOGRAM:
+                            Chromatogram chromatogram = (Chromatogram) object;
+                            value = null;
+                            //setGraphic(node);
                         }
                     }
                     setText(value);

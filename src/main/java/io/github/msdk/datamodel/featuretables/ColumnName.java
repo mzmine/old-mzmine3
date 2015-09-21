@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
+import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 
@@ -37,7 +38,8 @@ public enum ColumnName {
     NUMBEROFDATAPOINTS("# Data Points", Integer.class),
     FWHM("FWHM", Double.class),
     TAILINGFACTOR("Tailing Factor", Double.class),
-    ASYMMETRYFACTOR("Asymmetry Factor", Double.class);
+    ASYMMETRYFACTOR("Asymmetry Factor", Double.class),
+    CHROMATOGRAM("Chromatogram", Chromatogram.class);
 
     @Nonnull private final String name;
     @Nonnull private final Class<?> dataTypeClass;
