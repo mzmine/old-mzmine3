@@ -36,6 +36,7 @@ import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.modules.MZmineModuleCategory;
 import io.github.mzmine.modules.MZmineRunnableModule;
+import io.github.mzmine.modules.featuretable.renderers.DoubleRenderer;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineProject;
 import javafx.beans.property.SimpleObjectProperty;
@@ -43,6 +44,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.CellDataFeatures;
 import javafx.scene.control.TreeTableView;
@@ -106,27 +108,48 @@ public class FeatureTableModule implements MZmineRunnableModule {
         for (FeatureTableColumn<?> col : columns) {
             currentSample = col.getSample();
             if (currentSample == null) {
-                tableColumn = new TreeTableColumn<FeatureTableRow, Object>(col.getName());
+                tableColumn = new TreeTableColumn<FeatureTableRow, Object>(
+                        col.getName());
 
-                tableColumn.setCellValueFactory(new Callback<CellDataFeatures<FeatureTableRow, Object>, ObservableValue<Object>>() {
-                    public ObservableValue<Object> call(CellDataFeatures<FeatureTableRow, Object> p) {
+                tableColumn.setCellValueFactory(
+                        new Callback<CellDataFeatures<FeatureTableRow, Object>, ObservableValue<Object>>() {
+                            public ObservableValue<Object> call(
+                                    CellDataFeatures<FeatureTableRow, Object> p) {
 
-                        if (p.getValue() != null) {
-                            if (p.getValue().getValue() != null) {
-                                TreeItem treeItem = (TreeItem) p.getValue().getValue();
-                                FeatureTableRow featureTableRow = (FeatureTableRow) treeItem.getValue();
-                                if (featureTableRow.getData(col) != null) {
-                                    return new SimpleObjectProperty<>(featureTableRow.getData(col));
+                                if (p.getValue() != null) {
+                                    if (p.getValue().getValue() != null) {
+                                        TreeItem treeItem = (TreeItem) p
+                                                .getValue().getValue();
+                                        FeatureTableRow featureTableRow = (FeatureTableRow) treeItem
+                                                .getValue();
+                                        if (featureTableRow
+                                                .getData(col) != null) {
+                                            return new SimpleObjectProperty<>(
+                                                    featureTableRow
+                                                            .getData(col));
+                                        }
+                                    }
                                 }
+
+                                return null;
+
                             }
-                        }
+                        });
 
-                        return null;
+                // Set column renderer
+                Class renderClass = ColumnRenderers.getRenderClass(col.getName());
+                Callback<TreeTableColumn<FeatureTableRow, Object>, TreeTableCell<FeatureTableRow, Object>> rendeder = null;
+                try {
+                    rendeder = (Callback<TreeTableColumn<FeatureTableRow, Object>, TreeTableCell<FeatureTableRow, Object>>) renderClass
+                            .newInstance();
+                } catch (InstantiationException
+                        | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                tableColumn.setCellFactory(rendeder);
 
-                    }
-                });
-
-                tableColumn.setCellFactory(new CellFactoryCallback(col.getName()));
+                // tableColumn.setCellFactory(new
+                // CellFactoryCallback(col.getName()));
                 treeTable.getColumns().add(tableColumn);
                 columnMap.put(totalColumns, tableColumn);
                 totalColumns++;
@@ -148,25 +171,43 @@ public class FeatureTableModule implements MZmineRunnableModule {
                 // Creates sample columns
                 tableColumn = new TreeTableColumn<>(col.getName());
 
-                tableColumn.setCellValueFactory(new Callback<CellDataFeatures<FeatureTableRow, Object>, ObservableValue<Object>>() {
-                    public ObservableValue<Object> call(CellDataFeatures<FeatureTableRow, Object> p) {
+                tableColumn.setCellValueFactory(
+                        new Callback<CellDataFeatures<FeatureTableRow, Object>, ObservableValue<Object>>() {
+                            public ObservableValue<Object> call(
+                                    CellDataFeatures<FeatureTableRow, Object> p) {
 
-                        if (p.getValue() != null) {
-                            if (p.getValue().getValue() != null) {
-                                TreeItem treeItem = (TreeItem) p.getValue().getValue();
-                                FeatureTableRow featureTableRow = (FeatureTableRow) treeItem.getValue();
-                                if (featureTableRow.getData(col) != null) {
-                                    return new SimpleObjectProperty<>(featureTableRow.getData(col));
+                                if (p.getValue() != null) {
+                                    if (p.getValue().getValue() != null) {
+                                        TreeItem treeItem = (TreeItem) p
+                                                .getValue().getValue();
+                                        FeatureTableRow featureTableRow = (FeatureTableRow) treeItem
+                                                .getValue();
+                                        if (featureTableRow
+                                                .getData(col) != null) {
+                                            return new SimpleObjectProperty<>(
+                                                    featureTableRow
+                                                            .getData(col));
+                                        }
+                                    }
                                 }
+
+                                return null;
+
                             }
-                        }
+                        });
 
-                        return null;
+                // Set column renderer
+                Class renderClass = ColumnRenderers.getRenderClass(col.getName());
+                Callback<TreeTableColumn<FeatureTableRow, Object>, TreeTableCell<FeatureTableRow, Object>> rendeder = null;
+                try {
+                    rendeder = (Callback<TreeTableColumn<FeatureTableRow, Object>, TreeTableCell<FeatureTableRow, Object>>) renderClass
+                            .newInstance();
+                } catch (InstantiationException
+                        | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                tableColumn.setCellFactory(rendeder);
 
-                    }
-                });
-
-                tableColumn.setCellFactory(new CellFactoryCallback(col.getName()));
                 tableColumn.setStyle("-fx-alignment: CENTER;");
                 sampleColumn.getColumns().add(tableColumn);
                 columnMap.put(totalColumns, tableColumn);
@@ -177,6 +218,7 @@ public class FeatureTableModule implements MZmineRunnableModule {
         // Table preferences
         treeTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         treeTable.getSelectionModel().setCellSelectionEnabled(true);
+        treeTable.setShowRoot(false);
 
         // Add column selection button
         treeTable.setTableMenuButtonVisible(true);
