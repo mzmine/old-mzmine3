@@ -22,28 +22,35 @@ import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
 
 public class MsScanUtil {
 
     @Nonnull
-    static public MsScan clone(@Nonnull DataPointStore newStore, @Nonnull MsScan scan) {
-        Preconditions.checkNotNull(newStore);
-        MsScan newScan = MSDKObjectBuilder.getMsScan(newStore, scan.getScanNumber(), scan.getMsFunction());
-        final MsSpectrumDataPointList dataPointList = MSDKObjectBuilder.getMsSpectrumDataPointList();
-        scan.getDataPoints(dataPointList);
+    static public MsScan clone(@Nonnull DataPointStore newStore,
+            @Nonnull MsScan scan, @Nonnull Boolean copyDataPoints) {
 
-        final RawDataFile rawDataFile2 = scan.getRawDataFile();
-        if (rawDataFile2 != null) {
-            newScan.setRawDataFile(rawDataFile2);
-        }
+        Preconditions.checkNotNull(newStore);
+        Preconditions.checkNotNull(scan);
+        Preconditions.checkNotNull(copyDataPoints);
+
+        MsScan newScan = MSDKObjectBuilder.getMsScan(newStore,
+                scan.getScanNumber(), scan.getMsFunction());
+
         newScan.setPolarity(scan.getPolarity());
         newScan.setMsScanType(scan.getMsScanType());
         newScan.setScanningRange(scan.getScanningRange());
         newScan.setChromatographyInfo(scan.getChromatographyInfo());
-        newScan.setSourceInducedFragmentation(scan.getSourceInducedFragmentation());
+        newScan.setSourceInducedFragmentation(
+                scan.getSourceInducedFragmentation());
         newScan.getIsolations().addAll(scan.getIsolations());
-        newScan.setDataPoints(dataPointList);
+
+        if (copyDataPoints) {
+            final MsSpectrumDataPointList dataPointList = MSDKObjectBuilder
+                    .getMsSpectrumDataPointList();
+            scan.getDataPoints(dataPointList);
+            newScan.setDataPoints(dataPointList);
+        }
+
         return newScan;
     }
 

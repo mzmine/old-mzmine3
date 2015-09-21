@@ -328,4 +328,27 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
 
     }
 
+    @Override
+    public void add(double mz, float intensity) {
+
+        // Make sure we have enough space to add a new data point
+        if (size == mzBuffer.length) {
+            allocate(size * 2);
+        }
+
+        // Add the data
+        mzBuffer[size] = mz;
+        intensityBuffer[size] = intensity;
+
+        // If the m/z value is larger than the last one, let's simply add it to
+        // the end. Otherwise, we have to call the setSize() method that will
+        // sort the lists in m/z order
+        if ((size == 0) || (mzBuffer[size] > mzBuffer[size - 1])) {
+            size++;
+        } else {
+            setSize(size + 1);
+        }
+
+    }
+
 }

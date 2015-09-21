@@ -33,9 +33,7 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 
 /**
- * A DataPointStore implementation that stores the data points in memory. Use
- * with caution. When DataPointLists are stored or retrieved, they are not
- * referenced but copied, so the original list can be used for other purpose.
+ * A DataPointStore implementation that stores the data points in NFSDB.
  * 
  * The methods of this class are synchronized, therefore it can be safely used
  * by multiple threads.

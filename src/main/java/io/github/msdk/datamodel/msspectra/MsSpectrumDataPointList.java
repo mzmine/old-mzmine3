@@ -114,6 +114,20 @@ public interface MsSpectrumDataPointList {
             @Nonnull float[] intensityBuffer, int newSize);
 
     /**
+     * Adds a new data point to this list. If the m/z value is larger than all
+     * existing existing m/z values in this list, it is simply added to the end.
+     * If that is not the case, the list is reordered to maintain the correct
+     * order of data points by m/z. If the capacity of the list is full, its
+     * capacity is doubled.
+     * 
+     * @param mz
+     *            new m/z value
+     * @param intensity
+     *            new intensity value
+     */
+    void add(double mz, float intensity);
+
+    /**
      * Copies the contents of another data point list into this list. The
      * capacity of this list might stay the same or it might change, depending
      * on needs.
