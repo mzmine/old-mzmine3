@@ -131,12 +131,15 @@ class SimpleIonAnnotation implements IonAnnotation {
     public int compareTo(IonAnnotation i) {
         int returnValue;
 
+        final String thisDescription = this.description;
+        final String thisAnnotationId = this.annotationId;
+        
         // 1. Compare description
-        if (this.description != null && i.getDescription() != null) {
-            returnValue = this.description.compareTo(i.getDescription());
-        } else if (this.description == null && i.getDescription() == null) {
+        if (thisDescription != null && i.getDescription() != null) {
+            returnValue = thisDescription.compareTo(i.getDescription());
+        } else if (thisDescription == null && i.getDescription() == null) {
             returnValue = 0;
-        } else if (this.description == null) {
+        } else if (thisDescription == null) {
             returnValue = 1;
         } else {
             returnValue = -1;
@@ -144,12 +147,12 @@ class SimpleIonAnnotation implements IonAnnotation {
 
         // 2. Compare annotation id
         if (returnValue == 0) {
-            if (this.annotationId != null && i.getAnnotationId() != null) {
-                returnValue = this.annotationId.compareTo(i.getAnnotationId());
+            if (thisAnnotationId != null && i.getAnnotationId() != null) {
+                returnValue = thisAnnotationId.compareTo(i.getAnnotationId());
             } else
-                if (this.annotationId == null && i.getAnnotationId() == null) {
+                if (thisAnnotationId == null && i.getAnnotationId() == null) {
                 returnValue = 0;
-            } else if (this.description == null) {
+            } else if (thisAnnotationId == null) {
                 returnValue = 1;
             } else {
                 returnValue = -1;
