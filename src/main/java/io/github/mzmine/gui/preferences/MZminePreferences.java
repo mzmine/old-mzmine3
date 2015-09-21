@@ -73,8 +73,8 @@ public class MZminePreferences extends ParameterSet {
             } , FileNameParameter.Type.OPEN);
 
     public static final BooleanParameter sendStatistics = new BooleanParameter(
-            "Send anonymous statistics",
-            "Allow MZmine to send anonymous statistics on the module usage?",
+            "Send statistics",
+            "Allow MZmine to send anonymous statistics on the usage of its modules?",
             "Statistics", true);
 
     // public static final WindowSettingsParameter windowSetttings = new
