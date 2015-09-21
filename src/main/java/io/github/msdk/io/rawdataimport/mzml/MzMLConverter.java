@@ -23,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
@@ -59,6 +60,7 @@ class MzMLConverter {
 
     private Map<String, Integer> scanIdTable = new Hashtable<String, Integer>();
 
+    @Nonnull
     Integer extractScanNumber(Spectrum spectrum) {
 
         String spectrumId = spectrum.getId();
@@ -86,6 +88,7 @@ class MzMLConverter {
         return scanNumber;
     }
 
+    @Nonnull
     MsFunction extractMsFunction(Spectrum spectrum) {
         Integer msLevel = 1;
         // Browse the spectrum parameters
@@ -106,6 +109,7 @@ class MzMLConverter {
         return MSDKObjectBuilder.getMsFunction(msLevel);
     }
 
+    @Nullable
     ChromatographyInfo extractChromatographyData(Spectrum spectrum) {
 
         ScanList scanListElement = spectrum.getScanList();
@@ -157,6 +161,7 @@ class MzMLConverter {
         return null;
     }
 
+    @Nonnull
     String extractScanDefinition(Spectrum spectrum) {
         List<CVParam> cvParams = spectrum.getCvParam();
         if (cvParams != null) {
@@ -191,10 +196,12 @@ class MzMLConverter {
         return spectrum.getId();
     }
 
+    @Nonnull
     MsScanType extractScanType(Spectrum spectrum) {
         return MsScanType.UNKNOWN;
     }
 
+    @Nonnull
     PolarityType extractPolarity(Spectrum spectrum) {
         List<CVParam> cvParams = spectrum.getCvParam();
         if (cvParams != null) {
@@ -234,15 +241,17 @@ class MzMLConverter {
 
     }
 
+    @Nullable
     ActivationInfo extractSourceFragmentation(Spectrum spectrum) {
         return null;
     }
 
+    @Nonnull
     List<IsolationInfo> extractIsolations(Spectrum spectrum) {
         PrecursorList precursorListElement = spectrum.getPrecursorList();
         if ((precursorListElement == null)
                 || (precursorListElement.getCount().equals(0)))
-            return null;
+            return Collections.emptyList();
 
         Double precursorMz = null;
         Integer precursorCharge = null;
@@ -253,7 +262,7 @@ class MzMLConverter {
                     .getSelectedIonList();
             if ((selectedIonListElement == null)
                     || (selectedIonListElement.getCount().equals(0)))
-                return null;
+                return Collections.emptyList();
             List<ParamGroup> selectedIonParams = selectedIonListElement
                     .getSelectedIon();
             if (selectedIonParams == null)
@@ -290,15 +299,18 @@ class MzMLConverter {
         return Collections.emptyList();
     }
 
+    @Nonnull
     SeparationType extractSeparationType(Spectrum spectrum) {
         return SeparationType.UNKNOWN;
     }
 
+    @Nonnull
     public SeparationType extractSeparationType(
             uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram) {
         return SeparationType.UNKNOWN;
     }
 
+    @Nonnull
     public ChromatogramType extractChromatogramType(
             uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram) {
         List<CVParam> cvParams = chromatogram.getCvParam();
@@ -324,7 +336,7 @@ class MzMLConverter {
         return ChromatogramType.UNKNOWN;
     }
 
-    @SuppressWarnings("null")
+    @Nonnull
     public List<IsolationInfo> extractIsolations(
             uk.ac.ebi.jmzml.model.mzml.Chromatogram chromatogram) {
         if (extractChromatogramType(chromatogram) == ChromatogramType.MRM_SRM) {

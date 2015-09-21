@@ -74,7 +74,6 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
      * @throws MzXMLParsingException
      * @throws MSDKException
      */
-    @SuppressWarnings("null")
     @Override
     public RawDataFile execute() throws MSDKException {
 

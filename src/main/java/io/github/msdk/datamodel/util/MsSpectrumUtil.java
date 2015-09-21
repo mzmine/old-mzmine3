@@ -44,8 +44,8 @@ public class MsSpectrumUtil {
     /**
      * Calculates the total ion current (=sum of all intensity values)
      */
-    @Nonnull
-    public static Float getTIC(@Nonnull MsSpectrumDataPointList dataPoints) {
+    public static @Nonnull Float getTIC(
+            @Nonnull MsSpectrumDataPointList dataPoints) {
         Preconditions.checkNotNull(dataPoints);
         float tic = 0f;
         float intValues[] = dataPoints.getIntensityBuffer();
@@ -59,17 +59,32 @@ public class MsSpectrumUtil {
      * Returns the highest intensity value. Returns 0 if the list has no data
      * points.
      */
-    @Nonnull
-    public static Float getMaxIntensity(
+    public static @Nonnull Float getMaxIntensity(
             @Nonnull MsSpectrumDataPointList dataPoints) {
         Preconditions.checkNotNull(dataPoints);
+        Integer topIndex = getBasePeakIndex(dataPoints);
+        if (topIndex == null)
+            return 0f;
         float intValues[] = dataPoints.getIntensityBuffer();
-        float maxInt = 0f;
-        for (int i = 0; i < dataPoints.getSize(); i++) {
-            if (intValues[i] > maxInt)
-                maxInt = intValues[i];
+        return intValues[topIndex];
+    }
+
+    /**
+     * Returns the highest intensity value. Returns null if the list has no data
+     * points.
+     */
+    public static @Nullable Integer getBasePeakIndex(
+            @Nonnull MsSpectrumDataPointList dataPoints) {
+        Preconditions.checkNotNull(dataPoints);
+        if (dataPoints.getSize() == 0)
+            return null;
+        final float intValues[] = dataPoints.getIntensityBuffer();
+        int topIndex = 0;
+        for (int i = 1; i < dataPoints.getSize(); i++) {
+            if (intValues[i] > intValues[topIndex])
+                topIndex = i;
         }
-        return maxInt;
+        return topIndex;
     }
 
 }

@@ -16,7 +16,7 @@ package io.github.msdk.centroiding;
 
 public class WaveletCentroidingMethodTest {
 
-    private static final String TEST_DATA_PATH = "src/test/resources/io/centroiding/";
+    private static final String TEST_DATA_PATH = "src/test/resources/centroiding/";
 
     
     
