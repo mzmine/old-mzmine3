@@ -28,8 +28,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import io.github.mzmine.parameters.ParameterEditor;
-
 public class MultiChoiceParameter<ValueType>
         extends AbstractParameter<List<ValueType>> {
 
@@ -45,12 +43,11 @@ public class MultiChoiceParameter<ValueType>
         this(name, description, category, choices, null);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public MultiChoiceParameter(@Nonnull String name,
             @Nonnull String description, @Nonnull String category,
             @Nonnull List<ValueType> choices, List<ValueType> defaultValue) {
-        super(name, description, category,
-                (Class<? extends ParameterEditor<List<ValueType>>>) MultiChoiceEditor.class,
+        super(name, description, category, (Class) MultiChoiceEditor.class,
                 null);
         this.choices = choices;
         setValue(defaultValue);

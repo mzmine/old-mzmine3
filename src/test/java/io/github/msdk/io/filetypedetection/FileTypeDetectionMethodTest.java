@@ -24,7 +24,7 @@ import io.github.msdk.datamodel.files.FileType;
 
 public class FileTypeDetectionMethodTest {
 
-    private static final String TEST_DATA_PATH = "src/test/resources/rawdataimport/";
+    private static final String TEST_DATA_PATH = "src/test/resources/io/rawdataimport/";
 
     @SuppressWarnings("null")
     @Test

@@ -35,7 +35,7 @@ import io.github.msdk.io.rawdataimport.nativeformats.ThermoRawImportMethod;
 
 public class ThermoRawImportMethodTest {
 
-    private static final String TEST_DATA_PATH = "src/test/resources/rawdataimport/thermo/";
+    private static final String TEST_DATA_PATH = "src/test/resources/io/rawdataimport/thermo/";
 
     @SuppressWarnings("null")
     @Test

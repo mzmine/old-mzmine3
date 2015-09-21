@@ -38,8 +38,9 @@ import io.github.msdk.io.featuretableimport.mztab.MzTabFileImportMethod;
 
 public class MzTabFileImportMethodTest {
 
-    private static final String TEST_DATA_PATH = "src/test/resources/rawdataimport/mztab/";
+    private static final String TEST_DATA_PATH = "src/test/resources/io/rawdataimport/mztab/";
 
+    @SuppressWarnings("null")
     @Test
     public void testMzTab_Sample() throws MSDKException {
 
@@ -115,6 +116,7 @@ public class MzTabFileImportMethodTest {
         featureTable.dispose();
     }
 
+    @SuppressWarnings("null")
     @Test
     public void testMzTab_Lipidomics() throws MSDKException {
 

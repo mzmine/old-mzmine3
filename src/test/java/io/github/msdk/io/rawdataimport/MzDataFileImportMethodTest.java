@@ -35,7 +35,7 @@ import io.github.msdk.io.rawdataimport.mzdata.MzDataFileImportMethod;
 
 public class MzDataFileImportMethodTest {
 
-    private static final String TEST_DATA_PATH = "src/test/resources/rawdataimport/mzdata/";
+    private static final String TEST_DATA_PATH = "src/test/resources/io/rawdataimport/mzdata/";
 
     @Test
     public void testMzDataFile() throws MSDKException {

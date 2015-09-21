@@ -35,7 +35,7 @@ import io.github.msdk.io.rawdataimport.nativeformats.WatersRawImportMethod;
 
 public class WatersRawImportMethodTest {
 
-    private static final String TEST_DATA_PATH = "src/test/resources/rawdataimport/waters/";
+    private static final String TEST_DATA_PATH = "src/test/resources/io/rawdataimport/waters/";
 
     @SuppressWarnings("null")
     @Test

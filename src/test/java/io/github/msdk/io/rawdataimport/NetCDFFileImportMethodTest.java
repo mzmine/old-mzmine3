@@ -33,7 +33,7 @@ import io.github.msdk.io.rawdataimport.netcdf.NetCDFFileImportMethod;
 
 public class NetCDFFileImportMethodTest {
 
-    private static final String TEST_DATA_PATH = "src/test/resources/rawdataimport/netcdf/";
+    private static final String TEST_DATA_PATH = "src/test/resources/io/rawdataimport/netcdf/";
 
     @SuppressWarnings("null")
     @Test

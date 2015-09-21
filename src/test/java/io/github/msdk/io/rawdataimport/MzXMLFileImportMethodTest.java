@@ -31,7 +31,7 @@ import io.github.msdk.io.rawdataimport.mzxml.MzXMLFileImportMethod;
 
 public class MzXMLFileImportMethodTest {
 
-    private static final String TEST_DATA_PATH = "src/test/resources/rawdataimport/mzxml/";
+    private static final String TEST_DATA_PATH = "src/test/resources/io/rawdataimport/mzxml/";
 
     @Test
     public void testA10A2() throws MSDKException {

@@ -26,7 +26,7 @@ import io.github.msdk.io.rawdataimport.mzml.MzMLFileImportMethod;
 
 public class SpectrumTypeDetectionMethodTest {
 
-    private static final String TEST_DATA_PATH = "src/test/resources/spectrumtypedetection/";
+    private static final String TEST_DATA_PATH = "src/test/resources/io/spectrumtypedetection/";
 
     @Test
     public void testCentroided1() throws Exception {

@@ -37,7 +37,7 @@ import io.github.msdk.io.rawdataimport.mzml.MzMLFileImportMethod;
 
 public class MzMLFileImportMethodTest {
 
-    private static final String TEST_DATA_PATH = "src/test/resources/rawdataimport/mzml/";
+    private static final String TEST_DATA_PATH = "src/test/resources/io/rawdataimport/mzml/";
 
     @SuppressWarnings("null")
     @Test

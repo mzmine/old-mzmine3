@@ -17,7 +17,7 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.msdk.centroiding.wavelets;
+package io.github.msdk.centroiding;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
