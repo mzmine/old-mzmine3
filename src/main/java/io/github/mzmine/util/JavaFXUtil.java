@@ -133,6 +133,8 @@ public class JavaFXUtil {
                     - (yOffset - rect.getHeight()) / yAxisScale;
             double newYUpperBound = yAxis.getLowerBound()
                     - yOffset / yAxisScale;
+            newYLowerBound = Math.max(newYLowerBound, 0.0);
+            newYUpperBound = Math.max(newYUpperBound, newYLowerBound + 1.0);
             xAxis.setLowerBound(newXLowerBound);
             xAxis.setUpperBound(newXUpperBound);
             yAxis.setLowerBound(newYLowerBound);
