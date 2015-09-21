@@ -151,6 +151,10 @@ public class MainWindowController implements Initializable {
                     /*
                      * TODO: Get feature table from clicked item
                      */
+                    //TreeView<FeatureTableTreeItem> tableTreeItem = (TreeView<FeatureTableTreeItem>) event.getSource();
+                    //System.out.println(tableTreeItem);
+                    //System.out.println(tableTreeItem.getTreeItem(0));
+
                     FeatureTable featureTable = MZmineCore.getCurrentProject().getFeatureTables().get(0);
 
                     final FeatureTableModule moduleInstance = MZmineCore.getModuleInstance(FeatureTableModule.class);                    

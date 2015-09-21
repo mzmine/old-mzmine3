@@ -29,7 +29,6 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
@@ -39,14 +38,15 @@ import io.github.mzmine.modules.MZmineModuleCategory;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineProject;
-import io.github.mzmine.util.TableUtils;
-import javafx.collections.ObservableList;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.MapValueFactory;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTableColumn.CellDataFeatures;
+import javafx.scene.control.TreeTableView;
+import javafx.util.Callback;
 
 public class FeatureTableModule implements MZmineRunnableModule {
 
@@ -58,7 +58,7 @@ public class FeatureTableModule implements MZmineRunnableModule {
     @Nonnull
     private static final String MODULE_DESCRIPTION = "This module creates a TableView of a feature table.";
 
-    private static Map<Integer, TableColumn<Map, Object>> columnMap;
+    private static Map<Integer, TreeTableColumn<FeatureTableRow, Object>> columnMap;
 
     @Override
     public @Nonnull String getName() {
@@ -75,42 +75,59 @@ public class FeatureTableModule implements MZmineRunnableModule {
             @Nonnull ParameterSet parameters,
             @Nonnull Collection<Task<?>> tasks) {
 
-        columnMap = new HashMap<Integer, TableColumn<Map, Object>>();
-
         // FeatureTable featureTable
         final List<FeatureTable> featureTables = parameters
                 .getParameter(FeatureTableModuleParameters.featureTables)
                 .getValue().getMatchingFeatureTables();
         FeatureTable featureTable = featureTables.get(0);
 
-        char nextChar = 'A';
-        String mapChar;
-        int totalColumns = 0;
+        // Variables
         final List<FeatureTableColumn<?>> columns = featureTable.getColumns();
-        TableColumn<Map, Object> tableColumn = null;
-        TableColumn sampleColumn = null;
+        final List<FeatureTableRow> rows = featureTable.getRows();
+        columnMap = new HashMap<Integer, TreeTableColumn<FeatureTableRow, Object>>();
+        TreeTableColumn<FeatureTableRow, Object> tableColumn = null;
+        TreeTableColumn<FeatureTableRow, Object> sampleColumn = null;
         Sample prevSample = null, currentSample = null;
+        int totalColumns = 0;
 
-        // New Table
-        TableView table = new TableView();
+        // Table tree root
+        final TreeItem<FeatureTableRow> root = new TreeItem<>();
+        root.setExpanded(true);
+
+        // Add all rows to their group
+        for (FeatureTableRow row : rows) {
+            root.getChildren().add(new TreeItem(new TreeItem<>(row)));
+        }
+
+        // New tree table
+        TreeTableView<FeatureTableRow> treeTable = new TreeTableView<>(root);
 
         // Common columns
         for (FeatureTableColumn<?> col : columns) {
             currentSample = col.getSample();
-            Class dataType = col.getDataTypeClass();
             if (currentSample == null) {
-                mapChar = String.valueOf(nextChar++);
-                tableColumn = new TableColumn<>(col.getName());
-                tableColumn.setCellValueFactory(
-                        new MapValueFactory<Object>(mapChar));
-                tableColumn
-                        .setCellFactory(new CellFactoryCallback(col.getName()));
-                if (col.getName().equals(ColumnName.ID.getName())
-                        || col.getName().equals(ColumnName.MZ.getName())
-                        || col.getName().equals(ColumnName.CHARGE.getName())) {
-                    tableColumn.setStyle("-fx-alignment: CENTER;");
-                }
-                table.getColumns().add(tableColumn);
+                tableColumn = new TreeTableColumn<FeatureTableRow, Object>(col.getName());
+
+                tableColumn.setCellValueFactory(new Callback<CellDataFeatures<FeatureTableRow, Object>, ObservableValue<Object>>() {
+                    public ObservableValue<Object> call(CellDataFeatures<FeatureTableRow, Object> p) {
+
+                        if (p.getValue() != null) {
+                            if (p.getValue().getValue() != null) {
+                                TreeItem treeItem = (TreeItem) p.getValue().getValue();
+                                FeatureTableRow featureTableRow = (FeatureTableRow) treeItem.getValue();
+                                if (featureTableRow.getData(col) != null) {
+                                    return new SimpleObjectProperty<>(featureTableRow.getData(col));
+                                }
+                            }
+                        }
+
+                        return null;
+
+                    }
+                });
+
+                tableColumn.setCellFactory(new CellFactoryCallback(col.getName()));
+                treeTable.getColumns().add(tableColumn);
                 columnMap.put(totalColumns, tableColumn);
                 totalColumns++;
             }
@@ -123,18 +140,33 @@ public class FeatureTableModule implements MZmineRunnableModule {
             if (currentSample != null) {
                 // Create sample header
                 if (prevSample == null || !prevSample.equals(currentSample)) {
-                    sampleColumn = new TableColumn(currentSample.getName());
-                    table.getColumns().add(sampleColumn);
+                    sampleColumn = new TreeTableColumn(currentSample.getName());
+                    treeTable.getColumns().add(sampleColumn);
                     prevSample = currentSample;
                 }
 
                 // Creates sample columns
-                mapChar = String.valueOf(nextChar++);
-                tableColumn = new TableColumn<>(col.getName());
-                tableColumn.setCellValueFactory(
-                        new MapValueFactory<Object>(mapChar));
-                tableColumn
-                        .setCellFactory(new CellFactoryCallback(col.getName()));
+                tableColumn = new TreeTableColumn<>(col.getName());
+
+                tableColumn.setCellValueFactory(new Callback<CellDataFeatures<FeatureTableRow, Object>, ObservableValue<Object>>() {
+                    public ObservableValue<Object> call(CellDataFeatures<FeatureTableRow, Object> p) {
+
+                        if (p.getValue() != null) {
+                            if (p.getValue().getValue() != null) {
+                                TreeItem treeItem = (TreeItem) p.getValue().getValue();
+                                FeatureTableRow featureTableRow = (FeatureTableRow) treeItem.getValue();
+                                if (featureTableRow.getData(col) != null) {
+                                    return new SimpleObjectProperty<>(featureTableRow.getData(col));
+                                }
+                            }
+                        }
+
+                        return null;
+
+                    }
+                });
+
+                tableColumn.setCellFactory(new CellFactoryCallback(col.getName()));
                 tableColumn.setStyle("-fx-alignment: CENTER;");
                 sampleColumn.getColumns().add(tableColumn);
                 columnMap.put(totalColumns, tableColumn);
@@ -142,50 +174,19 @@ public class FeatureTableModule implements MZmineRunnableModule {
             }
         }
 
-        // Add blank column at the end of the table to make space for the scroll
-        // bar
-        tableColumn = new TableColumn<>("");
-        tableColumn.setPrefWidth(15);
-        table.getColumns().add(tableColumn);
-        columnMap.put(totalColumns, tableColumn);
-
-        // Add rows
-        final List<FeatureTableRow> rows = featureTable.getRows();
-        int rowNr = 0;
-        ObservableList<Map> allData = table.getItems();
-        for (FeatureTableRow row : rows) {
-            rowNr++;
-            int columnNr = 0;
-            Map<String, Object> dataRow = new HashMap<>();
-
-            for (FeatureTableColumn<?> column : columns) {
-                String mapKey = Character.toString((char) ('A' + columnNr));
-                if (row.getData(column) != null) {
-                    Object value1 = row.getData(column);
-                    dataRow.put(mapKey, value1);
-                } else {
-                    dataRow.put(mapKey, null);
-                }
-
-                columnNr++;
-            }
-
-            allData.add(dataRow);
-        }
-
         // Table preferences
-        table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        table.getSelectionModel().setCellSelectionEnabled(true);
+        treeTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        treeTable.getSelectionModel().setCellSelectionEnabled(true);
 
-        // Enable copy to clipboard
-        TableUtils.addCopyHandler(table, columnMap);
+        // Add column selection button
+        treeTable.setTableMenuButtonVisible(true);
 
         // Add new window with table
-        MZmineGUI.addWindow(table, featureTable.getName());
+        MZmineGUI.addWindow(treeTable, featureTable.getName());
 
     }
 
-    public Map<Integer, TableColumn<Map, Object>> getColumnMap() {
+    public Map<Integer, TreeTableColumn<FeatureTableRow, Object>> getColumnMap() {
         return columnMap;
     }
 

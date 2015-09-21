@@ -21,25 +21,20 @@ package io.github.mzmine.modules.featuretable;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Map;
 
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.featuretables.ColumnName;
+import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.mzmine.main.MZmineCore;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.stage.WindowEvent;
+import javafx.scene.control.TreeTableCell;
+import javafx.scene.control.TreeTableColumn;
 import javafx.util.Callback;
 
-public class CellFactoryCallback
-        implements Callback<TableColumn<Map, Object>, TableCell<Map, Object>> {
+public class CellFactoryCallback implements
+        Callback<TreeTableColumn<FeatureTableRow, Object>, TreeTableCell<FeatureTableRow, Object>> {
 
     private String name;
 
@@ -48,8 +43,9 @@ public class CellFactoryCallback
     }
 
     @Override
-    public TableCell<Map, Object> call(TableColumn<Map, Object> p) {
-        return new TableCell<Map, Object>() {
+    public TreeTableCell<FeatureTableRow, Object> call(
+            TreeTableColumn<FeatureTableRow, Object> p) {
+        return new TreeTableCell<FeatureTableRow, Object>() {
             @Override
             public void updateItem(Object object, boolean empty) {
                 super.updateItem(object, empty);
@@ -73,7 +69,7 @@ public class CellFactoryCallback
                     Double doubleValue;
                     Range rangeValue;
 
-                    // Default format
+                    // Default format to two decimals
                     NumberFormat formatter = new DecimalFormat("#0.00");
 
                     if (columnName == null) {
@@ -159,6 +155,5 @@ public class CellFactoryCallback
             }
         };
     }
-
 
 }
