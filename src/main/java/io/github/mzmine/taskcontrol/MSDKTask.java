@@ -68,17 +68,15 @@ public class MSDKTask extends Task<Object> {
 
     @Override
     protected Object call() throws Exception {
-
         Object result = null;
         try {
             result = method.execute();
-
         } catch (Throwable e) {
-            String msg = "Error executing task " + title + e.getMessage();
+            final String msg = "Error executing task " + title + ": "
+                    + e.getMessage();
             logger.error(msg, e);
             MZmineGUI.displayMessage(msg);
         }
-
         return result;
     }
 

@@ -15,6 +15,7 @@
 package io.github.msdk.io.rawdataimport.nativeformats;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 
@@ -103,7 +104,12 @@ public class ThermoRawImportMethod implements MSDKMethod<RawDataFile> {
             // Cleanup
             dumpStream.close();
             dumperProcess.destroy();
-            FileUtils.deleteDirectory(tempFolder);
+
+            try {
+                FileUtils.deleteDirectory(tempFolder);
+            } catch (IOException e) {
+                // Ignore errors while deleting the tmp folder
+            }
 
             if (canceled)
                 return null;

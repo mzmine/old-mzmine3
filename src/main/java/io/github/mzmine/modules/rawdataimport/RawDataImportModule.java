@@ -49,7 +49,7 @@ import javafx.concurrent.Task;
 public class RawDataImportModule implements MZmineProcessingModule {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
     private static final String MODULE_NAME = "Raw data import";
     private static final String MODULE_DESCRIPTION = "This module imports raw data into the project.";
 

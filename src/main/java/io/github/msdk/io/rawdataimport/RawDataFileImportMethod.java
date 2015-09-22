@@ -28,6 +28,8 @@ import io.github.msdk.io.filetypedetection.FileTypeDetectionMethod;
 import io.github.msdk.io.rawdataimport.mzdata.MzDataFileImportMethod;
 import io.github.msdk.io.rawdataimport.mzml.MzMLFileImportMethod;
 import io.github.msdk.io.rawdataimport.mzxml.MzXMLFileImportMethod;
+import io.github.msdk.io.rawdataimport.nativeformats.ThermoRawImportMethod;
+import io.github.msdk.io.rawdataimport.nativeformats.WatersRawImportMethod;
 import io.github.msdk.io.rawdataimport.netcdf.NetCDFFileImportMethod;
 
 /**
@@ -63,7 +65,7 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
         FileTypeDetectionMethod typeDetector = new FileTypeDetectionMethod(
                 sourceFile);
         FileType fileType = typeDetector.execute();
-        
+
         if (fileType == null)
             throw new MSDKException("Unknown file type of file " + sourceFile);
 
@@ -83,8 +85,13 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
         case NETCDF:
             parser = new NetCDFFileImportMethod(sourceFile, dataStore);
             break;
+        case THERMO_RAW:
+            parser = new ThermoRawImportMethod(sourceFile, dataStore);
+            break;
+        case WATERS_RAW:
+            parser = new WatersRawImportMethod(sourceFile, dataStore);
+            break;
         default:
-            System.out.println("excep");
             throw new MSDKException("Unsupported file type (" + fileType
                     + ") of file " + sourceFile);
         }
