@@ -244,11 +244,4 @@ public class FeatureTableModule implements MZmineRunnableModule {
         return FeatureTableModuleParameters.class;
     }
 
-    @Override
-    @Nonnull
-    public MZmineModuleCategory getModuleCategory() {
-        // TODO REMOVE!
-        return MZmineModuleCategory.VISUALIZATIONRAWDATA;
-    }
-
 }

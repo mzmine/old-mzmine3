@@ -79,11 +79,6 @@ public class ChromatogramPlotModule implements MZmineRunnableModule {
     }
 
     @Override
-    public @Nonnull MZmineModuleCategory getModuleCategory() {
-        return MZmineModuleCategory.VISUALIZATIONRAWDATA;
-    }
-
-    @Override
     public @Nonnull Class<? extends ParameterSet> getParameterSetClass() {
         return ChromatogramPlotParameters.class;
     }
