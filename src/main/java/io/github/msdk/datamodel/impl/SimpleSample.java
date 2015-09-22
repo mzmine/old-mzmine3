@@ -34,8 +34,13 @@ class SimpleSample implements Sample {
     private File originalFile;
 
     SimpleSample(@Nonnull String name) {
+        this(name, null);
+    }
+
+    SimpleSample(@Nonnull String name, @Nullable RawDataFile rawDataFile) {
         Preconditions.checkNotNull(name);
         this.name = name;
+        this.rawDataFile = rawDataFile;
     }
 
     @Override

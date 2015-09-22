@@ -82,7 +82,7 @@ public interface Chromatogram extends Cloneable {
     void setChromatogramNumber(@Nonnull Integer chromatogramNumber);
 
     /**
-     * Returns the type of the chromatogram. If unknown, MsScanType.UNKNOWN is
+     * Returns the type of the chromatogram. If unknown, ChromatogramType.UNKNOWN is
      * returned.
      * 
      * @return Chromatogram type
