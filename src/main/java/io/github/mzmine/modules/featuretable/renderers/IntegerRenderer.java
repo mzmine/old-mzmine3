@@ -39,6 +39,7 @@ public class IntegerRenderer implements
                 } else {
                     Integer integerValue = Integer.parseInt(object.toString());
                     setText(integerValue.toString());
+                    setStyle("-fx-alignment: CENTER;");
                 }
             }
         };
