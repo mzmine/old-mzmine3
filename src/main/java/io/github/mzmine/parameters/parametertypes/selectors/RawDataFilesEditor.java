@@ -148,6 +148,9 @@ public class RawDataFilesEditor extends HBox
 
     @Override
     public void setValue(RawDataFilesSelection value) {
+        if (value == null)
+            return;
+
         typeCombo.getSelectionModel().select(value.getSelectionType());
         specificFiles = value.getSpecificFiles();
         namePattern = value.getNamePattern();
