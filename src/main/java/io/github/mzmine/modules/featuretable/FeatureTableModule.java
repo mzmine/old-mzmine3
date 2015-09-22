@@ -23,11 +23,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.annotation.Nonnull;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
@@ -39,6 +40,7 @@ import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.util.TableUtils;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -51,8 +53,6 @@ import javafx.scene.control.TreeTableView;
 import javafx.util.Callback;
 
 public class FeatureTableModule implements MZmineRunnableModule {
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Nonnull
     private static final String MODULE_NAME = "Feature Table";
@@ -148,8 +148,6 @@ public class FeatureTableModule implements MZmineRunnableModule {
                 }
                 tableColumn.setCellFactory(rendeder);
 
-                // tableColumn.setCellFactory(new
-                // CellFactoryCallback(col.getName()));
                 treeTable.getColumns().add(tableColumn);
                 columnMap.put(totalColumns, tableColumn);
                 totalColumns++;
@@ -232,6 +230,8 @@ public class FeatureTableModule implements MZmineRunnableModule {
         // Add new window with table
         MZmineGUI.addWindow(treeTable, featureTable.getName());
 
+        // Add custom table menu
+        FeatureTableMenu.addCustomTableMenu(treeTable);
     }
 
     public Map<Integer, TreeTableColumn<FeatureTableRow, Object>> getColumnMap() {

@@ -50,6 +50,7 @@ import javafx.concurrent.Task;
 public class FeatureTableImportModule implements MZmineProcessingModule {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Nonnull
     private static final String MODULE_NAME = "Feature table import";
     @Nonnull
