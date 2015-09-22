@@ -255,9 +255,17 @@ public final class MZmineGUI extends Application {
 
         DockPane mainDockPane = mainWindowController.getMainDockPane();
 
+        testDock.setPrefSize(1000, 600);
         testDock.dock(mainDockPane, DockPos.RIGHT);
         testDock.setFloatable(true);
-        //testDock.setFloating(true);
+
+        // Fix for DockFX bug
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                testDock.setFloating(true);
+            }
+          });
 
     }
 
