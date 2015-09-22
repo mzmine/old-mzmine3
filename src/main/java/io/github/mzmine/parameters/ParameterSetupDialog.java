@@ -19,6 +19,7 @@
 
 package io.github.mzmine.parameters;
 
+import java.io.File;
 import java.net.URL;
 
 import org.controlsfx.property.editor.PropertyEditor;
@@ -33,6 +34,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 /**
  * Parameter setup dialog
@@ -48,6 +51,12 @@ public class ParameterSetupDialog extends Alert {
     ParameterSetupDialog(ParameterSet parameters) {
 
         super(AlertType.CONFIRMATION);
+
+        // Set window icon
+        final Image mzMineIcon = new Image(
+                "file:icon" + File.separator + "mzmine-icon.png");
+        Stage stage = (Stage) getDialogPane().getScene().getWindow();
+        stage.getIcons().setAll(mzMineIcon);
 
         setTitle("Parameters");
         setHeaderText("Please set parameter values");
