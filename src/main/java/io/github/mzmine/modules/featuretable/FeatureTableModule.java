@@ -38,6 +38,7 @@ import io.github.mzmine.modules.MZmineModuleCategory;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineProject;
+import io.github.mzmine.util.TableUtils;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -214,6 +215,9 @@ public class FeatureTableModule implements MZmineRunnableModule {
             }
         }
 
+        // Add right padding on last column to fix issue with scroll bar
+        tableColumn.setStyle("-fx-padding: 0 20 0 0;");
+
         // Table preferences
         treeTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         treeTable.getSelectionModel().setCellSelectionEnabled(true);
@@ -221,6 +225,9 @@ public class FeatureTableModule implements MZmineRunnableModule {
 
         // Add column selection button
         treeTable.setTableMenuButtonVisible(true);
+
+        // Enable copy to clipboard
+        TableUtils.addCopyHandler(treeTable, columnMap);
 
         // Add new window with table
         MZmineGUI.addWindow(treeTable, featureTable.getName());

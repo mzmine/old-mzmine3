@@ -44,6 +44,7 @@ public class MzRenderer implements
                             .getMZFormat();
                     Double doubleValue = Double.parseDouble(object.toString());
                     setText(formatter.format(doubleValue));
+                    setStyle("-fx-alignment: CENTER;");
                 }
             }
         };

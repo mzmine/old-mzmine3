@@ -21,13 +21,14 @@ package io.github.mzmine.util;
 
 import java.util.Map;
 
+import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
-import javafx.scene.control.TableView;
+import javafx.scene.control.TreeTableColumn;
+import javafx.scene.control.TreeTablePosition;
+import javafx.scene.control.TreeTableView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
@@ -42,8 +43,8 @@ public class TableUtils {
      * 
      * @param table
      */
-    public static void addCopyHandler(TableView<?> table,
-            Map<Integer, TableColumn<Map, Object>> columnMap) {
+    public static void addCopyHandler(TreeTableView<?> table,
+            Map<Integer, TreeTableColumn<FeatureTableRow, Object>> columnMap) {
         table.setOnKeyPressed(new KeyEventHandler(columnMap));
     }
 
@@ -54,17 +55,19 @@ public class TableUtils {
         KeyCodeCombination keyCodeCompination = new KeyCodeCombination(
                 KeyCode.C, KeyCombination.CONTROL_ANY);
 
-        Map<Integer, TableColumn<Map, Object>> columnMap;
+        Map<Integer, TreeTableColumn<FeatureTableRow, Object>> columnMap;
 
-        KeyEventHandler(Map<Integer, TableColumn<Map, Object>> columnMap) {
+        KeyEventHandler(
+                Map<Integer, TreeTableColumn<FeatureTableRow, Object>> columnMap) {
             this.columnMap = columnMap;
         }
 
         public void handle(final KeyEvent keyEvent) {
             if (keyCodeCompination.match(keyEvent)) {
-                if (keyEvent.getSource() instanceof TableView) {
+                if (keyEvent.getSource() instanceof TreeTableView) {
                     // Copy to clipboard
-                    copySelectionToClipboard((TableView<?>) keyEvent.getSource());
+                    copySelectionToClipboard(
+                            (TreeTableView<?>) keyEvent.getSource());
 
                     // Event is handled, consume it
                     keyEvent.consume();
@@ -74,25 +77,27 @@ public class TableUtils {
 
         /**
          * Get table selection and copy it to the clipboard.
+         * @param <S>
          * 
          * @param table
          */
-        public void copySelectionToClipboard(TableView<?> table) {
+        public void copySelectionToClipboard(TreeTableView table) {
             StringBuilder clipboardString = new StringBuilder();
 
-            ObservableList<TablePosition> positionList = table
-                    .getSelectionModel().getSelectedCells();
+            // ObservableList<TreeTablePosition> positionList =
+            // table.getSelectionModel().getSelectedCells();
+            ObservableList<TreeTablePosition<?,?>> positionList = table.getSelectionModel().getSelectedCells();
             int prevRow = -1;
 
             // Add sample headers
-            for (TablePosition position : positionList) {
+            for (TreeTablePosition position : positionList) {
                 int rowNr = position.getRow();
                 int columnNr = position.getColumn();
 
                 // Get the column from the map to avoid trouble with sample
                 // headers
-                TableColumn column = columnMap.get(columnNr);
-              
+                TreeTableColumn column = columnMap.get(columnNr);
+
                 if (prevRow == rowNr || prevRow == -1) {
                     String columnTitle;
                     if (column.getParentColumn() != null) {
@@ -112,13 +117,13 @@ public class TableUtils {
             clipboardString.append('\n');
 
             // Add column headers
-            for (TablePosition position : positionList) {
+            for (TreeTablePosition position : positionList) {
                 int rowNr = position.getRow();
                 int columnNr = position.getColumn();
 
                 // Get the column from the map to avoid trouble with sample
                 // headers
-                TableColumn column = columnMap.get(columnNr);
+                TreeTableColumn column = columnMap.get(columnNr);
 
                 if (prevRow == rowNr || prevRow == -1) {
                     String columnTitle = column.getText();
@@ -133,14 +138,14 @@ public class TableUtils {
             clipboardString.append('\n');
 
             // Add data
-            for (TablePosition position : positionList) {
+            for (TreeTablePosition position : positionList) {
 
                 int rowNr = position.getRow();
                 int columnNr = position.getColumn();
 
                 // Get the column from the map to avoid trouble with sample
                 // headers
-                TableColumn column = columnMap.get(columnNr);
+                TreeTableColumn column = columnMap.get(columnNr);
 
                 String text = null;
                 Object object = (Object) column.getCellData(rowNr);
