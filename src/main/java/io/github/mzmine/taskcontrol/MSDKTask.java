@@ -21,12 +21,18 @@ package io.github.mzmine.taskcontrol;
 
 import javax.annotation.Nullable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.github.msdk.MSDKMethod;
+import io.github.mzmine.gui.MZmineGUI;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 
 public class MSDKTask extends Task<Object> {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private MSDKMethod<?> method;
     private String title, message;
@@ -62,7 +68,18 @@ public class MSDKTask extends Task<Object> {
 
     @Override
     protected Object call() throws Exception {
-        return method.execute();
+
+        Object result = null;
+        try {
+            result = method.execute();
+
+        } catch (Throwable e) {
+            String msg = "Error executing task " + title + e.getMessage();
+            logger.error(msg, e);
+            MZmineGUI.displayMessage(msg);
+        }
+
+        return result;
     }
 
 }

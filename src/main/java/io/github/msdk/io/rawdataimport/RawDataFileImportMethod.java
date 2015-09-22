@@ -63,7 +63,7 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
         FileTypeDetectionMethod typeDetector = new FileTypeDetectionMethod(
                 sourceFile);
         FileType fileType = typeDetector.execute();
-
+        
         if (fileType == null)
             throw new MSDKException("Unknown file type of file " + sourceFile);
 
@@ -84,6 +84,7 @@ public class RawDataFileImportMethod implements MSDKMethod<RawDataFile> {
             parser = new NetCDFFileImportMethod(sourceFile, dataStore);
             break;
         default:
+            System.out.println("excep");
             throw new MSDKException("Unsupported file type (" + fileType
                     + ") of file " + sourceFile);
         }

@@ -49,6 +49,7 @@ import javafx.concurrent.Task;
 public class RawDataImportModule implements MZmineProcessingModule {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    
     private static final String MODULE_NAME = "Raw data import";
     private static final String MODULE_DESCRIPTION = "This module imports raw data into the project.";
 
@@ -81,7 +82,6 @@ public class RawDataImportModule implements MZmineProcessingModule {
             logger.warn("Raw data import module started with no filenames");
             return;
         }
-
         for (File fileName : fileNames) {
 
             if ((!fileName.exists()) || (!fileName.canRead())) {
@@ -90,43 +90,46 @@ public class RawDataImportModule implements MZmineProcessingModule {
                 continue;
             }
 
-            DataPointStore dataStore;
+            DataPointStore dataStore = null;
             MSDKTask newTask = null;
+
             try {
                 dataStore = DataPointStoreFactory.getTmpFileDataPointStore();
-                RawDataFileImportMethod method = new RawDataFileImportMethod(
-                        fileName, dataStore);
-                newTask = new MSDKTask("Importing raw data file",
-                        fileName.getName(), method);
-                newTask.setOnSucceeded(e -> {
-                    RawDataFile rawDataFile = method.getResult();
-                    if (rawDataFile == null)
-                        return;
-
-                    // Remove common prefix
-                    if (!Strings.isNullOrEmpty(removePrefix)) {
-                        String name = rawDataFile.getName();
-                        if (name.startsWith(removePrefix))
-                            name = name.substring(removePrefix.length());
-                        rawDataFile.setName(name);
-                    }
-
-                    // Remove common suffix
-                    if (!Strings.isNullOrEmpty(removeSuffix)) {
-                        String name = rawDataFile.getName();
-                        if (name.endsWith(removeSuffix))
-                            name = name.substring(0,
-                                    name.length() - removeSuffix.length());
-                        rawDataFile.setName(name);
-                    }
-
-                    project.addFile(rawDataFile);
-                });
-                tasks.add(newTask);
-
             } catch (MSDKException e) {
                 e.printStackTrace();
+                logger.error("Error creating a data point store", e);
             }
+
+            RawDataFileImportMethod method = new RawDataFileImportMethod(
+                    fileName, dataStore);
+            newTask = new MSDKTask("Importing raw data file",
+                    fileName.getName(), method);
+            newTask.setOnSucceeded(e -> {
+                RawDataFile rawDataFile = method.getResult();
+                if (rawDataFile == null)
+                    return;
+
+                // Remove common prefix
+                if (!Strings.isNullOrEmpty(removePrefix)) {
+                    String name = rawDataFile.getName();
+                    if (name.startsWith(removePrefix))
+                        name = name.substring(removePrefix.length());
+                    rawDataFile.setName(name);
+                }
+
+                // Remove common suffix
+                if (!Strings.isNullOrEmpty(removeSuffix)) {
+                    String name = rawDataFile.getName();
+                    if (name.endsWith(removeSuffix))
+                        name = name.substring(0,
+                                name.length() - removeSuffix.length());
+                    rawDataFile.setName(name);
+                }
+
+                project.addFile(rawDataFile);
+            });
+            tasks.add(newTask);
+
         }
 
     }

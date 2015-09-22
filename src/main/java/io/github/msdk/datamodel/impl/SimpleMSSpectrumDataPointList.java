@@ -23,6 +23,8 @@ import com.google.common.collect.Range;
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.util.DataPointSorter;
+import io.github.msdk.datamodel.util.DataPointSorter.SortingDirection;
+import io.github.msdk.datamodel.util.DataPointSorter.SortingProperty;
 
 /**
  * Basic implementation of DataPointList.
@@ -180,8 +182,10 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
         this.size = newSize;
 
         // Ensure the arrays are sorted in m/z order
-        if (newSize > 0)
-            DataPointSorter.sortDataPoints(mzBuffer, intensityBuffer, newSize);
+        if (newSize > 0) {
+            DataPointSorter.sortDataPoints(mzBuffer, intensityBuffer, newSize,
+                    SortingProperty.MZ, SortingDirection.ASCENDING);
+        }
 
     }
 
