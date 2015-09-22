@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
+import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
@@ -77,4 +78,15 @@ public class RawDataFileUtil {
         return new ArrayList<MsScan>();
     }
 
+    @Nonnull
+    static public Integer getNextChromatogramNumber(RawDataFile rawDataFile){
+        int chromatogramNumber = 1;
+        List<Chromatogram> chromatograms = rawDataFile.getChromatograms();
+        for (Chromatogram chromatogram : chromatograms) {
+            int currentChromatogramNumber = chromatogram.getChromatogramNumber();
+            if (currentChromatogramNumber > chromatogramNumber)
+                chromatogramNumber = currentChromatogramNumber;
+        }
+        return chromatogramNumber;
+    }
 }

@@ -135,7 +135,7 @@ class SimpleIonAnnotation implements IonAnnotation {
 
         final String thisDescription = this.description;
         final String thisAnnotationId = this.annotationId;
-        
+
         // 1. Compare description
         if (thisDescription != null && i.getDescription() != null) {
             returnValue = thisDescription.compareTo(i.getDescription());
