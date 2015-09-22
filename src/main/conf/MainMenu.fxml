@@ -107,7 +107,8 @@
 						<Menu text="MS">
 							<items>
 								<MenuItem text="Chromatoram Builder" />
-								<MenuItem text="Targeted Feature Detection" />
+								<ModuleMenuItem text="Targeted Feature Detection"
+							moduleClass="io.github.mzmine.modules.featuredetection.targeteddetection.TargetedDetectionModule" />
 								<MenuItem text="GridMass - 2D Feature Detection" />
 							</items>
 						</Menu>

@@ -135,11 +135,6 @@ public class RawDataImportModule implements MZmineProcessingModule {
     }
 
     @Override
-    public @Nonnull MZmineModuleCategory getModuleCategory() {
-        return MZmineModuleCategory.RAWDATA;
-    }
-
-    @Override
     public @Nonnull Class<? extends ParameterSet> getParameterSetClass() {
         return RawDataImportParameters.class;
     }

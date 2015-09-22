@@ -5,5 +5,6 @@
 	<module>io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotModule</module>
 	<module>io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotModule</module>
 	<module>io.github.mzmine.modules.featuretable.FeatureTableModule</module>
+	<module>io.github.mzmine.modules.featuredetection.targeteddetection.TargetedDetectionModule</module>
 	FeatureTableModule
 </modules>
