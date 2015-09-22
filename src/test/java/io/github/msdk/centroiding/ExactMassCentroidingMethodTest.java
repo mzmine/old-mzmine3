@@ -63,13 +63,15 @@ public class ExactMassCentroidingMethodTest {
         centroidedScan.getDataPoints(dataPoints);
         double mzBuffer[] = dataPoints.getMzBuffer();
         float intensityBuffer[] = dataPoints.getIntensityBuffer();
+        
+        
 
         Assert.assertTrue(dataPoints.getSize() > 50);
 
         Integer basePeak = MsSpectrumUtil.getBasePeakIndex(dataPoints);
 
         Assert.assertEquals(3.537E7f, intensityBuffer[basePeak], 1E5);
-        Assert.assertEquals(281.2477426, mzBuffer[basePeak], 0.000001);
+        Assert.assertEquals(281.24774060, mzBuffer[basePeak], 0.0000001);
 
         rawFile.dispose();
 

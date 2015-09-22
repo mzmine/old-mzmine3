@@ -47,8 +47,6 @@ import io.github.msdk.io.spectrumtypedetection.SpectrumTypeDetectionMethod;
 import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
-import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
-import uk.ac.ebi.pride.tools.mzxml_parser.MzXMLParsingException;
 
 /**
  * This class reads mzML data format using the jmzml library.
@@ -69,11 +67,6 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
         this.sourceFile = sourceFile;
     }
 
-    /**
-     * @throws JMzReaderException
-     * @throws MzXMLParsingException
-     * @throws MSDKException
-     */
     @Override
     public RawDataFile execute() throws MSDKException {
 

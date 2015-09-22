@@ -56,7 +56,7 @@ public class LocalMaximaCentroidingMethodTest {
         MsScan lastScan = scans.get(scans.size() - 1);
 
         final float noiseLevel = 1E3f;
-        ExactMassCentroidingMethod centroider = new ExactMassCentroidingMethod(
+        LocalMaximaCentroidingMethod centroider = new LocalMaximaCentroidingMethod(
                 lastScan, dataStore, noiseLevel);
         final MsScan centroidedScan = centroider.execute();
 
@@ -69,7 +69,7 @@ public class LocalMaximaCentroidingMethodTest {
         Integer basePeak = MsSpectrumUtil.getBasePeakIndex(dataPoints);
 
         Assert.assertEquals(3.537E7f, intensityBuffer[basePeak], 1E5);
-        Assert.assertEquals(281.2476196, mzBuffer[basePeak], 0.000001);
+        Assert.assertEquals(281.24761852, mzBuffer[basePeak], 0.000001);
 
         rawFile.dispose();
 
