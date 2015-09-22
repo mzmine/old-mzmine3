@@ -23,6 +23,7 @@ import org.openscience.cdk.interfaces.IMolecularFormula;
 
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonType;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 /**
  * Simple IonAnnotation implementation;
@@ -37,6 +38,7 @@ class SimpleIonAnnotation implements IonAnnotation {
     private @Nullable String identificationMethod;
     private @Nullable String annotationId;
     private @Nullable URL accessionURL;
+    private @Nullable ChromatographyInfo chromatographyInfo;
 
     @Override
     @Nullable
@@ -160,5 +162,17 @@ class SimpleIonAnnotation implements IonAnnotation {
         }
 
         return returnValue;
+    }
+
+    @Override
+    @Nullable
+    public ChromatographyInfo getChromatographyInfo() {
+        return chromatographyInfo;
+    }
+
+    @Override
+    public void setChromatographyInfo(
+            @Nullable ChromatographyInfo chromatographyInfo) {
+        this.chromatographyInfo = chromatographyInfo;
     }
 }

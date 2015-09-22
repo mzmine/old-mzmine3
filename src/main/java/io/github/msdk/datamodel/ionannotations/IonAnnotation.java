@@ -21,11 +21,13 @@ import javax.annotation.Nullable;
 import org.openscience.cdk.interfaces.IAtomContainer;
 import org.openscience.cdk.interfaces.IMolecularFormula;
 
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
+
 /**
  * Annotation of a detected feature with a chemical structure, formula, or
  * textual description.
  */
-public interface IonAnnotation extends Comparable<IonAnnotation>{
+public interface IonAnnotation extends Comparable<IonAnnotation> {
 
     /**
      * @return Chemical structure of this annotation.
@@ -69,11 +71,11 @@ public interface IonAnnotation extends Comparable<IonAnnotation>{
     @Nullable
     Double getExpectedMz();
 
-	/**
-	 * Sets the expected m/z value to this annotation. The expected m/z value
-	 * can be the calculated value based on the chemical formula or a value
-	 * from a database.
-	 */
+    /**
+     * Sets the expected m/z value to this annotation. The expected m/z value
+     * can be the calculated value based on the chemical formula or a value from
+     * a database.
+     */
     void setExpectedMz(@Nullable Double expectedMz);
 
     /**
@@ -120,5 +122,16 @@ public interface IonAnnotation extends Comparable<IonAnnotation>{
      * Sets a new accession URL to this annotation.
      */
     void setAccessionURL(@Nullable URL dbURL);
+
+    /**
+     * @return Chromatography info.
+     */
+    @Nullable
+    ChromatographyInfo getChromatographyInfo();
+
+    /**
+     * Sets a new chromatography info to this annotation.
+     */
+    void setChromatographyInfo(@Nullable ChromatographyInfo chromatographyInfo);
 
 }

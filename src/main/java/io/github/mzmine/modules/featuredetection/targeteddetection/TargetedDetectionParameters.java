@@ -40,7 +40,7 @@ public class TargetedDetectionParameters extends ParameterSet {
     @SuppressWarnings("null")
     public static final TextAreaParameter features = new TextAreaParameter(
             "Features",
-            "Features to search for in the raw data files. Any line not starting with a number will be ignored.\nExpected input is: m/z, retention time, name",
+            "Features to search for in the raw data file(s). Any line not starting with a number will be ignored.\nExpected input is: m/z, retention time, name",
             "Features", ParameterValidator.createNonEmptyValidator(),
             Arrays.asList(filters));
 
@@ -51,7 +51,7 @@ public class TargetedDetectionParameters extends ParameterSet {
 
     public static final StringParameter nameSuffix = new StringParameter(
             "Name suffix",
-            "Suffix to be added to the raw data files when creating the feature table",
+            "Suffix to be added to the raw data file(s) when creating the feature table(s)",
             "Suffix", "targetedDetection");
 
     /**
