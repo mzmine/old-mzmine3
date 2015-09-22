@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 import org.controlsfx.control.PropertySheet;
 
 import io.github.mzmine.parameters.ParameterEditor;
+import io.github.mzmine.parameters.parametertypes.SpinnerAutoCommit;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -51,9 +52,9 @@ public class NumOfThreadsEditor extends HBox
         setSpacing(10);
         setAlignment(Pos.CENTER_LEFT);
 
-        int maxThreads = Runtime.getRuntime().availableProcessors();
-        numField = new Spinner<>(1, maxThreads, 4);
+        numField = new SpinnerAutoCommit<>(1, 999999, 4);
         numField.setPrefWidth(80.0);
+        numField.setEditable(true);
 
         optionCombo = new ComboBox<>(options);
         optionCombo.setOnAction(e -> {

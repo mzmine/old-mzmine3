@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 import org.controlsfx.control.PropertySheet;
 
 import io.github.mzmine.parameters.ParameterEditor;
+import io.github.mzmine.parameters.parametertypes.SpinnerAutoCommit;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
@@ -54,8 +55,10 @@ public class NumberFormatEditor extends HBox
 
         getChildren().add(new Text("Decimals"));
 
-        decimalsSpinner = new Spinner<>(1, 20, 3);
+        decimalsSpinner = new SpinnerAutoCommit<>(1, 20, 3);
         decimalsSpinner.setPrefWidth(80.0);
+        decimalsSpinner.setEditable(true);
+
         getChildren().add(decimalsSpinner);
 
         if (numFormatParameter.isShowExponentEnabled()) {
