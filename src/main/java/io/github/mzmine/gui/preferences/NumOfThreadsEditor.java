@@ -51,9 +51,9 @@ public class NumOfThreadsEditor extends HBox
         setSpacing(10);
         setAlignment(Pos.CENTER_LEFT);
 
-        numField = new Spinner<>(1, 50, 4);
+        int maxThreads = Runtime.getRuntime().availableProcessors();
+        numField = new Spinner<>(1, maxThreads, 4);
         numField.setPrefWidth(80.0);
-        numField.setVisible(false);
 
         optionCombo = new ComboBox<>(options);
         optionCombo.setOnAction(e -> {
@@ -82,8 +82,10 @@ public class NumOfThreadsEditor extends HBox
     @Override
     public void setValue(NumOfThreadsValue value) {
         if (value != null) {
-            if (value.isAutomatic())
+            if (value.isAutomatic()) {
                 optionCombo.getSelectionModel().select(0);
+                numField.setVisible(false);
+            }
             else
                 optionCombo.getSelectionModel().select(1);
             numField.getValueFactory().setValue(value.getManualValue());

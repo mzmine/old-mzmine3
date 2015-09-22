@@ -130,8 +130,12 @@ public class MZminePreferences extends ParameterSet {
                 .getValue();
         if (numOfThreadsValue != null) {
             int threadPoolSize = numOfThreadsValue.getNumberOfThreads();
-            logger.debug("Setting the thread pool size to " + threadPoolSize);
-            MZmineCore.getTaskExecutor().setCorePoolSize(threadPoolSize);
+            int currentThreadPoolSize = MZmineCore.getTaskExecutor().getCorePoolSize();
+            if (threadPoolSize != currentThreadPoolSize) {
+                logger.debug(
+                        "Setting the thread pool size to " + threadPoolSize);
+                MZmineCore.getTaskExecutor().setCorePoolSize(threadPoolSize);
+            }
         }
 
     }

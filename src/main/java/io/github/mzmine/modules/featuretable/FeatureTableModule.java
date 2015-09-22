@@ -36,7 +36,6 @@ import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.modules.MZmineModuleCategory;
 import io.github.mzmine.modules.MZmineRunnableModule;
-import io.github.mzmine.modules.featuretable.renderers.DoubleRenderer;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineProject;
 import javafx.beans.property.SimpleObjectProperty;
@@ -137,13 +136,13 @@ public class FeatureTableModule implements MZmineRunnableModule {
                         });
 
                 // Set column renderer
-                Class renderClass = ColumnRenderers.getRenderClass(col.getName());
+                Class renderClass = ColumnRenderers
+                        .getRenderClass(col.getName());
                 Callback<TreeTableColumn<FeatureTableRow, Object>, TreeTableCell<FeatureTableRow, Object>> rendeder = null;
                 try {
                     rendeder = (Callback<TreeTableColumn<FeatureTableRow, Object>, TreeTableCell<FeatureTableRow, Object>>) renderClass
                             .newInstance();
-                } catch (InstantiationException
-                        | IllegalAccessException e) {
+                } catch (InstantiationException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
                 tableColumn.setCellFactory(rendeder);
@@ -197,13 +196,13 @@ public class FeatureTableModule implements MZmineRunnableModule {
                         });
 
                 // Set column renderer
-                Class renderClass = ColumnRenderers.getRenderClass(col.getName());
+                Class renderClass = ColumnRenderers
+                        .getRenderClass(col.getName());
                 Callback<TreeTableColumn<FeatureTableRow, Object>, TreeTableCell<FeatureTableRow, Object>> rendeder = null;
                 try {
                     rendeder = (Callback<TreeTableColumn<FeatureTableRow, Object>, TreeTableCell<FeatureTableRow, Object>>) renderClass
                             .newInstance();
-                } catch (InstantiationException
-                        | IllegalAccessException e) {
+                } catch (InstantiationException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
                 tableColumn.setCellFactory(rendeder);
