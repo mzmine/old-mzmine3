@@ -23,7 +23,7 @@
 			<directoryMode>0755</directoryMode>
 			<filtered>false</filtered>
 		</fileSet>
-				<fileSet>
+		<fileSet>
 			<directory>src/main/conf</directory>
 			<outputDirectory>conf</outputDirectory>
 			<excludes>
@@ -34,9 +34,9 @@
 		</fileSet>
 		<fileSet>
 			<directory>src/main/icon</directory>
-			<outputDirectory>/lib</outputDirectory>
+			<outputDirectory>icon</outputDirectory>
 			<fileMode>0755</fileMode>
-			<directoryMode>0755</directoryMode>
+			<directoryMode>0777</directoryMode>
 			<filtered>false</filtered>
 		</fileSet>
 		<fileSet>
