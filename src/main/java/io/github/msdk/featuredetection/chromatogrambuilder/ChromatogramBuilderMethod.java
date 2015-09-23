@@ -14,6 +14,7 @@
 
 package io.github.msdk.featuredetection.chromatogrambuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -21,15 +22,15 @@ import javax.annotation.Nullable;
 
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
+import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.util.MZTolerance;
 
-public class ChromatogramBuilderMethod implements MSDKMethod<FeatureTable> {
+public class ChromatogramBuilderMethod
+        implements MSDKMethod<List<Chromatogram>> {
 
     private final @Nonnull DataPointStore dataPointStore;
     private final @Nonnull RawDataFile inputFile;
@@ -39,7 +40,7 @@ public class ChromatogramBuilderMethod implements MSDKMethod<FeatureTable> {
 
     private int processedScans = 0, totalScans = 0;
     private boolean canceled = false;
-    private FeatureTable resultTable;
+    private List<Chromatogram> result;
 
     public ChromatogramBuilderMethod(@Nonnull DataPointStore dataPointStore,
             @Nonnull RawDataFile inputFile, @Nonnull Double minimumTimeSpan,
@@ -62,7 +63,7 @@ public class ChromatogramBuilderMethod implements MSDKMethod<FeatureTable> {
 
     @Override
     @Nullable
-    public FeatureTable execute() throws MSDKException {
+    public List<Chromatogram> execute() throws MSDKException {
 
         // Check if we have any scans
         totalScans = inputScans.size();
@@ -91,9 +92,6 @@ public class ChromatogramBuilderMethod implements MSDKMethod<FeatureTable> {
         }
 
         // Create a new feature table
-        final String featureTableName = inputFile.getName() + " chromatograms";
-        resultTable = MSDKObjectBuilder.getFeatureTable(featureTableName,
-                dataPointStore);
 
         HighestDataPointConnector massConnector = new HighestDataPointConnector(
                 minimumTimeSpan, minimumHeight, mzTolerance);
@@ -107,9 +105,10 @@ public class ChromatogramBuilderMethod implements MSDKMethod<FeatureTable> {
             processedScans++;
         }
 
-        massConnector.finishChromatograms(resultTable, inputFile);
+        result = new ArrayList<>();
+        massConnector.finishChromatograms(inputFile, dataPointStore, result);
 
-        return resultTable;
+        return result;
     }
 
     @Override
@@ -123,8 +122,8 @@ public class ChromatogramBuilderMethod implements MSDKMethod<FeatureTable> {
 
     @Override
     @Nullable
-    public FeatureTable getResult() {
-        return resultTable;
+    public List<Chromatogram> getResult() {
+        return result;
     }
 
     @Override

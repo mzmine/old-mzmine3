@@ -18,13 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.msdk.MSDKRuntimeException;
+import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
+import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 
 class BuildingChromatogram {
 
     // All data points of this chromatogram
-    private final List<ChromatogramDataPoint> dataPoints = new ArrayList<>();
+    private final ChromatogramDataPointList dataPoints = MSDKObjectBuilder.getChromatogramDataPointList();
 
     // A set of scan numbers of a segment which is currently being connected
     private final List<ChromatogramDataPoint> buildingSegment = new ArrayList<>();
@@ -85,7 +87,7 @@ class BuildingChromatogram {
         return maxIntensity;
     }
 
-    List<ChromatogramDataPoint> getDataPoints() {
+    ChromatogramDataPointList getDataPoints() {
         return dataPoints;
     }
 

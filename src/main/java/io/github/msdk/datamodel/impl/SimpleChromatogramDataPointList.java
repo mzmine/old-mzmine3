@@ -328,4 +328,27 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
 
     }
 
+    @Override
+    public void add(ChromatographyInfo rt, float intensity) {
+
+        // Make sure we have enough space to add a new data point
+        if (size == rtBuffer.length) {
+            allocate(size * 2);
+        }
+
+        // Add the data
+        rtBuffer[size] = rt;
+        intensityBuffer[size] = intensity;
+
+        // If the RT value is larger than the last one, let's simply add it to
+        // the end. Otherwise, we have to call the setSize() method that will
+        // sort the lists in RT order
+        if ((size == 0) || (rtBuffer[size].compareTo(rtBuffer[size - 1]) > 0)) {
+            size++;
+        } else {
+            setSize(size + 1);
+        }
+
+    }
+
 }

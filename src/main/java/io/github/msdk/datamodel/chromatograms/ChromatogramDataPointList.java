@@ -113,6 +113,20 @@ public interface ChromatogramDataPointList {
             @Nonnull float[] intensityBuffer, int newSize);
 
     /**
+     * Adds a new data point to this list. If the RT value is larger than all
+     * existing existing RT values in this list, it is simply added to the end.
+     * If that is not the case, the list is reordered to maintain the correct
+     * order of data points by RT. If the capacity of the list is full, its
+     * capacity is doubled.
+     * 
+     * @param rt
+     *            new RT value
+     * @param intensity
+     *            new intensity value
+     */
+    void add(ChromatographyInfo rt, float intensity);
+
+    /**
      * Copies the contents of another data point list into this list. The
      * capacity of this list might stay the same or it might change, depending
      * on needs.

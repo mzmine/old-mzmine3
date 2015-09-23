@@ -14,47 +14,18 @@
 
 package io.github.msdk.featuredetection.chromatogrambuilder;
 
-import javax.annotation.Nonnull;
-
-import io.github.msdk.datamodel.featuretables.ColumnName;
-import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
-import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.featuretables.Sample;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 
 class BuildingChromatogramFinalizer {
 
-    private FeatureTableColumn<Double> mzColumn;
-    private FeatureTableColumn<ChromatographyInfo> rtColumn;
-    private FeatureTableColumn<Double> heightColumn;
-    private FeatureTableColumn<Double> areaColumn;
-
-    void convertChromatogramToTableRow(BuildingChromatogram chromatogram,
-            FeatureTableRow row) {
+    static void convertChromatogramData(BuildingChromatogram from,
+            Chromatogram to) {
 
         
         
-    }
-
-    void addColumns(@Nonnull FeatureTable newFeatureTable,
-            @Nonnull Sample sample) {
-
-        mzColumn = MSDKObjectBuilder.getFeatureTableColumn(ColumnName.MZ,
-                sample);
-        rtColumn = MSDKObjectBuilder.getFeatureTableColumn(ColumnName.RT,
-                sample);
-        heightColumn = MSDKObjectBuilder
-                .getFeatureTableColumn(ColumnName.HEIGHT, sample);
-        areaColumn = MSDKObjectBuilder.getFeatureTableColumn(ColumnName.AREA,
-                sample);
-
-        newFeatureTable.addColumn(mzColumn);
-        newFeatureTable.addColumn(rtColumn);
-        newFeatureTable.addColumn(heightColumn);
-        newFeatureTable.addColumn(areaColumn);
-
     }
 
 }

@@ -82,8 +82,8 @@ public interface Chromatogram extends Cloneable {
     void setChromatogramNumber(@Nonnull Integer chromatogramNumber);
 
     /**
-     * Returns the type of the chromatogram. If unknown, ChromatogramType.UNKNOWN is
-     * returned.
+     * Returns the type of the chromatogram. If unknown,
+     * ChromatogramType.UNKNOWN is returned.
      * 
      * @return Chromatogram type
      */
@@ -125,6 +125,18 @@ public interface Chromatogram extends Cloneable {
      *            new data points
      */
     void setDataPoints(@Nonnull ChromatogramDataPointList newDataPoints);
+
+    /**
+     * Returns the m/z value of this chromatogram, or null if no m/z value is
+     * set for the chromatogram.
+     */
+    @Nullable
+    Double getMz();
+
+    /**
+     * Sets the m/z value of the chromatogram
+     */
+    void setMz(@Nullable Double newMz);
 
     /**
      * Returns a list of isolations performed for this chromatogram. These

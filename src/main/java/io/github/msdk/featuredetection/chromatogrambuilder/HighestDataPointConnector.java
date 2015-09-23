@@ -16,18 +16,21 @@ package io.github.msdk.featuredetection.chromatogrambuilder;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.FeatureTableRow;
+import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.chromatograms.ChromatogramType;
+import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.datamodel.util.DataPointSorter;
 import io.github.msdk.datamodel.util.DataPointSorter.SortingDirection;
 import io.github.msdk.datamodel.util.DataPointSorter.SortingProperty;
@@ -42,8 +45,6 @@ class HighestDataPointConnector {
     private final Set<BuildingChromatogram> buildingChromatograms,
             connectedChromatograms;
 
-    
-    
     HighestDataPointConnector(double minimumTimeSpan, double minimumHeight,
             MZTolerance mzTolerance) {
 
@@ -59,8 +60,6 @@ class HighestDataPointConnector {
         // order every time the method is invoked.
         buildingChromatograms = new LinkedHashSet<BuildingChromatogram>();
         connectedChromatograms = new LinkedHashSet<BuildingChromatogram>();
-        
-        
 
     }
 
@@ -157,16 +156,14 @@ class HighestDataPointConnector {
 
     }
 
-    void finishChromatograms(@Nonnull FeatureTable resultTable,@Nonnull RawDataFile inputFile) {
+    void finishChromatograms(@Nonnull RawDataFile inputFile,
+            @Nonnull DataPointStore dataPointStore,
+            List<Chromatogram> finalList) {
 
-        BuildingChromatogramFinalizer finalizer= new BuildingChromatogramFinalizer();
-        Sample sample = MSDKObjectBuilder
-                .getSimpleSample("Sample");
-        finalizer.addColumns(resultTable, sample);
-        
         // Iterate through current chromatograms and remove those which do not
         // contain any committed segment or long-enough building segment
-        Iterator<BuildingChromatogram> chromIterator = buildingChromatograms.iterator();
+        Iterator<BuildingChromatogram> chromIterator = buildingChromatograms
+                .iterator();
         while (chromIterator.hasNext()) {
 
             BuildingChromatogram chromatogram = chromIterator.next();
@@ -189,14 +186,20 @@ class HighestDataPointConnector {
         }
 
         // All remaining chromatograms are good, so we can add them to the table
-        int rowId = 1;
-        for (BuildingChromatogram chromatogram : buildingChromatograms) {
-            FeatureTableRow newRow = MSDKObjectBuilder
-                    .getFeatureTableRow(resultTable, rowId);
-            
-            BuildingChromatogramFinalizer.convertChromatogramToTableRow(chromatogram, newRow);
-            
-            rowId++;
+        int chromId = 1;
+        for (BuildingChromatogram buildingChromatogram : buildingChromatograms) {
+
+            // Make a new MSDK Chromatogram
+            Chromatogram newChromatogram = MSDKObjectBuilder.getChromatogram(
+                    dataPointStore, chromId, ChromatogramType.XIC,
+                    SeparationType.UNKNOWN);
+
+            // Convert the data from our BuildingChromatogram to the MSDK
+            // Chromatogram
+            BuildingChromatogramFinalizer.convertChromatogramData(
+                    buildingChromatogram, newChromatogram);
+
+            chromId++;
 
         }
 

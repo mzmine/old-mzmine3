@@ -40,6 +40,7 @@ class SimpleChromatogram implements Chromatogram {
     private @Nullable RawDataFile dataFile;
     private @Nonnull Integer chromatogramNumber;
     private @Nonnull ChromatogramType chromatogramType;
+    private @Nullable Double mz;
     private @Nonnull SeparationType separationType;
     private Object dataStoreId = null;
 
@@ -147,6 +148,17 @@ class SimpleChromatogram implements Chromatogram {
         newChromatogram.getIsolations().addAll(getIsolations());
         newChromatogram.setDataPoints(dataPointList);
         return newChromatogram;
+    }
+
+    @Override
+    @Nullable
+    public Double getMz() {
+        return mz;
+    }
+
+    @Override
+    public void setMz(@Nullable Double newMz) {
+        this.mz = newMz;
     }
 
 }
