@@ -198,13 +198,16 @@ public class MzMLFileImportMethod implements MSDKMethod<RawDataFile> {
                 ChromatogramType chromatogramType = converter
                         .extractChromatogramType(chromatogram);
 
+                // Get the chromatogram m/z value
+                Double mz = converter.extractMz(chromatogram);
+
                 // Get the in-source fragmentation
                 List<IsolationInfo> isolations = converter
                         .extractIsolations(chromatogram);
 
                 // Create a new Chromatogram instance
                 MzMLChromatogram chrom = new MzMLChromatogram(newRawFile,
-                        chromatogramId, chromatogramNumber, separationType,
+                        chromatogramId, chromatogramNumber, separationType, mz,
                         chromatogramType, isolations);
 
                 // Add the chromatogram to the final raw data file

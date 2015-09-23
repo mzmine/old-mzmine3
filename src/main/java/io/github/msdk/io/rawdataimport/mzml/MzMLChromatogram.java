@@ -39,19 +39,20 @@ class MzMLChromatogram implements Chromatogram {
     private final @Nonnull String chromatogramId;
     private final @Nonnull Integer chromatogramNumber;
     private final @Nonnull ChromatogramType chromatogramType;
+    private final @Nullable Double mz;
     private final @Nonnull SeparationType separationType;
     private final @Nonnull List<IsolationInfo> isolations;
 
     MzMLChromatogram(@Nonnull MzMLRawDataFile dataFile,
-            @Nonnull String chromatogramId,
-            @Nonnull Integer chromatogramNumber,
-            @Nonnull SeparationType separationType,
+            @Nonnull String chromatogramId, @Nonnull Integer chromatogramNumber,
+            @Nonnull SeparationType separationType, @Nullable Double mz,
             @Nonnull ChromatogramType chromatogramType,
             @Nonnull List<IsolationInfo> isolations) {
         this.dataFile = dataFile;
         this.chromatogramId = chromatogramId;
         this.chromatogramNumber = chromatogramNumber;
         this.separationType = separationType;
+        this.mz = mz;
         this.chromatogramType = chromatogramType;
         this.isolations = isolations;
     }
@@ -75,18 +76,26 @@ class MzMLChromatogram implements Chromatogram {
     }
 
     @Override
-    public void getDataPoints(@Nonnull ChromatogramDataPointList dataPointList) {
+    public void getDataPoints(
+            @Nonnull ChromatogramDataPointList dataPointList) {
         try {
             MzMLUnmarshaller parser = dataFile.getParser();
             if (parser == null) {
                 throw new MSDKRuntimeException(
                         "The raw data file object has been disposed");
             }
-            uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram = parser.getChromatogramById(chromatogramId);
+            uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram = parser
+                    .getChromatogramById(chromatogramId);
             MzMLConverter.extractDataPoints(jmzChromatogram, dataPointList);
         } catch (MzMLUnmarshallerException e) {
             throw (new MSDKRuntimeException(e));
         }
+    }
+
+    @Override
+    @Nullable
+    public Double getMz() {
+        return mz;
     }
 
     @Override
@@ -145,6 +154,11 @@ class MzMLChromatogram implements Chromatogram {
     @Override
     public void setDataPoints(
             @Nonnull ChromatogramDataPointList newDataPoints) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setMz(@Nullable Double newMz) {
         throw new UnsupportedOperationException();
     }
 

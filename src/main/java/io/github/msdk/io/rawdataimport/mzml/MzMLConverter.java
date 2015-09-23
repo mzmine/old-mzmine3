@@ -536,4 +536,9 @@ class MzMLConverter {
         dataPointList.setSize(rtValues.length);
     }
 
+    static @Nullable Double extractMz(
+            uk.ac.ebi.jmzml.model.mzml.Chromatogram jmzChromatogram) {
+        return null;
+    }
+
 }

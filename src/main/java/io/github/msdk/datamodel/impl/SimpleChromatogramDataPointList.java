@@ -329,7 +329,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
     }
 
     @Override
-    public void add(ChromatographyInfo rt, float intensity) {
+    public void add(@Nonnull ChromatographyInfo rt, float intensity) {
 
         // Make sure we have enough space to add a new data point
         if (size == rtBuffer.length) {

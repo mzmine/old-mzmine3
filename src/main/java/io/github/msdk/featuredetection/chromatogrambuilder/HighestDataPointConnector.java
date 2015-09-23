@@ -24,6 +24,7 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
@@ -86,15 +87,13 @@ class HighestDataPointConnector {
 
             for (BuildingChromatogram testChrom : buildingChromatograms) {
 
-                ChromatogramDataPoint testChromLast = testChrom
-                        .getLastDataPoint();
-
                 Range<Double> toleranceRange = mzTolerance
-                        .getToleranceRange(testChromLast.getMz());
+                        .getToleranceRange(testChrom.getLastMz());
+
                 if (toleranceRange.contains(mzBuffer[i])) {
                     if ((bestChromatogram == null)
-                            || (testChromLast.getIntensity() > bestChromatogram
-                                    .getLastDataPoint().getIntensity())) {
+                            || (testChrom.getLastIntensity() > bestChromatogram
+                                    .getLastIntensity())) {
                         bestChromatogram = testChrom;
                     }
                 }
@@ -113,8 +112,8 @@ class HighestDataPointConnector {
             }
 
             // Add this mzPeak to the chromatogram
-            bestChromatogram.addDataPoint(new ChromatogramDataPoint(scan,
-                    mzBuffer[i], intensityBuffer[i]));
+            bestChromatogram.addDataPoint(scan.getChromatographyInfo(),
+                    mzBuffer[i], intensityBuffer[i]);
 
             // Move the chromatogram to the set of connected chromatograms
             connectedChromatograms.add(bestChromatogram);
@@ -196,9 +195,11 @@ class HighestDataPointConnector {
 
             // Convert the data from our BuildingChromatogram to the MSDK
             // Chromatogram
-            BuildingChromatogramFinalizer.convertChromatogramData(
-                    buildingChromatogram, newChromatogram);
+            ChromatogramDataPointList dataPoints = buildingChromatogram
+                    .getDataPoints();
+            newChromatogram.setDataPoints(dataPoints);
 
+            // Increase the ID
             chromId++;
 
         }

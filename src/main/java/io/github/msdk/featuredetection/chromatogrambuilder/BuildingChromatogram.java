@@ -14,22 +14,23 @@
 
 package io.github.msdk.featuredetection.chromatogrambuilder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Vector;
 
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.MsScan;
 
 class BuildingChromatogram {
 
     // All data points of this chromatogram
-    private final ChromatogramDataPointList dataPoints = MSDKObjectBuilder.getChromatogramDataPointList();
+    private final ChromatogramDataPointList dataPoints = MSDKObjectBuilder
+            .getChromatogramDataPointList();
 
-    // A set of scan numbers of a segment which is currently being connected
-    private final List<ChromatogramDataPoint> buildingSegment = new ArrayList<>();
+    private final Vector<Double> mzValues = new Vector<>();
+
+    // Number of scans in a segment that is currently being connected
+    private int buildingSegmentLength = 0;
 
     // Number of connected segments, which have been committed by
     // commitBuildingSegment()
@@ -42,13 +43,13 @@ class BuildingChromatogram {
     @SuppressWarnings("null")
     public float getBuildingSegmentLength() {
 
-        if (buildingSegment.size() < 2)
+        if (buildingSegmentLength < 2)
             return 0.0f;
-        MsScan firstScan = buildingSegment.get(0).getScan();
-        MsScan lastScan = buildingSegment.get(buildingSegment.size() - 1)
-                .getScan();
-        ChromatographyInfo firstChromInfo = firstScan.getChromatographyInfo();
-        ChromatographyInfo lastChromInfo = lastScan.getChromatographyInfo();
+        ChromatographyInfo rtBuffer[] = dataPoints.getRtBuffer();
+
+        ChromatographyInfo firstChromInfo = rtBuffer[dataPoints.getSize()
+                - buildingSegmentLength];
+        ChromatographyInfo lastChromInfo = rtBuffer[dataPoints.getSize() - 1];
 
         if ((firstChromInfo == null) || (lastChromInfo == null))
             throw new MSDKRuntimeException(
@@ -61,28 +62,35 @@ class BuildingChromatogram {
     }
 
     void removeBuildingSegment() {
-        dataPoints.removeAll(buildingSegment);
-        buildingSegment.clear();
+        final int newSize = dataPoints.getSize() - buildingSegmentLength;
+        dataPoints.setSize(newSize);
+        mzValues.setSize(newSize);
+        buildingSegmentLength = 0;
     }
 
     void commitBuildingSegment() {
         numOfCommittedSegments++;
-        buildingSegment.clear();
+        buildingSegmentLength = 0;
     }
 
-    void addDataPoint(ChromatogramDataPoint dataPoint) {
-        dataPoints.add(dataPoint);
-        buildingSegment.add(dataPoint);
+    void addDataPoint(ChromatographyInfo rt, Double mz, Float intensity) {
+        dataPoints.add(rt, intensity);
+        buildingSegmentLength++;
     }
 
-    ChromatogramDataPoint getLastDataPoint() {
-        return dataPoints.get(dataPoints.size() - 1);
+    double getLastMz() {
+        return mzValues.lastElement();
+    }
+
+    float getLastIntensity() {
+        return dataPoints.getIntensityBuffer()[dataPoints.getSize() - 1];
     }
 
     float getHeight() {
         float maxIntensity = 0f;
-        for (ChromatogramDataPoint dataPoint : dataPoints) {
-            maxIntensity = Math.max(maxIntensity, dataPoint.getIntensity());
+        float intensityBuffer[] = dataPoints.getIntensityBuffer();
+        for (int i = 0; i < dataPoints.getSize(); i++) {
+            maxIntensity = Math.max(maxIntensity, intensityBuffer[i]);
         }
         return maxIntensity;
     }

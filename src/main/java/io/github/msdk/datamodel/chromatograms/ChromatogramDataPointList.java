@@ -124,7 +124,7 @@ public interface ChromatogramDataPointList {
      * @param intensity
      *            new intensity value
      */
-    void add(ChromatographyInfo rt, float intensity);
+    void add(@Nonnull ChromatographyInfo rt, float intensity);
 
     /**
      * Copies the contents of another data point list into this list. The
