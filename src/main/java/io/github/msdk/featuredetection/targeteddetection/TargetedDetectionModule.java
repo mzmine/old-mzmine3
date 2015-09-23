@@ -30,6 +30,7 @@ import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
+import io.github.msdk.datamodel.util.MZTolerance;
 import io.github.msdk.datamodel.util.RawDataFileUtil;
 
 /**
@@ -41,6 +42,7 @@ public class TargetedDetectionModule implements MSDKMethod<List<Chromatogram>> {
     private final @Nonnull List<IonAnnotation> ionAnnotations;
     private final @Nonnull RawDataFile rawDataFile;
     private final @Nonnull DataPointStore dataPointStore;
+    private final @Nonnull MZTolerance mzTolerance;
 
     private List<Chromatogram> result;
     private boolean canceled = false;
@@ -52,10 +54,11 @@ public class TargetedDetectionModule implements MSDKMethod<List<Chromatogram>> {
      */
     public TargetedDetectionModule(@Nonnull List<IonAnnotation> ionAnnotations,
             @Nonnull RawDataFile rawDataFile,
-            @Nonnull DataPointStore dataPointStore) {
+            @Nonnull DataPointStore dataPointStore, @Nonnull MZTolerance mzTolerance) {
         this.ionAnnotations = ionAnnotations;
         this.rawDataFile = rawDataFile;
         this.dataPointStore = dataPointStore;
+        this.mzTolerance = mzTolerance;
     }
 
     /**
