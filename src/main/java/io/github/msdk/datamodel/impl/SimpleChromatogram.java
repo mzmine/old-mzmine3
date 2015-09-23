@@ -102,13 +102,12 @@ class SimpleChromatogram implements Chromatogram {
         dataPointStore.readDataPoints(dataStoreIdCopy, dataPointList);
     }
 
+    @SuppressWarnings("null")
     synchronized public void setDataPoints(
             @Nonnull ChromatogramDataPointList newDataPoints) {
-        final Object dataStoreIdCopy = dataStoreId;
-        Preconditions.checkNotNull(dataStoreIdCopy);
         Preconditions.checkNotNull(newDataPoints);
-        if (dataStoreIdCopy != null)
-            dataPointStore.removeDataPoints(dataStoreIdCopy);
+        if (dataStoreId != null)
+            dataPointStore.removeDataPoints(dataStoreId);
         dataStoreId = dataPointStore.storeDataPoints(newDataPoints);
     }
 

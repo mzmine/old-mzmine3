@@ -22,6 +22,9 @@ package io.github.msdk.centroiding;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
@@ -37,6 +40,8 @@ import io.github.msdk.datamodel.util.MsScanUtil;
  * the original raw datapoints.
  */
 public class WaveletCentroidingMethod implements MSDKMethod<MsScan> {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
      * Parameters of the wavelet, NPOINTS is the number of wavelet values to use
@@ -68,6 +73,9 @@ public class WaveletCentroidingMethod implements MSDKMethod<MsScan> {
     @Override
     public MsScan execute() throws MSDKException {
 
+        logger.info("Started wavelet centroider on scan #"
+                + inputScan.getScanNumber());
+
         // Copy all scan properties
         this.newScan = MsScanUtil.clone(dataPointStore, inputScan, false);
 
@@ -95,6 +103,10 @@ public class WaveletCentroidingMethod implements MSDKMethod<MsScan> {
 
         // Finish
         methodProgress = 1f;
+
+        logger.info("Finished wavelet centroider on scan #"
+                + inputScan.getScanNumber());
+
         return newScan;
 
     }

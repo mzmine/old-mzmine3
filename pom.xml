@@ -15,7 +15,6 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<cdk.version>1.5.11</cdk.version>
 		<controlsfx.version>8.40.9</controlsfx.version>
-		<jfreechart.version>1.0.19</jfreechart.version>
 		<junit.version>4.12</junit.version>
 		<jmztab.version>3.0.2</jmztab.version>
 	</properties>
@@ -154,21 +153,19 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.jfree</groupId>
-			<artifactId>jfreechart</artifactId>
-			<version>${jfreechart.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>xml-apis</artifactId>
-					<groupId>xml-apis</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
 			<groupId>edu.ucar</groupId>
 			<artifactId>netcdf4</artifactId>
 			<version>4.5.5</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>httpservices</artifactId>
+					<groupId>edu.ucar</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -219,6 +216,17 @@
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.12</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-jdk14</artifactId>
 			<version>1.7.12</version>
 		</dependency>
@@ -238,6 +246,7 @@
 					<artifactId>logback-classic</artifactId>
 					<groupId>ch.qos.logback</groupId>
 				</exclusion>
+
 			</exclusions>
 		</dependency>
 		<dependency>

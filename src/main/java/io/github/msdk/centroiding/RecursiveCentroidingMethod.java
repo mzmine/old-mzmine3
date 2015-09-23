@@ -22,6 +22,9 @@ package io.github.msdk.centroiding;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKException;
@@ -33,6 +36,8 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.util.MsScanUtil;
 
 public class RecursiveCentroidingMethod implements MSDKMethod<MsScan> {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final @Nonnull MsScan inputScan;
     private final @Nonnull DataPointStore dataPointStore;
@@ -53,6 +58,9 @@ public class RecursiveCentroidingMethod implements MSDKMethod<MsScan> {
 
     @Override
     public MsScan execute() throws MSDKException {
+
+        logger.info("Started recursive centroider on scan #"
+                + inputScan.getScanNumber());
 
         // Copy all scan properties
         this.newScan = MsScanUtil.clone(dataPointStore, inputScan, false);
@@ -82,6 +90,10 @@ public class RecursiveCentroidingMethod implements MSDKMethod<MsScan> {
 
         // Finish
         methodProgress = 1f;
+
+        logger.info("Finished recursive centroider on scan #"
+                + inputScan.getScanNumber());
+
         return newScan;
 
     }

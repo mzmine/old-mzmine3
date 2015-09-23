@@ -63,6 +63,8 @@ class SimpleMSSpectrumDataPointList implements MsSpectrumDataPointList {
      *            Initial size of the m/z and intensity arrays.
      */
     SimpleMSSpectrumDataPointList(@Nonnull Integer initialCapacity) {
+        Preconditions.checkArgument(initialCapacity > 0,
+                "Initial capacity of a list must be >0");
         mzBuffer = new double[initialCapacity];
         intensityBuffer = new float[initialCapacity];
         size = 0;

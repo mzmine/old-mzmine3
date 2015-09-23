@@ -20,6 +20,9 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
@@ -31,6 +34,8 @@ import io.github.msdk.datamodel.util.MZTolerance;
 
 public class ChromatogramBuilderMethod
         implements MSDKMethod<List<Chromatogram>> {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final @Nonnull DataPointStore dataPointStore;
     private final @Nonnull RawDataFile inputFile;
@@ -64,6 +69,9 @@ public class ChromatogramBuilderMethod
     @Override
     @Nullable
     public List<Chromatogram> execute() throws MSDKException {
+
+        logger.info(
+                "Started chromatogram builder on file " + inputFile.getName());
 
         // Check if we have any scans
         totalScans = inputScans.size();
@@ -107,6 +115,9 @@ public class ChromatogramBuilderMethod
 
         result = new ArrayList<>();
         massConnector.finishChromatograms(inputFile, dataPointStore, result);
+
+        logger.info(
+                "Finished chromatogram builder on file " + inputFile.getName());
 
         return result;
     }

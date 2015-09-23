@@ -21,6 +21,9 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
@@ -40,6 +43,8 @@ import io.github.msdk.datamodel.util.DataPointSorter.SortingProperty;
 import io.github.msdk.datamodel.util.MZTolerance;
 
 class HighestDataPointConnector {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final @Nonnull MsSpectrumDataPointList dataPoints;
     private final MZTolerance mzTolerance;
@@ -162,6 +167,9 @@ class HighestDataPointConnector {
             @Nonnull DataPointStore dataPointStore,
             List<Chromatogram> finalList) {
 
+        logger.debug(
+                "Finishing " + buildingChromatograms.size() + " chromatograms");
+
         // Iterate through current chromatograms and remove those which do not
         // contain any committed segment or long-enough building segment
         Iterator<BuildingChromatogram> chromIterator = buildingChromatograms
@@ -182,8 +190,9 @@ class HighestDataPointConnector {
             }
 
             // Remove chromatograms below minimum height
-            if (chromatogram.getHeight() < minimumHeight)
+            if (chromatogram.getHeight() < minimumHeight) {
                 chromIterator.remove();
+            }
 
         }
 
@@ -196,14 +205,18 @@ class HighestDataPointConnector {
                     dataPointStore, chromId, ChromatogramType.XIC,
                     SeparationType.UNKNOWN);
 
-            // Convert the data from our BuildingChromatogram to the MSDK
-            // Chromatogram
+            // Copy the data points from the BuildingChromatogram
             @Nonnull
             ChromatogramDataPointList dataPoints = buildingChromatogram
                     .getDataPoints();
             newChromatogram.setDataPoints(dataPoints);
+
+            // Update the final m/z value of the Chromatogram
             Double mz = buildingChromatogram.calculateMz();
             newChromatogram.setMz(mz);
+
+            // Add the Chromatogram to the result list
+            finalList.add(newChromatogram);
 
             // Increase the ID
             chromId++;

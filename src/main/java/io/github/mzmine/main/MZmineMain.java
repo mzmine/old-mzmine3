@@ -19,9 +19,7 @@
 
 package io.github.mzmine.main;
 
-import java.io.InputStream;
 import java.util.Locale;
-import java.util.logging.LogManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,16 +47,7 @@ public final class MZmineMain {
         /*
          * Configure the logging properties before we start logging
          */
-        try {
-            ClassLoader cl = MZmineCore.class.getClassLoader();
-            InputStream loggingProperties = cl
-                    .getResourceAsStream("logging.properties");
-            LogManager logMan = LogManager.getLogManager();
-            logMan.readConfiguration(loggingProperties);
-            loggingProperties.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        MZmineLogging.configureLogging();
 
         /*
          * Cleanup old temporary files on a new thread

@@ -53,7 +53,7 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
      * Creates a new data point list with internal array capacity of 100.
      */
     SimpleChromatogramDataPointList() {
-        this(0);
+        this(100);
     }
 
     /**
@@ -63,6 +63,8 @@ class SimpleChromatogramDataPointList implements ChromatogramDataPointList {
      *            Initial size of the RT and intensity arrays.
      */
     SimpleChromatogramDataPointList(@Nonnull Integer initialCapacity) {
+        Preconditions.checkArgument(initialCapacity > 0,
+                "Initial capacity of a list must be >0");
         rtBuffer = new ChromatographyInfo[initialCapacity];
         intensityBuffer = new float[initialCapacity];
         size = 0;

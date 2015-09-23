@@ -57,8 +57,8 @@ public class ChromatogramBuilderMethodTest {
         Assert.assertEquals(1.0, chromBuilder.getFinishedPercentage(), 0.0001);
 
         Assert.assertTrue(detectedFeatures.size() > 10);
-        for (Chromatogram feature : detectedFeatures) {
-            System.out.println(feature.getMz());
-        }
+
+    
+    
     }
 }
