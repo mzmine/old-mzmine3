@@ -21,6 +21,7 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
@@ -29,6 +30,7 @@ import io.github.msdk.datamodel.chromatograms.ChromatogramType;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
@@ -112,8 +114,9 @@ class HighestDataPointConnector {
             }
 
             // Add this mzPeak to the chromatogram
-            bestChromatogram.addDataPoint(scan.getChromatographyInfo(),
-                    mzBuffer[i], intensityBuffer[i]);
+            ChromatographyInfo rt = scan.getChromatographyInfo();
+            Preconditions.checkNotNull(rt);
+            bestChromatogram.addDataPoint(rt, mzBuffer[i], intensityBuffer[i]);
 
             // Move the chromatogram to the set of connected chromatograms
             connectedChromatograms.add(bestChromatogram);
@@ -195,9 +198,12 @@ class HighestDataPointConnector {
 
             // Convert the data from our BuildingChromatogram to the MSDK
             // Chromatogram
+            @Nonnull
             ChromatogramDataPointList dataPoints = buildingChromatogram
                     .getDataPoints();
             newChromatogram.setDataPoints(dataPoints);
+            Double mz = buildingChromatogram.calculateMz();
+            newChromatogram.setMz(mz);
 
             // Increase the ID
             chromId++;

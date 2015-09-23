@@ -59,6 +59,7 @@ public class LocalMaximaCentroidingMethodTest {
         LocalMaximaCentroidingMethod centroider = new LocalMaximaCentroidingMethod(
                 lastScan, dataStore, noiseLevel);
         final MsScan centroidedScan = centroider.execute();
+        Assert.assertEquals(1.0, centroider.getFinishedPercentage(), 0.0001);
 
         centroidedScan.getDataPoints(dataPoints);
         double mzBuffer[] = dataPoints.getMzBuffer();

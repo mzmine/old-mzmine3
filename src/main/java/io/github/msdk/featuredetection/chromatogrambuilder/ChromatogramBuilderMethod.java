@@ -81,7 +81,7 @@ public class ChromatogramBuilderMethod
                 prevRT = s.getChromatographyInfo();
                 continue;
             }
-            if (prevRT.compareTo(s.getChromatographyInfo()) < 0) {
+            if (prevRT.compareTo(s.getChromatographyInfo()) > 0) {
                 final String msg = "Retention time of scan #"
                         + s.getScanNumber()
                         + " is smaller then the retention time of the previous scan."

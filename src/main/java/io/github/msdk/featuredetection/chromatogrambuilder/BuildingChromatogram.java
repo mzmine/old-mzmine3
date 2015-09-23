@@ -16,6 +16,13 @@ package io.github.msdk.featuredetection.chromatogrambuilder;
 
 import java.util.Vector;
 
+import javax.annotation.Nonnull;
+
+import org.apache.commons.math3.stat.descriptive.rank.Median;
+
+import com.google.common.base.Preconditions;
+import com.google.common.primitives.Doubles;
+
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
@@ -24,10 +31,10 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 class BuildingChromatogram {
 
     // All data points of this chromatogram
-    private final ChromatogramDataPointList dataPoints = MSDKObjectBuilder
+    private final @Nonnull ChromatogramDataPointList dataPoints = MSDKObjectBuilder
             .getChromatogramDataPointList();
 
-    private final Vector<Double> mzValues = new Vector<>();
+    private final @Nonnull Vector<Double> mzValues = new Vector<>();
 
     // Number of scans in a segment that is currently being connected
     private int buildingSegmentLength = 0;
@@ -73,16 +80,25 @@ class BuildingChromatogram {
         buildingSegmentLength = 0;
     }
 
-    void addDataPoint(ChromatographyInfo rt, Double mz, Float intensity) {
+    void addDataPoint(@Nonnull ChromatographyInfo rt, @Nonnull Double mz,
+            @Nonnull Float intensity) {
+        Preconditions.checkNotNull(rt);
         dataPoints.add(rt, intensity);
+        mzValues.add(mz);
         buildingSegmentLength++;
     }
 
     double getLastMz() {
+        if (mzValues.isEmpty())
+            throw new MSDKRuntimeException(
+                    "Cannot return the last data point of an empty chromatogram");
         return mzValues.lastElement();
     }
 
     float getLastIntensity() {
+        if (dataPoints.getSize() == 0)
+            throw new MSDKRuntimeException(
+                    "Cannot return the last data point of an empty chromatogram");
         return dataPoints.getIntensityBuffer()[dataPoints.getSize() - 1];
     }
 
@@ -95,8 +111,26 @@ class BuildingChromatogram {
         return maxIntensity;
     }
 
+    @Nonnull
     ChromatogramDataPointList getDataPoints() {
         return dataPoints;
+    }
+
+    @Nonnull
+    Double calculateMz() {
+        if (mzValues.isEmpty())
+            throw new MSDKRuntimeException(
+                    "Cannot calculate the m/z value of an empty chromatogram");
+
+        // Convert the m/z values to an array
+        double mzDoubleValues[] = Doubles.toArray(mzValues);
+
+        // Calculate the final m/z value as a median of all m/z values
+        Median median = new Median();
+        double medianValue = median.evaluate(mzDoubleValues);
+
+        return medianValue;
+
     }
 
 }
