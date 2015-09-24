@@ -35,6 +35,8 @@
 					</accelerator>
 				</MenuItem>
 				<SeparatorMenuItem />
+				<MenuItem text="Export Audit Log" />
+				<SeparatorMenuItem />
 				<Menu text="Import...">
 					<items>
 						<ModuleMenuItem text="Raw Data"

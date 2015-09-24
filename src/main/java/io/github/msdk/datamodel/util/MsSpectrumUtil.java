@@ -14,6 +14,8 @@
 
 package io.github.msdk.datamodel.util;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -70,8 +72,8 @@ public class MsSpectrumUtil {
     }
 
     /**
-     * Returns the highest intensity value. Returns null if the list has no data
-     * points.
+     * Returns the index of the highest intensity value. Returns null if the
+     * list has no data points.
      */
     public static @Nullable Integer getBasePeakIndex(
             @Nonnull MsSpectrumDataPointList dataPoints) {
@@ -82,6 +84,29 @@ public class MsSpectrumUtil {
         int topIndex = 0;
         for (int i = 1; i < dataPoints.getSize(); i++) {
             if (intValues[i] > intValues[topIndex])
+                topIndex = i;
+        }
+        return topIndex;
+    }
+
+    /**
+     * Returns the index of the highest intensity value. Returns null if the
+     * list has no data points or if no data point was found within the mz
+     * range.
+     */
+    public static @Nullable Integer getBasePeakIndex(
+            @Nonnull MsSpectrumDataPointList dataPoints,
+            @Nonnull Range<Double> mzRange) {
+        Preconditions.checkNotNull(dataPoints);
+        Preconditions.checkNotNull(mzRange);
+        if (dataPoints.getSize() == 0)
+            return null;
+        final float intValues[] = dataPoints.getIntensityBuffer();
+        final double mzValues[] = dataPoints.getMzBuffer();
+        Integer topIndex = null;
+        for (int i = 0; i < dataPoints.getSize(); i++) {
+            if ((topIndex == null || intValues[i] > intValues[topIndex])
+                    && mzRange.contains(mzValues[i]))
                 topIndex = i;
         }
         return topIndex;
