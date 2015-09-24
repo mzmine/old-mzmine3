@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.modules.AuditLogEntry;
 import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
@@ -86,6 +87,12 @@ public final class ModuleMenuItem extends MenuItem {
                 MZmineProject project = MZmineCore.getCurrentProject();
                 logger.info("Starting module " + module.getName());
                 runnableModule.runModule(project, parametersCopy, tasks);
+
+                // Log module run in audit log
+                AuditLogEntry auditLogEntry = new AuditLogEntry(module,
+                        parametersCopy, tasks);
+                project.logProcessingStep(auditLogEntry);
+
                 MZmineCore.submitTasks(tasks);
             }
         });

@@ -31,6 +31,7 @@ import com.google.common.collect.ImmutableList;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.mzmine.modules.AuditLogEntry;
 
 /**
  * Simple implementation of the MZmineProject interface.
@@ -41,6 +42,7 @@ public class MZmineProject {
 
     private final List<RawDataFile> rawDataFiles = new ArrayList<>();
     private final List<FeatureTable> featureTables = new ArrayList<>();
+    private final List<AuditLogEntry> auditLog = new ArrayList<>();
 
     @Nullable
     public File getProjectFile() {
@@ -101,6 +103,20 @@ public class MZmineProject {
     public @Nonnull List<FeatureTable> getFeatureTables() {
         synchronized (featureTables) {
             return ImmutableList.copyOf(featureTables);
+        }
+    }
+
+    public void logProcessingStep(final AuditLogEntry auditLog) {
+        synchronized (auditLog) {
+            if (auditLog != null)
+                this.auditLog.add(auditLog);
+        }
+    }
+
+    @SuppressWarnings("null")
+    public @Nonnull List<AuditLogEntry> getAuditLog() {
+        synchronized (auditLog) {
+            return ImmutableList.copyOf(auditLog);
         }
     }
 
