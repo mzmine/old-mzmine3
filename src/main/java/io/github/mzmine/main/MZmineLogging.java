@@ -40,7 +40,6 @@ public final class MZmineLogging {
             LogManager logMan = LogManager.getLogManager();
             logMan.readConfiguration(loggingProperties);
             loggingProperties.close();
-            System.out.println(logMan);
         } catch (Exception e) {
             e.printStackTrace();
         }
