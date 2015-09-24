@@ -27,11 +27,11 @@ import org.slf4j.LoggerFactory;
 
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
-import io.github.mzmine.modules.AuditLogEntry;
 import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineProject;
+import io.github.mzmine.project.auditlog.AuditLogEntry;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;

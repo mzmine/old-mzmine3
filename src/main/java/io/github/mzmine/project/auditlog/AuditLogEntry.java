@@ -17,13 +17,14 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules;
+package io.github.mzmine.project.auditlog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.parameters.ParameterSet;
 import javafx.concurrent.Task;
 

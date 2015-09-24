@@ -31,7 +31,7 @@ import com.google.common.collect.ImmutableList;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.mzmine.modules.AuditLogEntry;
+import io.github.mzmine.project.auditlog.AuditLogEntry;
 
 /**
  * Simple implementation of the MZmineProject interface.
