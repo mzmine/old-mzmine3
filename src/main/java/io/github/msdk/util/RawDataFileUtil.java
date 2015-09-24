@@ -12,7 +12,7 @@
  * the Eclipse Foundation.
  */
 
-package io.github.msdk.datamodel.util;
+package io.github.msdk.util;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -22,9 +22,9 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
-import io.github.msdk.datamodel.util.DataPointSorter;
-import io.github.msdk.datamodel.util.DataPointSorter.SortingDirection;
-import io.github.msdk.datamodel.util.DataPointSorter.SortingProperty;
+import io.github.msdk.util.DataPointSorter;
+import io.github.msdk.util.DataPointSorter.SortingDirection;
+import io.github.msdk.util.DataPointSorter.SortingProperty;
 
 /**
  * Basic implementation of DataPointList.

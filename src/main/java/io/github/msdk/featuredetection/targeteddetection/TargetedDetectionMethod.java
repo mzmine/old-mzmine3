@@ -37,10 +37,10 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.datamodel.util.MZTolerance;
-import io.github.msdk.datamodel.util.MsSpectrumUtil;
-import io.github.msdk.datamodel.util.RTTolerance;
-import io.github.msdk.datamodel.util.RawDataFileUtil;
+import io.github.msdk.util.MZTolerance;
+import io.github.msdk.util.MsSpectrumUtil;
+import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.RawDataFileUtil;
 
 /**
  * This class creates a list of Chromatograms for a RawDataFile based the

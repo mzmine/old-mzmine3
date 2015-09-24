@@ -30,7 +30,7 @@ import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.util.MZTolerance;
+import io.github.msdk.util.MZTolerance;
 
 public class ChromatogramBuilderMethod
         implements MSDKMethod<List<Chromatogram>> {

@@ -23,7 +23,7 @@ import com.google.common.collect.Range;
 import io.github.msdk.MSDKRuntimeException;
 import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.util.DataPointSorter;
+import io.github.msdk.util.DataPointSorter;
 
 /**
  * Basic implementation of DataPointList.

@@ -37,10 +37,10 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.datamodel.util.DataPointSorter;
-import io.github.msdk.datamodel.util.DataPointSorter.SortingDirection;
-import io.github.msdk.datamodel.util.DataPointSorter.SortingProperty;
-import io.github.msdk.datamodel.util.MZTolerance;
+import io.github.msdk.util.DataPointSorter;
+import io.github.msdk.util.MZTolerance;
+import io.github.msdk.util.DataPointSorter.SortingDirection;
+import io.github.msdk.util.DataPointSorter.SortingProperty;
 
 class HighestDataPointConnector {
 

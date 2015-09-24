@@ -31,7 +31,7 @@ import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrumDataPointList;
 import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.util.MsScanUtil;
+import io.github.msdk.util.MsScanUtil;
 
 public class LocalMaximaCentroidingMethod implements MSDKMethod<MsScan> {
 

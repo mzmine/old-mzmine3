@@ -18,10 +18,10 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.datamodel.util.MZTolerance;
-import io.github.msdk.datamodel.util.RTTolerance;
 import io.github.msdk.featuredetection.chromatogrambuilder.ChromatogramBuilderMethod;
 import io.github.msdk.io.rawdataimport.mzml.MzMLFileImportMethod;
+import io.github.msdk.util.MZTolerance;
+import io.github.msdk.util.RTTolerance;
 
 public class TargetedDetectionMethodTest {
 

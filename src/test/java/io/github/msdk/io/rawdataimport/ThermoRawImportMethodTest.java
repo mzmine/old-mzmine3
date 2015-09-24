@@ -30,8 +30,8 @@ import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.util.MsSpectrumUtil;
 import io.github.msdk.io.rawdataimport.nativeformats.ThermoRawImportMethod;
+import io.github.msdk.util.MsSpectrumUtil;
 
 public class ThermoRawImportMethodTest {
 

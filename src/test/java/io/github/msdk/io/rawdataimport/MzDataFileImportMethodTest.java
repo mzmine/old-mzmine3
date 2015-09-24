@@ -30,8 +30,8 @@ import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.PolarityType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.util.MsSpectrumUtil;
 import io.github.msdk.io.rawdataimport.mzdata.MzDataFileImportMethod;
+import io.github.msdk.util.MsSpectrumUtil;
 
 public class MzDataFileImportMethodTest {
 
