@@ -214,7 +214,8 @@ public class FeatureTableModule implements MZmineRunnableModule {
         }
 
         // Add right padding on last column to fix issue with scroll bar
-        tableColumn.setStyle("-fx-padding: 0 20 0 0;");
+        if (tableColumn != null)
+            tableColumn.setStyle("-fx-padding: 0 20 0 0;");
 
         // Table preferences
         treeTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);

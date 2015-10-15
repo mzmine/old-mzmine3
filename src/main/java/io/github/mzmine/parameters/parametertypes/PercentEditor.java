@@ -42,12 +42,11 @@ public class PercentEditor extends BorderPane
 
         // The percent field
         this.percentField = new TextField();
-        setLeft(percentField);
+        setCenter(percentField);
 
         // The percent sign
-        Text sign = new Text("%");
-        sign.applyCss();
-        setCenter(sign);
+        Text sign = new Text(" %");
+        setRight(sign);
 
     }
 
