@@ -23,24 +23,18 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.annotation.Nonnull;
-
-import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.mzmine.gui.MZmineGUI;
-import io.github.mzmine.modules.MZmineModuleCategory;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.util.TableUtils;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -221,6 +215,11 @@ public class FeatureTableModule implements MZmineRunnableModule {
         treeTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         treeTable.getSelectionModel().setCellSelectionEnabled(true);
         treeTable.setShowRoot(false);
+
+        // Add right click menu
+        FeatureTablePopupMenu popupMenu = new FeatureTablePopupMenu(
+                featureTable, treeTable);
+        treeTable.setContextMenu(popupMenu);
 
         // Add column selection button
         treeTable.setTableMenuButtonVisible(true);

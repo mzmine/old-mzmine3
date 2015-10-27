@@ -33,11 +33,13 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.featuredetection.targeteddetection.TargetedDetectionMethod;
+import io.github.msdk.featuredetection.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;
@@ -113,7 +115,7 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
 
                     if (lineArray.length != 3) {
                         logger.warn(
-                                "Input features list is not in the right format.");
+                                "Input feature list is not in the right format. Expected input is: m/z, retention time, name");
                         return;
                     }
 
@@ -154,8 +156,13 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
                 FeatureTable featureTable = MSDKObjectBuilder
                         .getFeatureTable(rawDataFile.getName(), dataStore);
 
-                // TODO: Add the features to the table
-                // detectedChromatograms
+                // Create a new sample
+                Sample sample = MSDKObjectBuilder
+                        .getSimpleSample(rawDataFile.getName());
+
+                // Add the chromatograms to the feature table
+                ChromatogramToFeatureTableMethod method = new ChromatogramToFeatureTableMethod(
+                        detectedChromatograms, featureTable, sample);
 
                 // Add the feature table to the project
                 project.addFeatureTable(featureTable);

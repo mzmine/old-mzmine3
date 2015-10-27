@@ -9,7 +9,7 @@ import io.github.mzmine.modules.featuretable.renderers.IntegerRenderer;
 import io.github.mzmine.modules.featuretable.renderers.IntensityRenderer;
 import io.github.mzmine.modules.featuretable.renderers.IonAnnotationRenderer;
 import io.github.mzmine.modules.featuretable.renderers.MzRenderer;
-import io.github.mzmine.modules.featuretable.renderers.RtRangeRenderer;
+import io.github.mzmine.modules.featuretable.renderers.RtRenderer;
 
 public class ColumnRenderers {
 
@@ -21,8 +21,10 @@ public class ColumnRenderers {
             return MzRenderer.class;
         if (columnName.equals(ColumnName.RT.getName()))
             return ChromatographyInfoRenderer.class;
-        if (columnName.equals(ColumnName.RTRANGE.getName()))
-            return RtRangeRenderer.class;
+        if (columnName.equals(ColumnName.RTSTART.getName()))
+            return RtRenderer.class;
+        if (columnName.equals(ColumnName.RTEND.getName()))
+            return RtRenderer.class;
         if (columnName.equals(ColumnName.DURATION.getName()))
             return DoubleRenderer.class;
         if (columnName.equals(ColumnName.AREA.getName()))
