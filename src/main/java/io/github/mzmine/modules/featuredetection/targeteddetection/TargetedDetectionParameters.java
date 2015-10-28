@@ -23,6 +23,7 @@ import java.util.Arrays;
 
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterValidator;
+import io.github.mzmine.parameters.parametertypes.PercentParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.TextAreaParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
@@ -33,7 +34,7 @@ public class TargetedDetectionParameters extends ParameterSet {
     public static final RawDataFilesParameter rawDataFiles = new RawDataFilesParameter();
 
     private static final ExtensionFilter filters[] = new ExtensionFilter[] {
-            new ExtensionFilter("All raw data files", "*.csv", "*.txt"),
+            new ExtensionFilter("All supported files", "*.csv", "*.txt"),
             new ExtensionFilter("CSV files", "*.csv"),
             new ExtensionFilter("TXT files", "*.txt") };
 
@@ -49,6 +50,11 @@ public class TargetedDetectionParameters extends ParameterSet {
             "Character(s) used to separate fields in the feature list",
             "Features", ParameterValidator.createNonEmptyValidator(), ",");
 
+    public static final PercentParameter intensityTolerance = new PercentParameter(
+            "Intensity tolerance",
+            "Maximum allowed deviation of the peak chromatogram from the expected /\\ shape.",
+            "Data", ParameterValidator.createNonEmptyValidator(), 0.3);
+
     public static final StringParameter nameSuffix = new StringParameter(
             "Name suffix",
             "Suffix to be added to the raw data file(s) when creating the feature table(s)",
@@ -58,7 +64,7 @@ public class TargetedDetectionParameters extends ParameterSet {
      * Create the parameter set.
      */
     public TargetedDetectionParameters() {
-        super(rawDataFiles, features, separator, nameSuffix);
+        super(rawDataFiles, features, separator, intensityTolerance, nameSuffix);
     }
 
 }

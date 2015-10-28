@@ -37,6 +37,8 @@ public class DoubleRenderer implements
             @Override
             public void updateItem(Object object, boolean empty) {
                 super.updateItem(object, empty);
+                setStyle("-fx-alignment: CENTER;"
+                        + "-fx-border-color: transparent -fx-table-cell-border-color -fx-table-cell-border-color transparent;");
                 if (object == null) {
                     setText(null);
                 } else {
