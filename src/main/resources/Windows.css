@@ -1,19 +1,20 @@
-.root {
-    -fx-font-size: 10.0pt;
-}
-
-#memoryBarLabel { 
-	-fx-font-size: 9.0pt; 
-	-fx-label-padding: 0.0 20.0 0.0 20.0; 
-}
-
-.tooltip {
-    -fx-font-size: 10.0pt;
-}
-
 /* Default chart color set to blue */
 .default-color0.chart-series-line { -fx-stroke: #0096c9; }
 .default-color0.chart-line-symbol { -fx-background-color: #0096c9, white; }
+
+/* Remove default padding on chart */
+.chart-content{ -fx-padding:0px; }
+.chart{ -fx-padding:0px; }
+
+/* Remove ticks and grid lines */
+.axis-tick-mark, 
+.axis-minor-tick-mark, 
+.chart-vertical-grid-lines, 
+.chart-horizontal-grid-lines, 
+.chart-vertical-zero-line, 
+.chart-horizontal-zero-line  {
+    -fx-stroke: transparent;
+}
 
 /* Some useful CSS properties:
 :focused {

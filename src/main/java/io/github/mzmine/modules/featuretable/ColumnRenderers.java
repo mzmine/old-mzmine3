@@ -20,7 +20,7 @@ public class ColumnRenderers {
         if (columnName.equals(ColumnName.MZ.getName()))
             return MzRenderer.class;
         if (columnName.equals(ColumnName.RT.getName()))
-            return ChromatographyInfoRenderer.class;
+            return RtRenderer.class;
         if (columnName.equals(ColumnName.RTSTART.getName()))
             return RtRenderer.class;
         if (columnName.equals(ColumnName.RTEND.getName()))

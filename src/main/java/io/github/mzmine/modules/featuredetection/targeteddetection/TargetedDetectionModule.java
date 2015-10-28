@@ -38,8 +38,8 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.featuredetection.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.featuredetection.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
+import io.github.msdk.featuredetection.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;
@@ -161,8 +161,21 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
                         .getSimpleSample(rawDataFile.getName());
 
                 // Add the chromatograms to the feature table
-                ChromatogramToFeatureTableMethod method = new ChromatogramToFeatureTableMethod(
+                ChromatogramToFeatureTableMethod method2 = new ChromatogramToFeatureTableMethod(
                         detectedChromatograms, featureTable, sample);
+
+                /*
+                 * TODO: Make new TargetedDetectionTask which will run the
+                 * following tasks one by one: 
+                 * - TargetedDetectionMethod
+                 * - ChromatogramToFeatureTableMethod
+                 */
+                try {
+                    method2.execute();
+                } catch (Exception e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
 
                 // Add the feature table to the project
                 project.addFeatureTable(featureTable);

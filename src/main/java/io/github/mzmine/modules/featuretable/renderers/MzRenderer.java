@@ -37,6 +37,8 @@ public class MzRenderer implements
             @Override
             public void updateItem(Object object, boolean empty) {
                 super.updateItem(object, empty);
+                setStyle("-fx-alignment: CENTER;"
+                        + "-fx-border-color: transparent -fx-table-cell-border-color -fx-table-cell-border-color transparent;");
                 if (object == null) {
                     setText(null);
                 } else {
@@ -44,7 +46,6 @@ public class MzRenderer implements
                             .getMZFormat();
                     Double doubleValue = Double.parseDouble(object.toString());
                     setText(formatter.format(doubleValue));
-                    setStyle("-fx-alignment: CENTER;");
                 }
             }
         };

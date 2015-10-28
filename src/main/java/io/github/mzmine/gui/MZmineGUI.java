@@ -236,8 +236,9 @@ public final class MZmineGUI extends Application {
 
     public static void addWindow(Node node, String title) {
 
-        // New test dock
-        final DockNode testDock = new DockNode(node, title);
+        // New dock
+        final DockNode newDock = new DockNode(node, " " + title);
+        newDock.getStylesheets().add("Windows.css");
 
         // Add default button
         ToggleButton DefaultButton;
@@ -251,19 +252,19 @@ public final class MZmineGUI extends Application {
         });
         DefaultButton.setMinSize(16, 20);
         DefaultButton.setMaxSize(16, 20);
-        testDock.getDockTitleBar().getChildren().add(DefaultButton);
+        newDock.getDockTitleBar().getChildren().add(DefaultButton);
 
         DockPane mainDockPane = mainWindowController.getMainDockPane();
 
-        testDock.setPrefSize(1000, 600);
-        testDock.dock(mainDockPane, DockPos.RIGHT);
-        testDock.setFloatable(true);
+        newDock.setPrefSize(1000, 600);
+        newDock.dock(mainDockPane, DockPos.RIGHT);
+        newDock.setFloatable(true);
 
         // Fix for DockFX bug
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                testDock.setFloating(true);
+                newDock.setFloating(true);
             }
           });
 

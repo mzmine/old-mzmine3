@@ -22,7 +22,6 @@ package io.github.mzmine.modules.featuretable.renderers;
 import java.text.NumberFormat;
 
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.mzmine.main.MZmineCore;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
@@ -38,13 +37,14 @@ public class RtRenderer implements
             @Override
             public void updateItem(Object object, boolean empty) {
                 super.updateItem(object, empty);
+                setStyle("-fx-alignment: CENTER;"
+                        + "-fx-border-color: transparent -fx-table-cell-border-color -fx-table-cell-border-color transparent;");
                 if (object == null) {
                     setText(null);
                 } else {
-                    ChromatographyInfo chromatographyInfo = (ChromatographyInfo) object;
-                    Float floatValue = chromatographyInfo.getRetentionTime();
                     NumberFormat formatter = MZmineCore.getConfiguration()
                             .getRTFormat();
+                    Float floatValue = Float.parseFloat(object.toString());
                     setText(formatter.format(floatValue));
                 }
             }
