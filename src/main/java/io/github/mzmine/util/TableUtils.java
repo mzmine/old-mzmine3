@@ -21,6 +21,8 @@ package io.github.mzmine.util;
 
 import java.util.Map;
 
+import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -90,13 +92,25 @@ public class TableUtils {
             int prevRow = -1;
 
             // Add sample headers
+            int hiddenColumns = 0;
             for (TreeTablePosition position : positionList) {
                 int rowNr = position.getRow();
-                int columnNr = position.getColumn();
+                int columnNr = position.getColumn()+hiddenColumns;
+
+                // Account for hidden columns
+                while (!columnMap.get(columnNr).isVisible()) {
+                	hiddenColumns++;
+                	columnNr++;
+                }
 
                 // Get the column from the map to avoid trouble with sample
                 // headers
                 TreeTableColumn column = columnMap.get(columnNr);
+                Object object = (Object) column.getCellData(rowNr);
+
+                // Skip chromatogram column
+                if (object instanceof Chromatogram)
+                	continue;
 
                 if (prevRow == rowNr || prevRow == -1) {
                     String columnTitle;
@@ -117,14 +131,27 @@ public class TableUtils {
             clipboardString.append('\n');
 
             // Add column headers
+            hiddenColumns = 0;
             for (TreeTablePosition position : positionList) {
                 int rowNr = position.getRow();
-                int columnNr = position.getColumn();
+                int columnNr = position.getColumn()+hiddenColumns;
+
+                // Account for hidden columns
+                while (!columnMap.get(columnNr).isVisible()) {
+                	hiddenColumns++;
+                	columnNr++;
+                }
 
                 // Get the column from the map to avoid trouble with sample
                 // headers
                 TreeTableColumn column = columnMap.get(columnNr);
+                Object object = (Object) column.getCellData(rowNr);
 
+                // Skip chromatogram column
+                if (object instanceof Chromatogram)
+                	continue;
+
+                // Add all columns
                 if (prevRow == rowNr || prevRow == -1) {
                     String columnTitle = column.getText();
                     clipboardString.append(columnTitle);
@@ -138,10 +165,19 @@ public class TableUtils {
             clipboardString.append('\n');
 
             // Add data
+            hiddenColumns = 0;
             for (TreeTablePosition position : positionList) {
 
+            		
                 int rowNr = position.getRow();
-                int columnNr = position.getColumn();
+                if (prevRow != rowNr) { hiddenColumns = 0; }
+                int columnNr = position.getColumn()+hiddenColumns;
+
+                // Account for hidden columns
+                while (!columnMap.get(columnNr).isVisible()) {
+                	hiddenColumns++;
+                	columnNr++;
+                }
 
                 // Get the column from the map to avoid trouble with sample
                 // headers
@@ -168,6 +204,8 @@ public class TableUtils {
                     text = ionAnnotation.getDescription();
                     if (text == null)
                         text = ionAnnotation.getAnnotationId();
+                } else if (object instanceof Chromatogram) {
+                	continue;
                 } else {
                     if (object != null)
                         text = object.toString();
