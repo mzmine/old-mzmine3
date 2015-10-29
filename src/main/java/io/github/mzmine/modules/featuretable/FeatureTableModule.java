@@ -26,6 +26,7 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
@@ -37,13 +38,20 @@ import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.util.TableUtils;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.TreeTableColumn.CellDataFeatures;
+import javafx.scene.control.TreeTablePosition;
+import javafx.scene.control.TreeTableRow;
 import javafx.scene.control.TreeTableView;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
 public class FeatureTableModule implements MZmineRunnableModule {
@@ -55,6 +63,7 @@ public class FeatureTableModule implements MZmineRunnableModule {
     private static final String MODULE_DESCRIPTION = "This module creates a TableView of a feature table.";
 
     private static Map<Integer, TreeTableColumn<FeatureTableRow, Object>> columnMap;
+    private static Map<Integer, TreeItem<FeatureTableRow>> rowMap;
 
     @Override
     public @Nonnull String getName() {
@@ -81,6 +90,7 @@ public class FeatureTableModule implements MZmineRunnableModule {
         final List<FeatureTableColumn<?>> columns = featureTable.getColumns();
         final List<FeatureTableRow> rows = featureTable.getRows();
         columnMap = new HashMap<Integer, TreeTableColumn<FeatureTableRow, Object>>();
+        rowMap = new HashMap<Integer, TreeItem<FeatureTableRow>>();
         TreeTableColumn<FeatureTableRow, Object> tableColumn = null;
         TreeTableColumn<FeatureTableRow, Object> sampleColumn = null;
         Sample prevSample = null, currentSample = null;
@@ -90,9 +100,35 @@ public class FeatureTableModule implements MZmineRunnableModule {
         final TreeItem<FeatureTableRow> root = new TreeItem<>();
         root.setExpanded(true);
 
-        // Add all rows to their group
+        // Table tree items
+        TreeItem<FeatureTableRow> treeItem;
+
+        // Group rows
+        FeatureTableColumn groupColoumn = featureTable
+                .getColumn(ColumnName.GROUPID.getName(), null);
+        FeatureTableColumn idColoumn = featureTable
+                .getColumn(ColumnName.ID.getName(), null);
         for (FeatureTableRow row : rows) {
-            root.getChildren().add(new TreeItem(new TreeItem<>(row)));
+            // No group column
+            if (groupColoumn == null) {
+                treeItem = new TreeItem<>(row);
+                root.getChildren().add(treeItem);
+            }
+            // No group id
+            else if (row.getData(groupColoumn) == null) {
+                treeItem = new TreeItem<>(row);
+                treeItem.setExpanded(true);
+                root.getChildren().add(treeItem);
+                rowMap.put((int) row.getData(idColoumn), treeItem);
+            }
+            // The row has a group id
+            else {
+                Integer groupID = (int) row.getData(groupColoumn);
+                TreeItem<FeatureTableRow> parentTreeItem = rowMap.get(groupID);
+                treeItem = new TreeItem<>(row);
+                parentTreeItem.getChildren().add(treeItem);
+                rowMap.put((int) row.getData(idColoumn), treeItem);
+            }
         }
 
         // New tree table
@@ -100,6 +136,11 @@ public class FeatureTableModule implements MZmineRunnableModule {
 
         // Common columns
         for (FeatureTableColumn<?> col : columns) {
+
+            // Don't show Group ID column
+            if (col.getName() == ColumnName.GROUPID.getName())
+                continue;
+
             currentSample = col.getSample();
             if (currentSample == null) {
                 tableColumn = new TreeTableColumn<FeatureTableRow, Object>(
@@ -112,10 +153,8 @@ public class FeatureTableModule implements MZmineRunnableModule {
 
                                 if (p.getValue() != null) {
                                     if (p.getValue().getValue() != null) {
-                                        TreeItem treeItem = (TreeItem) p
+                                        FeatureTableRow featureTableRow = (FeatureTableRow) p
                                                 .getValue().getValue();
-                                        FeatureTableRow featureTableRow = (FeatureTableRow) treeItem
-                                                .getValue();
                                         if (featureTableRow
                                                 .getData(col) != null) {
                                             return new SimpleObjectProperty<>(
@@ -170,10 +209,8 @@ public class FeatureTableModule implements MZmineRunnableModule {
 
                                 if (p.getValue() != null) {
                                     if (p.getValue().getValue() != null) {
-                                        TreeItem treeItem = (TreeItem) p
+                                        FeatureTableRow featureTableRow = (FeatureTableRow) p
                                                 .getValue().getValue();
-                                        FeatureTableRow featureTableRow = (FeatureTableRow) treeItem
-                                                .getValue();
                                         if (featureTableRow
                                                 .getData(col) != null) {
                                             return new SimpleObjectProperty<>(
@@ -220,6 +257,47 @@ public class FeatureTableModule implements MZmineRunnableModule {
         FeatureTablePopupMenu popupMenu = new FeatureTablePopupMenu(
                 featureTable, treeTable);
         treeTable.setContextMenu(popupMenu);
+
+        // Add double click to open XIC chromatogram
+        treeTable.setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                    // Find feature table row
+                    Node node = ((Node) event.getTarget()).getParent();
+                    TreeTableRow row;
+                    while (!(node instanceof TreeTableRow)) {
+                        node = node.getParent();
+                    }
+                    row = (TreeTableRow) node;
+                    FeatureTableRow featureTableRow = (FeatureTableRow) row
+                            .getItem();
+
+                    // Find sample
+                    Sample sample = null;
+                    ObservableList<TreeTablePosition<FeatureTableRow, ?>> cells = treeTable
+                            .getSelectionModel().getSelectedCells();
+                    for (TreeTablePosition<FeatureTableRow, ?> cell : cells) {
+                        if (cell.getTableColumn().getParentColumn() != null) {
+                            TreeTableColumn parentColumn = (TreeTableColumn) cell.getTableColumn().getParentColumn();
+                            List<Sample> samples = featureTable.getSamples();
+                            for (Sample s : samples) {
+                                if (s.getName().equals(parentColumn.getText())) {
+                                    sample = s;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    /*
+                     * TODO: Show XIC chromatogram
+                     */
+                    System.out.println("Show XIC chromatogram for row "+ featureTableRow);
+                    System.out.println("Sample: " + sample);
+                }
+            }
+        });
 
         // Add column selection button
         treeTable.setTableMenuButtonVisible(true);

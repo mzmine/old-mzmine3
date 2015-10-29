@@ -24,8 +24,6 @@ import com.sun.javafx.scene.control.skin.TreeTableViewSkin;
 
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Side;
@@ -191,18 +189,19 @@ public class FeatureTableMenu {
                             for (TreeTableColumn col2 : tableColumn2
                                     .getColumns()) {
                                 if (col.getText().equals(col2.getText())) {
-                                    cb.selectedProperty().bindBidirectional(col2.visibleProperty());
+                                    cb.selectedProperty().bindBidirectional(
+                                            col2.visibleProperty());
 
-                                   // cb.setSelected(true);
-                                   // cb.selectedProperty().addListener(
-                                   //         new ChangeListener<Boolean>() {
-                                   //             public void changed(
-                                   //                     ObservableValue<? extends Boolean> ov,
-                                   //                     Boolean old_val,
-                                   //                     Boolean new_val) {
-                                   //                 col2.setVisible(new_val);
-                                   //             }
-                                   //         });
+                                    // cb.setSelected(true);
+                                    // cb.selectedProperty().addListener(
+                                    // new ChangeListener<Boolean>() {
+                                    // public void changed(
+                                    // ObservableValue<? extends Boolean> ov,
+                                    // Boolean old_val,
+                                    // Boolean new_val) {
+                                    // col2.setVisible(new_val);
+                                    // }
+                                    // });
 
                                 }
                             }
@@ -219,14 +218,14 @@ public class FeatureTableMenu {
                 cm.getItems().add(new SeparatorMenuItem());
             }
 
-            if (childrenColumns == 0 ) {
+            if (childrenColumns == 0) {
                 cb = new CheckBox(tableColumn.getText());
                 cb.selectedProperty()
                         .bindBidirectional(tableColumn.visibleProperty());
-    
+
                 cmi = new CustomMenuItem(cb);
                 cmi.setHideOnClick(false);
-    
+
                 cm.getItems().add(cmi);
             }
 

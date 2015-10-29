@@ -27,34 +27,83 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableView;
 
 public class FeatureTablePopupMenu extends ContextMenu {
 
-    public FeatureTablePopupMenu(FeatureTable featureTable, TreeTableView<FeatureTableRow> treeTable) {
+    public FeatureTablePopupMenu(FeatureTable featureTable,
+            TreeTableView<FeatureTableRow> treeTable) {
 
-        // Show menu
+        /*
+         * Show menu
+         */
         Menu showMenu = new Menu("Show");
+
+        // XIC
         MenuItem xicItem = new MenuItem("Extracted Ion Chromatogram (XIC)");
+        xicItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                /*
+                 * TODO
+                 */
+            }
+        });
         showMenu.getItems().addAll(xicItem);
         getItems().addAll(showMenu);
+        getItems().addAll(new SeparatorMenuItem());
 
-        // Other items
-        MenuItem deleteItem = new MenuItem("Delete selected row(s)");
-        deleteItem.setOnAction(new EventHandler<ActionEvent>()
-        {
+        /*
+         * Other items
+         */
+
+        // Expand
+        MenuItem expandItem = new MenuItem("Expand all groups");
+        expandItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(ActionEvent e)
-            {
-                ObservableList<TreeItem<FeatureTableRow>> rows = treeTable.getSelectionModel().getSelectedItems();
-                if(rows!=null) {
+            public void handle(ActionEvent e) {
+                /*
+                 * TODO!
+                 */
+                treeTable.refresh();
+                System.out.println("Expand all groups!");
+            }
+        });
+        getItems().addAll(expandItem);
+
+        // Collapse
+        MenuItem collapsItem = new MenuItem("Collapse all groups");
+        collapsItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                /*
+                 * TODO!
+                 */
+                treeTable.refresh();
+                System.out.println("Collapse all groups!");
+            }
+        });
+        getItems().addAll(collapsItem);
+        getItems().addAll(new SeparatorMenuItem());
+
+        // Delete
+        MenuItem deleteItem = new MenuItem("Delete selected row(s)");
+        deleteItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                ObservableList<TreeItem<FeatureTableRow>> rows = treeTable
+                        .getSelectionModel().getSelectedItems();
+                if (rows != null) {
                     for (TreeItem<FeatureTableRow> row : rows) {
                         FeatureTableRow featureTableRow = row.getValue();
-
-                        //featureTable.removeRow(featureTableRow);
-                        System.out.println("Delete row: " + row);
-                        System.out.println("Delete feature table row: " + featureTableRow);
+                        featureTable.removeRow(featureTableRow);
+                        /*
+                         * TODO!
+                         */
+                        treeTable.refresh();
+                        System.out.println("Feature row deleted - update table!");
                     }
                 }
             }
