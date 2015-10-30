@@ -21,8 +21,10 @@ package io.github.mzmine.modules.featuredetection.targeteddetection;
 
 import java.util.Arrays;
 
+import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterValidator;
+import io.github.mzmine.parameters.parametertypes.DoubleParameter;
 import io.github.mzmine.parameters.parametertypes.PercentParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.TextAreaParameter;
@@ -53,7 +55,15 @@ public class TargetedDetectionParameters extends ParameterSet {
     public static final PercentParameter intensityTolerance = new PercentParameter(
             "Intensity tolerance",
             "Maximum allowed deviation of the peak chromatogram from the expected /\\ shape.",
-            "Data", ParameterValidator.createNonEmptyValidator(), 0.3);
+            "Data", ParameterValidator.createNonEmptyValidator(), 0.15);
+
+    public static final DoubleParameter minHeight = new DoubleParameter(
+            "Min peak height",
+            "Peaks with intensities less than this value are interpreted as noise",
+            "Data", MZmineCore.getConfiguration().getIntensityFormat(), ParameterValidator.createNonEmptyValidator(), 5000d);
+
+  //  public static final MZToleranceParameter MZTolerance = new MZToleranceParameter();
+  //  public static final RTToleranceParameter RTTolerance = new RTToleranceParameter();
 
     public static final StringParameter nameSuffix = new StringParameter(
             "Name suffix",
@@ -64,7 +74,7 @@ public class TargetedDetectionParameters extends ParameterSet {
      * Create the parameter set.
      */
     public TargetedDetectionParameters() {
-        super(rawDataFiles, features, separator, intensityTolerance, nameSuffix);
+        super(rawDataFiles, features, separator, intensityTolerance, minHeight, nameSuffix);
     }
 
 }

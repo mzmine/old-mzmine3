@@ -90,10 +90,16 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
                 .getParameter(TargetedDetectionParameters.intensityTolerance)
                 .getValue();
 
+        final Double minHeight = parameters
+                .getParameter(TargetedDetectionParameters.minHeight).getValue();
+
+        final String nameSuffix = " " + parameters
+                .getParameter(TargetedDetectionParameters.nameSuffix)
+                .getValue();
+
         // Variables
         final MZTolerance mzTolerance = new MZTolerance(0.003, 5.0);
         final RTTolerance rtTolerance = new RTTolerance(0.2, false);
-        final Double noiseLevel = 5000d;
 
         if (rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
             logger.warn(
@@ -145,7 +151,7 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
             // Create the detection method
             TargetedDetectionMethod method = new TargetedDetectionMethod(
                     ionAnnotations, rawDataFile, dataStore, mzTolerance,
-                    rtTolerance, intensityTolerance, noiseLevel);
+                    rtTolerance, intensityTolerance, minHeight);
 
             newTask = new MSDKTask("Targeted feature detection",
                     rawDataFile.getName(), method);
@@ -153,8 +159,8 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
                 List<Chromatogram> detectedChromatograms = method.getResult();
 
                 // Create a new feature table
-                FeatureTable featureTable = MSDKObjectBuilder
-                        .getFeatureTable(rawDataFile.getName(), dataStore);
+                FeatureTable featureTable = MSDKObjectBuilder.getFeatureTable(
+                        rawDataFile.getName() + nameSuffix, dataStore);
 
                 // Create a new sample
                 Sample sample = MSDKObjectBuilder
@@ -166,9 +172,8 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
 
                 /*
                  * TODO: Make new TargetedDetectionTask which will run the
-                 * following tasks one by one: 
-                 * - TargetedDetectionMethod
-                 * - ChromatogramToFeatureTableMethod
+                 * following tasks one by one: - TargetedDetectionMethod -
+                 * ChromatogramToFeatureTableMethod
                  */
                 try {
                     method2.execute();
