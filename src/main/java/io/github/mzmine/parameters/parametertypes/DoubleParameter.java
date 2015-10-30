@@ -47,11 +47,11 @@ public class DoubleParameter extends AbstractParameter<Double> {
     }
 
     public DoubleParameter(@Nonnull String name, @Nonnull String description,
-            @Nonnull String category, @Nullable NumberFormat intensityFormat,
+            @Nonnull String category, @Nullable NumberFormat numberFormat,
             @Nullable ParameterValidator<Double> validator,
             @Nullable Double defaultValue) {
         super(name, description, category, DoubleEditor.class, validator,
-                intensityFormat);
+                numberFormat);
         setValue(defaultValue);
     }
 
