@@ -42,7 +42,12 @@ import javafx.scene.control.MenuItem;
 public class MainMenuController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
+    @FXML
+    protected void closeProject(ActionEvent event) {
+        MZmineGUI.closeProject();
+    }
+
     @FXML
     protected void exitApplication(ActionEvent event) {
         MZmineGUI.requestQuit();

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
@@ -56,6 +57,8 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuBar;
@@ -195,7 +198,34 @@ public final class MZmineGUI extends Application {
                 System.exit(0);
             }
         });
+    }
 
+    public static void closeProject() {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        String s = "Are you sure you want to close the current project?";
+        alert.setContentText(s);       
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+            MZmineGUIProject newProject = new MZmineGUIProject();
+            activateProject(newProject);
+            setStatusBarMessage("");
+        }
+        
+       // Dialog<ButtonType> dialog = new Dialog<>();
+       // dialog.setTitle("Confirmation");
+       // dialog.setContentText(
+       //         "Are you sure you want to close the current project?");
+       // dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES,
+       //         ButtonType.NO);
+       // dialog.showAndWait().ifPresent(response -> {
+       //     if (response == ButtonType.YES) {
+       //         MZmineGUIProject newProject = new MZmineGUIProject();
+       //         activateProject(newProject);
+        //        setStatusBarMessage("");
+       //     }
+       // });
     }
 
     public static void displayMessage(String msg) {
@@ -266,7 +296,7 @@ public final class MZmineGUI extends Application {
             public void run() {
                 newDock.setFloating(true);
             }
-          });
+        });
 
     }
 
