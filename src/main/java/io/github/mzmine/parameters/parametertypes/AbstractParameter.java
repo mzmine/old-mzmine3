@@ -19,6 +19,7 @@
 
 package io.github.mzmine.parameters.parametertypes;
 
+import java.text.NumberFormat;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
@@ -41,16 +42,19 @@ public abstract class AbstractParameter<ValueType>
     private final @Nonnull String name, description, category;
     private final Optional<Class<? extends ParameterEditor<ValueType>>> editorClass;
     private @Nullable ParameterValidator<ValueType> validator;
+    private @Nullable NumberFormat numberFormat;
 
     public AbstractParameter(@Nonnull String name, @Nonnull String description,
             @Nonnull String category,
             @Nonnull Class<? extends ParameterEditor<ValueType>> editorClass,
-            @Nullable ParameterValidator<ValueType> validator) {
+            @Nullable ParameterValidator<ValueType> validator,
+            @Nullable NumberFormat numberFormat) {
         this.name = name;
         this.description = description;
         this.category = category;
         this.editorClass = Optional.of(editorClass);
         this.validator = validator;
+        this.numberFormat = numberFormat;
     }
 
     @Override
@@ -78,6 +82,11 @@ public abstract class AbstractParameter<ValueType>
     @Override
     public @Nullable ValueType getValue() {
         return value;
+    }
+
+    @Override
+    public @Nullable NumberFormat getNumberFormat() {
+        return numberFormat;
     }
 
     @SuppressWarnings("unchecked")

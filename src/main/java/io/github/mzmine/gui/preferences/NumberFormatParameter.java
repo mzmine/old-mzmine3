@@ -38,7 +38,7 @@ public class NumberFormatParameter extends AbstractParameter<DecimalFormat> {
             @Nonnull String description, @Nonnull String category,
             boolean showExponentOption, @Nonnull DecimalFormat defaultValue) {
 
-        super(name, description, category, NumberFormatEditor.class, null);
+        super(name, description, category, NumberFormatEditor.class, null, null);
 
         assert defaultValue != null;
 

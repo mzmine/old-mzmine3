@@ -42,7 +42,7 @@ public class RawDataFilesParameter
     private static final @Nonnull String CATEGORY = "Input";
 
     public RawDataFilesParameter() {
-        super(NAME, DESCRIPTION, CATEGORY, RawDataFilesEditor.class, null);
+        super(NAME, DESCRIPTION, CATEGORY, RawDataFilesEditor.class, null, null);
     }
 
     @Override

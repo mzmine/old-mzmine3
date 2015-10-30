@@ -52,7 +52,7 @@ public class TextAreaParameter extends AbstractParameter<String> {
             @Nullable ParameterValidator<String> validator,
             @Nonnull List<FileChooser.ExtensionFilter> extensions) {
         super(name, description, category, TextAreaEditor.class,
-                validator);
+                validator, null);
         this.extensions = ImmutableList.copyOf(extensions);
     }
 

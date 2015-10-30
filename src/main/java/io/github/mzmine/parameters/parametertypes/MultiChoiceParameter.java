@@ -48,7 +48,7 @@ public class MultiChoiceParameter<ValueType>
             @Nonnull String description, @Nonnull String category,
             @Nonnull List<ValueType> choices, List<ValueType> defaultValue) {
         super(name, description, category, (Class) MultiChoiceEditor.class,
-                null);
+                null, null);
         this.choices = choices;
         setValue(defaultValue);
     }

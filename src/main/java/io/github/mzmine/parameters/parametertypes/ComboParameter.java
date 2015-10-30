@@ -52,7 +52,7 @@ public class ComboParameter<ValueType> extends AbstractParameter<ValueType> {
             @Nonnull List<ValueType> options,
             @Nullable ValueType defaultValue) {
         super(name, description, category, (Class) ComboEditor.class,
-                validator);
+                validator, null);
         this.options = FXCollections.observableList(options);
         setValue(defaultValue);
     }
