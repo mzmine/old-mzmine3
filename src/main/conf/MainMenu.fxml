@@ -128,7 +128,7 @@
 				</Menu>
 			</items>
 		</Menu>
-		<Menu text="Feature Methods">
+		<Menu text="Feature Table Methods">
 			<items>
 				<Menu text="Feature Detection">
 					<items>

@@ -58,7 +58,8 @@ public class ParameterSetupDialog extends Alert {
         Stage stage = (Stage) getDialogPane().getScene().getWindow();
         stage.getIcons().setAll(mzMineIcon);
 
-        setTitle("Parameters");
+        setTitle("Parameters (" + parameters.getClass().getSimpleName()
+                .replace("Parameters", "") + ")");
         setHeaderText("Please set parameter values");
         setResizable(true);
 
