@@ -29,7 +29,6 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
@@ -55,13 +54,11 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
     private static final String MODULE_NAME = "Targeted detection";
     private static final String MODULE_DESCRIPTION = "This module searches for specific features in the raw data files.";
 
-    @SuppressWarnings("null")
     @Override
     public @Nonnull String getName() {
         return MODULE_NAME;
     }
 
-    @SuppressWarnings("null")
     @Override
     public @Nonnull String getDescription() {
         return MODULE_DESCRIPTION;
@@ -139,6 +136,7 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
         scanner.close();
 
         for (RawDataFile rawDataFile : rawDataFiles.getMatchingRawDataFiles()) {
+
             // Create the data structures
             DataPointStore dataStore = DataPointStoreFactory
                     .getMemoryDataStore();
@@ -153,10 +151,10 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
 
             // Add the feature table to the project
             newTask.setOnSucceeded(e -> {
-                FeatureTable featureTable = newTask.getResult();                
+                FeatureTable featureTable = newTask.getResult();
                 project.addFeatureTable(featureTable);
             });
-            
+
             // Add the task to the queue
             tasks.add(newTask);
 
