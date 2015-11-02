@@ -24,12 +24,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.Nullable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import io.github.mzmine.modules.MZmineModule;
 import javafx.scene.control.ButtonType;
 
 /**
@@ -101,8 +104,8 @@ public class ParameterSet implements Iterable<Parameter<?>>, Cloneable {
         return parameters;
     }
 
-    public ButtonType showSetupDialog() {
-        ParameterSetupDialog dialog = new ParameterSetupDialog(this);
+    public ButtonType showSetupDialog(@Nullable MZmineModule module) {
+        ParameterSetupDialog dialog = new ParameterSetupDialog(this, module);
         Optional<ButtonType> result = dialog.showAndWait();
         return result.get();
     }

@@ -350,7 +350,7 @@ public final class MZmineGUI extends Application {
                 .getModuleInstance(moduleClass);
         final ParameterSet moduleParameters = MZmineCore.getConfiguration()
                 .getModuleParameters(moduleClass);
-        ButtonType result = moduleParameters.showSetupDialog();
+        ButtonType result = moduleParameters.showSetupDialog(null);
         if (result == ButtonType.OK) {
             List<Task<?>> newTasks = new ArrayList<>();
             moduleInstance.runModule(MZmineCore.getCurrentProject(),

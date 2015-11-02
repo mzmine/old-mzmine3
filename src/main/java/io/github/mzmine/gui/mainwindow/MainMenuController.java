@@ -105,7 +105,7 @@ public class MainMenuController {
     protected void setPreferences(ActionEvent event) {
         // Show the Preferences dialog
         logger.info("Showing the Preferences dialog");
-        MZmineCore.getConfiguration().getPreferences().showSetupDialog();
+        MZmineCore.getConfiguration().getPreferences().showSetupDialog(null);
     }
 
 }
