@@ -44,7 +44,7 @@ public class BooleanParameter extends AbstractParameter<Boolean> {
             @Nonnull String category,
             @Nullable ParameterValidator<Boolean> validator,
             @Nullable Boolean defaultValue) {
-        super(name, description, category, BooleanEditor.class, validator, null);
+        super(name, description, category, BooleanEditor.class, validator);
         setValue(defaultValue);
     }
 

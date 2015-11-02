@@ -59,7 +59,7 @@ public class StringParameter extends AbstractParameter<String> {
             @Nullable ParameterValidator<String> validator,
             @Nullable String defaultValue,
             @Nullable EventHandler<ActionEvent> autoSetAction) {
-        super(name, description, category, StringEditor.class, validator, null);
+        super(name, description, category, StringEditor.class, validator);
         setValue(defaultValue);
         this.autoSetAction = autoSetAction;
     }

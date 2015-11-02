@@ -42,7 +42,7 @@ public class OptionalModuleParameter extends AbstractParameter<Boolean> {
     public OptionalModuleParameter(@Nonnull String name,
             @Nonnull String description, @Nonnull String category,
             ParameterSet embeddedParameters) {
-        super(name, description, category, OptionalModuleEditor.class, null, null);
+        super(name, description, category, OptionalModuleEditor.class, null);
 
         this.embeddedParameters = embeddedParameters;
 

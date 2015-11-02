@@ -60,7 +60,7 @@ public class FileNameParameter extends AbstractParameter<File> {
             @Nonnull String category,
             @Nullable ParameterValidator<File> validator, @Nonnull Type type,
             File defaultValue) {
-        super(name, description, category, FileNameEditor.class, validator, null);
+        super(name, description, category, FileNameEditor.class, validator);
         this.type = type;
         setValue(defaultValue);
     }

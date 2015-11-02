@@ -49,7 +49,7 @@ public class PercentParameter extends AbstractParameter<Double> {
             @Nonnull String category,
             @Nullable ParameterValidator<Double> validator,
             @Nullable Double defaultValue) {
-        super(name, description, category, PercentEditor.class, validator, null);
+        super(name, description, category, PercentEditor.class, validator);
         setValue(defaultValue);
     }
 

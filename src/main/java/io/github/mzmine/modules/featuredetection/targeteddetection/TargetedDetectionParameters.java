@@ -40,7 +40,6 @@ public class TargetedDetectionParameters extends ParameterSet {
             new ExtensionFilter("CSV files", "*.csv"),
             new ExtensionFilter("TXT files", "*.txt") };
 
-    @SuppressWarnings("null")
     public static final TextAreaParameter features = new TextAreaParameter(
             "Features",
             "Features to search for in the raw data file(s). Any line not starting with a number will be ignored.\nExpected input is: m/z, retention time, name",
@@ -60,10 +59,11 @@ public class TargetedDetectionParameters extends ParameterSet {
     public static final DoubleParameter minHeight = new DoubleParameter(
             "Min peak height",
             "Peaks with intensities less than this value are interpreted as noise",
-            "Data", MZmineCore.getConfiguration().getIntensityFormat(), ParameterValidator.createNonEmptyValidator(), 5000d);
+            "Data", MZmineCore.getConfiguration().getIntensityFormat(),
+            ParameterValidator.createNonEmptyValidator(), 5000d);
 
-  //  public static final MZToleranceParameter MZTolerance = new MZToleranceParameter();
-  //  public static final RTToleranceParameter RTTolerance = new RTToleranceParameter();
+    // public static final MZToleranceParameter MZTolerance = newMZToleranceParameter();
+    // public static final RTToleranceParameter RTTolerance = newRTToleranceParameter();
 
     public static final StringParameter nameSuffix = new StringParameter(
             "Name suffix",
@@ -74,7 +74,8 @@ public class TargetedDetectionParameters extends ParameterSet {
      * Create the parameter set.
      */
     public TargetedDetectionParameters() {
-        super(rawDataFiles, features, separator, intensityTolerance, minHeight, nameSuffix);
+        super(rawDataFiles, features, separator, intensityTolerance, minHeight,
+                nameSuffix);
     }
 
 }

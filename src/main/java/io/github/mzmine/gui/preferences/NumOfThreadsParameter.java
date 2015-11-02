@@ -35,7 +35,7 @@ public class NumOfThreadsParameter
     private static final @Nonnull String category = "Parallel tasks";
 
     public NumOfThreadsParameter() {
-        super(name, description, category, NumOfThreadsEditor.class, null, null);
+        super(name, description, category, NumOfThreadsEditor.class, null);
 
         // Provide a default value
         setValue(new NumOfThreadsValue(true, 4));

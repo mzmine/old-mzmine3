@@ -30,6 +30,8 @@ import io.github.mzmine.parameters.ParameterValidator;
 
 public class DoubleParameter extends AbstractParameter<Double> {
 
+    private @Nullable NumberFormat numberFormat = null;
+
     public DoubleParameter(@Nonnull String name, @Nonnull String description,
             @Nonnull String category) {
         this(name, description, category, null, null, null);
@@ -50,9 +52,9 @@ public class DoubleParameter extends AbstractParameter<Double> {
             @Nonnull String category, @Nullable NumberFormat numberFormat,
             @Nullable ParameterValidator<Double> validator,
             @Nullable Double defaultValue) {
-        super(name, description, category, DoubleEditor.class, validator,
-                numberFormat);
+        super(name, description, category, DoubleEditor.class, validator);
         setValue(defaultValue);
+        this.numberFormat = numberFormat;
     }
 
     @Override
@@ -60,6 +62,10 @@ public class DoubleParameter extends AbstractParameter<Double> {
         DoubleParameter copy = new DoubleParameter(getName(), getDescription(),
                 getCategory(), getNumberFormat(), getValidator(), getValue());
         return copy;
+    }
+
+    public NumberFormat getNumberFormat() {
+        return numberFormat;
     }
 
     @Override

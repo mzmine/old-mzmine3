@@ -61,7 +61,4 @@ public interface Parameter<ValueType> extends Item, Cloneable {
     @Nullable
     ParameterValidator<ValueType> getValidator();
 
-    @Nullable
-    NumberFormat getNumberFormat();
-
 }

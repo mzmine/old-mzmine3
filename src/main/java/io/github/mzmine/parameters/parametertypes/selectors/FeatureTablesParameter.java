@@ -42,7 +42,7 @@ public class FeatureTablesParameter
     private static final @Nonnull String CATEGORY = "Input";
 
     public FeatureTablesParameter() {
-        super(NAME, DESCRIPTION, CATEGORY, FeatureTablesEditor.class, null, null);
+        super(NAME, DESCRIPTION, CATEGORY, FeatureTablesEditor.class, null);
     }
 
     @Override
