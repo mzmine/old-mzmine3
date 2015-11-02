@@ -68,7 +68,7 @@ public class TargetedDetectionParameters extends ParameterSet {
     public static final StringParameter nameSuffix = new StringParameter(
             "Name suffix",
             "Suffix to be added to the raw data file(s) when creating the feature table(s)",
-            "Suffix", "targetedDetection");
+            "Suffix", " targetedDetection");
 
     /**
      * Create the parameter set.

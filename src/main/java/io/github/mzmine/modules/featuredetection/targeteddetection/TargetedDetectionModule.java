@@ -33,20 +33,16 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.featuredetection.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
-import io.github.msdk.featuredetection.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;
 import io.github.mzmine.project.MZmineProject;
-import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.concurrent.Task;
 
 /**
@@ -93,7 +89,7 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
         final Double minHeight = parameters
                 .getParameter(TargetedDetectionParameters.minHeight).getValue();
 
-        final String nameSuffix = " " + parameters
+        final String nameSuffix = parameters
                 .getParameter(TargetedDetectionParameters.nameSuffix)
                 .getValue();
 
@@ -146,46 +142,22 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
             // Create the data structures
             DataPointStore dataStore = DataPointStoreFactory
                     .getMemoryDataStore();
-            MSDKTask newTask;
 
-            // Create the detection method
-            TargetedDetectionMethod method = new TargetedDetectionMethod(
+            // New targeted detection task which runs the following two methods:
+            // 1. TargetedDetectionMethod
+            // 2. ChromatogramToFeatureTableMethod
+            TargetedDetectionTask newTask = new TargetedDetectionTask(
+                    "Targeted feature detection", rawDataFile.getName(),
                     ionAnnotations, rawDataFile, dataStore, mzTolerance,
-                    rtTolerance, intensityTolerance, minHeight);
+                    rtTolerance, intensityTolerance, minHeight, nameSuffix);
 
-            newTask = new MSDKTask("Targeted feature detection",
-                    rawDataFile.getName(), method);
+            // Add the feature table to the project
             newTask.setOnSucceeded(e -> {
-                List<Chromatogram> detectedChromatograms = method.getResult();
-
-                // Create a new feature table
-                FeatureTable featureTable = MSDKObjectBuilder.getFeatureTable(
-                        rawDataFile.getName() + nameSuffix, dataStore);
-
-                // Create a new sample
-                Sample sample = MSDKObjectBuilder
-                        .getSimpleSample(rawDataFile.getName());
-
-                // Add the chromatograms to the feature table
-                ChromatogramToFeatureTableMethod method2 = new ChromatogramToFeatureTableMethod(
-                        detectedChromatograms, featureTable, sample);
-
-                /*
-                 * TODO: Make new TargetedDetectionTask which will run the
-                 * following tasks one by one: - TargetedDetectionMethod -
-                 * ChromatogramToFeatureTableMethod
-                 */
-                try {
-                    method2.execute();
-                } catch (Exception e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-
-                // Add the feature table to the project
+                FeatureTable featureTable = newTask.getResult();                
                 project.addFeatureTable(featureTable);
             });
-
+            
+            // Add the task to the queue
             tasks.add(newTask);
 
         }
