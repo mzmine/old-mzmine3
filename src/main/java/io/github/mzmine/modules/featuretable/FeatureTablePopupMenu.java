@@ -42,9 +42,9 @@ public class FeatureTablePopupMenu extends ContextMenu {
         this.featureTable = featureTable;
         this.treeTable = treeTable;
 
-        /* ***********
+        /*
          * Show menu
-         *************/
+         */
 
         Menu showMenu = new Menu("Show");
 
@@ -55,10 +55,9 @@ public class FeatureTablePopupMenu extends ContextMenu {
         getItems().addAll(showMenu);
         getItems().addAll(new SeparatorMenuItem());
 
-
-        /* ************
+        /*
          * Other items
-         **************/
+         */
 
         // Expand
         MenuItem expandItem = new MenuItem("Expand all groups");
@@ -88,7 +87,8 @@ public class FeatureTablePopupMenu extends ContextMenu {
 
                 // Tree items
                 TreeItem<FeatureTableRow> rootItem = treeTable.getRoot();
-                ObservableList<TreeItem<FeatureTableRow>> treeItems = rootItem.getChildren();
+                ObservableList<TreeItem<FeatureTableRow>> treeItems = rootItem
+                        .getChildren();
 
                 switch (item) {
 
@@ -122,7 +122,8 @@ public class FeatureTablePopupMenu extends ContextMenu {
                             treeItems = row.getChildren();
                             for (TreeItem<FeatureTableRow> treeItem : treeItems) {
                                 // Remove from featureTable
-                                FeatureTableRow featureTableRow = treeItem.getValue();
+                                FeatureTableRow featureTableRow = treeItem
+                                        .getValue();
                                 featureTable.removeRow(featureTableRow);
 
                                 // Remove from tree table view
