@@ -21,6 +21,8 @@ package io.github.mzmine.parameters.parametertypes;
 
 import java.text.NumberFormat;
 
+import javax.annotation.Nullable;
+
 import org.controlsfx.control.PropertySheet;
 
 import io.github.mzmine.parameters.ParameterEditor;
@@ -36,7 +38,7 @@ public class DoubleEditor extends BorderPane
         implements ParameterEditor<Double> {
 
     private final TextField doubleField;
-    NumberFormat numberFormat;
+    private @Nullable NumberFormat numberFormat;
 
     public DoubleEditor(PropertySheet.Item parameter) {
         if (!(parameter instanceof DoubleParameter))
