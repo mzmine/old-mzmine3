@@ -86,6 +86,10 @@ public class FeatureTablePopupMenu extends ContextMenu {
                     rows = treeTable.getSelectionModel().getSelectedItems();
                 }
 
+                // Tree items
+                TreeItem<FeatureTableRow> rootItem = treeTable.getRoot();
+                ObservableList<TreeItem<FeatureTableRow>> treeItems = rootItem.getChildren();
+
                 switch (item) {
 
                 case "XIC":
@@ -96,18 +100,16 @@ public class FeatureTablePopupMenu extends ContextMenu {
                     break;
 
                 case "Expand":
-                    /*
-                     * TODO
-                     */
-                    System.out.println("Expand all groups");
+                    for (TreeItem<FeatureTableRow> treeItem : treeItems) {
+                        treeItem.setExpanded(true);
+                    }
                     treeTable.refresh();
                     break;
 
                 case "Collapse":
-                    /*
-                     * TODO
-                     */
-                    System.out.println("Collapse all groups");
+                    for (TreeItem<FeatureTableRow> treeItem : treeItems) {
+                        treeItem.setExpanded(false);
+                    }
                     treeTable.refresh();
                     break;
 
@@ -115,6 +117,18 @@ public class FeatureTablePopupMenu extends ContextMenu {
                     if (rows != null) {
                         for (int i = rows.size() - 1; i >= 0; i--) {
                             TreeItem<FeatureTableRow> row = rows.get(i);
+
+                            // If row has children then delete those first
+                            treeItems = row.getChildren();
+                            for (TreeItem<FeatureTableRow> treeItem : treeItems) {
+                                // Remove from featureTable
+                                FeatureTableRow featureTableRow = treeItem.getValue();
+                                featureTable.removeRow(featureTableRow);
+
+                                // Remove from tree table view
+                                TreeItem<?> parent = treeItem.getParent();
+                                parent.getChildren().remove(row);
+                            }
 
                             // Remove from featureTable
                             FeatureTableRow featureTableRow = row.getValue();
