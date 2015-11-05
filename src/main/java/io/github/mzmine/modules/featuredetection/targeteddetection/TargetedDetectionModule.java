@@ -86,13 +86,17 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
         final Double minHeight = parameters
                 .getParameter(TargetedDetectionParameters.minHeight).getValue();
 
+        final RTTolerance rtTolerance = parameters
+                .getParameter(TargetedDetectionParameters.rtTolerance)
+                .getValue();
+
+        final MZTolerance mzTolerance = parameters
+                .getParameter(TargetedDetectionParameters.mzTolerance)
+                .getValue();
+
         final String nameSuffix = parameters
                 .getParameter(TargetedDetectionParameters.nameSuffix)
                 .getValue();
-
-        // Variables
-        final MZTolerance mzTolerance = new MZTolerance(0.003, 5.0);
-        final RTTolerance rtTolerance = new RTTolerance(0.2, false);
 
         if (rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
             logger.warn(
