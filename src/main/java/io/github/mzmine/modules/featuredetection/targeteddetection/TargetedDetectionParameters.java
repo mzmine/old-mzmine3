@@ -21,12 +21,18 @@ package io.github.mzmine.modules.featuredetection.targeteddetection;
 
 import java.util.Arrays;
 
+import io.github.msdk.util.MZTolerance;
+import io.github.msdk.util.RTTolerance;
+import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterValidator;
+import io.github.mzmine.parameters.parametertypes.DoubleParameter;
 import io.github.mzmine.parameters.parametertypes.PercentParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.TextAreaParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
+import io.github.mzmine.parameters.parametertypes.tolerances.MZToleranceParameter;
+import io.github.mzmine.parameters.parametertypes.tolerances.RTToleranceParameter;
 import javafx.stage.FileChooser.ExtensionFilter;
 
 public class TargetedDetectionParameters extends ParameterSet {
@@ -38,7 +44,6 @@ public class TargetedDetectionParameters extends ParameterSet {
             new ExtensionFilter("CSV files", "*.csv"),
             new ExtensionFilter("TXT files", "*.txt") };
 
-    @SuppressWarnings("null")
     public static final TextAreaParameter features = new TextAreaParameter(
             "Features",
             "Features to search for in the raw data file(s). Any line not starting with a number will be ignored.\nExpected input is: m/z, retention time, name",
@@ -50,21 +55,42 @@ public class TargetedDetectionParameters extends ParameterSet {
             "Character(s) used to separate fields in the feature list",
             "Features", ParameterValidator.createNonEmptyValidator(), ",");
 
+    public static final DoubleParameter minHeight = new DoubleParameter(
+            "Min peak height",
+            "Peaks with intensities less than this value are interpreted as noise",
+            "Data", MZmineCore.getConfiguration().getIntensityFormat(),
+            ParameterValidator.createNonEmptyValidator(), 5000d);
+
     public static final PercentParameter intensityTolerance = new PercentParameter(
             "Intensity tolerance",
             "Maximum allowed deviation of the peak chromatogram from the expected /\\ shape.",
-            "Data", ParameterValidator.createNonEmptyValidator(), 0.3);
+            "Data", ParameterValidator.createNonEmptyValidator(), 0.15);
+
+    public static final MZToleranceParameter mzTolerance = new MZToleranceParameter(
+            "m/z tolerance",
+            "Maximum allowed difference between two m/z values to be considered same.\n"
+                    + "The value is specified both as absolute tolerance (in m/z) and relative tolerance (in ppm).\n"
+                    + "The tolerance range is calculated using maximum of the absolute and relative tolerances.",
+            "Data", ParameterValidator.createNonEmptyValidator(),
+            new MZTolerance(0.001, 5.0));
+
+    public static final RTToleranceParameter rtTolerance = new RTToleranceParameter(
+            "RT tolerance",
+            "Maximum allowed retention time difference between the peak apex and the retention times in the above feature input list.",
+            "Data", ParameterValidator.createNonEmptyValidator(),
+            new RTTolerance(10, true));
 
     public static final StringParameter nameSuffix = new StringParameter(
             "Name suffix",
             "Suffix to be added to the raw data file(s) when creating the feature table(s)",
-            "Suffix", "targetedDetection");
+            "Suffix", " targetedDetection");
 
     /**
      * Create the parameter set.
      */
     public TargetedDetectionParameters() {
-        super(rawDataFiles, features, separator, intensityTolerance, nameSuffix);
+        super(rawDataFiles, features, separator, minHeight, intensityTolerance,
+                mzTolerance, rtTolerance, nameSuffix);
     }
 
 }

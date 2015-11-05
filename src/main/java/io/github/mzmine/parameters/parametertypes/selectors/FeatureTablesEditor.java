@@ -88,7 +88,7 @@ public class FeatureTablesEditor extends HBox
                         "Select files", "Select files", "FeatureTables",
                         allFeatureTables, specificFeatureTables);
                 final ParameterSet paramSet = new ParameterSet(filesParameter);
-                final ButtonType exitCode = paramSet.showSetupDialog();
+                final ButtonType exitCode = paramSet.showSetupDialog(null);
                 if (exitCode == ButtonType.OK) {
                     specificFeatureTables = paramSet
                             .getParameter(filesParameter).getValue();
@@ -102,7 +102,7 @@ public class FeatureTablesEditor extends HBox
                         "Set name pattern that may include wildcards (*), e.g. *mouse* matches any name that contains mouse",
                         "Name", namePattern);
                 final ParameterSet paramSet = new ParameterSet(nameParameter);
-                final ButtonType exitCode = paramSet.showSetupDialog();
+                final ButtonType exitCode = paramSet.showSetupDialog(null);
                 if (exitCode == ButtonType.OK) {
                     namePattern = paramSet.getParameter(nameParameter)
                             .getValue();

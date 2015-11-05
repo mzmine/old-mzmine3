@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
@@ -44,7 +45,6 @@ import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineGUIProject;
-import io.github.mzmine.project.MZmineProject;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -56,6 +56,8 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.MenuBar;
@@ -77,6 +79,8 @@ public final class MZmineGUI extends Application {
     private static final File MENU_FILE = new File("conf/MainMenu.fxml");
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private static final Image mzMineIcon = new Image("file:icon" + File.separator + "mzmine-icon.png");
 
     private static MainWindowController mainWindowController;
     private static TabPane tabs = new TabPane();
@@ -164,8 +168,6 @@ public final class MZmineGUI extends Application {
         stage.setMinHeight(300);
 
         // Set application icon
-        final Image mzMineIcon = new Image(
-                "file:icon" + File.separator + "mzmine-icon.png");
         stage.getIcons().setAll(mzMineIcon);
 
         stage.setOnCloseRequest(e -> {
@@ -183,26 +185,44 @@ public final class MZmineGUI extends Application {
     }
 
     public static void requestQuit() {
-        Dialog<ButtonType> dialog = new Dialog<>();
-        // dialog.initOwner(stage);
-        dialog.setTitle("Confirmation");
-        dialog.setContentText("Are you sure you want to exit?");
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES,
-                ButtonType.NO);
-        dialog.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.YES) {
-                Platform.exit();
-                System.exit(0);
-            }
-        });
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(mzMineIcon);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Exit MZmine");
+        String s = "Are you sure you want to exit?";
+        alert.setContentText(s);       
+        Optional<ButtonType> result = alert.showAndWait();
 
+        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+            Platform.exit();
+            System.exit(0);
+        }
+    }
+
+    public static void closeProject() {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(mzMineIcon);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Close project");
+        String s = "Are you sure you want to close the current project?";
+        alert.setContentText(s);       
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+            MZmineGUIProject newProject = new MZmineGUIProject();
+            activateProject(newProject);
+            setStatusBarMessage("");
+        }
     }
 
     public static void displayMessage(String msg) {
         Platform.runLater(() -> {
             Dialog<ButtonType> dialog = new Dialog<>();
-            // dialog.initOwner(stage);
-            dialog.setTitle("Message");
+            Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+            stage.getIcons().add(mzMineIcon);
+            dialog.setTitle("Exit MZmine");
             dialog.setContentText(msg);
             dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
             dialog.showAndWait();
@@ -266,7 +286,7 @@ public final class MZmineGUI extends Application {
             public void run() {
                 newDock.setFloating(true);
             }
-          });
+        });
 
     }
 
@@ -320,7 +340,7 @@ public final class MZmineGUI extends Application {
                 .getModuleInstance(moduleClass);
         final ParameterSet moduleParameters = MZmineCore.getConfiguration()
                 .getModuleParameters(moduleClass);
-        ButtonType result = moduleParameters.showSetupDialog();
+        ButtonType result = moduleParameters.showSetupDialog(null);
         if (result == ButtonType.OK) {
             List<Task<?>> newTasks = new ArrayList<>();
             moduleInstance.runModule(MZmineCore.getCurrentProject(),

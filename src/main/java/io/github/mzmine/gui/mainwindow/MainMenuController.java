@@ -42,7 +42,12 @@ import javafx.scene.control.MenuItem;
 public class MainMenuController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
+    @FXML
+    protected void closeProject(ActionEvent event) {
+        MZmineGUI.closeProject();
+    }
+
     @FXML
     protected void exitApplication(ActionEvent event) {
         MZmineGUI.requestQuit();
@@ -100,7 +105,7 @@ public class MainMenuController {
     protected void setPreferences(ActionEvent event) {
         // Show the Preferences dialog
         logger.info("Showing the Preferences dialog");
-        MZmineCore.getConfiguration().getPreferences().showSetupDialog();
+        MZmineCore.getConfiguration().getPreferences().showSetupDialog(null);
     }
 
 }

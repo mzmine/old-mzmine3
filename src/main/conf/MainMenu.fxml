@@ -28,7 +28,7 @@
 							control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 					</accelerator>
 				</MenuItem>
-				<MenuItem text="Close Project ">
+				<MenuItem text="Close Project" onAction="#closeProject">
 					<accelerator>
 						<KeyCodeCombination alt="UP" code="W" control="DOWN"
 							meta="UP" shift="UP" shortcut="UP" />
@@ -109,9 +109,9 @@
 						<Menu text="MS">
 							<items>
 								<MenuItem text="Chromatoram Builder" />
+								<MenuItem text="GridMass - 2D Feature Detection" />
 								<ModuleMenuItem text="Targeted Feature Detection"
 							moduleClass="io.github.mzmine.modules.featuredetection.targeteddetection.TargetedDetectionModule" />
-								<MenuItem text="GridMass - 2D Feature Detection" />
 							</items>
 						</Menu>
 						<Menu text="MS/MS">
@@ -128,7 +128,7 @@
 				</Menu>
 			</items>
 		</Menu>
-		<Menu text="Feature Methods">
+		<Menu text="Feature Table Methods">
 			<items>
 				<Menu text="Feature Detection">
 					<items>

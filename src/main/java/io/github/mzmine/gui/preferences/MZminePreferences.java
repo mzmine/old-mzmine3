@@ -21,11 +21,14 @@ package io.github.mzmine.gui.preferences;
 
 import java.text.DecimalFormat;
 
+import javax.annotation.Nullable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
 import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.BooleanParameter;
 import io.github.mzmine.parameters.parametertypes.OptionalModuleParameter;
@@ -86,9 +89,9 @@ public class MZminePreferences extends ParameterSet {
     }
 
     @Override
-    public ButtonType showSetupDialog() {
+    public ButtonType showSetupDialog(@Nullable MZmineModule module) {
 
-        ButtonType retVal = super.showSetupDialog();
+        ButtonType retVal = super.showSetupDialog(null);
         if (retVal == ButtonType.OK) {
 
             // Update system settings

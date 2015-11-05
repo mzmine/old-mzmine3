@@ -17,46 +17,47 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.parameters.parametertypes;
+package io.github.mzmine.parameters.parametertypes.tolerances;
 
 import org.controlsfx.control.PropertySheet;
 
+import io.github.msdk.util.RTTolerance;
 import io.github.mzmine.parameters.ParameterEditor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
 
 /**
- * This parameter stores filenames
+ * Parameter editor for RT tolerances
  */
-public class PercentEditor extends BorderPane
-        implements ParameterEditor<Double> {
+public class RTToleranceEditor extends BorderPane
+        implements ParameterEditor<RTTolerance> {
 
-    private final TextField percentField;
+    private final TextField valueField;
+    private final ComboBox<String> comboBox;
 
-    public PercentEditor(PropertySheet.Item parameter) {
-        if (!(parameter instanceof PercentParameter))
+    public RTToleranceEditor(PropertySheet.Item parameter) {
+        if (!(parameter instanceof RTToleranceParameter))
             throw new IllegalArgumentException();
 
         // Make a box for the fields and labels
         HBox hBox = new HBox();
         hBox.setSpacing(5);
 
-        // The percent field
-        this.percentField = new TextField();
-        hBox.getChildren().add(percentField);
+        // The value field
+        valueField = new TextField();
+        hBox.getChildren().add(valueField);
 
-        // The percent sign
-        Label signLabel = new Label("%");
-        signLabel.setPrefHeight(24);
-        hBox.getChildren().add(signLabel);
+        // The combo box
+        ObservableList<String> options = FXCollections
+                .observableArrayList("Absolute (sec)", "Relative (%)");
+        comboBox = new ComboBox<String>(options);
+        hBox.getChildren().add(comboBox);
 
         setLeft(hBox);
     }
@@ -67,28 +68,36 @@ public class PercentEditor extends BorderPane
     }
 
     @Override
-    public Double getValue() {
+    public RTTolerance getValue() {
+        String comboValue = comboBox.getSelectionModel().getSelectedItem();
+        Boolean isAbsolute = true;
+        if (comboValue.equals("Relative (%)"))
+            isAbsolute = false;
 
-        String stringValue = percentField.getText();
+        String stringValue = valueField.getText();
         try {
-            double doubleValue = Double.parseDouble(stringValue) / 100;
-            return doubleValue;
+            double doubleValue = Double.parseDouble(stringValue);
+            return new RTTolerance(doubleValue, isAbsolute);
         } catch (NumberFormatException e) {
             return null;
         }
     }
 
     @Override
-    public void setValue(Double value) {
-        String stringValue = String.valueOf(value * 100);
-        percentField.setText(stringValue);
+    public void setValue(RTTolerance value) {
+        String stringValue = String.valueOf(value.getTolerance());
+        valueField.setText(stringValue);
+        if (value.isAbsolute()) {
+            comboBox.getSelectionModel().select(0);
+        } else {
+            comboBox.getSelectionModel().select(1);
+        }
     }
 
-   
     @Override
     public Control getMainControl() {
         // TODO Auto-generated method stub
-        return percentField;
+        return valueField;
     }
 
 }

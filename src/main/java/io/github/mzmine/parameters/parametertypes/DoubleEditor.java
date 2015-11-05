@@ -19,46 +19,35 @@
 
 package io.github.mzmine.parameters.parametertypes;
 
+import java.text.NumberFormat;
+
+import javax.annotation.Nullable;
+
 import org.controlsfx.control.PropertySheet;
 
 import io.github.mzmine.parameters.ParameterEditor;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Text;
 
 /**
- * This parameter stores filenames
+ * This parameter stores double values
  */
-public class PercentEditor extends BorderPane
+public class DoubleEditor extends BorderPane
         implements ParameterEditor<Double> {
 
-    private final TextField percentField;
+    private final TextField doubleField;
+    private @Nullable NumberFormat numberFormat;
 
-    public PercentEditor(PropertySheet.Item parameter) {
-        if (!(parameter instanceof PercentParameter))
+    public DoubleEditor(PropertySheet.Item parameter) {
+        if (!(parameter instanceof DoubleParameter))
             throw new IllegalArgumentException();
 
-        // Make a box for the fields and labels
-        HBox hBox = new HBox();
-        hBox.setSpacing(5);
-
-        // The percent field
-        this.percentField = new TextField();
-        hBox.getChildren().add(percentField);
-
-        // The percent sign
-        Label signLabel = new Label("%");
-        signLabel.setPrefHeight(24);
-        hBox.getChildren().add(signLabel);
-
-        setLeft(hBox);
+        DoubleParameter dp = (DoubleParameter) parameter;
+        this.numberFormat = dp.getNumberFormat();
+        this.doubleField = new TextField();
+        setCenter(doubleField);
     }
 
     @Override
@@ -68,10 +57,9 @@ public class PercentEditor extends BorderPane
 
     @Override
     public Double getValue() {
-
-        String stringValue = percentField.getText();
+        String stringValue = doubleField.getText();
         try {
-            double doubleValue = Double.parseDouble(stringValue) / 100;
+            double doubleValue = Double.parseDouble(stringValue);
             return doubleValue;
         } catch (NumberFormatException e) {
             return null;
@@ -80,15 +68,18 @@ public class PercentEditor extends BorderPane
 
     @Override
     public void setValue(Double value) {
-        String stringValue = String.valueOf(value * 100);
-        percentField.setText(stringValue);
+        String stringValue;
+        if (numberFormat != null) {
+            stringValue = numberFormat.format(value);
+        } else {
+            stringValue = String.valueOf(value);
+        }
+        doubleField.setText(stringValue);
     }
 
-   
     @Override
     public Control getMainControl() {
-        // TODO Auto-generated method stub
-        return percentField;
+        return doubleField;
     }
 
 }

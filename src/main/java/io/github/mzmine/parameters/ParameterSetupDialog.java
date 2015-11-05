@@ -22,6 +22,8 @@ package io.github.mzmine.parameters;
 import java.io.File;
 import java.net.URL;
 
+import javax.annotation.Nullable;
+
 import org.controlsfx.property.editor.PropertyEditor;
 import org.controlsfx.validation.ValidationMessage;
 import org.controlsfx.validation.ValidationResult;
@@ -29,6 +31,7 @@ import org.controlsfx.validation.ValidationSupport;
 
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.gui.helpwindow.HelpWindow;
+import io.github.mzmine.modules.MZmineModule;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -48,7 +51,7 @@ public class ParameterSetupDialog extends Alert {
      */
     private HelpWindow helpWindow = null;
 
-    ParameterSetupDialog(ParameterSet parameters) {
+    ParameterSetupDialog(ParameterSet parameters, @Nullable MZmineModule module) {
 
         super(AlertType.CONFIRMATION);
 
@@ -58,7 +61,12 @@ public class ParameterSetupDialog extends Alert {
         Stage stage = (Stage) getDialogPane().getScene().getWindow();
         stage.getIcons().setAll(mzMineIcon);
 
-        setTitle("Parameters");
+        if (module != null) {
+            setTitle(module.getName());    
+        }
+        else {
+            setTitle("Parameters");
+        }
         setHeaderText("Please set parameter values");
         setResizable(true);
 

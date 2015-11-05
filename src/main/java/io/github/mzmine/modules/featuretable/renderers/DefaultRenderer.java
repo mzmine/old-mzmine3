@@ -19,6 +19,9 @@
 
 package io.github.mzmine.modules.featuretable.renderers;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
@@ -39,7 +42,16 @@ public class DefaultRenderer implements
                 if (object == null) {
                     setText(null);
                 } else {
-                    setText(object.toString());
+
+                    try {
+                        NumberFormat formatter = new DecimalFormat("#0.00");
+                        Double doubleValue = Double
+                                .parseDouble(object.toString());
+                        setText(formatter.format(doubleValue));
+                    } catch (NumberFormatException e) {
+                        setText(object.toString());
+                    }
+
                 }
             }
         };
