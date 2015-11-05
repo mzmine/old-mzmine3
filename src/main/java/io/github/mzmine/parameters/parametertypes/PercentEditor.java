@@ -22,10 +22,15 @@ package io.github.mzmine.parameters.parametertypes;
 import org.controlsfx.control.PropertySheet;
 
 import io.github.mzmine.parameters.ParameterEditor;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 
 /**
@@ -40,14 +45,20 @@ public class PercentEditor extends BorderPane
         if (!(parameter instanceof PercentParameter))
             throw new IllegalArgumentException();
 
+        // Make a box for the fields and labels
+        HBox hBox = new HBox();
+        hBox.setSpacing(5);
+
         // The percent field
         this.percentField = new TextField();
-        setCenter(percentField);
+        hBox.getChildren().add(percentField);
 
         // The percent sign
-        Text sign = new Text(" %");
-        setRight(sign);
+        Label signLabel = new Label("%");
+        signLabel.setPrefHeight(24);
+        hBox.getChildren().add(signLabel);
 
+        setLeft(hBox);
     }
 
     @Override

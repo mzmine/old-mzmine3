@@ -30,6 +30,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 
 /**
  * Parameter editor for RT tolerances
@@ -44,16 +45,21 @@ public class RTToleranceEditor extends BorderPane
         if (!(parameter instanceof RTToleranceParameter))
             throw new IllegalArgumentException();
 
+        // Make a box for the fields and labels
+        HBox hBox = new HBox();
+        hBox.setSpacing(5);
+
         // The value field
-        this.valueField = new TextField();
-        setCenter(valueField);
+        valueField = new TextField();
+        hBox.getChildren().add(valueField);
 
         // The combo box
         ObservableList<String> options = FXCollections
                 .observableArrayList("Absolute (sec)", "Relative (%)");
-        this.comboBox = new ComboBox<String>(options);
+        comboBox = new ComboBox<String>(options);
+        hBox.getChildren().add(comboBox);
 
-        setRight(comboBox);
+        setLeft(hBox);
     }
 
     @Override
@@ -81,7 +87,6 @@ public class RTToleranceEditor extends BorderPane
     public void setValue(RTTolerance value) {
         String stringValue = String.valueOf(value.getTolerance());
         valueField.setText(stringValue);
-        System.out.println(value.isAbsolute());
         if (value.isAbsolute()) {
             comboBox.getSelectionModel().select(0);
         } else {
