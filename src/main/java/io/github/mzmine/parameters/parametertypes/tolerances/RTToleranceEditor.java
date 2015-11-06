@@ -29,13 +29,12 @@ import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.FlowPane;
 
 /**
  * Parameter editor for RT tolerances
  */
-public class RTToleranceEditor extends BorderPane
+public class RTToleranceEditor extends FlowPane
         implements ParameterEditor<RTTolerance> {
 
     private final TextField valueField;
@@ -45,21 +44,19 @@ public class RTToleranceEditor extends BorderPane
         if (!(parameter instanceof RTToleranceParameter))
             throw new IllegalArgumentException();
 
-        // Make a box for the fields and labels
-        HBox hBox = new HBox();
-        hBox.setSpacing(5);
-
         // The value field
         valueField = new TextField();
-        hBox.getChildren().add(valueField);
 
         // The combo box
         ObservableList<String> options = FXCollections
                 .observableArrayList("Absolute (sec)", "Relative (%)");
         comboBox = new ComboBox<String>(options);
-        hBox.getChildren().add(comboBox);
 
-        setLeft(hBox);
+        // FlowPane setting
+        setHgap(10);
+
+        // Add the elements
+        getChildren().addAll(valueField, comboBox);
     }
 
     @Override

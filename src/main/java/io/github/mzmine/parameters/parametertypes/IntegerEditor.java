@@ -24,32 +24,23 @@ import org.controlsfx.control.PropertySheet;
 import io.github.mzmine.parameters.ParameterEditor;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.BorderPane;
 
 /**
- * This parameter stores filenames
+ * This parameter stores double values
  */
-public class PercentEditor extends FlowPane implements ParameterEditor<Double> {
+public class IntegerEditor extends BorderPane
+        implements ParameterEditor<Integer> {
 
-    private final TextField percentField;
+    private final TextField integerField;
 
-    public PercentEditor(PropertySheet.Item parameter) {
-        if (!(parameter instanceof PercentParameter))
+    public IntegerEditor(PropertySheet.Item parameter) {
+        if (!(parameter instanceof IntegerParameter))
             throw new IllegalArgumentException();
 
-        // The percent field
-        percentField = new TextField();
-
-        // The percent sign
-        Label signLabel = new Label("%");
-
-        // FlowPane setting
-        setHgap(10);
-
-        // Add the elements
-        getChildren().addAll(percentField, signLabel);
+        this.integerField = new TextField();
+        setCenter(integerField);
     }
 
     @Override
@@ -58,27 +49,27 @@ public class PercentEditor extends FlowPane implements ParameterEditor<Double> {
     }
 
     @Override
-    public Double getValue() {
-
-        String stringValue = percentField.getText();
+    public Integer getValue() {
+        String stringValue = integerField.getText();
         try {
-            double doubleValue = Double.parseDouble(stringValue) / 100;
-            return doubleValue;
+            Integer integerValue = Integer.parseInt(stringValue);
+            return integerValue;
         } catch (NumberFormatException e) {
             return null;
         }
     }
 
     @Override
-    public void setValue(Double value) {
-        String stringValue = String.valueOf(value * 100);
-        percentField.setText(stringValue);
+    public void setValue(Integer value) {
+        if (value != null) {
+            String stringValue = String.valueOf(value);
+            integerField.setText(stringValue);
+        }
     }
 
     @Override
     public Control getMainControl() {
-        // TODO Auto-generated method stub
-        return percentField;
+        return integerField;
     }
 
 }

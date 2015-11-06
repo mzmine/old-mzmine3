@@ -19,26 +19,20 @@
 
 package io.github.mzmine.parameters.parametertypes.tolerances;
 
-import java.awt.Insets;
-
 import org.controlsfx.control.PropertySheet;
 
 import io.github.msdk.util.MZTolerance;
 import io.github.mzmine.parameters.ParameterEditor;
-import javafx.geometry.HPos;
 import javafx.scene.Node;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.FlowPane;
 
 /**
  * Parameter editor for RT tolerances
  */
-public class MZToleranceEditor extends BorderPane
+public class MZToleranceEditor extends FlowPane
         implements ParameterEditor<MZTolerance> {
 
     private final TextField fieldMZ;
@@ -48,34 +42,26 @@ public class MZToleranceEditor extends BorderPane
         if (!(parameter instanceof MZToleranceParameter))
             throw new IllegalArgumentException();
 
-        // Make a box for the fields and labels
-        HBox hBox = new HBox();
-        hBox.setSpacing(5);
-
         // The m/z value field
         fieldMZ = new TextField();
-        hBox.getChildren().add(fieldMZ);
 
         // The m/z label
         Label mzLabel = new Label("m/z");
-        mzLabel.setPrefHeight(24);
-        hBox.getChildren().add(mzLabel);
 
         // The 'or' label
         Label orLabel = new Label(" or ");
-        orLabel.setPrefHeight(24);
-        hBox.getChildren().add(orLabel);
 
         // The ppm value field
         fieldPPM = new TextField();
-        hBox.getChildren().add(fieldPPM);
 
         // The m/z label
         Label ppmLabel = new Label("ppm");
-        ppmLabel.setPrefHeight(24);
-        hBox.getChildren().add(ppmLabel);
 
-        setLeft(hBox);
+        // FlowPane setting
+        setHgap(7);
+
+        // Add the elements
+        getChildren().addAll(fieldMZ, mzLabel, orLabel, fieldPPM, ppmLabel);
     }
 
     @Override

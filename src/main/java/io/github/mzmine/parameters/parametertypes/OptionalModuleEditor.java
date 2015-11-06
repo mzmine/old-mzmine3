@@ -61,7 +61,7 @@ public class OptionalModuleEditor extends FlowPane
             checkBox.setSelected(true);
         });
 
-        // FLowPane setting
+        // FlowPane setting
         setHgap(10);
 
         getChildren().addAll(checkBox, setButton);
