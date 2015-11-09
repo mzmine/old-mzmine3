@@ -80,6 +80,7 @@ public class ToggleParameter<ValueType> extends AbstractParameter<ValueType> {
         for (ValueType choice : choices) {
             if (choice.toString().equals(stringValue)) {
                 setValue(choice);
+                break;
             }
         }
     }

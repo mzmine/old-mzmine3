@@ -58,6 +58,9 @@ public class ToggleEditor<ValueType> extends BorderPane
             segmentedButton.getButtons()
                     .add(new ToggleButton(choice.toString()));
         }
+        
+        // Default set to first choice
+        setValue(choices.get(0));
 
         setLeft(segmentedButton);
     }
