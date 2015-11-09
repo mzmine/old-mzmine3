@@ -19,67 +19,74 @@
 
 package io.github.mzmine.parameters.parametertypes;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.w3c.dom.Element;
 
+import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterValidator;
 
-public class ToggleParameter<ValueType> extends AbstractParameter<ValueType> {
+public class ToggleParameterSetParameter<ValueType>
+        extends AbstractParameter<ValueType> {
 
-    private final @Nonnull List<ValueType> toggleValues;
+    private final @Nonnull LinkedHashMap<String, ParameterSet> toggleValues;
 
-    public ToggleParameter(@Nonnull String name, @Nonnull String description,
-            @Nonnull String category, List<ValueType> toggleValues) {
+    public ToggleParameterSetParameter(@Nonnull String name,
+            @Nonnull String description, @Nonnull String category,
+            LinkedHashMap<String, ParameterSet> toggleValues) {
         this(name, description, category, null, toggleValues, null);
     }
 
-    public ToggleParameter(@Nonnull String name, @Nonnull String description,
-            @Nonnull String category, List<ValueType> toggleValues,
+    public ToggleParameterSetParameter(@Nonnull String name,
+            @Nonnull String description, @Nonnull String category,
+            LinkedHashMap<String, ParameterSet> toggleValues,
             String defaultValue) {
         this(name, description, category, null, toggleValues, defaultValue);
     }
 
-    public ToggleParameter(@Nonnull String name, @Nonnull String description,
-            @Nonnull String category,
+    public ToggleParameterSetParameter(@Nonnull String name,
+            @Nonnull String description, @Nonnull String category,
             @Nullable ParameterValidator<ValueType> validator,
-            List<ValueType> toggleValues) {
+            LinkedHashMap<String, ParameterSet> toggleValues) {
         this(name, description, category, validator, toggleValues, null);
     }
 
     @SuppressWarnings("unchecked")
-    public ToggleParameter(@Nonnull String name, @Nonnull String description,
-            @Nonnull String category,
+    public ToggleParameterSetParameter(@Nonnull String name,
+            @Nonnull String description, @Nonnull String category,
             @Nullable ParameterValidator<ValueType> validator,
-            List<ValueType> toggleValues, @Nullable String defaultValue) {
-        super(name, description, category, (Class) ToggleEditor.class,
-                validator);
+            LinkedHashMap<String, ParameterSet> toggleValues,
+            @Nullable String defaultValue) {
+        super(name, description, category,
+                (Class) ToggleParameterSetEditor.class, validator);
         this.toggleValues = toggleValues;
         setValue(defaultValue);
     }
 
     @Override
-    public @Nonnull ToggleParameter<ValueType> clone() {
-        ToggleParameter<ValueType> copy = new ToggleParameter<ValueType>(
+    public @Nonnull ToggleParameterSetParameter<ValueType> clone() {
+        ToggleParameterSetParameter<ValueType> copy = new ToggleParameterSetParameter<ValueType>(
                 getName(), getDescription(), getCategory(), getValidator(),
                 toggleValues);
         copy.setValue(this.getValue());
         return copy;
     }
 
-    public List<ValueType> getToggleValues() {
+    public LinkedHashMap<String, ParameterSet> getToggleValues() {
         return toggleValues;
     }
 
     @Override
     public void loadValueFromXML(@Nonnull Element xmlElement) {
         String stringValue = xmlElement.getTextContent();
-        for (ValueType value : toggleValues) {
-            if (value.toString().equals(stringValue)) {
-                setValue(value);
+        for (HashMap.Entry<String, ParameterSet> entry : toggleValues
+                .entrySet()) {
+            if (entry.getKey().toString().equals(stringValue)) {
+                setValue(entry.getKey());
                 break;
             }
         }

@@ -48,7 +48,8 @@
 				<Menu text="Export...">
 					<items>
 						<MenuItem text="Raw Data" />
-						<MenuItem text="Feature Tables" />
+						<ModuleMenuItem text="Feature Tables"
+							moduleClass="io.github.mzmine.modules.featuretableexport.FeatureTableExportModule" />
 					</items>
 				</Menu>
 				<SeparatorMenuItem />

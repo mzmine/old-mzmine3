@@ -10,4 +10,5 @@
 	<module>io.github.mzmine.modules.filtering.rowfilter.RowFilterModule</module>
 	<module>io.github.mzmine.modules.alignment.joinaligner.JoinAlignerModule</module>
 	<module>io.github.mzmine.modules.gapfilling.peakfinder.PeakFinderModule</module>
+	<module>io.github.mzmine.modules.featuretableexport.FeatureTableExportModule</module>
 </modules>

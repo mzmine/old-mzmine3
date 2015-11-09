@@ -19,8 +19,6 @@
 
 package io.github.mzmine.parameters;
 
-import java.text.NumberFormat;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 

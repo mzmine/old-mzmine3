@@ -19,12 +19,14 @@
 
 package io.github.mzmine.parameters.parametertypes;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import org.controlsfx.control.PropertySheet;
 import org.controlsfx.control.SegmentedButton;
 
 import io.github.mzmine.parameters.ParameterEditor;
+import io.github.mzmine.parameters.ParameterSet;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
@@ -34,32 +36,33 @@ import javafx.scene.layout.BorderPane;
 /**
  * This parameter stores double values
  */
-public class ToggleEditor<ValueType> extends BorderPane
+public class ToggleParameterSetEditor<ValueType> extends BorderPane
         implements ParameterEditor<ValueType> {
 
     private final SegmentedButton segmentedButton;
-    private final ToggleParameter<ValueType> toggleParameter;
-    private final List<ValueType> toggleValues;
+    private final ToggleParameterSetParameter<ValueType> toggleParameterSetParameter;
+    private final LinkedHashMap<String, ParameterSet> toggleValues;
 
-    public ToggleEditor(PropertySheet.Item parameter) {
-        if (!(parameter instanceof ToggleParameter))
+    @SuppressWarnings("unchecked")
+    public ToggleParameterSetEditor(PropertySheet.Item parameter) {
+        if (!(parameter instanceof ToggleParameterSetParameter))
             throw new IllegalArgumentException();
 
-        this.toggleParameter = (ToggleParameter<ValueType>) parameter;
+        this.toggleParameterSetParameter = (ToggleParameterSetParameter<ValueType>) parameter;
 
         // The segmented button
         this.segmentedButton = new SegmentedButton();
         segmentedButton.getStyleClass().add(SegmentedButton.STYLE_CLASS_DARK);
+        /*
+         * TODO: Add event handler to handle showing different parameterSets
+         */
 
         // The toggle buttons
-        toggleValues = this.toggleParameter.getToggleValues();
-        for (ValueType toggleValue : toggleValues) {
-            segmentedButton.getButtons()
-                    .add(new ToggleButton(toggleValue.toString()));
+        toggleValues = this.toggleParameterSetParameter.getToggleValues();
+        for (HashMap.Entry<String, ParameterSet> entry : toggleValues
+                .entrySet()) {
+            segmentedButton.getButtons().add(new ToggleButton(entry.getKey()));
         }
-
-        // Default set to first choice
-        setValue(toggleValues.get(0));
 
         setLeft(segmentedButton);
     }
@@ -76,9 +79,12 @@ public class ToggleEditor<ValueType> extends BorderPane
             if (button.isSelected()) {
                 String buttonText = button.getText();
 
-                for (ValueType toggleValue : toggleValues) {
-                    if (toggleValue.toString().equals(buttonText)) {
-                        return toggleValue;
+                for (HashMap.Entry<String, ParameterSet> entry : toggleValues
+                        .entrySet()) {
+                    segmentedButton.getButtons()
+                            .add(new ToggleButton(entry.getKey()));
+                    if (entry.getKey().equals(buttonText)) {
+                        return (ValueType) entry.getKey();
                     }
                 }
 

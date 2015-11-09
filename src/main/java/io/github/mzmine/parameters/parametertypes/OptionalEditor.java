@@ -19,14 +19,14 @@
 
 package io.github.mzmine.parameters.parametertypes;
 
-import java.util.Optional;
+import java.beans.PropertyEditor;
 
 import javax.annotation.Nullable;
 
 import org.controlsfx.control.PropertySheet;
-import org.controlsfx.property.editor.PropertyEditor;
 
 import io.github.mzmine.parameters.ParameterEditor;
+import io.github.mzmine.parameters.parametertypes.ranges.DoubleRangeEditor;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
@@ -44,22 +44,21 @@ public class OptionalEditor extends FlowPane
         if (!(parameter instanceof OptionalParameter))
             throw new IllegalArgumentException();
 
-        this.optionalParameter = (OptionalParameter<?>) parameter;
-        embeddedComponent = optionalParameter.getEmbeddedParameters();
-        
         // The checkbox
         checkBox = new CheckBox();
 
         /*
-         *TODO: Get the editor for the embedded component 
+         * TODO: Get the editor for the embedded component
          */
-        Optional<Class<? extends PropertyEditor<?>>> embeddedClass = embeddedComponent.getPropertyEditorClass();
-        System.out.println(embeddedClass);
+        this.optionalParameter = (OptionalParameter<?>) parameter;
+        embeddedComponent = optionalParameter.getEmbeddedParameters();
+        ParameterEditor<?> embeddedParameterEditor = new DoubleRangeEditor(embeddedComponent);
+        Node embeddedNode = embeddedParameterEditor.getEditor();
 
         // FlowPane setting
         setHgap(10);
 
-        getChildren().addAll(checkBox);
+        getChildren().addAll(checkBox, embeddedNode);
 
     }
 
