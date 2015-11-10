@@ -25,13 +25,19 @@ import java.util.LinkedHashMap;
 import org.controlsfx.control.PropertySheet;
 import org.controlsfx.control.SegmentedButton;
 
+import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.modules.featuretableexport.FeatureTableExportModule;
 import io.github.mzmine.parameters.ParameterEditor;
 import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.parameters.ParameterSheetView;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
+
 
 /**
  * This parameter stores double values
@@ -53,18 +59,36 @@ public class ToggleParameterSetEditor<ValueType> extends BorderPane
         // The segmented button
         this.segmentedButton = new SegmentedButton();
         segmentedButton.getStyleClass().add(SegmentedButton.STYLE_CLASS_DARK);
-        /*
-         * TODO: Add event handler to handle showing different parameterSets
-         */
 
         // The toggle buttons
         toggleValues = this.toggleParameterSetParameter.getToggleValues();
         for (HashMap.Entry<String, ParameterSet> entry : toggleValues
                 .entrySet()) {
-            segmentedButton.getButtons().add(new ToggleButton(entry.getKey()));
+            ToggleButton toggleButton = new ToggleButton(entry.getKey());
+
+            // When toggle button is selected, show corresponding parameters
+            toggleButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent e) {
+                    /*
+                     * TODO Show parameters when button is selected
+                     */
+                    System.out.println("Toggle button selected: "+ entry.getKey());
+                    System.out.println("Parameter set: "+ entry.getValue());
+                    ParameterSheetView parameterSheetView = new ParameterSheetView(entry.getValue(),null);
+                    
+                    ParameterSet currentParameterSet = MZmineCore.getConfiguration()
+                            .getModuleParameters(FeatureTableExportModule.class);
+                    
+                    //ParameterSetupDialog dialog = new ParameterSetupDialog(entry.getValue(), null);
+                    //dialog.showAndWait();
+                }
+            });
+            segmentedButton.getButtons().add(toggleButton);
         }
 
         setLeft(segmentedButton);
+
     }
 
     @Override

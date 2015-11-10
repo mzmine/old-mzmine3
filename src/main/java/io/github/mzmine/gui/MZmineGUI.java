@@ -80,7 +80,8 @@ public final class MZmineGUI extends Application {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final Image mzMineIcon = new Image("file:icon" + File.separator + "mzmine-icon.png");
+    private static final Image mzMineIcon = new Image(
+            "file:icon" + File.separator + "mzmine-icon.png");
 
     private static MainWindowController mainWindowController;
     private static TabPane tabs = new TabPane();
@@ -191,7 +192,7 @@ public final class MZmineGUI extends Application {
         alert.setTitle("Confirmation");
         alert.setHeaderText("Exit MZmine");
         String s = "Are you sure you want to exit?";
-        alert.setContentText(s);       
+        alert.setContentText(s);
         Optional<ButtonType> result = alert.showAndWait();
 
         if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
@@ -207,7 +208,7 @@ public final class MZmineGUI extends Application {
         alert.setTitle("Confirmation");
         alert.setHeaderText("Close project");
         String s = "Are you sure you want to close the current project?";
-        alert.setContentText(s);       
+        alert.setContentText(s);
         Optional<ButtonType> result = alert.showAndWait();
 
         if ((result.isPresent()) && (result.get() == ButtonType.OK)) {

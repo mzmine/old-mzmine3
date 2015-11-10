@@ -24,6 +24,8 @@ import java.util.LinkedHashMap;
 
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterValidator;
+import io.github.mzmine.parameters.parametertypes.BooleanParameter;
+import io.github.mzmine.parameters.parametertypes.MultiChoiceParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.ToggleParameterSetParameter;
 import io.github.mzmine.parameters.parametertypes.filenames.FileNameParameter;
@@ -54,8 +56,28 @@ public class FeatureTableExportParameters extends ParameterSet {
             "Algorithm Parameters",
             ParameterValidator.createNonEmptyValidator(), ",");
 
+    public static final MultiChoiceParameter<CommonColumns> commonData = new MultiChoiceParameter<CommonColumns>(
+            "Common data", "Selection of common row data to export",
+            "Algorithm Parameters", Arrays.asList(CommonColumns.values()));
+
+    public static final MultiChoiceParameter<String> sampleData = new MultiChoiceParameter<String>(
+            "Sample data", "Selection of sample specific data to export",
+            "Algorithm Parameters", SampleColumns.getSampleColumns());
+
+    public static final BooleanParameter exportAllIds = new BooleanParameter(
+            "Export all feature identifications?",
+            "If checked, all possible identifications of a feature will be exported.",
+            "Algorithm Parameters", false);
+
+    public static final StringParameter separatorIDs = new StringParameter(
+            "Identification separator",
+            "Character(s) used to separate identification results in the exported file.",
+            "Algorithm Parameters",
+            ParameterValidator.createNonEmptyValidator(), ";");
+
     private static final ParameterSet csvParameters = new ParameterSet(
-            featureTables, exportFileCSV, separator);
+            exportFileCSV, separator, separatorIDs, commonData, sampleData,
+            exportAllIds);
 
     /*
      * mzTab parameters
@@ -69,13 +91,7 @@ public class FeatureTableExportParameters extends ParameterSet {
             Arrays.asList(new ExtensionFilter("mzTab file", "*.mzTab")));
 
     private static final ParameterSet mzTabParameters = new ParameterSet(
-            featureTables, exportFileCSV, separator);
-
-    private static final ParameterSet mzIdentMLParameters = new ParameterSet(
-            featureTables);
-
-    private static final ParameterSet mzQuantMLParameters = new ParameterSet(
-            featureTables);
+            exportFileMzTab);
 
     private static final ParameterSet xmlParameters = new ParameterSet(
             featureTables);
@@ -92,8 +108,6 @@ public class FeatureTableExportParameters extends ParameterSet {
         {
             put("CSV", csvParameters);
             put("mzTab", mzTabParameters);
-            put("mzIdentML", mzIdentMLParameters);
-            put("mzQuantML", mzQuantMLParameters);
             put("XML", xmlParameters);
             put("SQL", sqlParameters);
         }
@@ -103,7 +117,7 @@ public class FeatureTableExportParameters extends ParameterSet {
             "Algorithm Parameters", exportFormats, "CSV");
 
     public FeatureTableExportParameters() {
-        super(exportFormat);
+        super(exportFormat, featureTables, commonData, sampleData);
     }
 
 }
