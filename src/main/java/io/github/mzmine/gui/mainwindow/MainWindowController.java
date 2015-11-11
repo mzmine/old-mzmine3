@@ -34,13 +34,15 @@ import org.dockfx.DockPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.modules.featuretable.FeatureTableModule;
+import io.github.mzmine.modules.featuretable.FeatureTableModuleParameters;
 import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotModule;
 import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotParameters;
 import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesParameter;
+import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesSelectionType;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelectionType;
 import io.github.mzmine.project.MZmineProject;
@@ -48,6 +50,7 @@ import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -144,24 +147,23 @@ public class MainWindowController implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 2) {
-
-                    // FeatureTable
-                    /*
-                     * TODO: Get feature table from clicked item
-                     */
-                    //TreeView<FeatureTableTreeItem> tableTreeItem = (TreeView<FeatureTableTreeItem>) event.getSource();
-                    //System.out.println(tableTreeItem);
-                    //System.out.println(tableTreeItem.getTreeItem(0));
-
-                    FeatureTable featureTable = MZmineCore.getCurrentProject().getFeatureTables().get(0);
-
-                    final FeatureTableModule moduleInstance = MZmineCore.getModuleInstance(FeatureTableModule.class);                    
-                    final ParameterSet moduleParameters = MZmineCore.getConfiguration().getModuleParameters(FeatureTableModule.class);
-                    MZmineProject currentProject = MZmineCore.getCurrentProject();
+                    // Show feature table for selected row
+                    ParameterSet moduleParameters = MZmineCore
+                            .getConfiguration()
+                            .getModuleParameters(FeatureTableModule.class);
+                    FeatureTablesParameter inputTablesParam = moduleParameters
+                            .getParameter(
+                                    FeatureTableModuleParameters.featureTables);
+                    inputTablesParam.switchType(
+                            FeatureTablesSelectionType.GUI_SELECTED_FEATURE_TABLES);
+                    FeatureTableModule moduleInstance = MZmineCore
+                            .getModuleInstance(FeatureTableModule.class);
+                    MZmineProject currentProject = MZmineCore
+                            .getCurrentProject();
                     List<Task<?>> newTasks = new ArrayList<>();
-                    moduleInstance.runModule(MZmineCore.getCurrentProject(),moduleParameters, newTasks);
+                    moduleInstance.runModule(currentProject, moduleParameters,
+                            newTasks);
                     MZmineCore.submitTasks(newTasks);
-
                 }
             }
         });
@@ -258,19 +260,56 @@ public class MainWindowController implements Initializable {
 
     @FXML
     protected void removeRawData(ActionEvent event) {
-        System.out.println("Remove raw data " + event);
-        List<TreeItem<RawDataTreeItem>> selectedItems = rawDataTree
-                .getSelectionModel().getSelectedItems();
-        // MZmineCore.getCurrentProject().removeFile(rawDataFile);
+        // Get selected tree items
+        ObservableList<TreeItem<RawDataTreeItem>> rows = null;
+        if (rawDataTree.getSelectionModel() != null) {
+            rows = rawDataTree.getSelectionModel().getSelectedItems();
+        }
+
+        // Loop through all selected tree items
+        if (rows != null) {
+            for (int i = rows.size() - 1; i >= 0; i--) {
+                TreeItem<RawDataTreeItem> row = rows.get(i);
+
+                // Remove feature table from current project
+                RawDataTreeItem rawDataTreeItem = row.getValue();
+                MZmineCore.getCurrentProject()
+                        .removeFile(rawDataTreeItem.getRawDataFile());
+
+                // Remove raw data file from tree table view
+                TreeItem<?> parent = row.getParent();
+                parent.getChildren().remove(row);
+            }
+            rawDataTree.refresh();
+            rawDataTree.getSelectionModel().clearSelection();
+        }
     }
 
     @FXML
     protected void removeFeatureTable(ActionEvent event) {
-        System.out.println("Remove feature table " + event);
-        List<TreeItem<FeatureTableTreeItem>> selectedItems = featureTree
-                .getSelectionModel().getSelectedItems();
-        // MZmineCore.getCurrentProject().removeFeatureTable(featureTable);
+        // Get selected tree items
+        ObservableList<TreeItem<FeatureTableTreeItem>> rows = null;
+        if (featureTree.getSelectionModel() != null) {
+            rows = featureTree.getSelectionModel().getSelectedItems();
+        }
 
+        // Loop through all selected tree items
+        if (rows != null) {
+            for (int i = rows.size() - 1; i >= 0; i--) {
+                TreeItem<FeatureTableTreeItem> row = rows.get(i);
+
+                // Remove feature table from current project
+                FeatureTableTreeItem featureTableTreeItem = row.getValue();
+                MZmineCore.getCurrentProject().removeFeatureTable(
+                        featureTableTreeItem.getFeatureTable());
+
+                // Remove feature table from tree table view
+                TreeItem<?> parent = row.getParent();
+                parent.getChildren().remove(row);
+            }
+            featureTree.refresh();
+            featureTree.getSelectionModel().clearSelection();
+        }
     }
 
 }
