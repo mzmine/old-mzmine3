@@ -48,19 +48,16 @@ public class AuditLogTaskRecord {
 
     }
 
-    @SuppressWarnings("null")
     @Nonnull
     public String getTaskMessage() {
         return taskMessage;
     }
 
-    @SuppressWarnings("null")
     @Nonnull
     public String getTaskTitle() {
         return taskTitle;
     }
 
-    @SuppressWarnings("null")
     @Nonnull
     public State getTaskStatus() {
         return taskStatus;

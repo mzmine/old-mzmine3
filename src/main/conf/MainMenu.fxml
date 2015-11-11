@@ -35,7 +35,8 @@
 					</accelerator>
 				</MenuItem>
 				<SeparatorMenuItem />
-				<MenuItem text="Export Audit Log" />
+				<ModuleMenuItem text="Export Audit Log"
+					moduleClass="io.github.mzmine.modules.auditlogexport.AuditLogExportModule" />
 				<SeparatorMenuItem />
 				<Menu text="Import...">
 					<items>
