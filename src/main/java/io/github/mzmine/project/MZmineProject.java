@@ -113,7 +113,6 @@ public class MZmineProject {
         }
     }
 
-    @SuppressWarnings("null")
     public @Nonnull List<AuditLogEntry> getAuditLog() {
         synchronized (auditLog) {
             return ImmutableList.copyOf(auditLog);

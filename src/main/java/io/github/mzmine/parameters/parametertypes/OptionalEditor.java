@@ -19,52 +19,46 @@
 
 package io.github.mzmine.parameters.parametertypes;
 
+import java.beans.PropertyEditor;
+
 import javax.annotation.Nullable;
 
 import org.controlsfx.control.PropertySheet;
 
 import io.github.mzmine.parameters.ParameterEditor;
+import io.github.mzmine.parameters.parametertypes.ranges.DoubleRangeEditor;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
 import javafx.scene.layout.FlowPane;
 
-public class OptionalModuleEditor extends FlowPane
+public class OptionalEditor extends FlowPane
         implements ParameterEditor<Boolean> {
 
     private final CheckBox checkBox;
-    private final Button setButton;
+    private final OptionalParameter<?> optionalParameter;
+    private AbstractParameter<?> embeddedComponent;
 
-    private final OptionalModuleParameter optionalModuleParameter;
+    public OptionalEditor(PropertySheet.Item parameter) {
 
-    public OptionalModuleEditor(PropertySheet.Item parameter) {
-
-        if (!(parameter instanceof OptionalModuleParameter))
+        if (!(parameter instanceof OptionalParameter))
             throw new IllegalArgumentException();
 
-        this.optionalModuleParameter = (OptionalModuleParameter) parameter;
-
+        // The checkbox
         checkBox = new CheckBox();
-        setButton = new Button("Setup..");
-        setButton.setFocusTraversable(false);
 
-        checkBox.setOnAction(e -> {
-            setButton.setDisable(!checkBox.isSelected());
-        });
-
-        setButton.setDisable(true);
-        setButton.setOnAction(e -> {
-            optionalModuleParameter.getEmbeddedParameters().showSetupDialog(null);
-            // Fire the checkBox to update the validation decorations
-            checkBox.setSelected(false);
-            checkBox.setSelected(true);
-        });
+        /*
+         * TODO: Get the editor for the embedded component
+         */
+        this.optionalParameter = (OptionalParameter<?>) parameter;
+        embeddedComponent = optionalParameter.getEmbeddedParameters();
+        ParameterEditor<?> embeddedParameterEditor = new DoubleRangeEditor(embeddedComponent);
+        Node embeddedNode = embeddedParameterEditor.getEditor();
 
         // FlowPane setting
         setHgap(10);
 
-        getChildren().addAll(checkBox, setButton);
+        getChildren().addAll(checkBox, embeddedNode);
 
     }
 
@@ -82,7 +76,6 @@ public class OptionalModuleEditor extends FlowPane
     public void setValue(Boolean value) {
         if (value != null) {
             checkBox.setSelected(value);
-            setButton.setDisable(! value);
         }
     }
 

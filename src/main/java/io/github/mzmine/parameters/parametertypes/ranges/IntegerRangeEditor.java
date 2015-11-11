@@ -17,9 +17,11 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.parameters.parametertypes;
+package io.github.mzmine.parameters.parametertypes.ranges;
 
 import org.controlsfx.control.PropertySheet;
+
+import com.google.common.collect.Range;
 
 import io.github.mzmine.parameters.ParameterEditor;
 import javafx.scene.Node;
@@ -29,27 +31,32 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 
 /**
- * This parameter stores filenames
+ * Parameter editor for integer ranges
  */
-public class PercentEditor extends FlowPane implements ParameterEditor<Double> {
+public class IntegerRangeEditor extends FlowPane
+        implements ParameterEditor<Range<Integer>> {
 
-    private final TextField percentField;
+    private final TextField minTxtField;
+    private final TextField maxTxtField;
 
-    public PercentEditor(PropertySheet.Item parameter) {
-        if (!(parameter instanceof PercentParameter))
+    public IntegerRangeEditor(PropertySheet.Item parameter) {
+        if (!(parameter instanceof IntegerRangeParameter))
             throw new IllegalArgumentException();
 
-        // The percent field
-        percentField = new TextField();
+        // The minimum value field
+        minTxtField = new TextField();
 
-        // The percent sign
-        Label signLabel = new Label("%");
+        // The separator label
+        Label separatorLabel = new Label("-");
+
+        // The maximum value field
+        maxTxtField = new TextField();
 
         // FlowPane setting
         setHgap(10);
 
         // Add the elements
-        getChildren().addAll(percentField, signLabel);
+        getChildren().addAll(minTxtField, separatorLabel, maxTxtField);
     }
 
     @Override
@@ -58,27 +65,30 @@ public class PercentEditor extends FlowPane implements ParameterEditor<Double> {
     }
 
     @Override
-    public Double getValue() {
-
-        String stringValue = percentField.getText();
+    public Range<Integer> getValue() {
+        String minValueS = minTxtField.getText();
+        String maxValueS = maxTxtField.getText();
         try {
-            double doubleValue = Double.parseDouble(stringValue) / 100;
-            return doubleValue;
+            Integer minValue = Integer.parseInt(minValueS);
+            Integer maxValue = Integer.parseInt(maxValueS);
+            return Range.closed(minValue, maxValue);
         } catch (NumberFormatException e) {
             return null;
         }
     }
 
     @Override
-    public void setValue(Double value) {
-        String stringValue = String.valueOf(value * 100);
-        percentField.setText(stringValue);
+    public void setValue(Range<Integer> value) {
+        String minValue = String.valueOf(value.lowerEndpoint());
+        String maxValue = String.valueOf(value.upperEndpoint());
+        minTxtField.setText(minValue);
+        maxTxtField.setText(maxValue);
     }
 
     @Override
     public Control getMainControl() {
         // TODO Auto-generated method stub
-        return percentField;
+        return minTxtField;
     }
 
 }

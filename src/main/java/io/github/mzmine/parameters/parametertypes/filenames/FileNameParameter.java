@@ -20,6 +20,7 @@
 package io.github.mzmine.parameters.parametertypes.filenames;
 
 import java.io.File;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,9 +30,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 
 import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.AbstractParameter;
+import javafx.stage.FileChooser;
 
 public class FileNameParameter extends AbstractParameter<File> {
 
@@ -42,26 +45,36 @@ public class FileNameParameter extends AbstractParameter<File> {
     private static final String fileNameElement = "filename";
     private static final String lastOpenPathElement = "lastdirectory";
 
+    private final @Nullable List<FileChooser.ExtensionFilter> extensions;
     private final @Nonnull Type type;
     private File lastOpenPath;
 
     public FileNameParameter(@Nonnull String name, @Nonnull String description,
             @Nonnull String category, @Nonnull Type type) {
-        this(name, description, category, null, type, null);
+        this(name, description, category, null, type, null, null);
     }
 
     public FileNameParameter(@Nonnull String name, @Nonnull String description,
             @Nonnull String category,
             @Nullable ParameterValidator<File> validator, @Nonnull Type type) {
-        this(name, description, category, validator, type, null);
+        this(name, description, category, validator, type, null, null);
     }
 
     public FileNameParameter(@Nonnull String name, @Nonnull String description,
             @Nonnull String category,
             @Nullable ParameterValidator<File> validator, @Nonnull Type type,
+            @Nonnull List<FileChooser.ExtensionFilter> extensions) {
+        this(name, description, category, validator, type, extensions, null);
+    }
+
+    public FileNameParameter(@Nonnull String name, @Nonnull String description,
+            @Nonnull String category,
+            @Nullable ParameterValidator<File> validator, @Nonnull Type type,
+            @Nullable List<FileChooser.ExtensionFilter> extensions,
             File defaultValue) {
         super(name, description, category, FileNameEditor.class, validator);
         this.type = type;
+        this.extensions = extensions;
         setValue(defaultValue);
     }
 
@@ -73,7 +86,7 @@ public class FileNameParameter extends AbstractParameter<File> {
     public @Nonnull FileNameParameter clone() {
         FileNameParameter copy = new FileNameParameter(getName(),
                 getDescription(), getCategory(), getValidator(), type,
-                getValue());
+                extensions, getValue());
         return copy;
     }
 
@@ -108,6 +121,10 @@ public class FileNameParameter extends AbstractParameter<File> {
             newElement.setTextContent(lastOpenPath.getPath());
             xmlElement.appendChild(newElement);
         }
+    }
+
+    public List<FileChooser.ExtensionFilter> getExtensions() {
+        return extensions;
     }
 
     public File getLastOpenPath() {

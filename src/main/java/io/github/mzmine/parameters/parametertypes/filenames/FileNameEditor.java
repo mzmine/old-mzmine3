@@ -20,6 +20,7 @@
 package io.github.mzmine.parameters.parametertypes.filenames;
 
 import java.io.File;
+import java.util.List;
 
 import org.controlsfx.control.PropertySheet;
 
@@ -61,11 +62,16 @@ public class FileNameEditor extends BorderPane
         setRight(browseButton);
         setMargin(browseButton, new Insets(0, 0, 0, 10.0));
         browseButton.setOnAction(e -> {
+            List<FileChooser.ExtensionFilter> extensions = fileNameParameter
+                    .getExtensions();
             FileChooser fileChooser = new FileChooser();
             File lastOpenPath = fileNameParameter.getLastOpenPath();
             if (lastOpenPath != null)
                 fileChooser.setInitialDirectory(lastOpenPath);
             fileChooser.setTitle("Find file");
+            if (extensions != null) {
+                fileChooser.getExtensionFilters().addAll(extensions);
+            }
             Window parentWindow = this.getScene().getWindow();
             File selectedFile;
 

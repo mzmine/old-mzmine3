@@ -37,7 +37,6 @@ public class AuditLogEntry {
     private final ParameterSet parameterSet;
     private final List<AuditLogTaskRecord> taskRecords = new ArrayList<>();
 
-    @SuppressWarnings("null")
     public AuditLogEntry(@Nonnull MZmineModule module,
             @Nonnull ParameterSet parameterSet, @Nonnull List<Task<?>> tasks) {
         this.module = module;
@@ -49,19 +48,16 @@ public class AuditLogEntry {
         }
     }
 
-    @SuppressWarnings("null")
     @Nonnull
     public MZmineModule getModule() {
         return module;
     }
 
-    @SuppressWarnings("null")
     @Nonnull
     public ParameterSet getParameterSet() {
         return parameterSet;
     }
 
-    @SuppressWarnings("null")
     @Nonnull
     public List<AuditLogTaskRecord> getTaskRecords() {
         return taskRecords;

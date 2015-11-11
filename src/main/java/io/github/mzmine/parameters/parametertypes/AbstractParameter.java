@@ -19,7 +19,6 @@
 
 package io.github.mzmine.parameters.parametertypes;
 
-import java.text.NumberFormat;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;

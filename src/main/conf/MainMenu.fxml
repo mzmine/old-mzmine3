@@ -35,7 +35,8 @@
 					</accelerator>
 				</MenuItem>
 				<SeparatorMenuItem />
-				<MenuItem text="Export Audit Log" />
+				<ModuleMenuItem text="Export Audit Log"
+					moduleClass="io.github.mzmine.modules.auditlogexport.AuditLogExportModule" />
 				<SeparatorMenuItem />
 				<Menu text="Import...">
 					<items>
@@ -48,7 +49,8 @@
 				<Menu text="Export...">
 					<items>
 						<MenuItem text="Raw Data" />
-						<MenuItem text="Feature Tables" />
+						<ModuleMenuItem text="Feature Tables"
+							moduleClass="io.github.mzmine.modules.featuretableexport.FeatureTableExportModule" />
 					</items>
 				</Menu>
 				<SeparatorMenuItem />
@@ -111,7 +113,7 @@
 								<MenuItem text="Chromatoram Builder" />
 								<MenuItem text="GridMass - 2D Feature Detection" />
 								<ModuleMenuItem text="Targeted Feature Detection"
-							moduleClass="io.github.mzmine.modules.featuredetection.targeteddetection.TargetedDetectionModule" />
+									moduleClass="io.github.mzmine.modules.featuredetection.targeteddetection.TargetedDetectionModule" />
 							</items>
 						</Menu>
 						<Menu text="MS/MS">
@@ -139,26 +141,29 @@
 				</Menu>
 				<Menu text="Isotopes">
 					<items>
-						<MenuItem text="Isotopic Feature Grouper" />
+						<MenuItem text="Isotopic Grouper" />
 					</items>
 				</Menu>
 				<Menu text="Filtering">
 					<items>
-						<MenuItem text="Duplicate Feature Filter (Move to Rows Filter)" />
-						<MenuItem text="Feature Filter" />
-						<MenuItem text="Row Filter" />
-					</items>
-				</Menu>
-				<Menu text="Gap Filling">
-					<items>
-						<MenuItem text="Feature Finder" />
-						<MenuItem text="Same RT and m/z Range Gap Filler" />
+						<ModuleMenuItem text="Feature Filter"
+							moduleClass="io.github.mzmine.modules.filtering.featurefilter.FeatureFilterModule" />
+						<ModuleMenuItem text="Row Filter"
+							moduleClass="io.github.mzmine.modules.filtering.rowfilter.RowFilterModule" />
 					</items>
 				</Menu>
 				<Menu text="Alignment">
 					<items>
-						<MenuItem text="Join Aligner" />
+						<ModuleMenuItem text="Join Aligner"
+							moduleClass="io.github.mzmine.modules.alignment.joinaligner.JoinAlignerModule" />
 						<MenuItem text="RANSAC Aligner" />
+					</items>
+				</Menu>
+				<Menu text="Gap Filling">
+					<items>
+						<ModuleMenuItem text="Peak Finder"
+							moduleClass="io.github.mzmine.modules.gapfilling.peakfinder.PeakFinderModule" />
+						<MenuItem text="Same RT and m/z Range Gap Filler" />
 					</items>
 				</Menu>
 				<Menu text="Normalization">
