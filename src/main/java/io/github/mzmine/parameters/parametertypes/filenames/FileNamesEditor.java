@@ -70,7 +70,7 @@ public class FileNamesEditor extends BorderPane
                     .getExtensions();
             FileChooser fileChooser = new FileChooser();
             File lastOpenPath = fileNamesParameter.getLastOpenPath();
-            if (lastOpenPath != null)
+            if ((lastOpenPath != null) && (lastOpenPath.isDirectory()))
                 fileChooser.setInitialDirectory(lastOpenPath);
             fileChooser.setTitle("Open files");
             fileChooser.getExtensionFilters().addAll(extensions);
