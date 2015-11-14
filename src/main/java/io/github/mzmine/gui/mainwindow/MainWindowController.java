@@ -280,7 +280,6 @@ public class MainWindowController implements Initializable {
                 TreeItem<?> parent = row.getParent();
                 parent.getChildren().remove(row);
             }
-            rawDataTree.refresh();
             rawDataTree.getSelectionModel().clearSelection();
         }
     }
@@ -307,7 +306,6 @@ public class MainWindowController implements Initializable {
                 TreeItem<?> parent = row.getParent();
                 parent.getChildren().remove(row);
             }
-            featureTree.refresh();
             featureTree.getSelectionModel().clearSelection();
         }
     }

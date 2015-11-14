@@ -103,14 +103,12 @@ public class FeatureTablePopupMenu extends ContextMenu {
                     for (TreeItem<FeatureTableRow> treeItem : treeItems) {
                         treeItem.setExpanded(true);
                     }
-                    treeTable.refresh();
                     break;
 
                 case "Collapse":
                     for (TreeItem<FeatureTableRow> treeItem : treeItems) {
                         treeItem.setExpanded(false);
                     }
-                    treeTable.refresh();
                     break;
 
                 case "Delete":
@@ -139,7 +137,6 @@ public class FeatureTablePopupMenu extends ContextMenu {
                             TreeItem<?> parent = row.getParent();
                             parent.getChildren().remove(row);
                         }
-                        treeTable.refresh();
                         treeTable.getSelectionModel().clearSelection();
                     }
                     break;
