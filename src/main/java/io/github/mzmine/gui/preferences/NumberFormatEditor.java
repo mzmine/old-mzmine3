@@ -42,6 +42,8 @@ public class NumberFormatEditor extends HBox
     private final Spinner<Integer> decimalsSpinner;
     private final CheckBox exponentCheckbox;
 
+    private DecimalFormat value;
+
     public NumberFormatEditor(PropertySheet.Item parameter) {
 
         if (!(parameter instanceof NumberFormatParameter))
@@ -79,7 +81,9 @@ public class NumberFormatEditor extends HBox
 
     @Override
     public void setValue(DecimalFormat newValue) {
-        if (newValue == null) return;
+        if (newValue == null)
+            return;
+        this.value = newValue;
         final int decimals = newValue.getMinimumFractionDigits();
         boolean showExponent = newValue.toPattern().contains("E");
         decimalsSpinner.getValueFactory().setValue(decimals);
@@ -108,7 +112,10 @@ public class NumberFormatEditor extends HBox
         if (showExponent) {
             pattern += "E0";
         }
-        return new DecimalFormat(pattern);
+        if (value != null) {
+            value.applyPattern(pattern);
+        }
+        return value;
     }
 
     @Override
