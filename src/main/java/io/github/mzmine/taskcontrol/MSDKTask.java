@@ -30,7 +30,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 
-public class MSDKTask extends Task<Object> {
+public class MSDKTask extends Task<Object> implements MZmineTask {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -54,6 +54,7 @@ public class MSDKTask extends Task<Object> {
         setOnCancelled(cancelEvent);
     }
 
+    @Override
     public void refreshStatus() {
 
         // Progress
