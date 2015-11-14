@@ -51,7 +51,7 @@ public class OptionalParameter<EmbeddedParameter extends AbstractParameter<?>>
         return ((Parameter<?>) embeddedParameter).getCategory();
     }
 
-    public EmbeddedParameter getEmbeddedParameters() {
+    public EmbeddedParameter getEmbeddedParameter() {
         return embeddedParameter;
     }
 
