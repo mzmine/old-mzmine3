@@ -40,11 +40,12 @@ import io.github.msdk.featuredetection.targeteddetection.TargetedDetectionMethod
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
 import io.github.mzmine.gui.MZmineGUI;
+import io.github.mzmine.taskcontrol.MZmineTask;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 
-public class TargetedDetectionTask extends Task<Object> {
+public class TargetedDetectionTask extends Task<Object> implements MZmineTask {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -100,6 +101,7 @@ public class TargetedDetectionTask extends Task<Object> {
         setOnCancelled(cancelEvent);
     }
 
+    @Override
     public void refreshStatus() {
 
         // Progress

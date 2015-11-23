@@ -19,14 +19,12 @@
 
 package io.github.mzmine.parameters.parametertypes;
 
-import java.beans.PropertyEditor;
-
 import javax.annotation.Nullable;
 
 import org.controlsfx.control.PropertySheet;
+import org.controlsfx.property.editor.PropertyEditor;
 
 import io.github.mzmine.parameters.ParameterEditor;
-import io.github.mzmine.parameters.parametertypes.ranges.DoubleRangeEditor;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
@@ -36,8 +34,7 @@ public class OptionalEditor extends FlowPane
         implements ParameterEditor<Boolean> {
 
     private final CheckBox checkBox;
-    private final OptionalParameter<?> optionalParameter;
-    private AbstractParameter<?> embeddedComponent;
+    private AbstractParameter<?> embeddedParameter;
 
     public OptionalEditor(PropertySheet.Item parameter) {
 
@@ -46,19 +43,26 @@ public class OptionalEditor extends FlowPane
 
         // The checkbox
         checkBox = new CheckBox();
-
-        /*
-         * TODO: Get the editor for the embedded component
-         */
-        this.optionalParameter = (OptionalParameter<?>) parameter;
-        embeddedComponent = optionalParameter.getEmbeddedParameters();
-        ParameterEditor<?> embeddedParameterEditor = new DoubleRangeEditor(embeddedComponent);
-        Node embeddedNode = embeddedParameterEditor.getEditor();
+        getChildren().add(checkBox);
 
         // FlowPane setting
         setHgap(10);
 
-        getChildren().addAll(checkBox, embeddedNode);
+        // Add embedded editor
+        try {
+            OptionalParameter<?> optionalParameter = (OptionalParameter<?>) parameter;
+            embeddedParameter = optionalParameter.getEmbeddedParameter();
+            Class<? extends PropertyEditor<?>> embeddedEditorClass = embeddedParameter
+                    .getPropertyEditorClass().get();
+            PropertyEditor<?> editor;
+            editor = embeddedEditorClass
+                    .getDeclaredConstructor(PropertySheet.Item.class)
+                    .newInstance(embeddedParameter);
+            Node embeddedNode = editor.getEditor();
+            getChildren().add(embeddedNode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

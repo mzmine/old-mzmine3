@@ -46,7 +46,7 @@ import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesSelecti
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelectionType;
 import io.github.mzmine.project.MZmineProject;
-import io.github.mzmine.taskcontrol.MSDKTask;
+import io.github.mzmine.taskcontrol.MZmineTask;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -199,9 +199,9 @@ public class MainWindowController implements Initializable {
 
                     Collection<Task<?>> tasks = tasksView.getTasks();
                     for (Task<?> task : tasks) {
-                        if (task instanceof MSDKTask) {
-                            MSDKTask msdkTask = (MSDKTask) task;
-                            msdkTask.refreshStatus();
+                        if (task instanceof MZmineTask) {
+                            MZmineTask mzmineTask = (MZmineTask) task;
+                            mzmineTask.refreshStatus();
                         }
                     }
                 }));
@@ -280,7 +280,6 @@ public class MainWindowController implements Initializable {
                 TreeItem<?> parent = row.getParent();
                 parent.getChildren().remove(row);
             }
-            rawDataTree.refresh();
             rawDataTree.getSelectionModel().clearSelection();
         }
     }
@@ -307,7 +306,6 @@ public class MainWindowController implements Initializable {
                 TreeItem<?> parent = row.getParent();
                 parent.getChildren().remove(row);
             }
-            featureTree.refresh();
             featureTree.getSelectionModel().clearSelection();
         }
     }
