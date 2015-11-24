@@ -24,6 +24,7 @@ import io.github.msdk.util.RTTolerance;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.BooleanParameter;
+import io.github.mzmine.parameters.parametertypes.OptionalParameter;
 import io.github.mzmine.parameters.parametertypes.PercentParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesParameter;
@@ -50,16 +51,11 @@ public class PeakFinderParameters extends ParameterSet {
             ParameterValidator.createNonEmptyValidator(),
             new RTTolerance(10, true));
 
-    public static final PercentParameter intensityTolerance = new PercentParameter(
-            "Intensity tolerance",
-            "Maximum allowed deviation of the peak chromatogram from the expected /\\ shape.",
-            "Algorithm Parameters",
-            ParameterValidator.createNonEmptyValidator(), 0.15);
-
-    public static final BooleanParameter correctRT = new BooleanParameter(
-            "RT correction?",
-            "If checked, correction of the retention time will be applied to avoid the\nproblems caused by the deviation of the reteion time between the samples.",
-            "Algorithm Parameters", false);
+    public static final OptionalParameter<PercentParameter> intensityTolerance = new OptionalParameter<PercentParameter>(
+            new PercentParameter("Intensity tolerance",
+                    "Maximum allowed deviation of the peak chromatogram from the expected /\\ shape.",
+                    "Algorithm Parameters",
+                    ParameterValidator.createNonEmptyValidator(), 0.15));
 
     public static final BooleanParameter sameRT = new BooleanParameter(
             "Use rows RT range?",
@@ -70,6 +66,11 @@ public class PeakFinderParameters extends ParameterSet {
             "Use rows m/z range?",
             "If checked, the m/z range where the new peaks will be sought are obtained using the\nranges of the rest of the peaks in the same row.",
             "Algorithm Parameters", true);
+
+    public static final BooleanParameter correctRT = new BooleanParameter(
+            "Apply RT correction?",
+            "If checked, correction of the retention time will be applied to avoid the\nproblems caused by the deviation of the reteion time between the samples.",
+            "Algorithm Parameters", false);
 
     public static final StringParameter nameSuffix = new StringParameter(
             "Name suffix", "Suffix to be added to the feature table name.",
@@ -85,7 +86,7 @@ public class PeakFinderParameters extends ParameterSet {
      */
     public PeakFinderParameters() {
         super(featureTables, mzTolerance, rtTolerance, intensityTolerance,
-                correctRT, sameRT, sameMZ, nameSuffix, removeOldTable);
+                sameRT, sameMZ, correctRT, nameSuffix, removeOldTable);
     }
 
 }

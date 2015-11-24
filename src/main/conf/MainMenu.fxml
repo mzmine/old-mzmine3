@@ -163,7 +163,6 @@
 					<items>
 						<ModuleMenuItem text="Peak Finder"
 							moduleClass="io.github.mzmine.modules.gapfilling.peakfinder.PeakFinderModule" />
-						<MenuItem text="Same RT and m/z Range Gap Filler" />
 					</items>
 				</Menu>
 				<Menu text="Normalization">
