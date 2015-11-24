@@ -14,7 +14,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<cdk.version>1.5.11</cdk.version>
-		<controlsfx.version>8.40.9</controlsfx.version>
+		<controlsfx.version>8.40.10</controlsfx.version>
 	</properties>
 
 	<mailingLists>
@@ -124,13 +124,13 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.12</version>
+			<version>1.7.13</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-jdk14</artifactId>
-			<version>1.7.12</version>
+			<version>1.7.13</version>
 		</dependency>
 
 		<dependency>
@@ -142,7 +142,7 @@
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-all</artifactId>
-			<version>0.1</version>
+			<version>0.0.1</version>
 		</dependency>
 
 	</dependencies>
