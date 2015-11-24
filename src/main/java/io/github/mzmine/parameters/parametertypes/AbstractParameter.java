@@ -29,6 +29,7 @@ import org.controlsfx.property.editor.PropertyEditor;
 import io.github.mzmine.parameters.Parameter;
 import io.github.mzmine.parameters.ParameterEditor;
 import io.github.mzmine.parameters.ParameterValidator;
+import javafx.beans.value.ObservableValue;
 
 /**
  * This parameter stores filenames
@@ -101,6 +102,11 @@ public abstract class AbstractParameter<ValueType>
     public void setValidator(
             @Nullable ParameterValidator<ValueType> validator) {
         this.validator = validator;
+    }
+
+    @Override
+    public Optional<ObservableValue<? extends Object>> getObservableValue() {
+        return null;
     }
 
     abstract public @Nonnull Parameter<ValueType> clone();
