@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.modules.MZmineProcessingModule;
-import io.github.mzmine.modules.featuretableexport.FeatureTableExportModule;
+import io.github.mzmine.modules.featuretableexport.CsvExportModule;
 import io.github.mzmine.parameters.Parameter;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineProject;
@@ -72,7 +72,7 @@ public class AuditLogExportModule implements MZmineProcessingModule {
         // List of modules which won't be shown in the audit log
         final List<MZmineModule> removeModules = new ArrayList<>();
         removeModules.add(MZmineCore.getModuleInstance(AuditLogExportModule.class));
-        removeModules.add(MZmineCore.getModuleInstance(FeatureTableExportModule.class));
+        removeModules.add(MZmineCore.getModuleInstance(CsvExportModule.class));
 
         // Loop through all entries in the audit log
         List<AuditLogEntry> auditLog = MZmineCore.getCurrentProject()

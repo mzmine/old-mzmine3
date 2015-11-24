@@ -10,6 +10,6 @@
 	<module>io.github.mzmine.modules.filtering.rowfilter.RowFilterModule</module>
 	<module>io.github.mzmine.modules.alignment.joinaligner.JoinAlignerModule</module>
 	<module>io.github.mzmine.modules.gapfilling.peakfinder.PeakFinderModule</module>
-	<module>io.github.mzmine.modules.featuretableexport.FeatureTableExportModule</module>
+	<module>io.github.mzmine.modules.featuretableexport.CsvExportModule</module>
 	<module>io.github.mzmine.modules.auditlogexport.AuditLogExportModule</module>
 </modules>

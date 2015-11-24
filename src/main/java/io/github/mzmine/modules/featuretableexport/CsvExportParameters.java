@@ -20,28 +20,20 @@
 package io.github.mzmine.modules.featuretableexport;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.BooleanParameter;
 import io.github.mzmine.parameters.parametertypes.MultiChoiceParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
-import io.github.mzmine.parameters.parametertypes.ToggleParameterSetParameter;
 import io.github.mzmine.parameters.parametertypes.filenames.FileNameParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesParameter;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-public class FeatureTableExportParameters extends ParameterSet {
+public class CsvExportParameters extends ParameterSet {
 
-    /*
-     * Common parameter
-     */
     public static final FeatureTablesParameter featureTables = new FeatureTablesParameter();
 
-    /*
-     * CSV parameters
-     */
     public static final FileNameParameter exportFileCSV = new FileNameParameter(
             "Output file",
             "Path and name of the exported CSV file. If the file already exists, it will be overwritten.",
@@ -56,6 +48,17 @@ public class FeatureTableExportParameters extends ParameterSet {
             "Algorithm Parameters",
             ParameterValidator.createNonEmptyValidator(), ",");
 
+    public static final StringParameter separatorIDs = new StringParameter(
+            "Identification separator",
+            "Character(s) used to separate identification results in the exported file.",
+            "Algorithm Parameters",
+            ParameterValidator.createNonEmptyValidator(), ";");
+
+    public static final BooleanParameter exportAllIds = new BooleanParameter(
+            "Export all feature identifications?",
+            "If checked, all possible identifications of a feature will be exported.",
+            "Algorithm Parameters", false);
+
     public static final MultiChoiceParameter<CommonColumns> commonData = new MultiChoiceParameter<CommonColumns>(
             "Common data", "Selection of common row data to export",
             "Algorithm Parameters", Arrays.asList(CommonColumns.values()));
@@ -64,60 +67,9 @@ public class FeatureTableExportParameters extends ParameterSet {
             "Sample data", "Selection of sample specific data to export",
             "Algorithm Parameters", SampleColumns.getSampleColumns());
 
-    public static final BooleanParameter exportAllIds = new BooleanParameter(
-            "Export all feature identifications?",
-            "If checked, all possible identifications of a feature will be exported.",
-            "Algorithm Parameters", false);
-
-    public static final StringParameter separatorIDs = new StringParameter(
-            "Identification separator",
-            "Character(s) used to separate identification results in the exported file.",
-            "Algorithm Parameters",
-            ParameterValidator.createNonEmptyValidator(), ";");
-
-    private static final ParameterSet csvParameters = new ParameterSet(
-            exportFileCSV, separator, separatorIDs, commonData, sampleData,
-            exportAllIds);
-
-    /*
-     * mzTab parameters
-     */
-    public static final FileNameParameter exportFileMzTab = new FileNameParameter(
-            "Output file",
-            "Path and name of the exported mzTab file. If the file already exists, it will be overwritten.",
-            "Algorithm Parameters",
-            ParameterValidator.createNonEmptyValidator(),
-            FileNameParameter.Type.SAVE,
-            Arrays.asList(new ExtensionFilter("mzTab file", "*.mzTab")));
-
-    private static final ParameterSet mzTabParameters = new ParameterSet(
-            exportFileMzTab);
-
-    private static final ParameterSet xmlParameters = new ParameterSet(
-            featureTables);
-
-    private static final ParameterSet sqlParameters = new ParameterSet(
-            featureTables);
-
-    /*
-     * Toggle parameter
-     */
-    private static final LinkedHashMap<String, ParameterSet> exportFormats = new LinkedHashMap<String, ParameterSet>() {
-        private static final long serialVersionUID = 1L;
-
-        {
-            put("CSV", csvParameters);
-            put("mzTab", mzTabParameters);
-            put("XML", xmlParameters);
-            put("SQL", sqlParameters);
-        }
-    };
-    public static final ToggleParameterSetParameter<String> exportFormat = new ToggleParameterSetParameter<String>(
-            "Export format", "Format to export the feature table into.",
-            "Algorithm Parameters", exportFormats, "CSV");
-
-    public FeatureTableExportParameters() {
-        super(exportFormat, featureTables, commonData, sampleData);
+    public CsvExportParameters() {
+        super(featureTables, exportFileCSV, separator, separatorIDs,
+                exportAllIds, commonData, sampleData);
     }
 
 }

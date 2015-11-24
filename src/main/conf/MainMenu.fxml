@@ -35,9 +35,6 @@
 					</accelerator>
 				</MenuItem>
 				<SeparatorMenuItem />
-				<ModuleMenuItem text="Export Audit Log"
-					moduleClass="io.github.mzmine.modules.auditlogexport.AuditLogExportModule" />
-				<SeparatorMenuItem />
 				<Menu text="Import...">
 					<items>
 						<ModuleMenuItem text="Raw Data"
@@ -46,25 +43,16 @@
 							moduleClass="io.github.mzmine.modules.featuretableimport.FeatureTableImportModule" />
 					</items>
 				</Menu>
-				<Menu text="Export...">
-					<items>
-						<MenuItem text="Raw Data" />
-						<ModuleMenuItem text="Feature Tables"
-							moduleClass="io.github.mzmine.modules.featuretableexport.FeatureTableExportModule" />
-					</items>
-				</Menu>
 				<SeparatorMenuItem />
-				<ModuleMenuItem text="Import Raw Data"
-					moduleClass="io.github.mzmine.modules.rawdataimport.RawDataImportModule" />
-				<Menu text="Import Feature Tables...">
+				<Menu text="Export Feature Tables...">
 					<items>
-						<MenuItem text="CSV" />
-						<MenuItem text="mzIdentML" />
-						<MenuItem text="mzQuantML" />
+						<ModuleMenuItem text="CSV"
+							moduleClass="io.github.mzmine.modules.featuretableexport.CsvExportModule" />
 						<MenuItem text="mzTab" />
+						<MenuItem text="XML" />
+						<MenuItem text="SQL Database" />
 					</items>
 				</Menu>
-				<SeparatorMenuItem />
 				<Menu text="Export Raw Data...">
 					<items>
 						<MenuItem text="CSV" />
@@ -74,14 +62,9 @@
 						<MenuItem text="TXT" />
 					</items>
 				</Menu>
-				<Menu text="Export Feature Tables...">
-					<items>
-						<MenuItem text="CSV" />
-						<MenuItem text="MetaboAnalyst" />
-						<MenuItem text="mzTab" />
-						<MenuItem text="SQL Database" />
-					</items>
-				</Menu>
+				<SeparatorMenuItem />
+				<ModuleMenuItem text="Export Audit Log"
+					moduleClass="io.github.mzmine.modules.auditlogexport.AuditLogExportModule" />
 				<SeparatorMenuItem />
 				<MenuItem text="Exit" onAction="#exitApplication" />
 			</items>
