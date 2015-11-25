@@ -55,18 +55,15 @@ public class OptionalParameter<EmbeddedParameter extends AbstractParameter<?>>
         return embeddedParameter;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public @Nonnull OptionalParameter clone() {
-        /*
-         * TODO Write the clone method
-         */
-        return new OptionalParameter(embeddedParameter);
-        // final Parameter<?> embeddedParametersClone =
-        // embeddedParameters.clone();
-        // final OptionalParameter copy = new OptionalParameter(
-        // embeddedParametersClone);
-        // copy.setValue(this.getValue());
-        // return copy;
+    public @Nonnull OptionalParameter<EmbeddedParameter> clone() {
+        final EmbeddedParameter embeddedParameterClone = (EmbeddedParameter) embeddedParameter
+                .clone();
+        final OptionalParameter<EmbeddedParameter> copy = new OptionalParameter<EmbeddedParameter>(
+                embeddedParameterClone);
+        copy.setValue(this.getValue());
+        return copy;
     }
 
     @Override
