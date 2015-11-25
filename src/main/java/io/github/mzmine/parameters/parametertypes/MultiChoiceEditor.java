@@ -35,20 +35,20 @@ public class MultiChoiceEditor<ValueType> extends CheckListView<ValueType>
 
     private final MultiChoiceParameter<ValueType> multiChoiceParameter;
 
-    
     @SuppressWarnings("unchecked")
     public MultiChoiceEditor(PropertySheet.Item parameter) {
-        
+
         if (!(parameter instanceof MultiChoiceParameter))
             throw new IllegalArgumentException();
 
         this.multiChoiceParameter = (MultiChoiceParameter<ValueType>) parameter;
-        
-        List<ValueType> choices= this.multiChoiceParameter.getChoices();
+
+        List<ValueType> choices = this.multiChoiceParameter.getChoices();
         getItems().addAll(choices);
-       
+        setMaxHeight(120);
+
     }
-    
+
     @Override
     public Node getEditor() {
         return this;

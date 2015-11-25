@@ -26,7 +26,7 @@ import org.controlsfx.control.PropertySheet;
 import org.controlsfx.control.SegmentedButton;
 
 import io.github.mzmine.main.MZmineCore;
-import io.github.mzmine.modules.featuretableexport.FeatureTableExportModule;
+import io.github.mzmine.modules.featuretableexport.CsvExportModule;
 import io.github.mzmine.parameters.ParameterEditor;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterSheetView;
@@ -78,7 +78,7 @@ public class ToggleParameterSetEditor<ValueType> extends BorderPane
                     ParameterSheetView parameterSheetView = new ParameterSheetView(entry.getValue(),null);
                     
                     ParameterSet currentParameterSet = MZmineCore.getConfiguration()
-                            .getModuleParameters(FeatureTableExportModule.class);
+                            .getModuleParameters(CsvExportModule.class);
                     
                     //ParameterSetupDialog dialog = new ParameterSetupDialog(entry.getValue(), null);
                     //dialog.showAndWait();

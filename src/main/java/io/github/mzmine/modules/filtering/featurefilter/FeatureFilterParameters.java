@@ -42,40 +42,44 @@ public class FeatureFilterParameters extends ParameterSet {
                     ParameterValidator.createNonEmptyValidator(),
                     Range.closed(0.0, 20.0)));
 
-    public static final DoubleRangeParameter area = new DoubleRangeParameter(
-            "Area", "Permissible range of peak areas.", "Filters",
-            MZmineCore.getConfiguration().getIntensityFormat(),
-            ParameterValidator.createNonEmptyValidator(),
-            Range.closed(0.0, 1E7));
+    public static final OptionalParameter<DoubleRangeParameter> area = new OptionalParameter<DoubleRangeParameter>(
+            new DoubleRangeParameter("Area",
+                    "Permissible range of peak areas.", "Filters",
+                    MZmineCore.getConfiguration().getIntensityFormat(),
+                    ParameterValidator.createNonEmptyValidator(),
+                    Range.closed(0.0, 1E7)));
 
-    public static final DoubleRangeParameter height = new DoubleRangeParameter(
-            "Height", "Permissible range of peak heights.", "Filters",
-            MZmineCore.getConfiguration().getIntensityFormat(),
-            ParameterValidator.createNonEmptyValidator(),
-            Range.closed(0.0, 1E7));
+    public static final OptionalParameter<DoubleRangeParameter> height = new OptionalParameter<DoubleRangeParameter>(
+            new DoubleRangeParameter("Height",
+                    "Permissible range of peak heights.", "Filters",
+                    MZmineCore.getConfiguration().getIntensityFormat(),
+                    ParameterValidator.createNonEmptyValidator(),
+                    Range.closed(0.0, 1E7)));
 
-    public static final IntegerRangeParameter dataPoints = new IntegerRangeParameter(
-            "# data points",
-            "Permissible range of the number of data points over the peak.",
-            "Filters", ParameterValidator.createNonEmptyValidator(),
-            Range.closed(8, 999));
+    public static final OptionalParameter<IntegerRangeParameter> dataPoints = new OptionalParameter<IntegerRangeParameter>(
+            new IntegerRangeParameter("# data points",
+                    "Permissible range of the number of data points over the peak.", "Filters",
+                    ParameterValidator.createNonEmptyValidator(),
+                    Range.closed(8, 999)));
 
-    public static final DoubleRangeParameter fwhm = new DoubleRangeParameter(
-            "FWHM (sec)",
-            "Permissible range of full width at half maximum (FWHM) for a peak.",
-            "Filters", ParameterValidator.createNonEmptyValidator(),
-            Range.closed(0.0, 10.0));
+    public static final OptionalParameter<DoubleRangeParameter> fwhm = new OptionalParameter<DoubleRangeParameter>(
+            new DoubleRangeParameter("FWHM (sec)",
+                    "Permissible range of full width at half maximum (FWHM) for a peak.", "Filters",
+                    MZmineCore.getConfiguration().getIntensityFormat(),
+                    ParameterValidator.createNonEmptyValidator(),
+                    Range.closed(0.0, 10.0)));
 
-    public static final DoubleRangeParameter tailingFactor = new DoubleRangeParameter(
-            "Tailing factor", "Permissible range of tailing factor for a peak.",
-            "Filters", ParameterValidator.createNonEmptyValidator(),
-            Range.closed(0.5, 2.0));
+    public static final OptionalParameter<DoubleRangeParameter> tailingFactor = new OptionalParameter<DoubleRangeParameter>(
+            new DoubleRangeParameter("Tailing factor",
+                    "Permissible range of tailing factor for a peak.", "Filters",
+                    ParameterValidator.createNonEmptyValidator(),
+                    Range.closed(0.5, 2.0)));
 
-    public static final DoubleRangeParameter asymmetryFactor = new DoubleRangeParameter(
-            "Asymmetry factor",
-            "Permissible range of asymmetry factor for a peak.", "Filters",
-            ParameterValidator.createNonEmptyValidator(),
-            Range.closed(0.5, 2.0));
+    public static final OptionalParameter<DoubleRangeParameter> asymmetryFactor = new OptionalParameter<DoubleRangeParameter>(
+            new DoubleRangeParameter("Asymmetry factor",
+                    "Permissible range of asymmetry factor for a peak.", "Filters",
+                    ParameterValidator.createNonEmptyValidator(),
+                    Range.closed(0.5, 2.0)));
 
     public static final StringParameter nameSuffix = new StringParameter(
             "Name suffix", "Suffix to be added to the feature table name.",

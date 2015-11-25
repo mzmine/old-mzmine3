@@ -35,7 +35,7 @@ import javafx.concurrent.Task;
 /**
  * Feature table import module
  */
-public class FeatureTableExportModule implements MZmineProcessingModule {
+public class CsvExportModule implements MZmineProcessingModule {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -59,19 +59,15 @@ public class FeatureTableExportModule implements MZmineProcessingModule {
             @Nonnull ParameterSet parameters,
             @Nonnull Collection<Task<?>> tasks) {
 
-        final String exportFormat = parameters
-                .getParameter(FeatureTableExportParameters.exportFormat)
-                .getValue();
-
         /*
          * TODO
          */
-        System.out.println(exportFormat);
+        System.out.println("Export to CSV");
 
     }
 
     @Override
     public @Nonnull Class<? extends ParameterSet> getParameterSetClass() {
-        return FeatureTableExportParameters.class;
+        return CsvExportParameters.class;
     }
 }
