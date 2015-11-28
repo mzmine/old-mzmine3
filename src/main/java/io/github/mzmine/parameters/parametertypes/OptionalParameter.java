@@ -23,8 +23,6 @@ import javax.annotation.Nonnull;
 
 import org.w3c.dom.Element;
 
-import io.github.mzmine.parameters.Parameter;
-
 /**
  * Parameter represented by check box with additional sub-parameters
  * 
@@ -40,15 +38,15 @@ public class OptionalParameter<EmbeddedParameter extends AbstractParameter<?>>
     }
 
     public String getName() {
-        return ((Parameter<?>) embeddedParameter).getName();
+        return embeddedParameter.getName();
     }
 
     public String getDescription() {
-        return ((Parameter<?>) embeddedParameter).getDescription();
+        return embeddedParameter.getDescription();
     }
 
     public String getCategory() {
-        return ((Parameter<?>) embeddedParameter).getCategory();
+        return embeddedParameter.getCategory();
     }
 
     public EmbeddedParameter getEmbeddedParameter() {

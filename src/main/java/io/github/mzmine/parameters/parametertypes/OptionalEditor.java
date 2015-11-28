@@ -34,12 +34,17 @@ public class OptionalEditor extends FlowPane
         implements ParameterEditor<Boolean> {
 
     private final CheckBox checkBox;
-    private AbstractParameter<?> embeddedParameter;
+    private final OptionalParameter<?> optionalParameter;
+    private final AbstractParameter<?> embeddedParameter;
+    private final PropertyEditor embeddedEditor;
 
     public OptionalEditor(PropertySheet.Item parameter) {
 
         if (!(parameter instanceof OptionalParameter))
             throw new IllegalArgumentException();
+
+        optionalParameter = (OptionalParameter<?>) parameter;
+        embeddedParameter = optionalParameter.getEmbeddedParameter();
 
         // The checkbox
         checkBox = new CheckBox();
@@ -50,18 +55,16 @@ public class OptionalEditor extends FlowPane
 
         // Add embedded editor
         try {
-            OptionalParameter<?> optionalParameter = (OptionalParameter<?>) parameter;
-            embeddedParameter = optionalParameter.getEmbeddedParameter();
             Class<? extends PropertyEditor<?>> embeddedEditorClass = embeddedParameter
                     .getPropertyEditorClass().get();
-            PropertyEditor<?> editor;
-            editor = embeddedEditorClass
+            embeddedEditor = embeddedEditorClass
                     .getDeclaredConstructor(PropertySheet.Item.class)
                     .newInstance(embeddedParameter);
-            Node embeddedNode = editor.getEditor();
+            Node embeddedNode = embeddedEditor.getEditor();
             getChildren().add(embeddedNode);
         } catch (Exception e) {
             e.printStackTrace();
+            throw (new IllegalStateException(e));
         }
 
     }
@@ -73,13 +76,16 @@ public class OptionalEditor extends FlowPane
 
     @Override
     public Boolean getValue() {
+        embeddedParameter.setValue(embeddedEditor.getValue());
         return checkBox.isSelected();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void setValue(Boolean value) {
         if (value != null) {
             checkBox.setSelected(value);
+            embeddedEditor.setValue(embeddedParameter.getValue());
         }
     }
 
