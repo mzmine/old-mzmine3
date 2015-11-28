@@ -28,9 +28,9 @@ import io.github.mzmine.parameters.ParameterEditor;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.BorderPane;
 
-public class OptionalEditor extends FlowPane
+public class OptionalEditor extends BorderPane
         implements ParameterEditor<Boolean> {
 
     private final CheckBox checkBox;
@@ -48,10 +48,7 @@ public class OptionalEditor extends FlowPane
 
         // The checkbox
         checkBox = new CheckBox();
-        getChildren().add(checkBox);
-
-        // FlowPane setting
-        setHgap(10);
+        setLeft(checkBox);
 
         // Add embedded editor
         try {
@@ -61,9 +58,8 @@ public class OptionalEditor extends FlowPane
                     .getDeclaredConstructor(PropertySheet.Item.class)
                     .newInstance(embeddedParameter);
             Node embeddedNode = embeddedEditor.getEditor();
-            getChildren().add(embeddedNode);
+            setCenter(embeddedNode);
         } catch (Exception e) {
-            e.printStackTrace();
             throw (new IllegalStateException(e));
         }
 
