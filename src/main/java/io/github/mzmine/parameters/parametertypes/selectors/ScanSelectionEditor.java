@@ -25,6 +25,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import org.controlsfx.control.PropertySheet;
+
 import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 
@@ -60,7 +62,7 @@ public class ScanSelectionEditor extends HBox
     private MsSpectrumType spectrumType;
     private String scanDefinition;
 
-    public ScanSelectionEditor() {
+    public ScanSelectionEditor(PropertySheet.Item parameter) {
 
         restrictionsList = new Text();
 
@@ -201,26 +203,25 @@ public class ScanSelectionEditor extends HBox
             return;
         }
 
-        StringBuilder newText = new StringBuilder("<html>");
+        StringBuilder newText = new StringBuilder();
         if (scanNumberRange != null) {
             newText.append("Scan number: " + scanNumberRange.lowerEndpoint()
-                    + " - " + scanNumberRange.upperEndpoint() + "<br>");
+                    + " - " + scanNumberRange.upperEndpoint() + "\n");
         }
         if (scanRTRange != null) {
             NumberFormat rtFormat = MZmineCore.getConfiguration().getRTFormat();
             newText.append("Retention time: "
                     + rtFormat.format(scanRTRange.lowerEndpoint()) + " - "
-                    + rtFormat.format(scanRTRange.upperEndpoint())
-                    + " min.<br>");
+                    + rtFormat.format(scanRTRange.upperEndpoint()) + " min.\n");
         }
         if (msLevel != null) {
-            newText.append("MS level: " + msLevel + "<br>");
+            newText.append("MS level: " + msLevel + "\n");
         }
         if (!Strings.isNullOrEmpty(scanDefinition)) {
-            newText.append("Scan definition: " + scanDefinition + "<br>");
+            newText.append("Scan definition: " + scanDefinition + "\n");
         }
         if (polarity != null) {
-            newText.append("Polarity: " + polarity.toString() + "<br>");
+            newText.append("Polarity: " + polarity.toString() + "\n");
         }
         if (spectrumType != null) {
             newText.append(

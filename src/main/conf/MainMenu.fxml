@@ -178,7 +178,8 @@
 						<ModuleMenuItem text="Chromatogram Plot"
 							moduleClass="io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotModule" />
 						<MenuItem text="2D Plot" />
-						<MenuItem text="2D Plot" />
+						<ModuleMenuItem text="3D Plot"
+							moduleClass="io.github.mzmine.modules.plots.threed.ThreeDPlotModule" />
 						<MenuItem text="MS/MS Plot" />
 						<MenuItem text="Neutral Loss Plot" />
 					</items>
