@@ -88,6 +88,7 @@ public class DoubleRangeEditor extends FlowPane
 
     @Override
     public void setValue(Range<Double> value) {
+        if (value == null) return;
         String minValue;
         String maxValue;
 
@@ -107,7 +108,6 @@ public class DoubleRangeEditor extends FlowPane
 
     @Override
     public Control getMainControl() {
-        // TODO Auto-generated method stub
         return minTxtField;
     }
 

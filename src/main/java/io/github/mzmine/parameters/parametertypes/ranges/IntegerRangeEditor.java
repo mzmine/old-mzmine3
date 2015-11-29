@@ -79,6 +79,8 @@ public class IntegerRangeEditor extends FlowPane
 
     @Override
     public void setValue(Range<Integer> value) {
+        if (value == null)
+            return;
         String minValue = String.valueOf(value.lowerEndpoint());
         String maxValue = String.valueOf(value.upperEndpoint());
         minTxtField.setText(minValue);
@@ -87,7 +89,6 @@ public class IntegerRangeEditor extends FlowPane
 
     @Override
     public Control getMainControl() {
-        // TODO Auto-generated method stub
         return minTxtField;
     }
 
