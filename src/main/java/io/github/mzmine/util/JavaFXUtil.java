@@ -27,6 +27,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 /**
  * JavaFX related utilities
@@ -61,8 +62,12 @@ public class JavaFXUtil {
         final NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         yAxis.setForceZeroInRange(true);
         xAxis.setForceZeroInRange(false);
-        StackPane pane = new StackPane();
-        pane.getChildren().addAll(chart, rect);
+        final StackPane pane = new StackPane();
+        final Text zoomOut = new Text("Zoom out");
+        zoomOut.setVisible(false);
+        zoomOut.setManaged(false);
+        zoomOut.setFill(Color.BLUE);
+        pane.getChildren().addAll(chart, rect, zoomOut);
 
         chart.setOnMousePressed(event -> {
             if (event.getButton() != MouseButton.PRIMARY)
@@ -77,12 +82,22 @@ public class JavaFXUtil {
             double mouseY = event.getY();
             double rectX = rect.getX();
             double rectY = rect.getY();
-            if ((mouseX <= rectX) || (mouseY <= rectY)) {
+            final boolean isZoomedOut = xAxis.isAutoRanging()
+                    && yAxis.isAutoRanging();
+            if ((!isZoomedOut) && (mouseX < rectX - 5.0)
+                    && (mouseY < rectY - 5.0)) {
                 rect.setVisible(false);
-            } else {
+                zoomOut.setVisible(true);
+                zoomOut.setX(rect.getX() - 60.0);
+                zoomOut.setY(rect.getY() - 5.0);
+            } else if ((mouseX > rectX) && (mouseY > rectY)) {
+                zoomOut.setVisible(false);
                 rect.setWidth(mouseX - rectX);
                 rect.setHeight(mouseY - rectY);
                 rect.setVisible(true);
+            } else {
+                rect.setVisible(false);
+                zoomOut.setVisible(false);
             }
         });
 
@@ -91,12 +106,13 @@ public class JavaFXUtil {
                 return;
 
             rect.setVisible(false);
+            zoomOut.setVisible(false);
 
             double mouseX = event.getX();
             double mouseY = event.getY();
             double rectX = rect.getX();
             double rectY = rect.getY();
-            if (mouseX < rectX && mouseY < rectY) {
+            if ((mouseX < rectX - 5.0) && (mouseY < rectY - 5.0)) {
                 xAxis.setAutoRanging(true);
                 yAxis.setAutoRanging(true);
                 return;
@@ -142,10 +158,9 @@ public class JavaFXUtil {
 
             xAxis.setTickUnit((newXUpperBound - newXLowerBound) / 10);
             yAxis.setTickUnit((newYUpperBound - newYLowerBound) / 10);
-            
+
             rect.setWidth(0);
             rect.setHeight(0);
-
 
         });
 
