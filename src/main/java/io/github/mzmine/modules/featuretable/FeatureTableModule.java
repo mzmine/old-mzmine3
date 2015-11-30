@@ -104,9 +104,9 @@ public class FeatureTableModule implements MZmineRunnableModule {
 
         // Group rows
         FeatureTableColumn groupColoumn = featureTable
-                .getColumn(ColumnName.GROUPID.getName(), null);
+                .getColumn(ColumnName.GROUPID, null);
         FeatureTableColumn idColoumn = featureTable
-                .getColumn(ColumnName.ID.getName(), null);
+                .getColumn(ColumnName.ID, null);
         for (FeatureTableRow row : rows) {
             // No group column
             if (groupColoumn == null) {
@@ -114,19 +114,19 @@ public class FeatureTableModule implements MZmineRunnableModule {
                 root.getChildren().add(treeItem);
             }
             // No group id
-            else if (row.getData(groupColoumn, Integer.class) == null) {
+            else if (row.getData(groupColoumn) == null) {
                 treeItem = new TreeItem<>(row);
                 treeItem.setExpanded(true);
                 root.getChildren().add(treeItem);
-                rowMap.put((int) row.getData(idColoumn, Integer.class), treeItem);
+                rowMap.put((int) row.getData(idColoumn), treeItem);
             }
             // The row has a group id
             else {
-                Integer groupID = (int) row.getData(groupColoumn, Integer.class);
+                Integer groupID = (int) row.getData(groupColoumn);
                 TreeItem<FeatureTableRow> parentTreeItem = rowMap.get(groupID);
                 treeItem = new TreeItem<>(row);
                 parentTreeItem.getChildren().add(treeItem);
-                rowMap.put((int) row.getData(idColoumn, Integer.class), treeItem);
+                rowMap.put((int) row.getData(idColoumn), treeItem);
             }
         }
 
@@ -154,12 +154,11 @@ public class FeatureTableModule implements MZmineRunnableModule {
                                     if (p.getValue().getValue() != null) {
                                         FeatureTableRow featureTableRow = (FeatureTableRow) p
                                                 .getValue().getValue();
-                                        Class dtClass = column.getDataTypeClass();
                                         if (featureTableRow
-                                                .getData(column, dtClass) != null) {
+                                                .getData(column) != null) {
                                             return new SimpleObjectProperty<>(
                                                     featureTableRow
-                                                            .getData(column, dtClass));
+                                                            .getData(column));
                                         }
                                     }
                                 }
@@ -211,12 +210,11 @@ public class FeatureTableModule implements MZmineRunnableModule {
                                     if (p.getValue().getValue() != null) {
                                         FeatureTableRow featureTableRow = (FeatureTableRow) p
                                                 .getValue().getValue();
-                                        Class dtClass = column.getDataTypeClass();
                                         if (featureTableRow
-                                                .getData(column, dtClass) != null) {
+                                                .getData(column) != null) {
                                             return new SimpleObjectProperty<>(
                                                     featureTableRow
-                                                            .getData(column, dtClass));
+                                                            .getData(column));
                                         }
                                     }
                                 }
