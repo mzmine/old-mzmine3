@@ -28,40 +28,39 @@ import io.github.mzmine.parameters.ParameterEditor;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.BorderPane;
 
-public class OptionalEditor extends FlowPane
+public class OptionalEditor extends BorderPane
         implements ParameterEditor<Boolean> {
 
     private final CheckBox checkBox;
-    private AbstractParameter<?> embeddedParameter;
+    private final OptionalParameter<?> optionalParameter;
+    private final AbstractParameter<?> embeddedParameter;
+    private final PropertyEditor embeddedEditor;
 
     public OptionalEditor(PropertySheet.Item parameter) {
 
         if (!(parameter instanceof OptionalParameter))
             throw new IllegalArgumentException();
 
+        optionalParameter = (OptionalParameter<?>) parameter;
+        embeddedParameter = optionalParameter.getEmbeddedParameter();
+
         // The checkbox
         checkBox = new CheckBox();
-        getChildren().add(checkBox);
-
-        // FlowPane setting
-        setHgap(10);
+        setLeft(checkBox);
 
         // Add embedded editor
         try {
-            OptionalParameter<?> optionalParameter = (OptionalParameter<?>) parameter;
-            embeddedParameter = optionalParameter.getEmbeddedParameter();
             Class<? extends PropertyEditor<?>> embeddedEditorClass = embeddedParameter
                     .getPropertyEditorClass().get();
-            PropertyEditor<?> editor;
-            editor = embeddedEditorClass
+            embeddedEditor = embeddedEditorClass
                     .getDeclaredConstructor(PropertySheet.Item.class)
                     .newInstance(embeddedParameter);
-            Node embeddedNode = editor.getEditor();
-            getChildren().add(embeddedNode);
+            Node embeddedNode = embeddedEditor.getEditor();
+            setCenter(embeddedNode);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw (new IllegalStateException(e));
         }
 
     }
@@ -73,13 +72,16 @@ public class OptionalEditor extends FlowPane
 
     @Override
     public Boolean getValue() {
+        embeddedParameter.setValue(embeddedEditor.getValue());
         return checkBox.isSelected();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void setValue(Boolean value) {
         if (value != null) {
             checkBox.setSelected(value);
+            embeddedEditor.setValue(embeddedParameter.getValue());
         }
     }
 
