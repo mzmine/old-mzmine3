@@ -116,9 +116,20 @@ public class FeatureFilterModule implements MZmineProcessingModule {
 
         if (featureTables.getMatchingFeatureTables().isEmpty()) {
             MZmineGUI.displayMessage(
-                    "Feature filter module started with no feature table selected");
+                    "Feature filter module started with no feature table selected.");
             logger.warn(
-                    "Feature filter module started with no feature table selected");
+                    "Feature filter module started with no feature table selected.");
+            return;
+        }
+
+        // Check if at least one filter is selected
+        if (!filterByDuration && !filterByArea && !filterByHeight
+                && !filterByDataPoints && !filterByFWHM
+                && !filterByTailingFactor && !filterByAsymmetryFactor) {
+            MZmineGUI.displayMessage(
+                    "Feature filter module started with no filter selected.");
+            logger.warn(
+                    "Feature filter module started with no filter selected.");
             return;
         }
 

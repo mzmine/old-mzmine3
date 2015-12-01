@@ -65,7 +65,7 @@ public class FeatureFilterParameters extends ParameterSet {
     public static final OptionalParameter<DoubleRangeParameter> fwhm = new OptionalParameter<DoubleRangeParameter>(
             new DoubleRangeParameter("FWHM (sec)",
                     "Permissible range of full width at half maximum (FWHM) for a peak.", "Filters",
-                    MZmineCore.getConfiguration().getIntensityFormat(),
+                    MZmineCore.getConfiguration().getRTFormat(),
                     ParameterValidator.createNonEmptyValidator(),
                     Range.closed(0.0, 10.0)));
 
