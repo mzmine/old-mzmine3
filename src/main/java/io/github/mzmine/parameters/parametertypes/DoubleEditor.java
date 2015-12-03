@@ -29,13 +29,12 @@ import io.github.mzmine.parameters.ParameterEditor;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 
 /**
  * This parameter stores double values
  */
-public class DoubleEditor extends BorderPane
-        implements ParameterEditor<Double> {
+public class DoubleEditor extends FlowPane implements ParameterEditor<Double> {
 
     private final TextField doubleField;
     private @Nullable NumberFormat numberFormat;
@@ -47,7 +46,7 @@ public class DoubleEditor extends BorderPane
         DoubleParameter dp = (DoubleParameter) parameter;
         this.numberFormat = dp.getNumberFormat();
         this.doubleField = new TextField();
-        setCenter(doubleField);
+        getChildren().addAll(doubleField);
     }
 
     @Override

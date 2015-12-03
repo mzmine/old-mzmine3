@@ -25,12 +25,12 @@ import io.github.mzmine.parameters.ParameterEditor;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 
 /**
  * This parameter stores double values
  */
-public class IntegerEditor extends BorderPane
+public class IntegerEditor extends FlowPane
         implements ParameterEditor<Integer> {
 
     private final TextField integerField;
@@ -40,7 +40,7 @@ public class IntegerEditor extends BorderPane
             throw new IllegalArgumentException();
 
         this.integerField = new TextField();
-        setCenter(integerField);
+        getChildren().addAll(integerField);
     }
 
     @Override
