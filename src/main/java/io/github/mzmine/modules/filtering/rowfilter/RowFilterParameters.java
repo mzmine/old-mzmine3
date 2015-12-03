@@ -19,49 +19,63 @@
 
 package io.github.mzmine.modules.filtering.rowfilter;
 
-import io.github.mzmine.gui.preferences.ProxySettings;
+import com.google.common.collect.Range;
+
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.BooleanParameter;
 import io.github.mzmine.parameters.parametertypes.IntegerParameter;
 import io.github.mzmine.parameters.parametertypes.OptionalModuleParameter;
+import io.github.mzmine.parameters.parametertypes.OptionalParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
+import io.github.mzmine.parameters.parametertypes.ranges.DoubleRangeParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesParameter;
 
 public class RowFilterParameters extends ParameterSet {
 
     public static final FeatureTablesParameter featureTables = new FeatureTablesParameter();
 
-    public static final IntegerParameter minCount = new IntegerParameter(
-            "Minimum features in a row",
-            "Minimum number of feature detections required per row.", "Filters",
-            ParameterValidator.createNonEmptyValidator());
+    public static final OptionalParameter<DoubleRangeParameter> mzRange = new OptionalParameter<DoubleRangeParameter>(
+            new DoubleRangeParameter("m/z range",
+                    "Range of acceptable m/z values.", "Filters",
+                    ParameterValidator.createNonEmptyValidator(),
+                    Range.closed(200.0, 1700.0)));
 
-    public static final IntegerParameter minIsotopes = new IntegerParameter(
-            "Minimum peaks in isotope pattern",
-            "Minimum number of peaks required in an isotope pattern.", "Filters",
-            ParameterValidator.createNonEmptyValidator());
+    public static final OptionalParameter<DoubleRangeParameter> rtRange = new OptionalParameter<DoubleRangeParameter>(
+            new DoubleRangeParameter("Retention time range (min)",
+                    "Range of acceptable retention time values.", "Filters",
+                    ParameterValidator.createNonEmptyValidator(),
+                    Range.closed(0.0, 30.0)));
 
-    /*
-     * TODO: Add m/z range, RT range
-     */
+    public static final OptionalParameter<DoubleRangeParameter> durationRange = new OptionalParameter<DoubleRangeParameter>(
+            new DoubleRangeParameter("Duration range (sec)",
+                    "Range of acceptable average feature duration.", "Filters",
+                    ParameterValidator.createNonEmptyValidator(),
+                    Range.closed(0.0, 60.0)));
 
-    public static final StringParameter featureAnnotation = new StringParameter(
-            "Required feature annotation",
-            "Required text in feature annoation.", "Filters", "");
+    public static final OptionalParameter<IntegerParameter> minCount = new OptionalParameter<IntegerParameter>(
+            new IntegerParameter("Minimum features in a row",
+                    "Minimum number of feature detections required per row.",
+                    "Filters", ParameterValidator.createNonEmptyValidator()));
+
+    public static final OptionalParameter<IntegerParameter> minIsotopes = new OptionalParameter<IntegerParameter>(
+            new IntegerParameter("Minimum peaks in isotope pattern",
+                    "Minimum number of peaks required in an isotope pattern.",
+                    "Filters", ParameterValidator.createNonEmptyValidator()));
+
+    public static final OptionalParameter<StringParameter> featureAnnotation = new OptionalParameter<StringParameter>(
+            new StringParameter("Text in ion annotation",
+                    "Required text in feature annoation.", "Filters", ""));
 
     public static final BooleanParameter requireAnnotation = new BooleanParameter(
             "Remove non-identified features?",
             "If selected, non-identified features will be removed.", "Filters",
             false);
 
-    /*
-     * TODO: Change ParameterSet to duplicate feature remover
-     */
     public static final OptionalModuleParameter removeDuplicates = new OptionalModuleParameter(
             "Remove duplicate features?",
             "Remove duplicate features from the feature list?\nDuplicates are found based on m/z, RT and feature annotation.",
-            "Filters", new ProxySettings());
+            "Filters", new DuplicateFilterParameters());
 
     public static final StringParameter nameSuffix = new StringParameter(
             "Name suffix", "Suffix to be added to the feature table name.",
@@ -76,9 +90,9 @@ public class RowFilterParameters extends ParameterSet {
      * Create the parameter set.
      */
     public RowFilterParameters() {
-        super(featureTables, minCount, minIsotopes, featureAnnotation,
-                requireAnnotation, removeDuplicates, nameSuffix,
-                removeOldTable);
+        super(featureTables, mzRange, rtRange, durationRange, minCount,
+                minIsotopes, featureAnnotation, requireAnnotation,
+                removeDuplicates, nameSuffix, removeOldTable);
     }
 
 }
