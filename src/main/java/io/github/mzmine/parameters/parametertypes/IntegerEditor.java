@@ -25,13 +25,12 @@ import io.github.mzmine.parameters.ParameterEditor;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 
 /**
  * This parameter stores double values
  */
-public class IntegerEditor extends FlowPane
-        implements ParameterEditor<Integer> {
+public class IntegerEditor extends HBox implements ParameterEditor<Integer> {
 
     private final TextField integerField;
 

@@ -29,12 +29,12 @@ import io.github.mzmine.parameters.ParameterEditor;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 
 /**
  * This parameter stores double values
  */
-public class DoubleEditor extends FlowPane implements ParameterEditor<Double> {
+public class DoubleEditor extends HBox implements ParameterEditor<Double> {
 
     private final TextField doubleField;
     private @Nullable NumberFormat numberFormat;
