@@ -48,6 +48,7 @@ public class OptionalEditor extends BorderPane
 
         // The checkbox
         checkBox = new CheckBox();
+
         setLeft(checkBox);
 
         // Add embedded editor
@@ -58,6 +59,11 @@ public class OptionalEditor extends BorderPane
                     .getDeclaredConstructor(PropertySheet.Item.class)
                     .newInstance(embeddedParameter);
             Node embeddedNode = embeddedEditor.getEditor();
+            embeddedNode.setDisable(true);
+            checkBox.setOnAction(e -> {
+                embeddedNode.setDisable(!checkBox.isSelected());
+            });
+
             setCenter(embeddedNode);
         } catch (Exception e) {
             throw (new IllegalStateException(e));
