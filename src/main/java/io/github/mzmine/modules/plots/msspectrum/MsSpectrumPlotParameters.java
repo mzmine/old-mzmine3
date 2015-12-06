@@ -19,23 +19,22 @@
 
 package io.github.mzmine.modules.plots.msspectrum;
 
-import org.controlsfx.control.PropertySheet;
-
+import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
 
-public class MsSpectrumPlotParameters extends PropertySheet {
+public class MsSpectrumPlotParameters extends ParameterSet {
 
-    private final RawDataFilesParameter inputFiles = new RawDataFilesParameter();
+    public static final RawDataFilesParameter inputFiles = new RawDataFilesParameter();
 
-    private final StringParameter param1 = new StringParameter("aaa", "bbb",
-            "ccc");
+    public static final StringParameter param1 = new StringParameter("aaa",
+            "bbb", "ccc");
 
     /**
      * Create the parameter set.
      */
     public MsSpectrumPlotParameters() {
-        getItems().addAll(inputFiles, param1);
+        super(inputFiles, param1);
     }
 
 }
