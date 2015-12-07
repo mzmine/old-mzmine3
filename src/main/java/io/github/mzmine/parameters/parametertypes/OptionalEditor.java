@@ -59,7 +59,10 @@ public class OptionalEditor extends BorderPane
                     .getDeclaredConstructor(PropertySheet.Item.class)
                     .newInstance(embeddedParameter);
             Node embeddedNode = embeddedEditor.getEditor();
-            embeddedNode.setDisable(true);
+            Boolean value = optionalParameter.getValue();
+            if (value == null)
+                value = false;
+            embeddedNode.setDisable(!value);
             checkBox.setOnAction(e -> {
                 embeddedNode.setDisable(!checkBox.isSelected());
             });
