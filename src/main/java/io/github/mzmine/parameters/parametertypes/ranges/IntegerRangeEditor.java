@@ -28,12 +28,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 
 /**
  * Parameter editor for integer ranges
  */
-public class IntegerRangeEditor extends FlowPane
+public class IntegerRangeEditor extends HBox
         implements ParameterEditor<Range<Integer>> {
 
     private final TextField minTxtField;
@@ -52,8 +52,8 @@ public class IntegerRangeEditor extends FlowPane
         // The maximum value field
         maxTxtField = new TextField();
 
-        // FlowPane setting
-        setHgap(10);
+        // Spacing setting
+        setSpacing(10);
 
         // Add the elements
         getChildren().addAll(minTxtField, separatorLabel, maxTxtField);
