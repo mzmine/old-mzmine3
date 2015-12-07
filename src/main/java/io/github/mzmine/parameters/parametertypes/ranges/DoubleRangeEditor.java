@@ -32,12 +32,12 @@ import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 
 /**
  * Parameter editor for double ranges
  */
-public class DoubleRangeEditor extends FlowPane
+public class DoubleRangeEditor extends HBox
         implements ParameterEditor<Range<Double>> {
 
     private final TextField minTxtField;
@@ -61,8 +61,8 @@ public class DoubleRangeEditor extends FlowPane
         // The maximum value field
         maxTxtField = new TextField();
 
-        // FlowPane setting
-        setHgap(10);
+        // Spacing setting
+        setSpacing(10);
 
         // Add the elements
         getChildren().addAll(minTxtField, separatorLabel, maxTxtField);
