@@ -17,7 +17,7 @@
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.plots.threed;
+package io.github.mzmine.modules.plots.twod;
 
 import io.github.mzmine.util.JavaFXUtil;
 import javafx.scene.Node;
@@ -27,11 +27,11 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.layout.BorderPane;
 
 /**
- * 3D plot window
+ * 2D plot window
  */
-public class ThreeDPlotWindow extends BorderPane {
+public class TwoDPlotWindow extends BorderPane {
 
-    ThreeDPlotWindow() {
+    TwoDPlotWindow() {
 
         final NumberAxis xAxis = new NumberAxis();
         final NumberAxis yAxis = new NumberAxis();
