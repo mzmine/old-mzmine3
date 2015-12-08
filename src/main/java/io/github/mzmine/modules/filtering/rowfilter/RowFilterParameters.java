@@ -63,7 +63,7 @@ public class RowFilterParameters extends ParameterSet {
                     "Minimum number of peaks required in an isotope pattern.",
                     "Filters", ParameterValidator.createNonEmptyValidator()));
 
-    public static final OptionalParameter<StringParameter> featureAnnotation = new OptionalParameter<StringParameter>(
+    public static final OptionalParameter<StringParameter> ionAnnotation = new OptionalParameter<StringParameter>(
             new StringParameter("Text in ion annotation",
                     "Required text in feature annoation.", "Filters", ""));
 
@@ -91,7 +91,7 @@ public class RowFilterParameters extends ParameterSet {
      */
     public RowFilterParameters() {
         super(featureTables, mzRange, rtRange, durationRange, minCount,
-                minIsotopes, featureAnnotation, requireAnnotation,
+                minIsotopes, ionAnnotation, requireAnnotation,
                 removeDuplicates, nameSuffix, removeOldTable);
     }
 
