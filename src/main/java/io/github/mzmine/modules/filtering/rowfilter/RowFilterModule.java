@@ -31,9 +31,9 @@ import com.google.common.collect.Range;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.filtering.rowfilter.RowFilterMethod;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
-import io.github.msdk.filtering.featurefilter.FeatureFilterMethod;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesSelection;
@@ -143,7 +143,12 @@ public class RowFilterModule implements MZmineProcessingModule {
 
             // New row filter method
             RowFilterMethod method = new RowFilterMethod(featureTable,
-                    dataStore, filterByDuration, nameSuffix);
+                    dataStore, nameSuffix, filterByMz, filterByRt,
+                    filterByDuration, filterByCount, filterByIsotopes,
+                    filterByIonAnnotation, requireAnnotation, mzRange, rtRange,
+                    durationRange, minCount, minIsotopes, ionAnnotation,
+                    removeDuplicates, duplicateMzTolerance,
+                    duplicateRtTolerance, duplicateRequireSameID);
 
             MSDKTask newTask = new MSDKTask("Row filtering features in tables",
                     featureTable.getName(), method);
