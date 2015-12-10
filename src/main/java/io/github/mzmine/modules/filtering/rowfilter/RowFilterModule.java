@@ -26,10 +26,19 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Range;
+
+import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
+import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.filtering.rowfilter.RowFilterMethod;
+import io.github.msdk.util.MZTolerance;
+import io.github.msdk.util.RTTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesSelection;
 import io.github.mzmine.project.MZmineProject;
+import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.concurrent.Task;
 
 /**
@@ -57,9 +66,64 @@ public class RowFilterModule implements MZmineProcessingModule {
             @Nonnull ParameterSet parameters,
             @Nonnull Collection<Task<?>> tasks) {
 
+        // Boolean values
+        final boolean filterByMz = parameters
+                .getParameter(RowFilterParameters.mzRange).getValue();
+        final boolean filterByRt = parameters
+                .getParameter(RowFilterParameters.rtRange).getValue();
+        final boolean filterByDuration = parameters
+                .getParameter(RowFilterParameters.durationRange).getValue();
+        final boolean filterByCount = parameters
+                .getParameter(RowFilterParameters.minCount).getValue();
+        final boolean filterByIsotopes = parameters
+                .getParameter(RowFilterParameters.minIsotopes).getValue();
+        final boolean filterByIonAnnotation = parameters
+                .getParameter(RowFilterParameters.ionAnnotation).getValue();
+        final boolean requireAnnotation = parameters
+                .getParameter(RowFilterParameters.requireAnnotation).getValue();
+
+        // Embedded values
+        final Range<Double> mzRange = parameters
+                .getParameter(RowFilterParameters.mzRange)
+                .getEmbeddedParameter().getValue();
+        final Range<Double> rtRange = parameters
+                .getParameter(RowFilterParameters.rtRange)
+                .getEmbeddedParameter().getValue();
+        final Range<Double> durationRange = parameters
+                .getParameter(RowFilterParameters.durationRange)
+                .getEmbeddedParameter().getValue();
+        final Integer minCount = parameters
+                .getParameter(RowFilterParameters.minCount)
+                .getEmbeddedParameter().getValue();
+        final Integer minIsotopes = parameters
+                .getParameter(RowFilterParameters.minIsotopes)
+                .getEmbeddedParameter().getValue();
+        final String ionAnnotation = parameters
+                .getParameter(RowFilterParameters.ionAnnotation)
+                .getEmbeddedParameter().getValue();
+
+        // Remove duplicate parameters
+        final boolean removeDuplicates = parameters
+                .getParameter(RowFilterParameters.removeDuplicates).getValue();
+        final MZTolerance duplicateMzTolerance = parameters
+                .getParameter(RowFilterParameters.removeDuplicates)
+                .getEmbeddedParameters()
+                .getParameter(DuplicateFilterParameters.mzTolerance).getValue();
+        final RTTolerance duplicateRtTolerance = parameters
+                .getParameter(RowFilterParameters.removeDuplicates)
+                .getEmbeddedParameters()
+                .getParameter(DuplicateFilterParameters.rtTolerance).getValue();
+        final boolean duplicateRequireSameID = parameters
+                .getParameter(RowFilterParameters.removeDuplicates)
+                .getEmbeddedParameters()
+                .getParameter(DuplicateFilterParameters.requireSameID)
+                .getValue();
+
+        // Other values
         final FeatureTablesSelection featureTables = parameters
                 .getParameter(RowFilterParameters.featureTables).getValue();
-
+        final boolean removeOldTable = parameters
+                .getParameter(RowFilterParameters.removeOldTable).getValue();
         final String nameSuffix = parameters
                 .getParameter(RowFilterParameters.nameSuffix).getValue();
 
@@ -69,7 +133,41 @@ public class RowFilterModule implements MZmineProcessingModule {
             return;
         }
 
-        System.out.println("nameSuffix: " + nameSuffix);
+        // Add a task for each feature table
+        for (FeatureTable featureTable : featureTables
+                .getMatchingFeatureTables()) {
+
+            // Create the data structures
+            DataPointStore dataStore = DataPointStoreFactory
+                    .getMemoryDataStore();
+
+            // New row filter method
+            RowFilterMethod method = new RowFilterMethod(featureTable,
+                    dataStore, nameSuffix, filterByMz, filterByRt,
+                    filterByDuration, filterByCount, filterByIsotopes,
+                    filterByIonAnnotation, requireAnnotation, mzRange, rtRange,
+                    durationRange, minCount, minIsotopes, ionAnnotation,
+                    removeDuplicates, duplicateMzTolerance,
+                    duplicateRtTolerance, duplicateRequireSameID);
+
+            MSDKTask newTask = new MSDKTask("Row filtering features in tables",
+                    featureTable.getName(), method);
+
+            // Add the feature table to the project
+            newTask.setOnSucceeded(e -> {
+                FeatureTable newFeatureTable = method.getResult();
+                project.addFeatureTable(newFeatureTable);
+
+                // If selected, remove old feature table
+                if (removeOldTable) {
+                    project.removeFeatureTable(featureTable);
+                }
+            });
+
+            // Add the task to the queue
+            tasks.add(newTask);
+
+        }
     }
 
     @Override
