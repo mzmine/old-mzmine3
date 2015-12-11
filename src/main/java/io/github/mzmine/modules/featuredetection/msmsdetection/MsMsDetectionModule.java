@@ -26,6 +26,9 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.github.msdk.datamodel.datapointstore.DataPointStore;
+import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
+import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
@@ -86,16 +89,37 @@ public class MsMsDetectionModule implements MZmineProcessingModule {
             return;
         }
 
-        if (scanSelection.getMsLevel() == null || !scanSelection.getMsLevel().equals(2)) {
+        if (scanSelection.getMsLevel() == null
+                || !scanSelection.getMsLevel().equals(2)) {
             logger.warn(
-                    "Please select MS level 2 (MS/MS) under the scan filter");
+                    "Only MS level 2 can be processed using this module. Please set it under the scan filter parameter");
             return;
         }
 
         for (RawDataFile rawDataFile : rawDataFiles.getMatchingRawDataFiles()) {
-            /*
-             * TODO
-             */
+
+            // Create the data structures
+            DataPointStore dataStore = DataPointStoreFactory
+                    .getMemoryDataStore();
+
+            // New MS/MS detection task which runs the following three methods:
+            // 1. MsMsDetectionMethod
+            // 2. TargetedDetectionMethod
+            // 3. ChromatogramToFeatureTableMethod
+            MsMsDetectionTask newTask = new MsMsDetectionTask(
+                    "MS/MS Feature detection", rawDataFile.getName(),
+                    rawDataFile, scanSelection, dataStore, mzTolerance,
+                    rtTolerance, intensityTolerance, nameSuffix);
+
+            // Add the feature table to the project
+            newTask.setOnSucceeded(e -> {
+                FeatureTable featureTable = newTask.getResult();
+                project.addFeatureTable(featureTable);
+            });
+
+            // Add the task to the queue
+            tasks.add(newTask);
+
         }
     }
 
