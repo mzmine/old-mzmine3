@@ -101,7 +101,8 @@
 						</Menu>
 						<Menu text="MS/MS">
 							<items>
-								<MenuItem text="MS/MS Feature List Builder" />
+								<ModuleMenuItem text="MS/MS Feature List Builder"
+									moduleClass="io.github.mzmine.modules.featuredetection.msmsdetection.MsMsDetectionModule" />
 							</items>
 						</Menu>
 						<Menu text="SRM">
