@@ -119,7 +119,6 @@
 				<Menu text="Feature Detection">
 					<items>
 						<MenuItem text="Chromatogram Deconvolution" />
-						<MenuItem text="Feature Extender" />
 						<MenuItem text="Smoothing" />
 					</items>
 				</Menu>
