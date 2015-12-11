@@ -26,12 +26,17 @@ import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.PercentParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
+import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
+import io.github.mzmine.parameters.parametertypes.selectors.ScanSelectionParameter;
 import io.github.mzmine.parameters.parametertypes.tolerances.MZToleranceParameter;
 import io.github.mzmine.parameters.parametertypes.tolerances.RTToleranceParameter;
 
 public class MsMsDetectionParameters extends ParameterSet {
 
     public static final RawDataFilesParameter rawDataFiles = new RawDataFilesParameter();
+
+    public static final ScanSelectionParameter scanSelection = new ScanSelectionParameter(
+            new ScanSelection(2));
 
     public static final MZToleranceParameter mzTolerance = new MZToleranceParameter(
             "m/z tolerance",
@@ -63,7 +68,7 @@ public class MsMsDetectionParameters extends ParameterSet {
      * Create the parameter set.
      */
     public MsMsDetectionParameters() {
-        super(rawDataFiles, mzTolerance, rtTolerance, intensityTolerance, nameSuffix);
+        super(rawDataFiles, scanSelection, mzTolerance, rtTolerance, intensityTolerance, nameSuffix);
     }
 
 }
