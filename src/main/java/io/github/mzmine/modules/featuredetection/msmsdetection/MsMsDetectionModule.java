@@ -26,8 +26,10 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.ScanSelection;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;
@@ -62,6 +64,9 @@ public class MsMsDetectionModule implements MZmineProcessingModule {
         final RawDataFilesSelection rawDataFiles = parameters
                 .getParameter(MsMsDetectionParameters.rawDataFiles).getValue();
 
+        final ScanSelection scanSelection = parameters
+                .getParameter(MsMsDetectionParameters.scanSelection).getValue();
+
         final MZTolerance mzTolerance = parameters
                 .getParameter(MsMsDetectionParameters.mzTolerance).getValue();
 
@@ -81,9 +86,17 @@ public class MsMsDetectionModule implements MZmineProcessingModule {
             return;
         }
 
-        /*
-         * TODO
-         */
+        if (scanSelection.getMsLevel() == null || !scanSelection.getMsLevel().equals(2)) {
+            logger.warn(
+                    "Please select MS level 2 (MS/MS) under the scan filter");
+            return;
+        }
+
+        for (RawDataFile rawDataFile : rawDataFiles.getMatchingRawDataFiles()) {
+            /*
+             * TODO
+             */
+        }
     }
 
     @Override
