@@ -32,6 +32,7 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
+import io.github.msdk.util.ScanSelection;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.parameters.Parameter;
 import io.github.mzmine.parameters.ParameterEditor;
@@ -41,6 +42,7 @@ import io.github.mzmine.parameters.parametertypes.IntegerParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.ranges.DoubleRangeParameter;
 import io.github.mzmine.parameters.parametertypes.ranges.IntegerRangeParameter;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -52,7 +54,6 @@ public class ScanSelectionEditor extends HBox
         implements ParameterEditor<ScanSelection> {
 
     private final Button setButton, clearButton;
-
     private final Text restrictionsList;
 
     private Range<Integer> scanNumberRange;
@@ -64,8 +65,11 @@ public class ScanSelectionEditor extends HBox
 
     public ScanSelectionEditor(PropertySheet.Item parameter) {
 
-        restrictionsList = new Text();
+        // HBox properties
+        setSpacing(10);
+        setAlignment(Pos.CENTER_LEFT);
 
+        restrictionsList = new Text();
         updateRestrictionList();
 
         setButton = new Button("Set filters");
@@ -204,30 +208,46 @@ public class ScanSelectionEditor extends HBox
         }
 
         StringBuilder newText = new StringBuilder();
+        boolean textAdded = false;
         if (scanNumberRange != null) {
+            textAdded = true;
             newText.append("Scan number: " + scanNumberRange.lowerEndpoint()
-                    + " - " + scanNumberRange.upperEndpoint() + "\n");
+                    + " - " + scanNumberRange.upperEndpoint());
         }
         if (scanRTRange != null) {
+            if (textAdded)
+                newText.append("\n");
+            textAdded = true;
             NumberFormat rtFormat = MZmineCore.getConfiguration().getRTFormat();
             newText.append("Retention time: "
                     + rtFormat.format(scanRTRange.lowerEndpoint()) + " - "
-                    + rtFormat.format(scanRTRange.upperEndpoint()) + " min.\n");
+                    + rtFormat.format(scanRTRange.upperEndpoint()) + " min.");
         }
         if (msLevel != null) {
-            newText.append("MS level: " + msLevel + "\n");
+            if (textAdded)
+                newText.append("\n");
+            textAdded = true;
+            newText.append("MS level: " + msLevel);
         }
         if (!Strings.isNullOrEmpty(scanDefinition)) {
-            newText.append("Scan definition: " + scanDefinition + "\n");
+            if (textAdded)
+                newText.append("\n");
+            textAdded = true;
+            newText.append("Scan definition: " + scanDefinition);
         }
         if (polarity != null) {
-            newText.append("Polarity: " + polarity.toString() + "\n");
+            if (textAdded)
+                newText.append("\n");
+            textAdded = true;
+            newText.append("Polarity: " + polarity.toString());
         }
         if (spectrumType != null) {
+            if (textAdded)
+                newText.append("\n");
+            textAdded = true;
             newText.append(
                     "Spectrum type: " + spectrumType.toString().toLowerCase());
         }
-
         restrictionsList.setText(newText.toString());
     }
 

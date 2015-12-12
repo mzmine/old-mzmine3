@@ -101,7 +101,8 @@
 						</Menu>
 						<Menu text="MS/MS">
 							<items>
-								<MenuItem text="MS/MS Feature List Builder" />
+								<ModuleMenuItem text="MS/MS Feature List Builder"
+									moduleClass="io.github.mzmine.modules.featuredetection.msmsdetection.MsMsDetectionModule" />
 							</items>
 						</Menu>
 						<Menu text="SRM">
@@ -118,7 +119,6 @@
 				<Menu text="Feature Detection">
 					<items>
 						<MenuItem text="Chromatogram Deconvolution" />
-						<MenuItem text="Feature Extender" />
 						<MenuItem text="Smoothing" />
 					</items>
 				</Menu>

@@ -19,11 +19,11 @@
 
 package io.github.mzmine.modules.plots.twod;
 
+import io.github.msdk.util.ScanSelection;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.IntegerParameter;
 import io.github.mzmine.parameters.parametertypes.ranges.DoubleRangeParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
-import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.parameters.parametertypes.selectors.ScanSelectionParameter;
 
 public class TwoDPlotParameters extends ParameterSet {
