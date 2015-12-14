@@ -181,6 +181,8 @@ public class ScanSelectionEditor extends HBox
 
     @Override
     public void setValue(ScanSelection newValue) {
+        if (newValue == null)
+            return;
         scanNumberRange = newValue.getScanNumberRange();
         scanRTRange = newValue.getScanRTRange();
         polarity = newValue.getPolarity();
