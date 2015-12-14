@@ -32,7 +32,6 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.PolarityType;
-import io.github.msdk.util.ScanSelection;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.parameters.Parameter;
 import io.github.mzmine.parameters.ParameterEditor;
