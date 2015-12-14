@@ -34,14 +34,15 @@ import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featuredetection.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
 import io.github.msdk.featuredetection.msmsdetection.MsMsDetectionMethod;
 import io.github.msdk.featuredetection.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
-import io.github.msdk.util.ScanSelection;
 import io.github.mzmine.gui.MZmineGUI;
+import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.taskcontrol.MZmineTask;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -80,9 +81,11 @@ public class MsMsDetectionTask extends Task<Object> implements MZmineTask {
         this.title = title;
         this.message = message;
 
+        List<MsScan> msScans = scanSelection.getMatchingScans(rawDataFile);
+
         // New feature filter task
         msMsDetectionMethod = new MsMsDetectionMethod(rawDataFile,
-                scanSelection, dataStore, mzTolerance, rtTolerance,
+                msScans, dataStore, mzTolerance, rtTolerance,
                 intensityTolerance);
 
         // Targeted detection method
