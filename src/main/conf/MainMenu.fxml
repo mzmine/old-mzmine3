@@ -157,11 +157,12 @@
 				</Menu>
 				<Menu text="Identification">
 					<items>
-						<MenuItem text="Custom Database Search" />
+						<ModuleMenuItem text="Local Database Search"
+							moduleClass="io.github.mzmine.modules.identification.ms.localdatabasesearch.LocalDatabaseSearchModule" />
+						<MenuItem text="Online Database Search" />
 						<MenuItem text="Fragment Search" />
 						<MenuItem text="Adduct Search" />
 						<MenuItem text="Complex Search" />
-						<MenuItem text="Online Database Search" />
 						<MenuItem text="Glycerophospholipid Preciction" />
 						<MenuItem text="CAMERA Search" />
 						<MenuItem text="NIST MS Search" />
