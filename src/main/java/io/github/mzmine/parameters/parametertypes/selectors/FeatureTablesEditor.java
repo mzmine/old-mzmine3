@@ -148,6 +148,10 @@ public class FeatureTablesEditor extends HBox
 
     @Override
     public void setValue(FeatureTablesSelection value) {
+        if (value == null) {
+            typeCombo.getSelectionModel().select(0);
+            return;
+        }
         typeCombo.getSelectionModel().select(value.getSelectionType());
         specificFeatureTables = value.getSpecificFeatureTables();
         namePattern = value.getNamePattern();
