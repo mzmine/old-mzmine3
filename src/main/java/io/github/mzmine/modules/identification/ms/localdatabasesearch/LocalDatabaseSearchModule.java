@@ -19,19 +19,31 @@
 
 package io.github.mzmine.modules.identification.ms.localdatabasesearch;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Scanner;
 
 import javax.annotation.Nonnull;
 
+import org.openscience.cdk.interfaces.IAtomContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
+import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.ionannotations.IonType;
+import io.github.msdk.datamodel.rawdata.SeparationType;
+import io.github.msdk.identification.localdatabasesearch.LocalDatabaseSearchMethod;
+import io.github.msdk.util.IonTypeUtil;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesSelection;
 import io.github.mzmine.project.MZmineProject;
+import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.concurrent.Task;
 
 /**
@@ -63,8 +75,8 @@ public class LocalDatabaseSearchModule implements MZmineProcessingModule {
                 .getParameter(LocalDatabaseSearchParameters.featureTables)
                 .getValue();
 
-        final String features = parameters
-                .getParameter(LocalDatabaseSearchParameters.features)
+        final String annotations = parameters
+                .getParameter(LocalDatabaseSearchParameters.annotations)
                 .getValue();
 
         final String separator = parameters
@@ -85,7 +97,73 @@ public class LocalDatabaseSearchModule implements MZmineProcessingModule {
             return;
         }
 
-        System.out.println("Start identification using local database");
+        // Convert the input annotations into ionAnnotations
+        List<IonAnnotation> ionAnnotations = new ArrayList<IonAnnotation>();
+        Scanner scanner = new Scanner(annotations);
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            if (line != null) {
+
+                // Only process lines which start with an integer
+                char firstChar = line.charAt(0);
+                if (Character.digit(firstChar, 10) >= 0) {
+                    String[] lineArray = line.split(separator);
+
+                    String annotationId = lineArray[0];
+                    Double mz = Double.parseDouble(lineArray[1]);
+                    Float rt = Float.parseFloat(lineArray[2]) * 60;
+                    String name = lineArray[3];
+
+                    // If formula column is present then add chemical structure
+                    IAtomContainer chemicalStructure = null;
+                    if (lineArray.length > 4) {
+                        String formula = lineArray[4];
+                        // chemicalStructure
+                        /*
+                         * TODO
+                         */
+                    }
+
+                    // If adduct column is present then add ion type
+                    IonType ionType = null;
+
+                    if (lineArray.length > 5) {
+                        // Expected string format: [M+2H]2+
+                        ionType = IonTypeUtil.createIonType(lineArray[5]);
+                    }
+
+                    IonAnnotation ion = MSDKObjectBuilder
+                            .getSimpleIonAnnotation();
+                    ion.setAnnotationId(annotationId);
+                    ion.setExpectedMz(mz);
+                    ion.setDescription(name);
+                    ion.setChromatographyInfo(
+                            MSDKObjectBuilder.getChromatographyInfo1D(
+                                    SeparationType.LC, (float) rt));
+                    if (ionType != null)
+                        ion.setIonType(ionType);
+                    if (chemicalStructure != null)
+                        ion.setChemicalStructure(chemicalStructure);
+                    ionAnnotations.add(ion);
+
+                }
+
+            }
+        }
+        scanner.close();
+
+        // Run LocalDatabaseSearchMethod
+        MSDKTask newTask = null;
+        for (FeatureTable featureTable : featureTables
+                .getMatchingFeatureTables()) {
+            LocalDatabaseSearchMethod method = new LocalDatabaseSearchMethod(
+                    featureTable, ionAnnotations, mzTolerance, rtTolerance);
+
+            newTask = new MSDKTask("Importing feature table file",
+                    featureTable.getName(), method);
+
+            tasks.add(newTask);
+        }
 
     }
 
