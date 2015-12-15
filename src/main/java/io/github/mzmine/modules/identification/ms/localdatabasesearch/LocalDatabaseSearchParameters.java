@@ -41,10 +41,13 @@ public class LocalDatabaseSearchParameters extends ParameterSet {
             new ExtensionFilter("CSV files", "*.csv"),
             new ExtensionFilter("TXT files", "*.txt") };
 
-    public static final TextAreaParameter features = new TextAreaParameter(
-            "Features",
+    public static final TextAreaParameter annotations = new TextAreaParameter(
+            "Annotations",
             "Annotated features to use for identification. Any line not starting with a number will be ignored.\n"
-                    + "Expected input is: id, m/z, retention time, compound name, formula, adduct.\n"
+                    + "The following input formats are accepted:\n"
+                    + "id, m/z, retention time, compound name\n"
+                    + "id, m/z, retention time, compound name, formula\n"
+                    + "id, m/z, retention time, compound name, formula, adduct\n\n"
                     + "Optional columns are supported but have to be present after the adduct column.",
             "Features", ParameterValidator.createNonEmptyValidator(),
             Arrays.asList(filters));
@@ -74,7 +77,7 @@ public class LocalDatabaseSearchParameters extends ParameterSet {
      * Create the parameter set.
      */
     public LocalDatabaseSearchParameters() {
-        super(featureTables, features, separator, mzTolerance, rtTolerance);
+        super(featureTables, annotations, separator, mzTolerance, rtTolerance);
     }
 
 }
