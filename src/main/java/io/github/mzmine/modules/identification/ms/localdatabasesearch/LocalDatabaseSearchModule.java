@@ -26,7 +26,9 @@ import java.util.Scanner;
 
 import javax.annotation.Nonnull;
 
+import org.openscience.cdk.DefaultChemObjectBuilder;
 import org.openscience.cdk.interfaces.IAtomContainer;
+import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,10 +120,9 @@ public class LocalDatabaseSearchModule implements MZmineProcessingModule {
                     IAtomContainer chemicalStructure = null;
                     if (lineArray.length > 4) {
                         String formula = lineArray[4];
-                        // chemicalStructure
-                        /*
-                         * TODO
-                         */
+                        chemicalStructure = MolecularFormulaManipulator
+                                .getAtomContainer(formula,
+                                        DefaultChemObjectBuilder.getInstance());
                     }
 
                     // If adduct column is present then add ion type
