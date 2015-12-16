@@ -120,9 +120,11 @@ public class LocalDatabaseSearchModule implements MZmineProcessingModule {
                     IMolecularFormula formula = null;
                     if (lineArray.length > 4) {
                         String formulaString = lineArray[4];
-                        formula = MolecularFormulaManipulator
-                                .getMolecularFormula(formulaString,
-                                        DefaultChemObjectBuilder.getInstance());
+                        if (formulaString != null && !formulaString.equals(""))
+                            formula = MolecularFormulaManipulator
+                                    .getMolecularFormula(formulaString,
+                                            DefaultChemObjectBuilder
+                                                    .getInstance());
                     }
 
                     // If adduct column is present then add ion type
@@ -130,7 +132,9 @@ public class LocalDatabaseSearchModule implements MZmineProcessingModule {
 
                     if (lineArray.length > 5) {
                         // Expected string format: [M+2H]2+
-                        ionType = IonTypeUtil.createIonType(lineArray[5]);
+                        String adductString = lineArray[5];
+                        if (adductString != null && !adductString.equals(""))
+                            ionType = IonTypeUtil.createIonType(adductString);
                     }
 
                     IonAnnotation ion = MSDKObjectBuilder
