@@ -27,7 +27,7 @@ import java.util.Scanner;
 import javax.annotation.Nonnull;
 
 import org.openscience.cdk.DefaultChemObjectBuilder;
-import org.openscience.cdk.interfaces.IAtomContainer;
+import org.openscience.cdk.interfaces.IMolecularFormula;
 import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,11 +117,11 @@ public class LocalDatabaseSearchModule implements MZmineProcessingModule {
                     String name = lineArray[3];
 
                     // If formula column is present then add chemical structure
-                    IAtomContainer chemicalStructure = null;
+                    IMolecularFormula formula = null;
                     if (lineArray.length > 4) {
-                        String formula = lineArray[4];
-                        chemicalStructure = MolecularFormulaManipulator
-                                .getAtomContainer(formula,
+                        String formulaString = lineArray[4];
+                        formula = MolecularFormulaManipulator
+                                .getMolecularFormula(formulaString,
                                         DefaultChemObjectBuilder.getInstance());
                     }
 
@@ -143,8 +143,8 @@ public class LocalDatabaseSearchModule implements MZmineProcessingModule {
                                     SeparationType.LC, (float) rt));
                     if (ionType != null)
                         ion.setIonType(ionType);
-                    if (chemicalStructure != null)
-                        ion.setChemicalStructure(chemicalStructure);
+                    if (formula != null)
+                        ion.setFormula(formula);
                     ionAnnotations.add(ion);
 
                 }
