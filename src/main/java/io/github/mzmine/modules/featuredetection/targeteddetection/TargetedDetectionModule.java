@@ -26,6 +26,9 @@ import java.util.Scanner;
 
 import javax.annotation.Nonnull;
 
+import org.openscience.cdk.DefaultChemObjectBuilder;
+import org.openscience.cdk.interfaces.IMolecularFormula;
+import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,8 +37,10 @@ import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
+import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
+import io.github.msdk.util.IonTypeUtil;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;
@@ -73,8 +78,8 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
                 .getParameter(TargetedDetectionParameters.rawDataFiles)
                 .getValue();
 
-        final String features = parameters
-                .getParameter(TargetedDetectionParameters.features).getValue();
+        final String annotations = parameters
+                .getParameter(TargetedDetectionParameters.annotations).getValue();
 
         final String separator = parameters
                 .getParameter(TargetedDetectionParameters.separator).getValue();
@@ -104,9 +109,9 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
             return;
         }
 
-        // Convert the input features into ionAnnotations
+        // Convert the input annotations into ionAnnotations
         List<IonAnnotation> ionAnnotations = new ArrayList<IonAnnotation>();
-        Scanner scanner = new Scanner(features);
+        Scanner scanner = new Scanner(annotations);
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             if (line != null) {
@@ -116,25 +121,47 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
                 if (Character.digit(firstChar, 10) >= 0) {
                     String[] lineArray = line.split(separator);
 
-                    if (lineArray.length != 3) {
-                        logger.warn(
-                                "Input feature list is not in the right format. Expected input is: m/z, retention time, name");
-                        return;
+                    String annotationId = lineArray[0];
+                    Double mz = Double.parseDouble(lineArray[1]);
+                    Float rt = Float.parseFloat(lineArray[2]) * 60;
+                    String name = lineArray[3];
+
+                    // If formula column is present then add chemical structure
+                    IMolecularFormula formula = null;
+                    if (lineArray.length > 4) {
+                        String formulaString = lineArray[4];
+                        if (formulaString != null && !formulaString.equals(""))
+                            formula = MolecularFormulaManipulator
+                                    .getMolecularFormula(formulaString,
+                                            DefaultChemObjectBuilder
+                                                    .getInstance());
                     }
 
-                    Double mz = Double.parseDouble(lineArray[0]);
-                    Float rt = Float.parseFloat(lineArray[1]) * 60;
-                    String name = lineArray[2];
+                    // If adduct column is present then add ion type
+                    IonType ionType = null;
+
+                    if (lineArray.length > 5) {
+                        String adductString = lineArray[5];
+                        if (adductString != null && !adductString.equals(""))
+                            ionType = IonTypeUtil.createIonType(adductString);
+                    }
 
                     IonAnnotation ion = MSDKObjectBuilder
                             .getSimpleIonAnnotation();
+                    ion.setAnnotationId(annotationId);
                     ion.setExpectedMz(mz);
-                    ion.setAnnotationId(name);
+                    ion.setDescription(name);
                     ion.setChromatographyInfo(
                             MSDKObjectBuilder.getChromatographyInfo1D(
                                     SeparationType.LC, (float) rt));
+                    if (ionType != null)
+                        ion.setIonType(ionType);
+                    if (formula != null)
+                        ion.setFormula(formula);
                     ionAnnotations.add(ion);
+
                 }
+
             }
         }
         scanner.close();

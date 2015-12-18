@@ -44,9 +44,13 @@ public class TargetedDetectionParameters extends ParameterSet {
             new ExtensionFilter("CSV files", "*.csv"),
             new ExtensionFilter("TXT files", "*.txt") };
 
-    public static final TextAreaParameter features = new TextAreaParameter(
-            "Features",
-            "Features to search for in the raw data file(s). Any line not starting with a number will be ignored.\nExpected input is: m/z, retention time, name",
+    public static final TextAreaParameter annotations = new TextAreaParameter(
+            "Annotations",
+            "Annotated features to use for targeted detection. Any line not starting with a number will be ignored.\n"
+                    + "The following input formats are accepted:\n"
+                    + "id, m/z, retention time, compound name\n"
+                    + "id, m/z, retention time, compound name, formula\n"
+                    + "id, m/z, retention time, compound name, formula, adduct\n\n",
             "Features", ParameterValidator.createNonEmptyValidator(),
             Arrays.asList(filters));
 
@@ -89,7 +93,7 @@ public class TargetedDetectionParameters extends ParameterSet {
      * Create the parameter set.
      */
     public TargetedDetectionParameters() {
-        super(rawDataFiles, features, separator, minHeight, intensityTolerance,
+        super(rawDataFiles, annotations, separator, minHeight, intensityTolerance,
                 mzTolerance, rtTolerance, nameSuffix);
     }
 
