@@ -17,7 +17,7 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.alignment.joinaligner;
+package io.github.mzmine.modules.alignment.matchaligner;
 
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
@@ -30,7 +30,7 @@ import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesParamet
 import io.github.mzmine.parameters.parametertypes.tolerances.MZToleranceParameter;
 import io.github.mzmine.parameters.parametertypes.tolerances.RTToleranceParameter;
 
-public class JoinAlignerParameters extends ParameterSet {
+public class MatchAlignerParameters extends ParameterSet {
 
     public static final FeatureTablesParameter featureTables = new FeatureTablesParameter();
 
@@ -61,19 +61,19 @@ public class JoinAlignerParameters extends ParameterSet {
             "Algorithm Parameters",
             ParameterValidator.createNonEmptyValidator(), 100);
 
-    public static final BooleanParameter sameAnnotation = new BooleanParameter(
+    public static final BooleanParameter requireSameAnnotation = new BooleanParameter(
             "Require same annotation?",
             "If checked, only features with the same annoation (or no annotation) will be aligned.",
             "Algorithm Parameters", false);
 
-    public static final BooleanParameter sameCharge = new BooleanParameter(
+    public static final BooleanParameter requireSameCharge = new BooleanParameter(
             "Require same charge?",
             "If checked, only features with the same charge will be aligned.",
             "Algorithm Parameters", false);
 
     public static final StringParameter featureTableName = new StringParameter(
             "Feature table name", "Name of the aligned feature table.",
-            "Output", "Aligned Feature List");
+            "Output", "Aligned Feature Table");
 
     public static final BooleanParameter removeOldTable = new BooleanParameter(
             "Remove original tables?",
@@ -83,9 +83,9 @@ public class JoinAlignerParameters extends ParameterSet {
     /**
      * Create the parameter set.
      */
-    public JoinAlignerParameters() {
+    public MatchAlignerParameters() {
         super(featureTables, mzTolerance, rtTolerance, mzWeight, rtWeight,
-                sameAnnotation, sameCharge, featureTableName, removeOldTable);
+                requireSameAnnotation, requireSameCharge, featureTableName, removeOldTable);
     }
 
 }
