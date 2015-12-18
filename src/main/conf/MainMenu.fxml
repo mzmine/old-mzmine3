@@ -138,8 +138,8 @@
 				</Menu>
 				<Menu text="Alignment">
 					<items>
-						<ModuleMenuItem text="Join Aligner"
-							moduleClass="io.github.mzmine.modules.alignment.joinaligner.JoinAlignerModule" />
+						<ModuleMenuItem text="Match Aligner"
+							moduleClass="io.github.mzmine.modules.alignment.matchaligner.MatchAlignerModule" />
 						<MenuItem text="RANSAC Aligner" />
 					</items>
 				</Menu>
