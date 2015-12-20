@@ -37,7 +37,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.modules.MZmineProcessingModule;
-import io.github.mzmine.modules.rawdataimport.RawDataImportParameters;
+import io.github.mzmine.modules.rawdata.rawdataimport.RawDataImportParameters;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.taskcontrol.MSDKTask;

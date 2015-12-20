@@ -17,7 +17,7 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.rawdataimport;
+package io.github.mzmine.modules.rawdata.rawdataimport;
 
 import java.io.File;
 import java.util.Collection;

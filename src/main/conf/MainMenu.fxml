@@ -38,7 +38,7 @@
 				<Menu text="Import...">
 					<items>
 						<ModuleMenuItem text="Raw Data"
-							moduleClass="io.github.mzmine.modules.rawdataimport.RawDataImportModule" />
+							moduleClass="io.github.mzmine.modules.rawdata.rawdataimport.RawDataImportModule" />
 						<ModuleMenuItem text="Feature Tables"
 							moduleClass="io.github.mzmine.modules.featuretableimport.FeatureTableImportModule" />
 					</items>
@@ -58,7 +58,8 @@
 						<MenuItem text="CSV" />
 						<MenuItem text="MGF" />
 						<MenuItem text="MSP" />
-						<MenuItem text="mzML" />
+						<ModuleMenuItem text="mzML"
+							moduleClass="io.github.mzmine.modules.rawdata.mzmlexport.MzMLExportModule" />
 						<MenuItem text="TXT" />
 					</items>
 				</Menu>
