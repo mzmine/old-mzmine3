@@ -89,6 +89,18 @@
 						<MenuItem text="Baseline Correction" />
 					</items>
 				</Menu>
+				<Menu text="Centroiding">
+					<items>
+						<ModuleMenuItem text="Local Maxima"
+							moduleClass="io.github.mzmine.modules.rawdata.centroiding.localmaxima.LocalMaxCentroidingModule" />
+						<ModuleMenuItem text="Exact Mass"
+							moduleClass="io.github.mzmine.modules.rawdata.centroiding.exactmass.ExactMassCentroidingModule" />
+						<ModuleMenuItem text="Recursive"
+							moduleClass="io.github.mzmine.modules.rawdata.centroiding.recursive.RecursiveCentroidingModule" />
+						<ModuleMenuItem text="Wavelet"
+							moduleClass="io.github.mzmine.modules.rawdata.centroiding.wavelet.WaveletCentroidingModule" />
+					</items>
+				</Menu>
 				<Menu text="Feature Detection">
 					<items>
 						<Menu text="MS">

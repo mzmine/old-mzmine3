@@ -67,6 +67,8 @@ public class DoubleEditor extends HBox implements ParameterEditor<Double> {
 
     @Override
     public void setValue(Double value) {
+        if (value == null)
+            return;
         String stringValue;
         if (numberFormat != null) {
             stringValue = numberFormat.format(value);
