@@ -91,6 +91,8 @@
 				</Menu>
 				<Menu text="Centroiding">
 					<items>
+						<ModuleMenuItem text="Binning"
+							moduleClass="io.github.mzmine.modules.rawdata.centroiding.binning.BinningCentroidingModule" />
 						<ModuleMenuItem text="Local Maxima"
 							moduleClass="io.github.mzmine.modules.rawdata.centroiding.localmaxima.LocalMaxCentroidingModule" />
 						<ModuleMenuItem text="Exact Mass"

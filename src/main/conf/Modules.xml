@@ -17,6 +17,7 @@
 	<module>io.github.mzmine.modules.featuretableexport.CsvExportModule</module>
 	<module>io.github.mzmine.modules.auditlogexport.AuditLogExportModule</module>
 	<module>io.github.mzmine.modules.identification.ms.localdatabasesearch.LocalDatabaseSearchModule</module>
+	<module>io.github.mzmine.modules.rawdata.centroiding.exactmass.BinnningCentroidingModule</module>
 	<module>io.github.mzmine.modules.rawdata.centroiding.exactmass.ExactMassCentroidingModule</module>
 	<module>io.github.mzmine.modules.rawdata.centroiding.localmaxima.LocalMaxCentroidingModule</module>
 	<module>io.github.mzmine.modules.rawdata.centroiding.recursive.RecursiveCentroidingModule</module>

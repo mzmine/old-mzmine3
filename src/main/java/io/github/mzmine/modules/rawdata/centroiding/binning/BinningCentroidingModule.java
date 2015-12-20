@@ -17,7 +17,7 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.rawdata.centroiding.exactmass;
+package io.github.mzmine.modules.rawdata.centroiding.binning;
 
 import java.util.Collection;
 
@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.github.msdk.MSDKException;
-import io.github.msdk.centroiding.ExactMassCentroidingAlgorithm;
+import io.github.msdk.centroiding.BinningCentroidingAlgorithm;
 import io.github.msdk.centroiding.MSDKCentroidingMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
@@ -40,14 +40,14 @@ import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.concurrent.Task;
 
 /**
- * Exact mass centroiding
+ * Binning centroiding
  */
-public class ExactMassCentroidingModule implements MZmineProcessingModule {
+public class BinningCentroidingModule implements MZmineProcessingModule {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final String MODULE_NAME = "Exact mass centroiding";
-    private static final String MODULE_DESCRIPTION = "Exact mass centroiding";
+    private static final String MODULE_NAME = "Binning centroiding";
+    private static final String MODULE_DESCRIPTION = "Binning centroiding";
 
     @Override
     public @Nonnull String getName() {
@@ -65,13 +65,12 @@ public class ExactMassCentroidingModule implements MZmineProcessingModule {
             @Nonnull Collection<Task<?>> tasks) {
 
         final RawDataFilesSelection rawDataFiles = parameters
-                .getParameter(ExactMassCentroidingParameters.dataFiles)
+                .getParameter(BinningCentroidingParameters.dataFiles)
                 .getValue();
-        final Double noiseLevel = parameters
-                .getParameter(ExactMassCentroidingParameters.noiseLevel)
-                .getValue();
+        final Double binSize = parameters
+                .getParameter(BinningCentroidingParameters.binSize).getValue();
         final String suffix = parameters
-                .getParameter(ExactMassCentroidingParameters.suffix).getValue();
+                .getParameter(BinningCentroidingParameters.suffix).getValue();
 
         if (rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
             logger.warn(
@@ -91,13 +90,13 @@ public class ExactMassCentroidingModule implements MZmineProcessingModule {
             }
 
             final String newName = rawDataFile.getName() + " " + suffix;
-            ExactMassCentroidingAlgorithm algorithm = new ExactMassCentroidingAlgorithm(
-                    dataStore, noiseLevel.floatValue());
+            BinningCentroidingAlgorithm algorithm = new BinningCentroidingAlgorithm(
+                    dataStore, binSize);
 
             MSDKCentroidingMethod method = new MSDKCentroidingMethod(
                     rawDataFile, algorithm, dataStore);
 
-            MSDKTask newTask = new MSDKTask("Exact mass centroiding method",
+            MSDKTask newTask = new MSDKTask("Binning centroiding method",
                     rawDataFile.getName(), method);
 
             // Add the feature table to the project
@@ -116,6 +115,6 @@ public class ExactMassCentroidingModule implements MZmineProcessingModule {
 
     @Override
     public @Nonnull Class<? extends ParameterSet> getParameterSetClass() {
-        return ExactMassCentroidingParameters.class;
+        return BinningCentroidingParameters.class;
     }
 }
