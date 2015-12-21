@@ -19,30 +19,18 @@
 
 package io.github.mzmine.modules.featuredetection.chromatogrambuilder;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Scanner;
 
 import javax.annotation.Nonnull;
 
-import org.openscience.cdk.DefaultChemObjectBuilder;
-import org.openscience.cdk.interfaces.IMolecularFormula;
-import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
-import io.github.msdk.datamodel.ionannotations.IonAnnotation;
-import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.util.IonTypeUtil;
 import io.github.msdk.util.MZTolerance;
-import io.github.msdk.util.RTTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;
@@ -83,10 +71,12 @@ public class ChromatogramBuilderModule implements MZmineProcessingModule {
                 .getValue();
 
         final Double minDuration = parameters
-                .getParameter(ChromatogramBuilderParameters.minDuration).getValue();
+                .getParameter(ChromatogramBuilderParameters.minDuration)
+                .getValue();
 
         final Double minHeight = parameters
-                .getParameter(ChromatogramBuilderParameters.minHeight).getValue();
+                .getParameter(ChromatogramBuilderParameters.minHeight)
+                .getValue();
 
         final String nameSuffix = parameters
                 .getParameter(ChromatogramBuilderParameters.nameSuffix)
@@ -104,13 +94,13 @@ public class ChromatogramBuilderModule implements MZmineProcessingModule {
             DataPointStore dataStore = DataPointStoreFactory
                     .getMemoryDataStore();
 
-            // New chromatogram builder task which runs the following two methods:
+            // New chromatogram builder task which runs the following two
+            // methods:
             // 1. ChromatogramBuilderMethod
             // 2. ChromatogramToFeatureTableMethod
             ChromatogramBuilderTask newTask = new ChromatogramBuilderTask(
-                    "Targeted feature detection", rawDataFile.getName(),
-                    rawDataFile, dataStore, mzTolerance,
-                    minDuration, minHeight, nameSuffix);
+                    "Chromatogram builder", rawDataFile.getName(), rawDataFile,
+                    dataStore, mzTolerance, minDuration, minHeight, nameSuffix);
 
             // Add the feature table to the project
             newTask.setOnSucceeded(e -> {

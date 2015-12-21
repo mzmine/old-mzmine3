@@ -73,7 +73,7 @@ public class ChromatogramBuilderTask extends Task<Object>
         this.title = title;
         this.message = message;
 
-        // Targeted detection method
+        // Chromatogram builder method
         chromatogramBuilderMethod = new ChromatogramBuilderMethod(dataStore,
                 rawDataFile, minDuration, minHeight, mzTolerance);
 
