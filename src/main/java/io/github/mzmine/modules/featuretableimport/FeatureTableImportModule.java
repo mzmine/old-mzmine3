@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,10 +102,8 @@ public class FeatureTableImportModule implements MZmineProcessingModule {
                 dataStore = DataPointStoreFactory.getTmpFileDataPointStore();
 
                 // Find file extension and initiate corresponding import method
-                String fileExtension = fileName.getName()
-                        .substring(fileName.getName().indexOf(".") + 1,
-                                fileName.getName().length())
-                        .toUpperCase();
+                String fileExtension = FilenameUtils
+                        .getExtension(fileName.getAbsolutePath()).toUpperCase();
                 MSDKMethod<?> method = null;
                 switch (fileExtension) {
                 case "CSV":
