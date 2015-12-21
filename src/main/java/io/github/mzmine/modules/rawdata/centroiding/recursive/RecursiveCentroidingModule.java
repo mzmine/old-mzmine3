@@ -17,7 +17,7 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.featuredetection.chromatogrambuilder;
+package io.github.mzmine.modules.rawdata.centroiding.recursive;
 
 import java.util.Collection;
 
@@ -26,26 +26,30 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Range;
+
+import io.github.msdk.MSDKException;
+import io.github.msdk.centroiding.MSDKCentroidingMethod;
+import io.github.msdk.centroiding.RecursiveCentroidingAlgorithm;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
-import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.util.MZTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;
 import io.github.mzmine.project.MZmineProject;
+import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.concurrent.Task;
 
 /**
- * Targeted detection module
+ * Recursive centroiding
  */
-public class ChromatogramBuilderModule implements MZmineProcessingModule {
+public class RecursiveCentroidingModule implements MZmineProcessingModule {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final String MODULE_NAME = "Chromatogram builder";
-    private static final String MODULE_DESCRIPTION = "This module connects data points from mass spectra and builds chromatograms.";
+    private static final String MODULE_NAME = "Recursive centroiding";
+    private static final String MODULE_DESCRIPTION = "Recursive centroiding";
 
     @Override
     public @Nonnull String getName() {
@@ -63,49 +67,48 @@ public class ChromatogramBuilderModule implements MZmineProcessingModule {
             @Nonnull Collection<Task<?>> tasks) {
 
         final RawDataFilesSelection rawDataFiles = parameters
-                .getParameter(ChromatogramBuilderParameters.rawDataFiles)
+                .getParameter(RecursiveCentroidingParameters.dataFiles)
                 .getValue();
-
-        final MZTolerance mzTolerance = parameters
-                .getParameter(ChromatogramBuilderParameters.mzTolerance)
+        final Double noiseLevel = parameters
+                .getParameter(RecursiveCentroidingParameters.noiseLevel)
                 .getValue();
-
-        final Double minDuration = parameters
-                .getParameter(ChromatogramBuilderParameters.minDuration)
+        final Range<Double> mzPeakWidth = RecursiveCentroidingParameters.mzPeakWidth
                 .getValue();
-
-        final Double minHeight = parameters
-                .getParameter(ChromatogramBuilderParameters.minHeight)
-                .getValue();
-
-        final String nameSuffix = parameters
-                .getParameter(ChromatogramBuilderParameters.nameSuffix)
-                .getValue();
+        final String suffix = parameters
+                .getParameter(RecursiveCentroidingParameters.suffix).getValue();
 
         if (rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
             logger.warn(
-                    "Chromatogram builder module started with no raw data files selected");
+                    "Centroiding module started with no raw data files selected");
             return;
         }
 
         for (RawDataFile rawDataFile : rawDataFiles.getMatchingRawDataFiles()) {
 
             // Create the data structures
-            DataPointStore dataStore = DataPointStoreFactory
-                    .getMemoryDataStore();
+            DataPointStore dataStore;
+            try {
+                dataStore = DataPointStoreFactory.getTmpFileDataPointStore();
+            } catch (MSDKException e) {
+                e.printStackTrace();
+                return;
+            }
 
-            // New chromatogram builder task which runs the following two
-            // methods:
-            // 1. ChromatogramBuilderMethod
-            // 2. ChromatogramToFeatureTableMethod
-            ChromatogramBuilderTask newTask = new ChromatogramBuilderTask(
-                    "Chromatogram builder", rawDataFile.getName(), rawDataFile,
-                    dataStore, mzTolerance, minDuration, minHeight, nameSuffix);
+            final String newName = rawDataFile.getName() + " " + suffix;
+            RecursiveCentroidingAlgorithm algorithm = new RecursiveCentroidingAlgorithm(
+                    dataStore, noiseLevel.floatValue(), mzPeakWidth);
+
+            MSDKCentroidingMethod method = new MSDKCentroidingMethod(
+                    rawDataFile, algorithm, dataStore);
+
+            MSDKTask newTask = new MSDKTask("Recursive centroiding method",
+                    rawDataFile.getName(), method);
 
             // Add the feature table to the project
             newTask.setOnSucceeded(e -> {
-                FeatureTable featureTable = newTask.getResult();
-                project.addFeatureTable(featureTable);
+                RawDataFile newRawFile = method.getResult();
+                newRawFile.setName(newName);
+                project.addFile(newRawFile);
             });
 
             // Add the task to the queue
@@ -117,7 +120,6 @@ public class ChromatogramBuilderModule implements MZmineProcessingModule {
 
     @Override
     public @Nonnull Class<? extends ParameterSet> getParameterSetClass() {
-        return ChromatogramBuilderParameters.class;
+        return RecursiveCentroidingParameters.class;
     }
-
 }

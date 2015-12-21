@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modules>
-	<module>io.github.mzmine.modules.rawdataimport.RawDataImportModule</module>
+	<module>io.github.mzmine.modules.rawdata.rawdataimport.RawDataImportModule</module>
+	<module>io.github.mzmine.modules.rawdata.mzmlexport.MzMLExportModule</module>
+	<module>io.github.mzmine.modules.rawdata.centroiding.binning.BinningCentroidingModule</module>
+	<module>io.github.mzmine.modules.rawdata.centroiding.exactmass.ExactMassCentroidingModule</module>
+	<module>io.github.mzmine.modules.rawdata.centroiding.localmaxima.LocalMaxCentroidingModule</module>
+	<module>io.github.mzmine.modules.rawdata.centroiding.recursive.RecursiveCentroidingModule</module>
+	<module>io.github.mzmine.modules.rawdata.centroiding.wavelet.WaveletCentroidingModule</module>
 	<module>io.github.mzmine.modules.featuretableimport.FeatureTableImportModule</module>
 	<module>io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotModule</module>
 	<module>io.github.mzmine.modules.plots.msspectrum.MsSpectrumPlotModule</module>
@@ -17,4 +23,5 @@
 	<module>io.github.mzmine.modules.featuretableexport.CsvExportModule</module>
 	<module>io.github.mzmine.modules.auditlogexport.AuditLogExportModule</module>
 	<module>io.github.mzmine.modules.identification.ms.localdatabasesearch.LocalDatabaseSearchModule</module>
+
 </modules>

@@ -17,23 +17,24 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.rawdataimport;
+package io.github.mzmine.modules.rawdata.mzmlexport;
 
-public enum RawDataImportMode {
+import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.parameters.ParameterValidator;
+import io.github.mzmine.parameters.parametertypes.filenames.FileNameParameter;
+import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
 
-    TRANSPARENT("Access the file transparently, if possible"), //
-    LOAD_MEMORY("Store the file contents in memory"), //
-    LOAD_DISK("Store the file contents on disk");
+public class MzMLExportParameters extends ParameterSet {
 
-    private final String stringValue;
+    public static final RawDataFilesParameter dataFiles = new RawDataFilesParameter();
 
-    RawDataImportMode(String stringValue) {
-        this.stringValue = stringValue;
-    }
+    public static final FileNameParameter fileName = new FileNameParameter(
+            "File name", "Final file name", "",
+            ParameterValidator.createNonEmptyValidator(),
+            FileNameParameter.Type.SAVE);
 
-    @Override
-    public String toString() {
-        return stringValue;
+    public MzMLExportParameters() {
+        super(dataFiles, fileName);
     }
 
 }

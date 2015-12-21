@@ -38,7 +38,7 @@
 				<Menu text="Import...">
 					<items>
 						<ModuleMenuItem text="Raw Data"
-							moduleClass="io.github.mzmine.modules.rawdataimport.RawDataImportModule" />
+							moduleClass="io.github.mzmine.modules.rawdata.rawdataimport.RawDataImportModule" />
 						<ModuleMenuItem text="Feature Tables"
 							moduleClass="io.github.mzmine.modules.featuretableimport.FeatureTableImportModule" />
 					</items>
@@ -58,7 +58,8 @@
 						<MenuItem text="CSV" />
 						<MenuItem text="MGF" />
 						<MenuItem text="MSP" />
-						<MenuItem text="mzML" />
+						<ModuleMenuItem text="mzML"
+							moduleClass="io.github.mzmine.modules.rawdata.mzmlexport.MzMLExportModule" />
 						<MenuItem text="TXT" />
 					</items>
 				</Menu>
@@ -87,6 +88,20 @@
 				<Menu text="Smoothing">
 					<items>
 						<MenuItem text="Baseline Correction" />
+					</items>
+				</Menu>
+				<Menu text="Centroiding">
+					<items>
+						<ModuleMenuItem text="Binning"
+							moduleClass="io.github.mzmine.modules.rawdata.centroiding.binning.BinningCentroidingModule" />
+						<ModuleMenuItem text="Local Maxima"
+							moduleClass="io.github.mzmine.modules.rawdata.centroiding.localmaxima.LocalMaxCentroidingModule" />
+						<ModuleMenuItem text="Exact Mass"
+							moduleClass="io.github.mzmine.modules.rawdata.centroiding.exactmass.ExactMassCentroidingModule" />
+						<ModuleMenuItem text="Recursive"
+							moduleClass="io.github.mzmine.modules.rawdata.centroiding.recursive.RecursiveCentroidingModule" />
+						<ModuleMenuItem text="Wavelet"
+							moduleClass="io.github.mzmine.modules.rawdata.centroiding.wavelet.WaveletCentroidingModule" />
 					</items>
 				</Menu>
 				<Menu text="Feature Detection">
