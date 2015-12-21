@@ -37,7 +37,8 @@ import javafx.stage.FileChooser.ExtensionFilter;
 public class FeatureTableImportParameters extends ParameterSet {
 
     private static final ExtensionFilter filters[] = new ExtensionFilter[] {
-            new ExtensionFilter("All feature table files", "*.mzTab"),
+            new ExtensionFilter("All feature table files", "*.csv", "*.mzTab"),
+            new ExtensionFilter("CSV files", "*.csv"),
             new ExtensionFilter("mzTab files", "*.mzTab"),
             new ExtensionFilter("All files", "*.*") };
 
@@ -46,7 +47,7 @@ public class FeatureTableImportParameters extends ParameterSet {
             ParameterValidator.createNonEmptyValidator(),
             Arrays.asList(filters));
 
-    @SuppressWarnings({ "unchecked", "null", })
+    @SuppressWarnings({ "unchecked"})
     public static final StringParameter removePrefix = new StringParameter(
             "Remove prefix", "Prefix to be removed from file names", "Prefixes",
             null, null, e -> {
@@ -75,7 +76,7 @@ public class FeatureTableImportParameters extends ParameterSet {
                 }
             });
 
-    @SuppressWarnings({ "unchecked", "null", })
+    @SuppressWarnings({ "unchecked" })
     public static final StringParameter removeSuffix = new StringParameter(
             "Remove suffix", "Suffix to be removed from file names", "Prefixes",
             null, null, e -> {

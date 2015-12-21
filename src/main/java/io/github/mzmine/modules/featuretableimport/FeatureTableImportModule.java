@@ -31,9 +31,11 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Strings;
 
 import io.github.msdk.MSDKException;
+import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.io.csv.CsvFileImportMethod;
 import io.github.msdk.io.mztab.MzTabFileImportMethod;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.modules.MZmineProcessingModule;
@@ -65,7 +67,6 @@ public class FeatureTableImportModule implements MZmineProcessingModule {
         return MODULE_DESCRIPTION;
     }
 
-    @SuppressWarnings("null")
     @Override
     public void runModule(@Nonnull MZmineProject project,
             @Nonnull ParameterSet parameters,
@@ -98,13 +99,28 @@ public class FeatureTableImportModule implements MZmineProcessingModule {
             try {
 
                 dataStore = DataPointStoreFactory.getTmpFileDataPointStore();
-                MzTabFileImportMethod method = new MzTabFileImportMethod(
-                        fileName, dataStore);
+
+                // Find file extension and initiate corresponding import method
+                String fileExtension = fileName.getName()
+                        .substring(fileName.getName().indexOf(".") + 1,
+                                fileName.getName().length())
+                        .toUpperCase();
+                MSDKMethod<?> method = null;
+                switch (fileExtension) {
+                case "CSV":
+                    method = new CsvFileImportMethod(fileName, dataStore);
+                    break;
+                case "MZTAB":
+                    method = new MzTabFileImportMethod(fileName, dataStore);
+                    break;
+                }
+                final MSDKMethod<?> finalMethod = method;
 
                 newTask = new MSDKTask("Importing feature table file",
-                        fileName.getName(), method);
+                        fileName.getName(), finalMethod);
                 newTask.setOnSucceeded(e -> {
-                    FeatureTable featureTable = method.getResult();
+                    FeatureTable featureTable = (FeatureTable) finalMethod
+                            .getResult();
                     if (featureTable == null)
                         return;
 
