@@ -19,6 +19,8 @@
 
 package io.github.mzmine.modules.featuretable.renderers;
 
+import java.util.List;
+
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import javafx.scene.control.TreeTableCell;
@@ -40,12 +42,17 @@ public class IonAnnotationRenderer implements
                 if (object == null) {
                     setText(null);
                 } else {
-                    IonAnnotation ionAnnotation = (IonAnnotation) object;
-                    String value = ionAnnotation.getDescription();
+                    List<IonAnnotation> ionAnnotations = (List<IonAnnotation>) object;
+                    String value = "";
+                    for (IonAnnotation ionAnnotation : ionAnnotations) {
+                        if (value != "")
+                            value = value + "\n";
 
-                    if (value == null)
-                        value = ionAnnotation.getAnnotationId();
-
+                        if (ionAnnotation.getDescription() != null)
+                            value = value + ionAnnotation.getDescription();
+                        else
+                            value = value + ionAnnotation.getAnnotationId();
+                    }
                     setText(value);
                 }
             }

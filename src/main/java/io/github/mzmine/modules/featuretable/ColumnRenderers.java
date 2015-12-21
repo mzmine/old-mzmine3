@@ -45,7 +45,7 @@ public class ColumnRenderers {
             return ChromatogramRenderer.class;
         if (columnName.equals("Chromatography Info"))
             return ChromatographyInfoRenderer.class;
-        if (columnName.equals("Ion Annotation"))
+        if (columnName.equals(ColumnName.IONANNOTATION.getName()))
             return IonAnnotationRenderer.class;
 
         // Default
