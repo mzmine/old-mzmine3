@@ -153,7 +153,7 @@
 				</Menu>
 				<Menu text="Alignment">
 					<items>
-						<ModuleMenuItem text="Match Aligner"
+						<ModuleMenuItem text="Match Score Aligner (m/z and RT)"
 							moduleClass="io.github.mzmine.modules.alignment.matchaligner.MatchAlignerModule" />
 						<MenuItem text="RANSAC Aligner" />
 					</items>
