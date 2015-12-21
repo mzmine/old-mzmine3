@@ -24,6 +24,8 @@ import javax.annotation.Nullable;
 
 import org.w3c.dom.Element;
 
+import com.google.common.base.Strings;
+
 import io.github.mzmine.parameters.ParameterValidator;
 
 public class IntegerParameter extends AbstractParameter<Integer> {
@@ -39,7 +41,8 @@ public class IntegerParameter extends AbstractParameter<Integer> {
     }
 
     public IntegerParameter(@Nonnull String name, @Nonnull String description,
-            @Nonnull String category, @Nullable ParameterValidator<Integer> validator) {
+            @Nonnull String category,
+            @Nullable ParameterValidator<Integer> validator) {
         this(name, description, category, validator, null);
     }
 
@@ -60,7 +63,10 @@ public class IntegerParameter extends AbstractParameter<Integer> {
 
     @Override
     public void loadValueFromXML(@Nonnull Element xmlElement) {
-        Integer content = Integer.parseInt(xmlElement.getTextContent());
+        final String textValue = xmlElement.getTextContent();
+        if (Strings.isNullOrEmpty(textValue))
+            return;
+        final Integer content = Integer.parseInt(textValue);
         setValue(content);
     }
 

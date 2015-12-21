@@ -26,6 +26,8 @@ import javax.annotation.Nullable;
 
 import org.w3c.dom.Element;
 
+import com.google.common.base.Strings;
+
 import io.github.mzmine.parameters.ParameterValidator;
 
 public class DoubleParameter extends AbstractParameter<Double> {
@@ -70,7 +72,10 @@ public class DoubleParameter extends AbstractParameter<Double> {
 
     @Override
     public void loadValueFromXML(@Nonnull Element xmlElement) {
-        Double content = Double.parseDouble(xmlElement.getTextContent());
+        final String textValue = xmlElement.getTextContent();
+        if (Strings.isNullOrEmpty(textValue))
+            return;
+        final Double content = Double.parseDouble(textValue);
         setValue(content);
     }
 
