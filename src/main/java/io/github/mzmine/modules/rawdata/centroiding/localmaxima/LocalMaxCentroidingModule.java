@@ -67,9 +67,6 @@ public class LocalMaxCentroidingModule implements MZmineProcessingModule {
         final RawDataFilesSelection rawDataFiles = parameters
                 .getParameter(LocalMaxCentroidingParameters.dataFiles)
                 .getValue();
-        final Double noiseLevel = parameters
-                .getParameter(LocalMaxCentroidingParameters.noiseLevel)
-                .getValue();
         final String suffix = parameters
                 .getParameter(LocalMaxCentroidingParameters.suffix).getValue();
 
@@ -92,7 +89,7 @@ public class LocalMaxCentroidingModule implements MZmineProcessingModule {
 
             final String newName = rawDataFile.getName() + " " + suffix;
             LocalMaximaCentroidingAlgorithm algorithm = new LocalMaximaCentroidingAlgorithm(
-                    dataStore, noiseLevel.floatValue());
+                    dataStore);
 
             MSDKCentroidingMethod method = new MSDKCentroidingMethod(
                     rawDataFile, algorithm, dataStore);

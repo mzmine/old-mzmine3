@@ -21,7 +21,6 @@ package io.github.mzmine.modules.rawdata.centroiding.exactmass;
 
 import io.github.mzmine.parameters.Parameter;
 import io.github.mzmine.parameters.ParameterSet;
-import io.github.mzmine.parameters.parametertypes.DoubleParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
 
@@ -29,15 +28,11 @@ public class ExactMassCentroidingParameters extends ParameterSet {
 
     public static final RawDataFilesParameter dataFiles = new RawDataFilesParameter();
 
-    public static final DoubleParameter noiseLevel = new DoubleParameter(
-            "Noise level",
-            "Intensities less than this value are interpreted as noise.", "");
-
     public static final StringParameter suffix = new StringParameter("Suffix",
             "Suffix to add to the raw data file name", "centroided");
 
     public ExactMassCentroidingParameters() {
-        super(new Parameter[] { dataFiles, noiseLevel, suffix });
+        super(new Parameter[] { dataFiles, suffix });
     }
 
 }

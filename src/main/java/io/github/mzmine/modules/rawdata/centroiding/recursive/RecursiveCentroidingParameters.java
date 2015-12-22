@@ -21,7 +21,6 @@ package io.github.mzmine.modules.rawdata.centroiding.recursive;
 
 import io.github.mzmine.parameters.Parameter;
 import io.github.mzmine.parameters.ParameterSet;
-import io.github.mzmine.parameters.parametertypes.DoubleParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.ranges.DoubleRangeParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
@@ -29,10 +28,6 @@ import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParamete
 public class RecursiveCentroidingParameters extends ParameterSet {
 
     public static final RawDataFilesParameter dataFiles = new RawDataFilesParameter();
-
-    public static final DoubleParameter noiseLevel = new DoubleParameter(
-            "Noise level",
-            "Intensities less than this value are interpreted as noise", "");
 
     public static final DoubleRangeParameter mzPeakWidth = new DoubleRangeParameter(
             "m/z peak width",
@@ -42,7 +37,7 @@ public class RecursiveCentroidingParameters extends ParameterSet {
             "Suffix to add to the raw data file name", "centroided");
 
     public RecursiveCentroidingParameters() {
-        super(new Parameter[] { dataFiles, noiseLevel, mzPeakWidth, suffix });
+        super(new Parameter[] { dataFiles, mzPeakWidth, suffix });
     }
 
 }

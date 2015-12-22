@@ -67,9 +67,6 @@ public class ExactMassCentroidingModule implements MZmineProcessingModule {
         final RawDataFilesSelection rawDataFiles = parameters
                 .getParameter(ExactMassCentroidingParameters.dataFiles)
                 .getValue();
-        final Double noiseLevel = parameters
-                .getParameter(ExactMassCentroidingParameters.noiseLevel)
-                .getValue();
         final String suffix = parameters
                 .getParameter(ExactMassCentroidingParameters.suffix).getValue();
 
@@ -92,7 +89,7 @@ public class ExactMassCentroidingModule implements MZmineProcessingModule {
 
             final String newName = rawDataFile.getName() + " " + suffix;
             ExactMassCentroidingAlgorithm algorithm = new ExactMassCentroidingAlgorithm(
-                    dataStore, noiseLevel.floatValue());
+                    dataStore);
 
             MSDKCentroidingMethod method = new MSDKCentroidingMethod(
                     rawDataFile, algorithm, dataStore);

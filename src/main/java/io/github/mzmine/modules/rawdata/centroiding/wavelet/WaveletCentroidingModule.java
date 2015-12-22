@@ -67,9 +67,6 @@ public class WaveletCentroidingModule implements MZmineProcessingModule {
         final RawDataFilesSelection rawDataFiles = parameters
                 .getParameter(WaveletCentroidingParameters.dataFiles)
                 .getValue();
-        final Double noiseLevel = parameters
-                .getParameter(WaveletCentroidingParameters.noiseLevel)
-                .getValue();
         final Integer scaleLevel = parameters
                 .getParameter(WaveletCentroidingParameters.scaleLevel)
                 .getValue();
@@ -98,8 +95,7 @@ public class WaveletCentroidingModule implements MZmineProcessingModule {
 
             final String newName = rawDataFile.getName() + " " + suffix;
             WaveletCentroidingAlgorithm algorithm = new WaveletCentroidingAlgorithm(
-                    dataStore, noiseLevel.floatValue(), scaleLevel,
-                    waveletWindow);
+                    dataStore, scaleLevel, waveletWindow);
 
             MSDKCentroidingMethod method = new MSDKCentroidingMethod(
                     rawDataFile, algorithm, dataStore);
