@@ -41,6 +41,12 @@ public class ChromatogramBuilderParameters extends ParameterSet {
             ParameterValidator.createNonEmptyValidator(),
             new MZTolerance(0.001, 5.0));
 
+    public static final DoubleParameter noiseLevel = new DoubleParameter(
+            "Noise level", "Data points below this intensity will be ignored",
+            "Algorithm Parameters",
+            MZmineCore.getConfiguration().getIntensityFormat(),
+            ParameterValidator.createNonEmptyValidator(), null);
+
     public static final DoubleParameter minDuration = new DoubleParameter(
             "Min peak duration",
             "Minimum time span over which the same ion must be observed in order to be recognized as a peaks.",
@@ -63,7 +69,8 @@ public class ChromatogramBuilderParameters extends ParameterSet {
      * Create the parameter set.
      */
     public ChromatogramBuilderParameters() {
-        super(rawDataFiles, mzTolerance, minDuration, minHeight, nameSuffix);
+        super(rawDataFiles, mzTolerance, noiseLevel, minDuration, minHeight,
+                nameSuffix);
     }
 
 }
