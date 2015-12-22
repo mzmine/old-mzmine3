@@ -51,6 +51,7 @@ public class ChromatogramBuilderTask extends Task<Object>
     private final @Nonnull RawDataFile rawDataFile;
     private final @Nonnull DataPointStore dataStore;
     private final @Nonnull MZTolerance mzTolerance;
+    private final @Nonnull Float noiseLevel;
     private final @Nonnull Double minDuration;
     private final @Nonnull Double minHeight;
     private final @Nullable String nameSuffix;
@@ -62,11 +63,13 @@ public class ChromatogramBuilderTask extends Task<Object>
 
     public ChromatogramBuilderTask(String title, @Nullable String message,
             @Nonnull RawDataFile rawDataFile, @Nonnull DataPointStore dataStore,
-            @Nonnull MZTolerance mzTolerance, @Nonnull Double minDuration,
-            @Nonnull Double minHeight, @Nullable String nameSuffix) {
+            @Nonnull MZTolerance mzTolerance, @Nonnull Float noiseLevel,
+            @Nonnull Double minDuration, @Nonnull Double minHeight,
+            @Nullable String nameSuffix) {
         this.rawDataFile = rawDataFile;
         this.dataStore = dataStore;
         this.mzTolerance = mzTolerance;
+        this.noiseLevel = noiseLevel;
         this.minDuration = minDuration;
         this.minHeight = minHeight;
         this.nameSuffix = nameSuffix;
@@ -75,7 +78,7 @@ public class ChromatogramBuilderTask extends Task<Object>
 
         // Chromatogram builder method
         chromatogramBuilderMethod = new ChromatogramBuilderMethod(dataStore,
-                rawDataFile, minDuration, minHeight, mzTolerance);
+                rawDataFile, noiseLevel, minDuration, minHeight, mzTolerance);
 
         // Chromatogram to feature table method
         chromatogramToFeatureTableMethod = new ChromatogramToFeatureTableMethod(
