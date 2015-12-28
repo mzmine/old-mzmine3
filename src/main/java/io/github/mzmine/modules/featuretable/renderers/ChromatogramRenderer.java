@@ -20,9 +20,7 @@
 package io.github.mzmine.modules.featuretable.renderers;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.chromatograms.ChromatogramDataPointList;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -46,25 +44,22 @@ public class ChromatogramRenderer implements
                 if (object == null) {
                     setText(null);
                 } else {
-                    // Get the data point list
-                    Chromatogram chromatogram = (Chromatogram) object;
-                    ChromatogramDataPointList dataPointList = MSDKObjectBuilder
-                            .getChromatogramDataPointList();
-                    chromatogram.getDataPoints(dataPointList);
 
-                    ChromatographyInfo[] chromatographyInfoValues = dataPointList
-                            .getRtBuffer();
-                    float[] intensityValues = dataPointList
-                            .getIntensityBuffer();
+                    Chromatogram chromatogram = (Chromatogram) object;
+
+                    ChromatographyInfo[] chromatographyInfoValues = chromatogram
+                            .getRetentionTimes();
+                    float[] intensityValues = chromatogram.getIntensityValues();
+                    int numOfDataPoints = chromatogram.getNumberOfDataPoints();
 
                     // x-axis
                     NumberAxis xAxis = new NumberAxis();
                     xAxis.setTickLabelsVisible(false);
                     xAxis.setOpacity(0);
                     xAxis.setAutoRanging(false);
-                    xAxis.setLowerBound(dataPointList.getRtRange()
+                    xAxis.setLowerBound(chromatogram.getRtRange()
                             .lowerEndpoint().getRetentionTime());
-                    xAxis.setUpperBound(dataPointList.getRtRange()
+                    xAxis.setUpperBound(chromatogram.getRtRange()
                             .upperEndpoint().getRetentionTime());
 
                     // y-axis
@@ -76,7 +71,7 @@ public class ChromatogramRenderer implements
                     final LineChart<Number, Number> lineChart = new LineChart<Number, Number>(
                             xAxis, yAxis);
                     XYChart.Series series = new XYChart.Series();
-                    for (int i = 1; i < dataPointList.getSize(); i++) {
+                    for (int i = 1; i < numOfDataPoints; i++) {
                         series.getData()
                                 .add(new XYChart.Data(
                                         chromatographyInfoValues[i]

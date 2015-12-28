@@ -37,7 +37,7 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.rawdata.SeparationType;
-import io.github.msdk.identification.localdatabasesearch.LocalDatabaseSearchMethod;
+import io.github.msdk.id.localdatabasesearch.LocalDatabaseSearchMethod;
 import io.github.msdk.util.IonTypeUtil;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;

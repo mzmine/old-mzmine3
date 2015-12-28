@@ -19,6 +19,8 @@
 
 package io.github.mzmine.parameters.parametertypes.selectors;
 
+import javax.annotation.Nonnull;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -46,7 +48,7 @@ public class ScanSelectionParameter extends AbstractParameter<ScanSelection> {
     }
 
     @Override
-    public ScanSelectionParameter clone() {
+    public @Nonnull ScanSelectionParameter clone() {
         ScanSelectionParameter copy = new ScanSelectionParameter(getName(),
                 getDescription(), getCategory(), getValue());
         return copy;

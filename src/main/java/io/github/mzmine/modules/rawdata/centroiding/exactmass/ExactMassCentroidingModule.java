@@ -26,12 +26,11 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.msdk.MSDKException;
-import io.github.msdk.centroiding.ExactMassCentroidingAlgorithm;
-import io.github.msdk.centroiding.MSDKCentroidingMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.rawdata.centroiding.ExactMassCentroidingAlgorithm;
+import io.github.msdk.rawdata.centroiding.MSDKCentroidingMethod;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;
@@ -79,13 +78,8 @@ public class ExactMassCentroidingModule implements MZmineProcessingModule {
         for (RawDataFile rawDataFile : rawDataFiles.getMatchingRawDataFiles()) {
 
             // Create the data structures
-            DataPointStore dataStore;
-            try {
-                dataStore = DataPointStoreFactory.getTmpFileDataPointStore();
-            } catch (MSDKException e) {
-                e.printStackTrace();
-                return;
-            }
+            DataPointStore dataStore = DataPointStoreFactory
+                    .getTmpFileDataStore();
 
             final String newName = rawDataFile.getName() + " " + suffix;
             ExactMassCentroidingAlgorithm algorithm = new ExactMassCentroidingAlgorithm(

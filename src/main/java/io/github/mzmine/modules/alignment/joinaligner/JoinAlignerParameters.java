@@ -17,7 +17,7 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.alignment.matchaligner;
+package io.github.mzmine.modules.alignment.joinaligner;
 
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
@@ -30,7 +30,7 @@ import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesParamet
 import io.github.mzmine.parameters.parametertypes.tolerances.MZToleranceParameter;
 import io.github.mzmine.parameters.parametertypes.tolerances.RTToleranceParameter;
 
-public class MatchAlignerParameters extends ParameterSet {
+public class JoinAlignerParameters extends ParameterSet {
 
     public static final FeatureTablesParameter featureTables = new FeatureTablesParameter();
 
@@ -83,7 +83,7 @@ public class MatchAlignerParameters extends ParameterSet {
     /**
      * Create the parameter set.
      */
-    public MatchAlignerParameters() {
+    public JoinAlignerParameters() {
         super(featureTables, mzTolerance, rtTolerance, mzWeight, rtWeight,
                 requireSameAnnotation, requireSameCharge, featureTableName, removeOldTable);
     }

@@ -35,8 +35,8 @@ import io.github.msdk.datamodel.featuretables.Sample;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.featuredetection.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
-import io.github.msdk.featuredetection.targeteddetection.TargetedDetectionMethod;
+import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
+import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
 import io.github.mzmine.gui.MZmineGUI;
@@ -85,10 +85,6 @@ public class TargetedDetectionTask extends Task<Object> implements MZmineTask {
                 rawDataFile, dataStore, mzTolerance, rtTolerance,
                 intensityTolerance, minHeight);
 
-        // Chromatogram to feature table method
-        chromatogramToFeatureTableMethod = new ChromatogramToFeatureTableMethod(
-                null, null, null);
-
         refreshStatus();
 
         EventHandler<WorkerStateEvent> cancelEvent = new EventHandler<WorkerStateEvent>() {
@@ -111,12 +107,14 @@ public class TargetedDetectionTask extends Task<Object> implements MZmineTask {
                 .getFinishedPercentage();
         if (method1Percent != null)
             finishedPercent = method1Percent * 0.9f;
-
+        
+        if (chromatogramToFeatureTableMethod != null) {
         final Float method2Percent = chromatogramToFeatureTableMethod
                 .getFinishedPercentage();
         if (method2Percent != null)
             finishedPercent = finishedPercent + method2Percent * 0.1f;
-
+        }
+        
         updateProgress(finishedPercent.doubleValue(), 1.0);
 
         // Title and message

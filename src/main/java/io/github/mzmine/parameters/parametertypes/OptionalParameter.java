@@ -33,20 +33,9 @@ public class OptionalParameter<EmbeddedParameter extends AbstractParameter<?>>
     private final EmbeddedParameter embeddedParameter;
 
     public OptionalParameter(@Nonnull EmbeddedParameter embeddedParameters) {
-        super(null, null, null, OptionalEditor.class, null);
+        super(embeddedParameters.getName(), embeddedParameters.getDescription(),
+                embeddedParameters.getCategory(), OptionalEditor.class, null);
         this.embeddedParameter = embeddedParameters;
-    }
-
-    public String getName() {
-        return embeddedParameter.getName();
-    }
-
-    public String getDescription() {
-        return embeddedParameter.getDescription();
-    }
-
-    public String getCategory() {
-        return embeddedParameter.getCategory();
     }
 
     public EmbeddedParameter getEmbeddedParameter() {

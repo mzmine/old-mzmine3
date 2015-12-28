@@ -36,9 +36,9 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.featuredetection.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
-import io.github.msdk.featuredetection.msmsdetection.MsMsDetectionMethod;
-import io.github.msdk.featuredetection.targeteddetection.TargetedDetectionMethod;
+import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
+import io.github.msdk.featdet.msmsdetection.MsMsDetectionMethod;
+import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
 import io.github.mzmine.gui.MZmineGUI;
@@ -88,14 +88,6 @@ public class MsMsDetectionTask extends Task<Object> implements MZmineTask {
                 msScans, dataStore, mzTolerance, rtTolerance,
                 intensityTolerance);
 
-        // Targeted detection method
-        targetedDetectionMethod = new TargetedDetectionMethod(null, null, null,
-                null, null, null, null);
-
-        // Chromatogram to feature table method
-        chromatogramToFeatureTableMethod = new ChromatogramToFeatureTableMethod(
-                null, null, null);
-
         refreshStatus();
 
         EventHandler<WorkerStateEvent> cancelEvent = new EventHandler<WorkerStateEvent>() {
@@ -121,16 +113,20 @@ public class MsMsDetectionTask extends Task<Object> implements MZmineTask {
         if (method1Percent != null)
             finishedPercent = method1Percent * 0.1f;
 
+        if (targetedDetectionMethod != null) {
         final Float method2Percent = targetedDetectionMethod
                 .getFinishedPercentage();
         if (method2Percent != null)
             finishedPercent = finishedPercent + method2Percent * 0.8f;
+        }
 
+        if (chromatogramToFeatureTableMethod != null) {
         final Float method3Percent = chromatogramToFeatureTableMethod
                 .getFinishedPercentage();
         if (method3Percent != null)
             finishedPercent = finishedPercent + method3Percent * 0.1f;
-
+        }
+        
         updateProgress(finishedPercent.doubleValue(), 1.0);
 
         // Title and message
