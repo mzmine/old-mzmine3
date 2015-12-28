@@ -31,7 +31,7 @@ import com.google.common.collect.Range;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.filtering.rowfilter.RowFilterMethod;
+import io.github.msdk.features.rowfilter.RowFilterMethod;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;

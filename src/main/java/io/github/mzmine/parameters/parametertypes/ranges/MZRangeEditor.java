@@ -21,12 +21,11 @@ package io.github.mzmine.parameters.parametertypes.ranges;
 
 import java.text.NumberFormat;
 
-import javax.annotation.Nullable;
-
 import org.controlsfx.control.PropertySheet;
 
 import com.google.common.collect.Range;
 
+import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.parameters.ParameterEditor;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
@@ -37,20 +36,15 @@ import javafx.scene.layout.HBox;
 /**
  * Parameter editor for double ranges
  */
-public class DoubleRangeEditor extends HBox
+public class MZRangeEditor extends HBox
         implements ParameterEditor<Range<Double>> {
 
     private final TextField minTxtField;
     private final TextField maxTxtField;
-    private @Nullable NumberFormat numberFormat;
 
-    public DoubleRangeEditor(PropertySheet.Item parameter) {
-        if (!(parameter instanceof DoubleRangeParameter))
+    public MZRangeEditor(PropertySheet.Item parameter) {
+        if (!(parameter instanceof MZRangeParameter))
             throw new IllegalArgumentException();
-
-        // Get the number formatter
-        DoubleRangeParameter drp = (DoubleRangeParameter) parameter;
-        this.numberFormat = drp.getNumberFormat();
 
         // The minimum value field
         minTxtField = new TextField();
@@ -93,15 +87,9 @@ public class DoubleRangeEditor extends HBox
         String minValue;
         String maxValue;
 
-        if (numberFormat != null) {
-            minValue = String
-                    .valueOf(numberFormat.format(value.lowerEndpoint()));
-            maxValue = String
-                    .valueOf(numberFormat.format(value.upperEndpoint()));
-        } else {
-            minValue = String.valueOf(value.lowerEndpoint());
-            maxValue = String.valueOf(value.upperEndpoint());
-        }
+        NumberFormat numberFormat = MZmineCore.getConfiguration().getMZFormat();
+        minValue = numberFormat.format(value.lowerEndpoint());
+        maxValue = numberFormat.format(value.upperEndpoint());
 
         minTxtField.setText(minValue);
         maxTxtField.setText(maxValue);

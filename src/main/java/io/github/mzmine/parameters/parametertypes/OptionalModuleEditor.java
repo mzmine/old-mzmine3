@@ -55,7 +55,8 @@ public class OptionalModuleEditor extends FlowPane
 
         setButton.setDisable(true);
         setButton.setOnAction(e -> {
-            optionalModuleParameter.getEmbeddedParameters().showSetupDialog(null);
+            optionalModuleParameter.getEmbeddedParameters()
+                    .showSetupDialog(null);
             // Fire the checkBox to update the validation decorations
             checkBox.setSelected(false);
             checkBox.setSelected(true);
@@ -82,7 +83,7 @@ public class OptionalModuleEditor extends FlowPane
     public void setValue(Boolean value) {
         if (value != null) {
             checkBox.setSelected(value);
-            setButton.setDisable(! value);
+            setButton.setDisable(!value);
         }
     }
 

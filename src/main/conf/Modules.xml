@@ -18,7 +18,7 @@
 	<module>io.github.mzmine.modules.featuredetection.msmsdetection.MsMsDetectionModule</module>
 	<module>io.github.mzmine.modules.filtering.featurefilter.FeatureFilterModule</module>
 	<module>io.github.mzmine.modules.filtering.rowfilter.RowFilterModule</module>
-	<module>io.github.mzmine.modules.alignment.matchaligner.MatchAlignerModule</module>
+	<module>io.github.mzmine.modules.alignment.joinaligner.JoinAlignerModule</module>
 	<module>io.github.mzmine.modules.gapfilling.peakfinder.PeakFinderModule</module>
 	<module>io.github.mzmine.modules.featuretableexport.CsvExportModule</module>
 	<module>io.github.mzmine.modules.auditlogexport.AuditLogExportModule</module>

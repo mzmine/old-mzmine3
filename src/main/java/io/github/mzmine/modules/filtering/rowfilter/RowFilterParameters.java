@@ -91,8 +91,8 @@ public class RowFilterParameters extends ParameterSet {
      */
     public RowFilterParameters() {
         super(featureTables, mzRange, rtRange, durationRange, minCount,
-                minIsotopes, ionAnnotation, requireAnnotation,
-                removeDuplicates, nameSuffix, removeOldTable);
+                minIsotopes, ionAnnotation, requireAnnotation, removeDuplicates,
+                nameSuffix, removeOldTable);
     }
 
 }

@@ -92,7 +92,6 @@ public class MZToleranceEditor extends FlowPane
 
     @Override
     public Control getMainControl() {
-        // TODO Auto-generated method stub
         return fieldMZ;
     }
 

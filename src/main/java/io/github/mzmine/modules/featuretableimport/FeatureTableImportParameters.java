@@ -47,7 +47,7 @@ public class FeatureTableImportParameters extends ParameterSet {
             ParameterValidator.createNonEmptyValidator(),
             Arrays.asList(filters));
 
-    @SuppressWarnings({ "unchecked"})
+    @SuppressWarnings({ "unchecked" })
     public static final StringParameter removePrefix = new StringParameter(
             "Remove prefix", "Prefix to be removed from file names", "Prefixes",
             null, null, e -> {

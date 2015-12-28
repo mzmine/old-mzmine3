@@ -93,7 +93,6 @@ public class RTToleranceEditor extends FlowPane
 
     @Override
     public Control getMainControl() {
-        // TODO Auto-generated method stub
         return valueField;
     }
 

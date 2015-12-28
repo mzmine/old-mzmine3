@@ -79,7 +79,8 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
                 .getValue();
 
         final String annotations = parameters
-                .getParameter(TargetedDetectionParameters.annotations).getValue();
+                .getParameter(TargetedDetectionParameters.annotations)
+                .getValue();
 
         final String separator = parameters
                 .getParameter(TargetedDetectionParameters.separator).getValue();

@@ -50,7 +50,8 @@ public class MsMsDetectionParameters extends ParameterSet {
     public static final RTToleranceParameter rtTolerance = new RTToleranceParameter(
             "RT tolerance",
             "Maximum allowed retention time difference between the peak apex and the retention times in the above feature input list.",
-            "Algorithm Parameters", ParameterValidator.createNonEmptyValidator(),
+            "Algorithm Parameters",
+            ParameterValidator.createNonEmptyValidator(),
             new RTTolerance(10, true));
 
     public static final PercentParameter intensityTolerance = new PercentParameter(
@@ -68,7 +69,8 @@ public class MsMsDetectionParameters extends ParameterSet {
      * Create the parameter set.
      */
     public MsMsDetectionParameters() {
-        super(rawDataFiles, scanSelection, mzTolerance, rtTolerance, intensityTolerance, nameSuffix);
+        super(rawDataFiles, scanSelection, mzTolerance, rtTolerance,
+                intensityTolerance, nameSuffix);
     }
 
 }

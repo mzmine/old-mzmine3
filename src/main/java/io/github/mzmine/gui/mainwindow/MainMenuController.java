@@ -100,7 +100,7 @@ public class MainMenuController {
         nvcThread.setPriority(Thread.MIN_PRIORITY);
         nvcThread.start();
     }
-    
+
     @FXML
     protected void setPreferences(ActionEvent event) {
         // Show the Preferences dialog

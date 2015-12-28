@@ -81,7 +81,6 @@ public class StringEditor extends BorderPane
         textField.setText(value);
     }
 
-   
     @Override
     public Control getMainControl() {
         // TODO Auto-generated method stub

@@ -51,8 +51,7 @@ public class TextAreaParameter extends AbstractParameter<String> {
             @Nonnull String category,
             @Nullable ParameterValidator<String> validator,
             @Nonnull List<FileChooser.ExtensionFilter> extensions) {
-        super(name, description, category, TextAreaEditor.class,
-                validator);
+        super(name, description, category, TextAreaEditor.class, validator);
         this.extensions = ImmutableList.copyOf(extensions);
     }
 
@@ -74,7 +73,7 @@ public class TextAreaParameter extends AbstractParameter<String> {
             Element nextElement = (Element) list.item(i);
             String textValue = nextElement.getTextContent();
             if (!Strings.isNullOrEmpty(textValue)) {
-                value += textValue;  
+                value += textValue;
             }
         }
         setValue(value);
@@ -98,7 +97,8 @@ public class TextAreaParameter extends AbstractParameter<String> {
             xmlElement.appendChild(newElement);
         }
         if (lastOpenPath != null) {
-            Element newElement = parentDocument.createElement(lastOpenPathElement);
+            Element newElement = parentDocument
+                    .createElement(lastOpenPathElement);
             newElement.setTextContent(lastOpenPath.getPath());
             xmlElement.appendChild(newElement);
         }

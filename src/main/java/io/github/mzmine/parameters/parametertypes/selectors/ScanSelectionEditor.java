@@ -75,31 +75,31 @@ public class ScanSelectionEditor extends HBox
         setButton.setOnAction(e -> {
 
             final IntegerRangeParameter scanNumParameter = new IntegerRangeParameter(
-                    "Scan number", "Range of included scan numbers", null,
+                    "Scan number", "Range of included scan numbers", "Category",
                     scanNumberRange);
             final DoubleRangeParameter rtParameter = new DoubleRangeParameter(
-                    "Retention time", "Retention time range", null);
+                    "Retention time", "Retention time range", "Category");
             if (scanRTRange != null)
                 rtParameter.setValue(scanRTRange);
             final IntegerParameter msLevelParameter = new IntegerParameter(
-                    "MS level", "MS level", null, msLevel);
+                    "MS level", "MS level", "Category", msLevel);
             final StringParameter scanDefinitionParameter = new StringParameter(
                     "Scan definition",
                     "Include only scans that match this scan definition. You can use wild cards, e.g. *FTMS*",
-                    null, scanDefinition);
+                    "Category", scanDefinition);
             final List<String> polarityTypes = Arrays
                     .asList(new String[] { "Any", "+", "-" });
             final ComboParameter<String> polarityParameter = new ComboParameter<>(
-                    "Polarity", "Include only scans of this polarity", null,
-                    polarityTypes);
+                    "Polarity", "Include only scans of this polarity",
+                    "Category", polarityTypes);
             if ((polarity == PolarityType.POSITIVE)
                     || (polarity == PolarityType.NEGATIVE))
                 polarityParameter.setValue(polarity.toString());
             final List<String> spectraTypes = Arrays.asList(new String[] {
                     "Any", "Centroided", "Profile", "Thresholded" });
             final ComboParameter<String> spectrumTypeParameter = new ComboParameter<>(
-                    "Spectrum type", "Include only spectra of this type", null,
-                    spectraTypes);
+                    "Spectrum type", "Include only spectra of this type",
+                    "Category", spectraTypes);
             if (spectrumType != null) {
                 switch (spectrumType) {
                 case CENTROIDED:

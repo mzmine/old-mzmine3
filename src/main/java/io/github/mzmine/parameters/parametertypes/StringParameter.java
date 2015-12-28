@@ -50,7 +50,8 @@ public class StringParameter extends AbstractParameter<String> {
 
     public StringParameter(@Nonnull String name, @Nonnull String description,
             @Nonnull String category,
-            @Nullable ParameterValidator<String> validator, String defaultValue) {
+            @Nullable ParameterValidator<String> validator,
+            String defaultValue) {
         this(name, description, category, validator, defaultValue, null);
     }
 

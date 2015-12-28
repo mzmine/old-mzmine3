@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -89,19 +88,12 @@ public class RawDataImportModule implements MZmineProcessingModule {
                 continue;
             }
 
-            DataPointStore dataStore = null;
-            MSDKTask newTask = null;
-
-            try {
-                dataStore = DataPointStoreFactory.getTmpFileDataPointStore();
-            } catch (MSDKException e) {
-                e.printStackTrace();
-                logger.error("Error creating a data point store", e);
-            }
+            DataPointStore dataStore = DataPointStoreFactory
+                    .getTmpFileDataStore();
 
             RawDataFileImportMethod method = new RawDataFileImportMethod(
                     fileName, dataStore);
-            newTask = new MSDKTask("Importing raw data file",
+            MSDKTask newTask = new MSDKTask("Importing raw data file",
                     fileName.getName(), method);
             newTask.setOnSucceeded(e -> {
                 RawDataFile rawDataFile = method.getResult();

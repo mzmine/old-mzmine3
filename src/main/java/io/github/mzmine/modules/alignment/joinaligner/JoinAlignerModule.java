@@ -17,7 +17,7 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.alignment.matchaligner;
+package io.github.mzmine.modules.alignment.joinaligner;
 
 import java.util.Collection;
 
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.matchaligner.matchaligner.MatchAlignerMethod;
+import io.github.msdk.features.joinaligner.JoinAlignerMethod;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;
@@ -42,7 +42,7 @@ import javafx.concurrent.Task;
 /**
  * Join aligner module
  */
-public class MatchAlignerModule implements MZmineProcessingModule {
+public class JoinAlignerModule implements MZmineProcessingModule {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -65,34 +65,34 @@ public class MatchAlignerModule implements MZmineProcessingModule {
             @Nonnull Collection<Task<?>> tasks) {
 
         final FeatureTablesSelection featureTables = parameters
-                .getParameter(MatchAlignerParameters.featureTables).getValue();
+                .getParameter(JoinAlignerParameters.featureTables).getValue();
 
         final MZTolerance mzTolerance = parameters
-                .getParameter(MatchAlignerParameters.mzTolerance).getValue();
+                .getParameter(JoinAlignerParameters.mzTolerance).getValue();
 
         final RTTolerance rtTolerance = parameters
-                .getParameter(MatchAlignerParameters.rtTolerance).getValue();
+                .getParameter(JoinAlignerParameters.rtTolerance).getValue();
 
         final int mzWeight = parameters
-                .getParameter(MatchAlignerParameters.mzWeight).getValue();
+                .getParameter(JoinAlignerParameters.mzWeight).getValue();
 
         final int rtWeight = parameters
-                .getParameter(MatchAlignerParameters.rtWeight).getValue();
+                .getParameter(JoinAlignerParameters.rtWeight).getValue();
 
         final Boolean requireSameAnnotation = parameters
-                .getParameter(MatchAlignerParameters.requireSameAnnotation)
+                .getParameter(JoinAlignerParameters.requireSameAnnotation)
                 .getValue();
 
         final Boolean requireSameCharge = parameters
-                .getParameter(MatchAlignerParameters.requireSameCharge)
+                .getParameter(JoinAlignerParameters.requireSameCharge)
                 .getValue();
 
         final String featureTableName = parameters
-                .getParameter(MatchAlignerParameters.featureTableName)
+                .getParameter(JoinAlignerParameters.featureTableName)
                 .getValue();
 
         final Boolean removeOldTable = parameters
-                .getParameter(MatchAlignerParameters.removeOldTable).getValue();
+                .getParameter(JoinAlignerParameters.removeOldTable).getValue();
 
         if (featureTables.getMatchingFeatureTables().isEmpty()) {
             logger.warn(
@@ -109,7 +109,7 @@ public class MatchAlignerModule implements MZmineProcessingModule {
         DataPointStore dataStore = DataPointStoreFactory.getMemoryDataStore();
 
         // New row filter method
-        MatchAlignerMethod method = new MatchAlignerMethod(
+        JoinAlignerMethod method = new JoinAlignerMethod(
                 featureTables.getMatchingFeatureTables(), dataStore,
                 mzTolerance, rtTolerance, mzWeight, rtWeight, requireSameCharge,
                 requireSameAnnotation, featureTableName);
@@ -137,7 +137,7 @@ public class MatchAlignerModule implements MZmineProcessingModule {
 
     @Override
     public @Nonnull Class<? extends ParameterSet> getParameterSetClass() {
-        return MatchAlignerParameters.class;
+        return JoinAlignerParameters.class;
     }
 
 }

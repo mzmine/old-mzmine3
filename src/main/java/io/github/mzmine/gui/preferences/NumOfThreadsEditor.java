@@ -86,8 +86,7 @@ public class NumOfThreadsEditor extends HBox
             if (value.isAutomatic()) {
                 optionCombo.getSelectionModel().select(0);
                 numField.setVisible(false);
-            }
-            else
+            } else
                 optionCombo.getSelectionModel().select(1);
             numField.getValueFactory().setValue(value.getManualValue());
         } else {

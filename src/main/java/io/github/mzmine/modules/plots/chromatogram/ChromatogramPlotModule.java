@@ -1,20 +1,20 @@
 /*
- * Copyright 2006-2015 The MZmine 2 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
- * This file is part of MZmine 2.
+ * This file is part of MZmine 3.
  * 
- * MZmine 2 is free software; you can redistribute it and/or modify it under the
+ * MZmine 3 is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
  * version.
  * 
- * MZmine 2 is distributed in the hope that it will be useful, but WITHOUT ANY
+ * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License along with
- * MZmine 2; if not, write to the Free Software Foundation, Inc., 51 Franklin
- * St, Fifth Floor, Boston, MA 02110-1301 USA
+ * MZmine 3; if not, write to the Free Software Foundation, Inc., 51 Franklin St,
+ * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
 package io.github.mzmine.modules.plots.chromatogram;
@@ -24,11 +24,13 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.collect.Range;
+
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.mzmine.gui.MZmineGUI;
-import io.github.mzmine.modules.MZmineModuleCategory;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.project.MZmineProject;
 import javafx.concurrent.Task;
 
@@ -54,27 +56,18 @@ public class ChromatogramPlotModule implements MZmineRunnableModule {
     public void runModule(@Nonnull MZmineProject project,
             @Nonnull ParameterSet parameters,
             @Nonnull Collection<Task<?>> tasks) {
-        
+
         final List<RawDataFile> dataFiles = parameters
                 .getParameter(ChromatogramPlotParameters.inputFiles).getValue()
                 .getMatchingRawDataFiles();
-        
+        final ScanSelection scanSelection = parameters
+                .getParameter(ChromatogramPlotParameters.scanSelection)
+                .getValue();
+        final Range<Double> mzRange = parameters
+                .getParameter(ChromatogramPlotParameters.mzRange).getValue();
 
-        // Add the window to the desktop only if we actually have any raw
-        // data to show.
-        boolean weHaveData = false;
-        for (RawDataFile dataFile : dataFiles) {
-            // TODO: check scans
-        }
-        weHaveData = true;
-
-        if (weHaveData) {
-            ChromatogramPlotWindow newWindow = new ChromatogramPlotWindow();
-            MZmineGUI.addWindow(newWindow, "Chromatogram");
-        } else {
-
-            MZmineGUI.displayMessage("No scans found");
-        }
+        ChromatogramPlotWindow newWindow = new ChromatogramPlotWindow();
+        MZmineGUI.addWindow(newWindow, "Chromatogram");
 
     }
 
@@ -82,6 +75,5 @@ public class ChromatogramPlotModule implements MZmineRunnableModule {
     public @Nonnull Class<? extends ParameterSet> getParameterSetClass() {
         return ChromatogramPlotParameters.class;
     }
-
 
 }

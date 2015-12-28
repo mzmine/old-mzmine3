@@ -28,12 +28,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.MSDKException;
-import io.github.msdk.centroiding.MSDKCentroidingMethod;
-import io.github.msdk.centroiding.RecursiveCentroidingAlgorithm;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.rawdata.centroiding.MSDKCentroidingMethod;
+import io.github.msdk.rawdata.centroiding.RecursiveCentroidingAlgorithm;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;
@@ -83,13 +82,8 @@ public class RecursiveCentroidingModule implements MZmineProcessingModule {
         for (RawDataFile rawDataFile : rawDataFiles.getMatchingRawDataFiles()) {
 
             // Create the data structures
-            DataPointStore dataStore;
-            try {
-                dataStore = DataPointStoreFactory.getTmpFileDataPointStore();
-            } catch (MSDKException e) {
-                e.printStackTrace();
-                return;
-            }
+            DataPointStore dataStore = DataPointStoreFactory
+                    .getTmpFileDataStore();
 
             final String newName = rawDataFile.getName() + " " + suffix;
             RecursiveCentroidingAlgorithm algorithm = new RecursiveCentroidingAlgorithm(

@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datapointstore.DataPointStore;
 import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
@@ -95,62 +94,53 @@ public class FeatureTableImportModule implements MZmineProcessingModule {
                 continue;
             }
 
-            DataPointStore dataStore;
-            MSDKTask newTask = null;
-            try {
+            DataPointStore dataStore = DataPointStoreFactory
+                    .getTmpFileDataStore();
 
-                dataStore = DataPointStoreFactory.getTmpFileDataPointStore();
-
-                // Find file extension and initiate corresponding import method
-                String fileExtension = FilenameUtils
-                        .getExtension(fileName.getAbsolutePath()).toUpperCase();
-                MSDKMethod<?> method = null;
-                switch (fileExtension) {
-                case "CSV":
-                    method = new CsvFileImportMethod(fileName, dataStore);
-                    break;
-                case "MZTAB":
-                    method = new MzTabFileImportMethod(fileName, dataStore);
-                    break;
-                default:
-                    method = new CsvFileImportMethod(fileName, dataStore);
-                    break;
-                }
-                final MSDKMethod<?> finalMethod = method;
-
-                newTask = new MSDKTask("Importing feature table file",
-                        fileName.getName(), finalMethod);
-                newTask.setOnSucceeded(e -> {
-                    FeatureTable featureTable = (FeatureTable) finalMethod
-                            .getResult();
-                    if (featureTable == null)
-                        return;
-
-                    // Remove common prefix
-                    if (!Strings.isNullOrEmpty(removePrefix)) {
-                        String name = featureTable.getName();
-                        if (name.startsWith(removePrefix))
-                            name = name.substring(removePrefix.length());
-                        featureTable.setName(name);
-                    }
-
-                    // Remove common suffix
-                    if (!Strings.isNullOrEmpty(removeSuffix)) {
-                        String name = featureTable.getName();
-                        if (name.endsWith(removeSuffix))
-                            name = name.substring(0,
-                                    name.length() - removeSuffix.length());
-                        featureTable.setName(name);
-                    }
-
-                    project.addFeatureTable(featureTable);
-                });
-
-                tasks.add(newTask);
-
-            } catch (MSDKException e) {
-                e.printStackTrace();
+            // Find file extension and initiate corresponding import method
+            String fileExtension = FilenameUtils
+                    .getExtension(fileName.getAbsolutePath()).toUpperCase();
+            MSDKMethod<?> method = null;
+            switch (fileExtension) {
+            case "CSV":
+                method = new CsvFileImportMethod(fileName, dataStore);
+                break;
+            case "MZTAB":
+                method = new MzTabFileImportMethod(fileName, dataStore);
+                break;
             }
+            final MSDKMethod<?> finalMethod = method;
+
+            MSDKTask newTask = new MSDKTask("Importing feature table file",
+                    fileName.getName(), finalMethod);
+            newTask.setOnSucceeded(e -> {
+                FeatureTable featureTable = (FeatureTable) finalMethod
+                        .getResult();
+                if (featureTable == null)
+                    return;
+
+                // Remove common prefix
+                if (!Strings.isNullOrEmpty(removePrefix)) {
+                    String name = featureTable.getName();
+                    if (name.startsWith(removePrefix))
+                        name = name.substring(removePrefix.length());
+                    featureTable.setName(name);
+                }
+
+                // Remove common suffix
+                if (!Strings.isNullOrEmpty(removeSuffix)) {
+                    String name = featureTable.getName();
+                    if (name.endsWith(removeSuffix))
+                        name = name.substring(0,
+                                name.length() - removeSuffix.length());
+                    featureTable.setName(name);
+                }
+
+                project.addFeatureTable(featureTable);
+            });
+
+            tasks.add(newTask);
+
         }
 
     }

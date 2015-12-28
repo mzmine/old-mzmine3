@@ -21,8 +21,7 @@ package io.github.mzmine.modules.isotopes.isotopegrouper;
 
 public enum RepresentativeIsotope {
 
-    MOST_INTENSE("Most intense"),
-    LOWEST_MZ("Lowest m/z");
+    MOST_INTENSE("Most intense"), LOWEST_MZ("Lowest m/z");
 
     private final String stringValue;
 
