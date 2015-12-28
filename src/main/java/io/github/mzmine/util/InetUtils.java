@@ -37,35 +37,35 @@ public class InetUtils {
      */
     public static String retrieveData(URL url) throws IOException {
 
-	URLConnection connection = url.openConnection();
-	connection.setRequestProperty("User-agent", "MZmine 2");
-	InputStream is = connection.getInputStream();
+        URLConnection connection = url.openConnection();
+        connection.setRequestProperty("User-agent", "MZmine 2");
+        InputStream is = connection.getInputStream();
 
-	if (is == null) {
-	    throw new IOException("Could not establish a connection to " + url);
-	}
+        if (is == null) {
+            throw new IOException("Could not establish a connection to " + url);
+        }
 
-	StringBuffer buffer = new StringBuffer();
+        StringBuffer buffer = new StringBuffer();
 
-	try {
-	    InputStreamReader reader = new InputStreamReader(is, "UTF-8");
+        try {
+            InputStreamReader reader = new InputStreamReader(is, "UTF-8");
 
-	    char[] cb = new char[1024];
+            char[] cb = new char[1024];
 
-	    int amtRead = reader.read(cb);
-	    while (amtRead > 0) {
-		buffer.append(cb, 0, amtRead);
-		amtRead = reader.read(cb);
-	    }
+            int amtRead = reader.read(cb);
+            while (amtRead > 0) {
+                buffer.append(cb, 0, amtRead);
+                amtRead = reader.read(cb);
+            }
 
-	} catch (UnsupportedEncodingException e) {
-	    // This should never happen, because UTF-8 is supported
-	    e.printStackTrace();
-	}
+        } catch (UnsupportedEncodingException e) {
+            // This should never happen, because UTF-8 is supported
+            e.printStackTrace();
+        }
 
-	is.close();
+        is.close();
 
-	return buffer.toString();
+        return buffer.toString();
 
     }
 

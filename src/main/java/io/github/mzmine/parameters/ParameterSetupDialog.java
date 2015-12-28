@@ -51,7 +51,8 @@ public class ParameterSetupDialog extends Alert {
      */
     private HelpWindow helpWindow = null;
 
-    ParameterSetupDialog(ParameterSet parameters, @Nullable MZmineModule module) {
+    ParameterSetupDialog(ParameterSet parameters,
+            @Nullable MZmineModule module) {
 
         super(AlertType.CONFIRMATION);
 
@@ -62,9 +63,8 @@ public class ParameterSetupDialog extends Alert {
         stage.getIcons().setAll(mzMineIcon);
 
         if (module != null) {
-            setTitle(module.getName());    
-        }
-        else {
+            setTitle(module.getName());
+        } else {
             setTitle("Parameters");
         }
         setHeaderText("Please set parameter values");

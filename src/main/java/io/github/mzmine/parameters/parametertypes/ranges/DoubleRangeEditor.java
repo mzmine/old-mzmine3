@@ -88,7 +88,8 @@ public class DoubleRangeEditor extends HBox
 
     @Override
     public void setValue(Range<Double> value) {
-        if (value == null) return;
+        if (value == null)
+            return;
         String minValue;
         String maxValue;
 

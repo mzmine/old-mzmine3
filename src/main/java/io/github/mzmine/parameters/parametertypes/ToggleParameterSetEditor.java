@@ -38,7 +38,6 @@ import javafx.scene.control.Control;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 
-
 /**
  * This parameter stores double values
  */
@@ -73,15 +72,19 @@ public class ToggleParameterSetEditor<ValueType> extends BorderPane
                     /*
                      * TODO Show parameters when button is selected
                      */
-                    System.out.println("Toggle button selected: "+ entry.getKey());
-                    System.out.println("Parameter set: "+ entry.getValue());
-                    ParameterSheetView parameterSheetView = new ParameterSheetView(entry.getValue(),null);
-                    
-                    ParameterSet currentParameterSet = MZmineCore.getConfiguration()
+                    System.out.println(
+                            "Toggle button selected: " + entry.getKey());
+                    System.out.println("Parameter set: " + entry.getValue());
+                    ParameterSheetView parameterSheetView = new ParameterSheetView(
+                            entry.getValue(), null);
+
+                    ParameterSet currentParameterSet = MZmineCore
+                            .getConfiguration()
                             .getModuleParameters(CsvExportModule.class);
-                    
-                    //ParameterSetupDialog dialog = new ParameterSetupDialog(entry.getValue(), null);
-                    //dialog.showAndWait();
+
+                    // ParameterSetupDialog dialog = new
+                    // ParameterSetupDialog(entry.getValue(), null);
+                    // dialog.showAndWait();
                 }
             });
             segmentedButton.getButtons().add(toggleButton);

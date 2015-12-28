@@ -108,10 +108,11 @@ public class IsotopeGrouperModule implements MZmineProcessingModule {
                     .getMemoryDataStore();
 
             // New isotope grouper method
-//            IsotopeGrouperMethod method = new IsotopeGrouperMethod(featureTable,
-//                    dataStore, nameSuffix, mzTolerance, rtTolerance,
-//                    maximumCharge, monotonicShape);
-MSDKMethod<FeatureTable> method = null;
+            // IsotopeGrouperMethod method = new
+            // IsotopeGrouperMethod(featureTable,
+            // dataStore, nameSuffix, mzTolerance, rtTolerance,
+            // maximumCharge, monotonicShape);
+            MSDKMethod<FeatureTable> method = null;
 
             MSDKTask newTask = new MSDKTask(
                     "Isotope grouping features in table",

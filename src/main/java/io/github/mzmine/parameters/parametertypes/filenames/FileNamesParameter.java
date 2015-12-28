@@ -53,8 +53,7 @@ public class FileNamesParameter extends AbstractParameter<List<File>> {
             @Nonnull String category,
             @Nullable ParameterValidator<List<File>> validator,
             @Nonnull List<FileChooser.ExtensionFilter> extensions) {
-        super(name, description, category, FileNamesEditor.class,
-                validator);
+        super(name, description, category, FileNamesEditor.class, validator);
         this.extensions = ImmutableList.copyOf(extensions);
     }
 

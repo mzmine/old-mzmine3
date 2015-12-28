@@ -36,9 +36,10 @@ public class SampleColumns {
         // sample columns from them
         List<FeatureTable> featuretables = MZmineCore.getCurrentProject()
                 .getFeatureTables();
-        /*
-         * TODO: Loop through all featuretables and add unique sample columns
-         */
+                /*
+                 * TODO: Loop through all featuretables and add unique sample
+                 * columns
+                 */
 
         // Otherwise get the sample columns from the predefined names
         if (featuretables.size() == 0) {

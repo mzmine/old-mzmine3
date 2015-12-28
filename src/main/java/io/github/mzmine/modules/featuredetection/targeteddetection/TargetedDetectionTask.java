@@ -107,14 +107,14 @@ public class TargetedDetectionTask extends Task<Object> implements MZmineTask {
                 .getFinishedPercentage();
         if (method1Percent != null)
             finishedPercent = method1Percent * 0.9f;
-        
+
         if (chromatogramToFeatureTableMethod != null) {
-        final Float method2Percent = chromatogramToFeatureTableMethod
-                .getFinishedPercentage();
-        if (method2Percent != null)
-            finishedPercent = finishedPercent + method2Percent * 0.1f;
+            final Float method2Percent = chromatogramToFeatureTableMethod
+                    .getFinishedPercentage();
+            if (method2Percent != null)
+                finishedPercent = finishedPercent + method2Percent * 0.1f;
         }
-        
+
         updateProgress(finishedPercent.doubleValue(), 1.0);
 
         // Title and message

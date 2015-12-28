@@ -39,7 +39,7 @@ public class ComboEditor<ValueType> extends ChoiceBox<ValueType>
 
     @SuppressWarnings("unchecked")
     public ComboEditor(PropertySheet.Item parameter) {
-        
+
         if (!(parameter instanceof ComboParameter))
             throw new IllegalArgumentException();
 
@@ -47,7 +47,7 @@ public class ComboEditor<ValueType> extends ChoiceBox<ValueType>
 
         ObservableList<ValueType> optionsList = (ObservableList<ValueType>) comboParameter
                 .getOptions();
-        
+
         if (optionsList != null)
             setItems(optionsList);
 

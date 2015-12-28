@@ -71,7 +71,8 @@ public class AuditLogExportModule implements MZmineProcessingModule {
 
         // List of modules which won't be shown in the audit log
         final List<MZmineModule> removeModules = new ArrayList<>();
-        removeModules.add(MZmineCore.getModuleInstance(AuditLogExportModule.class));
+        removeModules
+                .add(MZmineCore.getModuleInstance(AuditLogExportModule.class));
         removeModules.add(MZmineCore.getModuleInstance(CsvExportModule.class));
 
         // Loop through all entries in the audit log

@@ -85,7 +85,8 @@ public class JoinAlignerParameters extends ParameterSet {
      */
     public JoinAlignerParameters() {
         super(featureTables, mzTolerance, rtTolerance, mzWeight, rtWeight,
-                requireSameAnnotation, requireSameCharge, featureTableName, removeOldTable);
+                requireSameAnnotation, requireSameCharge, featureTableName,
+                removeOldTable);
     }
 
 }

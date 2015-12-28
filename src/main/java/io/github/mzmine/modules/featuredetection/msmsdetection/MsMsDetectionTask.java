@@ -84,9 +84,8 @@ public class MsMsDetectionTask extends Task<Object> implements MZmineTask {
         List<MsScan> msScans = scanSelection.getMatchingScans(rawDataFile);
 
         // New feature filter task
-        msMsDetectionMethod = new MsMsDetectionMethod(rawDataFile,
-                msScans, dataStore, mzTolerance, rtTolerance,
-                intensityTolerance);
+        msMsDetectionMethod = new MsMsDetectionMethod(rawDataFile, msScans,
+                dataStore, mzTolerance, rtTolerance, intensityTolerance);
 
         refreshStatus();
 
@@ -114,19 +113,19 @@ public class MsMsDetectionTask extends Task<Object> implements MZmineTask {
             finishedPercent = method1Percent * 0.1f;
 
         if (targetedDetectionMethod != null) {
-        final Float method2Percent = targetedDetectionMethod
-                .getFinishedPercentage();
-        if (method2Percent != null)
-            finishedPercent = finishedPercent + method2Percent * 0.8f;
+            final Float method2Percent = targetedDetectionMethod
+                    .getFinishedPercentage();
+            if (method2Percent != null)
+                finishedPercent = finishedPercent + method2Percent * 0.8f;
         }
 
         if (chromatogramToFeatureTableMethod != null) {
-        final Float method3Percent = chromatogramToFeatureTableMethod
-                .getFinishedPercentage();
-        if (method3Percent != null)
-            finishedPercent = finishedPercent + method3Percent * 0.1f;
+            final Float method3Percent = chromatogramToFeatureTableMethod
+                    .getFinishedPercentage();
+            if (method3Percent != null)
+                finishedPercent = finishedPercent + method3Percent * 0.1f;
         }
-        
+
         updateProgress(finishedPercent.doubleValue(), 1.0);
 
         // Title and message

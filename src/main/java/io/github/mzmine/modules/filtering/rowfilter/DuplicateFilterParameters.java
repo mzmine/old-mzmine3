@@ -47,8 +47,8 @@ public class DuplicateFilterParameters extends ParameterSet {
 
     public static final BooleanParameter requireSameID = new BooleanParameter(
             "Require same ion annotation?",
-            "If selected, duplicate peaks must have the same ion annotation(s).", "Filters",
-            false);
+            "If selected, duplicate peaks must have the same ion annotation(s).",
+            "Filters", false);
 
     /**
      * Create the parameter set.

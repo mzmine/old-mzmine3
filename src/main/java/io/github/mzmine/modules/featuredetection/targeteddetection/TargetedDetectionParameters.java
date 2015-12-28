@@ -62,26 +62,30 @@ public class TargetedDetectionParameters extends ParameterSet {
     public static final DoubleParameter minHeight = new DoubleParameter(
             "Min peak height",
             "Peaks with intensities less than this value are interpreted as noise",
-            "Algorithm Parameters", MZmineCore.getConfiguration().getIntensityFormat(),
+            "Algorithm Parameters",
+            MZmineCore.getConfiguration().getIntensityFormat(),
             ParameterValidator.createNonEmptyValidator(), 5000d);
 
     public static final PercentParameter intensityTolerance = new PercentParameter(
             "Intensity tolerance",
             "Maximum allowed deviation of the peak chromatogram from the expected /\\ shape.",
-            "Algorithm Parameters", ParameterValidator.createNonEmptyValidator(), 0.15);
+            "Algorithm Parameters",
+            ParameterValidator.createNonEmptyValidator(), 0.15);
 
     public static final MZToleranceParameter mzTolerance = new MZToleranceParameter(
             "m/z tolerance",
             "Maximum allowed difference between two m/z values to be considered same.\n"
                     + "The value is specified both as absolute tolerance (in m/z) and relative tolerance (in ppm).\n"
                     + "The tolerance range is calculated using maximum of the absolute and relative tolerances.",
-            "Algorithm Parameters", ParameterValidator.createNonEmptyValidator(),
+            "Algorithm Parameters",
+            ParameterValidator.createNonEmptyValidator(),
             new MZTolerance(0.001, 5.0));
 
     public static final RTToleranceParameter rtTolerance = new RTToleranceParameter(
             "RT tolerance",
             "Maximum allowed retention time difference between the peak apex and the retention times in the above feature input list.",
-            "Algorithm Parameters", ParameterValidator.createNonEmptyValidator(),
+            "Algorithm Parameters",
+            ParameterValidator.createNonEmptyValidator(),
             new RTTolerance(10, true));
 
     public static final StringParameter nameSuffix = new StringParameter(
@@ -93,8 +97,8 @@ public class TargetedDetectionParameters extends ParameterSet {
      * Create the parameter set.
      */
     public TargetedDetectionParameters() {
-        super(rawDataFiles, annotations, separator, minHeight, intensityTolerance,
-                mzTolerance, rtTolerance, nameSuffix);
+        super(rawDataFiles, annotations, separator, minHeight,
+                intensityTolerance, mzTolerance, rtTolerance, nameSuffix);
     }
 
 }

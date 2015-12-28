@@ -36,7 +36,8 @@ public class SpinnerAutoCommit<T> extends Spinner<T> {
         addListenerKeyChange();
     }
 
-    public SpinnerAutoCommit(int min, int max, int initialValue, int amountToStepBy) {
+    public SpinnerAutoCommit(int min, int max, int initialValue,
+            int amountToStepBy) {
         super(min, max, initialValue, amountToStepBy);
         addListenerKeyChange();
     }
@@ -46,7 +47,8 @@ public class SpinnerAutoCommit<T> extends Spinner<T> {
         addListenerKeyChange();
     }
 
-    public SpinnerAutoCommit(double min, double max, double initialValue, double amountToStepBy) {
+    public SpinnerAutoCommit(double min, double max, double initialValue,
+            double amountToStepBy) {
         super(min, max, initialValue, amountToStepBy);
         addListenerKeyChange();
     }
@@ -62,13 +64,15 @@ public class SpinnerAutoCommit<T> extends Spinner<T> {
     }
 
     private void addListenerKeyChange() {
-        getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
-            commitEditorText();
-        });
+        getEditor().textProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    commitEditorText();
+                });
     }
 
     private void commitEditorText() {
-        if (!isEditable()) return;
+        if (!isEditable())
+            return;
         String text = getEditor().getText();
         SpinnerValueFactory<T> valueFactory = getValueFactory();
         if (valueFactory != null) {

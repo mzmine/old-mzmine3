@@ -105,8 +105,8 @@ public class FeatureTableModule implements MZmineRunnableModule {
         // Group rows
         FeatureTableColumn groupColoumn = featureTable
                 .getColumn(ColumnName.GROUPID, null);
-        FeatureTableColumn idColoumn = featureTable
-                .getColumn(ColumnName.ID, null);
+        FeatureTableColumn idColoumn = featureTable.getColumn(ColumnName.ID,
+                null);
         for (FeatureTableRow row : rows) {
             // No group column
             if (groupColoumn == null) {
@@ -294,7 +294,8 @@ public class FeatureTableModule implements MZmineRunnableModule {
                     /*
                      * TODO: Show XIC chromatogram
                      */
-                    System.out.println("Show XIC chromatogram for row "+ featureTableRow);
+                    System.out.println(
+                            "Show XIC chromatogram for row " + featureTableRow);
                     System.out.println("Sample: " + sample);
                 }
             }

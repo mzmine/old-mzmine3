@@ -60,17 +60,19 @@ public class ChromatogramPlotChartNode extends BorderPane {
     void addChromatogram(Chromatogram chromatogram) {
 
         XYChart.Series newSeries = new XYChart.Series();
-        newSeries.setName("Chromatogram " + chromatogram.getChromatogramNumber());
+        newSeries.setName(
+                "Chromatogram " + chromatogram.getChromatogramNumber());
 
         ChromatographyInfo rtValues[] = chromatogram.getRetentionTimes();
         double mzValues[] = chromatogram.getMzValues();
         float intensityValues[] = chromatogram.getIntensityValues();
-        
+
         for (int i = 0; i < chromatogram.getNumberOfDataPoints(); i++) {
             final float rt = rtValues[i].getRetentionTime() / 60f;
             final float intensity = intensityValues[i];
             final double mz = mzValues[i];
-            String tooltipText = MZmineCore.getConfiguration().getMZFormat().format(mz);
+            String tooltipText = MZmineCore.getConfiguration().getMZFormat()
+                    .format(mz);
             XYChart.Data newData = new XYChart.Data(rt, intensity);
             Tooltip.install(newData.getNode(), new Tooltip(tooltipText));
             newSeries.getData().add(newData);

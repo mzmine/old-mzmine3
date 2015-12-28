@@ -37,8 +37,8 @@ public class TwoDPlotWindow extends BorderPane {
         final NumberAxis yAxis = new NumberAxis();
 
         xAxis.setLabel("Month");
-        final LineChart<Number, Number> lineChart = new LineChart<>(
-                xAxis, yAxis);
+        final LineChart<Number, Number> lineChart = new LineChart<>(xAxis,
+                yAxis);
 
         lineChart.setTitle("Stock Monitoring, 2010");
         lineChart.setCreateSymbols(false);
@@ -58,13 +58,10 @@ public class TwoDPlotWindow extends BorderPane {
         series1.getData().add(new XYChart.Data(27, 29));
         series1.getData().add(new XYChart.Data(28, 25));
 
-
         lineChart.getData().addAll(series1);
 
-        
-        
         Node zoomedChart = JavaFXUtil.addZoomSupport(lineChart);
-        
+
         setCenter(zoomedChart);
 
     }

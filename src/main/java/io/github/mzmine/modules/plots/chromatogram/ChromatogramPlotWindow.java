@@ -29,7 +29,7 @@ public class ChromatogramPlotWindow extends BorderPane {
     ChromatogramPlotWindow() {
 
         ChromatogramPlotChartNode chartNode = new ChromatogramPlotChartNode();
-        
+
         setCenter(chartNode);
 
     }

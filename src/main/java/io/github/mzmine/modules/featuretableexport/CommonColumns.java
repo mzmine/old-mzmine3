@@ -23,13 +23,12 @@ import io.github.msdk.datamodel.featuretables.ColumnName;
 
 public enum CommonColumns {
 
-    COMMON_ID(ColumnName.ID.getName()),
-    COMMON_MZ(ColumnName.MZ.getName()),
-    COMMON_PPM(ColumnName.PPM.getName()),
-    COMMON_CHARGE(ColumnName.CHARGE.getName()),
-    COMMON_CHROMATOGRAPHY_INFO("Chromatography Info"),
-    COMMON_ION_ANNOTATION("Ion Annotation"),
-    COMMON_NUMBER("# detected row features");
+    COMMON_ID(ColumnName.ID.getName()), COMMON_MZ(ColumnName.MZ
+            .getName()), COMMON_PPM(ColumnName.PPM.getName()), COMMON_CHARGE(
+                    ColumnName.CHARGE.getName()), COMMON_CHROMATOGRAPHY_INFO(
+                            "Chromatography Info"), COMMON_ION_ANNOTATION(
+                                    "Ion Annotation"), COMMON_NUMBER(
+                                            "# detected row features");
 
     private final String name;
 
