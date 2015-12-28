@@ -112,6 +112,9 @@ public class FeatureTableImportModule implements MZmineProcessingModule {
                 case "MZTAB":
                     method = new MzTabFileImportMethod(fileName, dataStore);
                     break;
+                default:
+                    method = new CsvFileImportMethod(fileName, dataStore);
+                    break;
                 }
                 final MSDKMethod<?> finalMethod = method;
 
