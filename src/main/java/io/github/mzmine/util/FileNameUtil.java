@@ -31,7 +31,6 @@ import com.google.common.io.Files;
  */
 public class FileNameUtil {
 
-    @SuppressWarnings("null")
     public static @Nonnull String findCommonPrefix(
             @Nonnull List<File> fileNames) {
         if (fileNames.size() < 2)
@@ -53,7 +52,6 @@ public class FileNameUtil {
         return firstName;
     }
 
-    @SuppressWarnings("null")
     public static @Nonnull String findCommonSuffix(
             @Nonnull List<File> fileNames) {
         if (fileNames.size() < 2) {

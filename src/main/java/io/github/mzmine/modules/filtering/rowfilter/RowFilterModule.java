@@ -150,7 +150,7 @@ public class RowFilterModule implements MZmineProcessingModule {
                     removeDuplicates, duplicateMzTolerance,
                     duplicateRtTolerance, duplicateRequireSameID);
 
-            MSDKTask newTask = new MSDKTask("Row filtering features in tables",
+            MSDKTask newTask = new MSDKTask("Row filtering features in table",
                     featureTable.getName(), method);
 
             // Add the feature table to the project

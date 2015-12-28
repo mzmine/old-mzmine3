@@ -140,7 +140,8 @@
 				</Menu>
 				<Menu text="Isotopes">
 					<items>
-						<MenuItem text="Isotopic Grouper" />
+						<ModuleMenuItem text="Isotope Grouper"
+							moduleClass="io.github.mzmine.modules.isotopes.isotopegrouper.IsotopeGrouperModule" />
 					</items>
 				</Menu>
 				<Menu text="Filtering">
