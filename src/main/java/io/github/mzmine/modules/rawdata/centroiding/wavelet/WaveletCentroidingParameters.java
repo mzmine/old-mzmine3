@@ -21,7 +21,6 @@ package io.github.mzmine.modules.rawdata.centroiding.wavelet;
 
 import io.github.mzmine.parameters.Parameter;
 import io.github.mzmine.parameters.ParameterSet;
-import io.github.mzmine.parameters.parametertypes.DoubleParameter;
 import io.github.mzmine.parameters.parametertypes.IntegerParameter;
 import io.github.mzmine.parameters.parametertypes.PercentParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
@@ -30,10 +29,6 @@ import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParamete
 public class WaveletCentroidingParameters extends ParameterSet {
 
     public static final RawDataFilesParameter dataFiles = new RawDataFilesParameter();
-
-    public static final DoubleParameter noiseLevel = new DoubleParameter(
-            "Noise level",
-            "Intensities less than this value are interpreted as noise", "");
 
     public static final IntegerParameter scaleLevel = new IntegerParameter(
             "Scale level",
@@ -48,8 +43,7 @@ public class WaveletCentroidingParameters extends ParameterSet {
             "Suffix to add to the raw data file name", "centroided");
 
     public WaveletCentroidingParameters() {
-        super(new Parameter[] { dataFiles, noiseLevel, scaleLevel,
-                waveletWindow, suffix });
+        super(new Parameter[] { dataFiles, scaleLevel, waveletWindow, suffix });
     }
 
 }

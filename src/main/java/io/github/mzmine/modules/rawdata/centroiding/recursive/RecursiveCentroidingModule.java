@@ -69,9 +69,6 @@ public class RecursiveCentroidingModule implements MZmineProcessingModule {
         final RawDataFilesSelection rawDataFiles = parameters
                 .getParameter(RecursiveCentroidingParameters.dataFiles)
                 .getValue();
-        final Double noiseLevel = parameters
-                .getParameter(RecursiveCentroidingParameters.noiseLevel)
-                .getValue();
         final Range<Double> mzPeakWidth = RecursiveCentroidingParameters.mzPeakWidth
                 .getValue();
         final String suffix = parameters
@@ -96,7 +93,7 @@ public class RecursiveCentroidingModule implements MZmineProcessingModule {
 
             final String newName = rawDataFile.getName() + " " + suffix;
             RecursiveCentroidingAlgorithm algorithm = new RecursiveCentroidingAlgorithm(
-                    dataStore, noiseLevel.floatValue(), mzPeakWidth);
+                    dataStore, mzPeakWidth);
 
             MSDKCentroidingMethod method = new MSDKCentroidingMethod(
                     rawDataFile, algorithm, dataStore);
