@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
-import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
+import io.github.msdk.datamodel.datastore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.features.rowfilter.RowFilterMethod;
 import io.github.msdk.util.MZTolerance;

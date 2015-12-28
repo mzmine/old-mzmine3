@@ -32,8 +32,8 @@ import org.openscience.cdk.tools.manipulator.MolecularFormulaManipulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.msdk.datamodel.datapointstore.DataPointStore;
-import io.github.msdk.datamodel.datapointstore.DataPointStoreFactory;
+import io.github.msdk.datamodel.datastore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
