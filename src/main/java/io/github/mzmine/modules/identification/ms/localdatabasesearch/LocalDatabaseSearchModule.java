@@ -93,7 +93,8 @@ public class LocalDatabaseSearchModule implements MZmineProcessingModule {
                 .getParameter(LocalDatabaseSearchParameters.mzTolerance)
                 .getValue();
 
-        if (featureTables.getMatchingFeatureTables().isEmpty()) {
+        if (featureTables == null
+                || featureTables.getMatchingFeatureTables().isEmpty()) {
             logger.warn(
                     "Local database search module started with no feature tables selected");
             return;

@@ -104,7 +104,8 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
                 .getParameter(TargetedDetectionParameters.nameSuffix)
                 .getValue();
 
-        if (rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
+        if (rawDataFiles == null
+                || rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
             logger.warn(
                     "Targeted detection module started with no raw data files selected");
             return;

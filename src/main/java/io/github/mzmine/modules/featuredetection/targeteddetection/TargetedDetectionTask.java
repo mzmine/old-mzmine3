@@ -60,7 +60,7 @@ public class TargetedDetectionTask extends Task<Object> implements MZmineTask {
     private String title, message;
     private FeatureTable featureTable;
 
-    private MSDKMethod<?> targetedDetectionMethod;
+    private MSDKMethod<List<Chromatogram>> targetedDetectionMethod;
     private MSDKMethod<?> chromatogramToFeatureTableMethod;
 
     public TargetedDetectionTask(String title, @Nullable String message,
@@ -125,7 +125,7 @@ public class TargetedDetectionTask extends Task<Object> implements MZmineTask {
     @Override
     protected Object call() throws Exception {
         try {
-            List<Chromatogram> detectedChromatograms = (List<Chromatogram>) targetedDetectionMethod
+            List<Chromatogram> detectedChromatograms = targetedDetectionMethod
                     .execute();
 
             // Create a new feature table

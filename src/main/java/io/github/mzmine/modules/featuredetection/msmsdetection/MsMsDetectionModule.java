@@ -83,13 +83,14 @@ public class MsMsDetectionModule implements MZmineProcessingModule {
         final String nameSuffix = parameters
                 .getParameter(MsMsDetectionParameters.nameSuffix).getValue();
 
-        if (rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
+        if (rawDataFiles == null
+                || rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
             logger.warn(
                     "MS/MS detection module started with no raw data files selected");
             return;
         }
 
-        if (scanSelection.getMsLevel() == null
+        if (scanSelection == null || scanSelection.getMsLevel() == null
                 || !scanSelection.getMsLevel().equals(2)) {
             logger.warn(
                     "Only MS level 2 can be processed using this module. Please set it under the scan filter parameter");

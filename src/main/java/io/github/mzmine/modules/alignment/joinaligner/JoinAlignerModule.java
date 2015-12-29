@@ -79,11 +79,11 @@ public class JoinAlignerModule implements MZmineProcessingModule {
         final int rtWeight = parameters
                 .getParameter(JoinAlignerParameters.rtWeight).getValue();
 
-        final Boolean requireSameAnnotation = parameters
+        final boolean requireSameAnnotation = parameters
                 .getParameter(JoinAlignerParameters.requireSameAnnotation)
                 .getValue();
 
-        final Boolean requireSameCharge = parameters
+        final boolean requireSameCharge = parameters
                 .getParameter(JoinAlignerParameters.requireSameCharge)
                 .getValue();
 
@@ -91,10 +91,10 @@ public class JoinAlignerModule implements MZmineProcessingModule {
                 .getParameter(JoinAlignerParameters.featureTableName)
                 .getValue();
 
-        final Boolean removeOldTable = parameters
+        final boolean removeOldTable = parameters
                 .getParameter(JoinAlignerParameters.removeOldTable).getValue();
 
-        if (featureTables.getMatchingFeatureTables().isEmpty()) {
+        if (featureTables == null || featureTables.getMatchingFeatureTables().isEmpty()) {
             logger.warn(
                     "Match aligner module started with no feature table selected");
             return;

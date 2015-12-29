@@ -114,7 +114,8 @@ public class FeatureFilterModule implements MZmineProcessingModule {
         final String nameSuffix = parameters
                 .getParameter(FeatureFilterParameters.nameSuffix).getValue();
 
-        if (featureTables.getMatchingFeatureTables().isEmpty()) {
+        if (featureTables == null
+                || featureTables.getMatchingFeatureTables().isEmpty()) {
             MZmineGUI.displayMessage(
                     "Feature filter module started with no feature table selected.");
             logger.warn(
