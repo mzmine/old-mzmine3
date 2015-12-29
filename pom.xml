@@ -13,7 +13,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<cdk.version>1.5.11</cdk.version>
+		<cdk.version>1.5.12</cdk.version>
 		<controlsfx.version>8.40.10</controlsfx.version>
 	</properties>
 
