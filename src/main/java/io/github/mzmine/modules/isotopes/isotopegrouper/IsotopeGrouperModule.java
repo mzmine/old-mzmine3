@@ -93,7 +93,7 @@ public class IsotopeGrouperModule implements MZmineProcessingModule {
                 .getParameter(IsotopeGrouperParameters.removeOldTable)
                 .getValue();
 
-        if (featureTables.getMatchingFeatureTables().isEmpty()) {
+        if (featureTables == null || featureTables.getMatchingFeatureTables().isEmpty()) {
             logger.warn(
                     "Isotopic grouper module started with no feature table selected");
             return;

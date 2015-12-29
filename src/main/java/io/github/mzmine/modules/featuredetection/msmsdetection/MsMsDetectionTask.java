@@ -62,8 +62,8 @@ public class MsMsDetectionTask extends Task<Object> implements MZmineTask {
     private String title, message;
     private FeatureTable featureTable;
 
-    private MSDKMethod<?> msMsDetectionMethod;
-    private MSDKMethod<?> targetedDetectionMethod;
+    private MSDKMethod<List<IonAnnotation>> msMsDetectionMethod;
+    private MSDKMethod<List<Chromatogram>> targetedDetectionMethod;
     private MSDKMethod<?> chromatogramToFeatureTableMethod;
 
     public MsMsDetectionTask(String title, @Nullable String message,
@@ -136,8 +136,7 @@ public class MsMsDetectionTask extends Task<Object> implements MZmineTask {
     @Override
     protected Object call() throws Exception {
         try {
-            List<IonAnnotation> ionAnnotations = (List<IonAnnotation>) msMsDetectionMethod
-                    .execute();
+            List<IonAnnotation> ionAnnotations = msMsDetectionMethod.execute();
 
             // Run the targeted feature detection module
             this.targetedDetectionMethod = new TargetedDetectionMethod(
@@ -146,7 +145,7 @@ public class MsMsDetectionTask extends Task<Object> implements MZmineTask {
 
             // Run method
             try {
-                List<Chromatogram> detectedChromatograms = (List<Chromatogram>) targetedDetectionMethod
+                List<Chromatogram> detectedChromatograms = targetedDetectionMethod
                         .execute();
 
                 // Create a new feature table

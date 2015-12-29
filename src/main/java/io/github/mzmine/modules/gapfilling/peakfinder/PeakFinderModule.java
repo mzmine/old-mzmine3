@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.github.mzmine.modules.MZmineProcessingModule;
-import io.github.mzmine.modules.alignment.joinaligner.JoinAlignerParameters;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesSelection;
 import io.github.mzmine.project.MZmineProject;
@@ -64,7 +63,8 @@ public class PeakFinderModule implements MZmineProcessingModule {
         final String nameSuffix = parameters
                 .getParameter(PeakFinderParameters.nameSuffix).getValue();
 
-        if (featureTables.getMatchingFeatureTables().isEmpty()) {
+        if (featureTables == null
+                || featureTables.getMatchingFeatureTables().isEmpty()) {
             logger.warn(
                     "Peak finder module started with no feature table selected");
             return;

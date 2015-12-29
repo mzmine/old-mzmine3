@@ -127,7 +127,7 @@ public class RowFilterModule implements MZmineProcessingModule {
         final String nameSuffix = parameters
                 .getParameter(RowFilterParameters.nameSuffix).getValue();
 
-        if (featureTables.getMatchingFeatureTables().isEmpty()) {
+        if (featureTables == null || featureTables.getMatchingFeatureTables().isEmpty()) {
             logger.warn(
                     "Row filter module started with no feature table selected");
             return;
