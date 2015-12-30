@@ -19,6 +19,7 @@
 
 package io.github.mzmine.util;
 
+import java.util.List;
 import java.util.Map;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
@@ -202,11 +203,17 @@ public class TableUtils {
                     if (rt2 != null) {
                         text = text + rt2.toString();
                     }
-                } else if (object instanceof IonAnnotation) {
-                    IonAnnotation ionAnnotation = (IonAnnotation) object;
-                    text = ionAnnotation.getDescription();
-                    if (text == null)
-                        text = ionAnnotation.getAnnotationId();
+                } else if (object instanceof List) {
+                    text = "";
+                    List<IonAnnotation> ionAnnotations = (List<IonAnnotation>) object;
+                    for (IonAnnotation ionAnnotation : ionAnnotations) {
+                        if (text != "")
+                            text += ", ";
+                        if (ionAnnotation.getDescription() != null)
+                            text += ionAnnotation.getDescription();
+                        else
+                            text += ionAnnotation.getAnnotationId();
+                    }
                 } else if (object instanceof Chromatogram) {
                     continue;
                 } else {

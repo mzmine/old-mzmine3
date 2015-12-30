@@ -26,10 +26,10 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.msdk.MSDKMethod;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.features.isotopegrouper.IsotopeGrouperMethod;
 import io.github.msdk.util.MZTolerance;
 import io.github.msdk.util.RTTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;
@@ -82,18 +82,19 @@ public class IsotopeGrouperModule implements MZmineProcessingModule {
                 .getParameter(IsotopeGrouperParameters.representativeIsotope)
                 .getValue();
 
-        final boolean monotonicShape = parameters
+        final Boolean monotonicShape = parameters
                 .getParameter(IsotopeGrouperParameters.monotonicShape)
                 .getValue();
 
         final String nameSuffix = parameters
                 .getParameter(IsotopeGrouperParameters.nameSuffix).getValue();
 
-        final boolean removeOldTable = parameters
+        final Boolean removeOldTable = parameters
                 .getParameter(IsotopeGrouperParameters.removeOldTable)
                 .getValue();
 
-        if (featureTables == null || featureTables.getMatchingFeatureTables().isEmpty()) {
+        if (featureTables == null
+                || featureTables.getMatchingFeatureTables().isEmpty()) {
             logger.warn(
                     "Isotopic grouper module started with no feature table selected");
             return;
@@ -107,12 +108,15 @@ public class IsotopeGrouperModule implements MZmineProcessingModule {
             DataPointStore dataStore = DataPointStoreFactory
                     .getMemoryDataStore();
 
+            // Feature table name
+            String featureTableName = featureTable.getName();
+            if (nameSuffix != null)
+                featureTableName += nameSuffix;
+
             // New isotope grouper method
-            // IsotopeGrouperMethod method = new
-            // IsotopeGrouperMethod(featureTable,
-            // dataStore, nameSuffix, mzTolerance, rtTolerance,
-            // maximumCharge, monotonicShape);
-            MSDKMethod<FeatureTable> method = null;
+            IsotopeGrouperMethod method = new IsotopeGrouperMethod(featureTable,
+                    dataStore, mzTolerance, rtTolerance, maximumCharge,
+                    monotonicShape, featureTableName);
 
             MSDKTask newTask = new MSDKTask(
                     "Isotope grouping features in table",
@@ -124,7 +128,7 @@ public class IsotopeGrouperModule implements MZmineProcessingModule {
                 project.addFeatureTable(newFeatureTable);
 
                 // If selected, remove old feature table
-                if (removeOldTable) {
+                if (removeOldTable != null && removeOldTable) {
                     project.removeFeatureTable(featureTable);
                 }
             });
