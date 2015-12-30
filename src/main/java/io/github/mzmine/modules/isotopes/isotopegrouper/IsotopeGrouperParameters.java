@@ -70,7 +70,7 @@ public class IsotopeGrouperParameters extends ParameterSet {
 
     public static final BooleanParameter monotonicShape = new BooleanParameter(
             "Monotonic shape?",
-            "If checked, then then a monotonically decreasing height of the isotope pattern in required.",
+            "If checked, a monotonically decreasing height of the isotope pattern in required.",
             "Algorithm Parameters", false);
 
     public static final StringParameter nameSuffix = new StringParameter(
