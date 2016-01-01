@@ -192,7 +192,8 @@
 			<items>
 				<Menu text="Raw Data">
 					<items>
-						<MenuItem text="Spectra Plot" />
+						<ModuleMenuItem text="Spectra Plot"
+							moduleClass="io.github.mzmine.modules.plots.msspectrum.MsSpectrumPlotModule" />
 						<ModuleMenuItem text="Chromatogram Plot"
 							moduleClass="io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotModule" />
 						<MenuItem text="2D Plot" />
