@@ -20,21 +20,22 @@
 package io.github.mzmine.modules.plots.msspectrum;
 
 import io.github.mzmine.parameters.ParameterSet;
-import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
+import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
+import io.github.mzmine.parameters.parametertypes.selectors.ScanSelectionParameter;
 
 public class MsSpectrumPlotParameters extends ParameterSet {
 
     public static final RawDataFilesParameter inputFiles = new RawDataFilesParameter();
 
-    public static final StringParameter param1 = new StringParameter("aaa",
-            "bbb", "ccc");
+    public static final ScanSelectionParameter scanSelection = new ScanSelectionParameter(
+            new ScanSelection(1));
 
     /**
      * Create the parameter set.
      */
     public MsSpectrumPlotParameters() {
-        super(inputFiles, param1);
+        super(inputFiles, scanSelection);
     }
 
 }

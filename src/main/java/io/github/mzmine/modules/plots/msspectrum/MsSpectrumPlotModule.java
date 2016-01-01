@@ -24,12 +24,17 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Preconditions;
+
+import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.modules.MZmineRunnableModule;
-import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotParameters;
 import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;
+import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.project.MZmineProject;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 
 /**
@@ -37,8 +42,8 @@ import javafx.concurrent.Task;
  */
 public class MsSpectrumPlotModule implements MZmineRunnableModule {
 
-    private static final @Nonnull String MODULE_NAME = "Spectrum plot";
-    private static final @Nonnull String MODULE_DESCRIPTION = "Spectrum plot";
+    private static final @Nonnull String MODULE_NAME = "MS spectrum plot";
+    private static final @Nonnull String MODULE_DESCRIPTION = "MS spectrum plot";
 
     @Override
     public @Nonnull String getName() {
@@ -55,23 +60,40 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
             @Nonnull ParameterSet parameters,
             @Nonnull Collection<Task<?>> tasks) {
 
-        final List<RawDataFile> dataFiles = parameters
-                .getParameter(ChromatogramPlotParameters.inputFiles).getValue()
-                .getMatchingRawDataFiles();
+        final RawDataFilesSelection fileSelection = parameters
+                .getParameter(MsSpectrumPlotParameters.inputFiles).getValue()
+                ;
 
+        final ScanSelection scanSelection = parameters
+                .getParameter(MsSpectrumPlotParameters.scanSelection).getValue()
+                ;
+        
+        Preconditions.checkNotNull(fileSelection);
+        Preconditions.checkNotNull(scanSelection);
+        
+        final List<RawDataFile> dataFiles  = fileSelection.getMatchingRawDataFiles();
+        
         // Add the window to the desktop only if we actually have any raw
         // data to show.
         boolean weHaveData = false;
         for (RawDataFile dataFile : dataFiles) {
-            // TODO: check scans
+            if (! scanSelection.getMatchingScans(dataFile).isEmpty()) {
+                weHaveData = true; break;
+            }
         }
         weHaveData = true;
 
         if (weHaveData) {
-            MsSpectrumPlotWindow newWindow = new MsSpectrumPlotWindow();
-            MZmineGUI.addWindow(newWindow, "Chromatogram");
+            MsSpectrumPlotWindow spectrumPlotWindow = new MsSpectrumPlotWindow();
+            MZmineGUI.addWindow(spectrumPlotWindow, "MS spectrum");
+            Platform.runLater(() -> {
+                for (RawDataFile dataFile : dataFiles) {
+                    for (MsScan scan : scanSelection.getMatchingScans(dataFile) ) {
+                        spectrumPlotWindow.addSpectrum(scan);
+                    }
+                }
+            });
         } else {
-
             MZmineGUI.displayMessage("No scans found");
         }
 

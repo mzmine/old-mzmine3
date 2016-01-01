@@ -19,51 +19,33 @@
 
 package io.github.mzmine.modules.plots.msspectrum;
 
-import io.github.mzmine.util.JavaFXUtil;
-import javafx.scene.Node;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
+import javax.annotation.Nonnull;
+
+import com.google.common.base.Preconditions;
+
+import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import javafx.scene.layout.BorderPane;
 
 /**
- * Chromatogram plot window
+ * MS spectrum plot window
  */
 public class MsSpectrumPlotWindow extends BorderPane {
 
+    private final MsSpectrumPlotChartNode chartNode;
+
     MsSpectrumPlotWindow() {
+        this.chartNode = new MsSpectrumPlotChartNode();
+        setCenter(chartNode);
+    }
 
-        final NumberAxis xAxis = new NumberAxis();
-        final NumberAxis yAxis = new NumberAxis();
-
-        xAxis.setLabel("Month");
-        final LineChart<Number, Number> lineChart = new LineChart<>(xAxis,
-                yAxis);
-
-        lineChart.setTitle("Stock Monitoring, 2010");
-        lineChart.setCreateSymbols(false);
-        XYChart.Series series1 = new XYChart.Series();
-        series1.setName("Portfolio 1");
-
-        series1.getData().add(new XYChart.Data(10, 23));
-        series1.getData().add(new XYChart.Data(12, 14));
-        series1.getData().add(new XYChart.Data(13, 15));
-        series1.getData().add(new XYChart.Data(14, 24));
-        series1.getData().add(new XYChart.Data(15, 34));
-        series1.getData().add(new XYChart.Data(18, 36));
-        series1.getData().add(new XYChart.Data(19, 22));
-        series1.getData().add(new XYChart.Data(22, 45));
-        series1.getData().add(new XYChart.Data(23, 43));
-        series1.getData().add(new XYChart.Data(26, 17));
-        series1.getData().add(new XYChart.Data(27, 29));
-        series1.getData().add(new XYChart.Data(28, 25));
-
-        lineChart.getData().addAll(series1);
-
-        Node zoomedChart = JavaFXUtil.addZoomSupport(lineChart);
-
-        setCenter(zoomedChart);
-
+    /**
+     * Add a new spectrum to the plot.
+     * 
+     * @param spectrum
+     */
+    public void addSpectrum(@Nonnull MsSpectrum spectrum) {
+        Preconditions.checkNotNull(spectrum);
+        chartNode.addSpectrum(spectrum);
     }
 
 }
