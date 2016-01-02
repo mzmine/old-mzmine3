@@ -11,9 +11,19 @@
     -fx-font-size: 10.0pt;
 }
 
-/* Default chart color set to blue */
-.default-color0.chart-series-line { -fx-stroke: #0096c9; }
-.default-color0.chart-line-symbol { -fx-background-color: #0096c9, white; }
+.chart-item-label {
+	-fx-font-size: 8.0pt;
+}
+
+.chart {
+	-fx-background-color: white;  
+}
+
+.chart-series-line {
+    -fx-stroke-width: 1.0px;
+    -fx-effect: null;
+	-fx-background-color: white;  
+}
 
 /* Some useful CSS properties:
 :focused {

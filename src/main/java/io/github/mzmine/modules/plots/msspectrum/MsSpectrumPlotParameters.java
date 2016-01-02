@@ -19,7 +19,10 @@
 
 package io.github.mzmine.modules.plots.msspectrum;
 
+import java.util.Arrays;
+
 import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.parameters.parametertypes.ComboParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.parameters.parametertypes.selectors.ScanSelectionParameter;
@@ -31,11 +34,15 @@ public class MsSpectrumPlotParameters extends ParameterSet {
     public static final ScanSelectionParameter scanSelection = new ScanSelectionParameter(
             new ScanSelection(1));
 
+    public static final ComboParameter<PlottingLibrary> plottingLibrary = new ComboParameter<>(
+            "Ploting library", "Select library to use for chart rendering",
+            "Category", Arrays.asList(PlottingLibrary.values()));
+
     /**
      * Create the parameter set.
      */
     public MsSpectrumPlotParameters() {
-        super(inputFiles, scanSelection);
+        super(inputFiles, scanSelection, plottingLibrary);
     }
 
 }

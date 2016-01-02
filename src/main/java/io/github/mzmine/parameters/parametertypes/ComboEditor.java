@@ -48,9 +48,12 @@ public class ComboEditor<ValueType> extends ChoiceBox<ValueType>
         ObservableList<ValueType> optionsList = (ObservableList<ValueType>) comboParameter
                 .getOptions();
 
-        if (optionsList != null)
+        if (optionsList != null) {
             setItems(optionsList);
+        }
 
+        getSelectionModel().selectFirst();
+        
     }
 
     @Override

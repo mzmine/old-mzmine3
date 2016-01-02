@@ -25,12 +25,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javax.annotation.Nonnull;
-
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.TaskProgressView;
-import org.dockfx.DockNode;
-import org.dockfx.DockPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,16 +54,23 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
- * This class is the main window of application
+ * This class controls the main window of the application
  * 
  */
 public class MainWindowController implements Initializable {
@@ -75,8 +78,13 @@ public class MainWindowController implements Initializable {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @FXML
-    private DockPane mainDockPane;
-    private DockNode visualizerDock;
+    private BorderPane mainWindowPane;
+
+    @FXML
+    private BorderPane mainContentPane;
+
+    @FXML
+    private TabPane mainTabPane;
 
     @FXML
     private TreeView<RawDataTreeItem> rawDataTree;
@@ -95,6 +103,11 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private Label memoryBarLabel;
+
+    @FXML
+    private Button detachButton;
+
+    private String currentNodeTitle;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -193,18 +206,6 @@ public class MainWindowController implements Initializable {
 
     }
 
-    public DockPane getMainDockPane() {
-        return mainDockPane;
-    }
-
-    public DockNode getVisualizerDock() {
-        return visualizerDock;
-    }
-
-    public void setVisualizerDock(@Nonnull DockNode visualizerDock) {
-        this.visualizerDock = visualizerDock;
-    }
-
     public TreeView<RawDataTreeItem> getRawDataTree() {
         return rawDataTree;
     }
@@ -294,6 +295,50 @@ public class MainWindowController implements Initializable {
                 parent.getChildren().remove(row);
             }
             featureTree.getSelectionModel().clearSelection();
+        }
+    }
+
+    @FXML
+    protected void detachCurrentNode(ActionEvent event) {
+
+        Node currentNode = mainContentPane.getCenter();
+        if (currentNode == null)
+            return;
+
+        mainContentPane.setCenter(new Pane());
+
+        BorderPane parent = new BorderPane();
+        parent.setCenter(currentNode);
+        Scene newScene = new Scene(parent);
+
+        // Copy CSS styles
+        newScene.getStylesheets()
+                .addAll(mainWindowPane.getScene().getStylesheets());
+
+        Stage newStage = new Stage();
+        newStage.setTitle(currentNodeTitle);
+        newStage.setScene(newScene);
+        newStage.show();
+
+        detachButton.setDisable(true);
+
+    }
+
+    public void addWindow(Node node, String title) {
+        mainContentPane.setCenter(node);
+        this.currentNodeTitle = title;
+        detachButton.setDisable(false);
+    }
+
+    public void setSelectedTab(String tabName) {
+        switch (tabName) {
+        default:
+        case "RawData":
+            mainTabPane.getSelectionModel().select(0);
+            break;
+        case "FeatureTable":
+            mainTabPane.getSelectionModel().select(1);
+            break;
         }
     }
 
