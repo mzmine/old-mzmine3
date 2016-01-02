@@ -154,8 +154,8 @@ public class ChartNodeJFreeChart extends BorderPane implements ChartNode {
         };
 
         plot.setDataset(numberOfDataSets, dataset);
-        plot.getRenderer()
-                .setBaseItemLabelGenerator(new SpectraItemLabelGenerator());
+        plot.getRenderer().setBaseItemLabelGenerator(new SpectraItemLabelGenerator());
+        plot.getRenderer().setBaseItemLabelsVisible(true);
         numberOfDataSets++;
 
     }
@@ -173,7 +173,7 @@ public class ChartNodeJFreeChart extends BorderPane implements ChartNode {
          *      int, int)
          */
         public String generateLabel(XYDataset dataset, int series, int item) {
-
+            
             // X and Y values of current data point
             double originalX = dataset.getX(series, item).doubleValue();
             double originalY = dataset.getY(series, item).doubleValue();
