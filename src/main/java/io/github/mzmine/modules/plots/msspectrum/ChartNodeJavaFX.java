@@ -19,12 +19,16 @@
 
 package io.github.mzmine.modules.plots.msspectrum;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.util.JavaFXUtil;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -53,6 +57,7 @@ public class ChartNodeJavaFX extends BorderPane implements ChartNode {
 
         lineChart.setTitle("MS spectrum");
         lineChart.setCreateSymbols(false);
+        lineChart.setAnimated(false);
 
         Node zoomedChart = JavaFXUtil.addZoomSupport(lineChart);
 
@@ -84,10 +89,16 @@ public class ChartNodeJavaFX extends BorderPane implements ChartNode {
             final double mz = mzValues[i];
             XYChart.Data<Number, Number> newData = new XYChart.Data<>(mz,
                     intensity);
-            String labelText = MZmineCore.getConfiguration().getMZFormat()
-                    .format(mz);
-            Text labelNode = new Text(labelText);
+            Text labelNode = new Text();
+
+            labelNode.getStyleClass().add("chart-item-label");
+            String tooltipText = "m/z: "
+                    + MZmineCore.getConfiguration().getMZFormat().format(mz)
+                    + "\nIntensity: " + MZmineCore.getConfiguration()
+                            .getIntensityFormat().format(intensity);
+            Tooltip.install(labelNode, new Tooltip(tooltipText));
             newData.setNode(labelNode);
+
             if (centroided) {
                 XYChart.Data<Number, Number> zeroPoint = new XYChart.Data<>(mz,
                         0.0);
@@ -103,37 +114,101 @@ public class ChartNodeJavaFX extends BorderPane implements ChartNode {
         }
 
         xAxis.lowerBoundProperty().addListener(e -> {
-            // updateLabels();
+            updateLabels();
+        });
+        xAxis.upperBoundProperty().addListener(e -> {
+            updateLabels();
         });
 
-        lineChart.setStyle("-fx-stroke-width: 5px");
+        lineChart.getStyleClass().add("spectrum-plot");
+
         lineChart.getData().add(newSeries);
+        updateLabels();
 
     }
 
     private void updateLabels() {
 
-        System.out.println("zoomed");
-        for (XYChart.Series<Number, Number> series : lineChart.getData()) {
-            for (XYChart.Data<Number, Number> data : series.getData()) {
-                double mz = data.getXValue().doubleValue();
+        List<XYChart.Series<Number, Number>> seriesCopy = new ArrayList<>();
+        seriesCopy.addAll(lineChart.getData());
+
+        for (XYChart.Series<Number, Number> series : seriesCopy) {
+            ObservableList<XYChart.Data<Number, Number>> seriesData = series
+                    .getData();
+
+            for (int i = 0; i < seriesData.size(); i++) {
+                XYChart.Data<Number, Number> data = seriesData.get(i);
                 float intensity = data.getYValue().floatValue();
                 if (intensity == 0f)
                     continue;
-                String tooltipText = "m/z: "
-                        + MZmineCore.getConfiguration().getMZFormat().format(mz)
-                        + "\\nIntensity: " + MZmineCore.getConfiguration()
-                                .getIntensityFormat().format(intensity);
-                Text labelNode = new Text("Test");
-                System.out.println(data.getNode());
-                data.setNode(labelNode);
-                Tooltip.install(data.getNode(), new Tooltip(tooltipText));
-                System.out.println(
-                        "adding label to mz  " + mz + " " + tooltipText);
+                Text labelNode = (Text) data.getNode();
+                if (labelNode == null)
+                    continue;
+
+                boolean visible = shouldLabelBeVisible(seriesData, i);
+                if (visible) {
+                    double mz = data.getXValue().doubleValue();
+                    String labelText = MZmineCore.getConfiguration()
+                            .getMZFormat().format(mz);
+                    labelNode.setText(labelText);
+                } else
+                    labelNode.setText("    ");
+
             }
-            // series.setNode(new Text("seriesXX"));
-            // lineChart.getData().remove(series);
         }
+
+    }
+
+    private boolean shouldLabelBeVisible(
+            ObservableList<XYChart.Data<Number, Number>> seriesData, int item) {
+
+        // X and Y values of current data point
+        double originalX = seriesData.get(item).getXValue().doubleValue();
+        double originalY = seriesData.get(item).getYValue().doubleValue();
+
+        // Calculate data size of 1 screen pixel
+        double xLength = xAxis.getUpperBound() - xAxis.getLowerBound();
+        double pixelX = xLength / lineChart.getWidth();
+
+        // Size of data set
+        int itemCount = seriesData.size();
+        int POINTS_RESERVE_X = 100;
+
+        // Search for data points higher than this one in the interval
+        // from limitLeft to limitRight
+        double limitLeft = originalX - ((POINTS_RESERVE_X / 2) * pixelX);
+        double limitRight = originalX + ((POINTS_RESERVE_X / 2) * pixelX);
+
+        // Iterate data points to the left and right
+        for (int i = 1; (item - i > 0) || (item + i < itemCount); i++) {
+
+            // If we get out of the limit we can stop searching
+            if ((item - i > 0)
+                    && (seriesData.get(item - i).getXValue()
+                            .doubleValue() < limitLeft)
+                    && ((item + i >= itemCount) || (seriesData.get(item + i)
+                            .getXValue().doubleValue() > limitRight)))
+                break;
+
+            if ((item + i < itemCount)
+                    && (seriesData.get(item + i).getXValue()
+                            .doubleValue() > limitRight)
+                    && ((item - i <= 0) || (seriesData.get(item - i).getXValue()
+                            .doubleValue() < limitLeft)))
+                break;
+
+            // If we find higher data point, bail out
+            if ((item - i > 0) && (originalY <= seriesData.get(item - i)
+                    .getYValue().doubleValue()))
+                return false;
+
+            if ((item + i < itemCount) && (originalY <= seriesData.get(item + i)
+                    .getYValue().doubleValue()))
+                return false;
+
+        }
+
+        return true;
 
     }
 }

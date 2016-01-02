@@ -9,9 +9,6 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
 	fx:id="mainWindowPane" fx:controller="io.github.mzmine.gui.mainwindow.MainWindowController">
-	<stylesheets>
-		<URL value="@MainWindow.css" />
-	</stylesheets>
 	<top>
 		<fx:include source="MainMenu.fxml" />
 	</top>

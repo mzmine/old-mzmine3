@@ -66,7 +66,9 @@ public final class MZmineGUI extends Application {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final Image mzMineIcon = new Image(
-            "file:icon" + File.separator + "mzmine-icon.png");
+            "file:icon/mzmine-icon.png");
+    private static final String mzMineFXML = "file:conf/MainWindow.fxml";
+    private static final String mzMineCSS = "file:conf/MZmine.css";
 
     private static MainWindowController mainWindowController;
 
@@ -74,12 +76,14 @@ public final class MZmineGUI extends Application {
 
         try {
             // Load the main window
-            URL mainFXML = new File("conf/MainWindow.fxml").toURI().toURL();
+            URL mainFXML = new File(mzMineFXML).toURI().toURL();
+            mainFXML = new URL(mzMineFXML);
             FXMLLoader loader = new FXMLLoader(mainFXML);
 
             BorderPane rootPane = (BorderPane) loader.load();
             mainWindowController = loader.getController();
             Scene scene = new Scene(rootPane, 1000, 600, Color.WHITE);
+            scene.getStylesheets().add(mzMineCSS);
             stage.setScene(scene);
 
         } catch (IOException e) {

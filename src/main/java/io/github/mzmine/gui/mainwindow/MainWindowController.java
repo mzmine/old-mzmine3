@@ -65,6 +65,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -304,14 +305,15 @@ public class MainWindowController implements Initializable {
         if (currentNode == null)
             return;
 
-        mainContentPane.setCenter(null);
+        mainContentPane.setCenter(new Pane());
 
         BorderPane parent = new BorderPane();
         parent.setCenter(currentNode);
         Scene newScene = new Scene(parent);
 
         // Copy CSS styles
-        newScene.getStylesheets().addAll(mainWindowPane.getStylesheets());
+        newScene.getStylesheets()
+                .addAll(mainWindowPane.getScene().getStylesheets());
 
         Stage newStage = new Stage();
         newStage.setTitle(currentNodeTitle);
