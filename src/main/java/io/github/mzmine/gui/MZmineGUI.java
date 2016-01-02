@@ -29,10 +29,6 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 
 import org.controlsfx.control.StatusBar;
-import org.controlsfx.control.TaskProgressView;
-import org.dockfx.DockNode;
-import org.dockfx.DockPane;
-import org.dockfx.DockPos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,22 +44,13 @@ import io.github.mzmine.project.MZmineGUIProject;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
@@ -76,30 +63,24 @@ import javafx.stage.Stage;
  */
 public final class MZmineGUI extends Application {
 
-    private static final File MENU_FILE = new File("conf/MainMenu.fxml");
-
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final Image mzMineIcon = new Image(
             "file:icon" + File.separator + "mzmine-icon.png");
 
     private static MainWindowController mainWindowController;
-    private static TabPane tabs = new TabPane();
 
     public void start(Stage stage) {
 
         try {
             // Load the main window
-            URL mainFXML = getClass().getResource("mainwindow/MainWindow.fxml");
+            URL mainFXML = new File("conf/MainWindow.fxml").toURI().toURL();
             FXMLLoader loader = new FXMLLoader(mainFXML);
+
             BorderPane rootPane = (BorderPane) loader.load();
             mainWindowController = loader.getController();
             Scene scene = new Scene(rootPane, 1000, 600, Color.WHITE);
             stage.setScene(scene);
-
-            // Load menu
-            MenuBar menu = (MenuBar) FXMLLoader.load(MENU_FILE.toURI().toURL());
-            rootPane.setTop(menu);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -107,62 +88,7 @@ public final class MZmineGUI extends Application {
             Platform.exit();
         }
 
-        // Configure DockFX - currently does not support FXML
-        DockPane dockPane = mainWindowController.getMainDockPane();
-        DockNode visualizerDock = mainWindowController.getVisualizerDock();
-        TreeView<?> rawDataTree = mainWindowController.getRawDataTree();
-        TreeView<?> featureTableTree = mainWindowController.getFeatureTree();
-        TaskProgressView<?> tasksView = mainWindowController.getTaskTable();
-
-        // Add raw data file and feature table trees to tabs
-        Tab fileTab = new Tab("Raw Data", rawDataTree);
-        fileTab.setClosable(false);
-        Tab featureTab = new Tab("Feature Tables", featureTableTree);
-        featureTab.setClosable(false);
-        tabs.getTabs().addAll(fileTab, featureTab);
-
-        DockNode tabsDock = new DockNode(tabs);
-        tabsDock.setDockTitleBar(null); // Disable undocking
-        tabsDock.setPrefSize(200, 400);
-        tabsDock.setMinHeight(400);
-        tabsDock.setVisible(true);
-        tabsDock.dock(dockPane, DockPos.LEFT);
-
-        // Sample Line Chart
-        NumberAxis xAxis = new NumberAxis();
-        NumberAxis yAxis = new NumberAxis();
-        xAxis.setLabel("Label X");
-        final LineChart<Number, Number> lineChart = new LineChart<Number, Number>(
-                xAxis, yAxis);
-        lineChart.setTitle("Line Chart Example");
-        XYChart.Series series = new XYChart.Series();
-        series.setName("Sample X");
-        series.getData().add(new XYChart.Data(1, 23));
-        series.getData().add(new XYChart.Data(2, 14));
-        series.getData().add(new XYChart.Data(3, 15));
-        series.getData().add(new XYChart.Data(4, 24));
-        series.getData().add(new XYChart.Data(5, 34));
-        series.getData().add(new XYChart.Data(6, 36));
-        series.getData().add(new XYChart.Data(7, 22));
-        series.getData().add(new XYChart.Data(8, 45));
-        series.getData().add(new XYChart.Data(9, 43));
-        series.getData().add(new XYChart.Data(10, 17));
-        series.getData().add(new XYChart.Data(11, 29));
-        series.getData().add(new XYChart.Data(12, 25));
-        lineChart.getData().addAll(series);
-
-        // Initial dock for visualizers
-        visualizerDock = new DockNode(lineChart, "Example Line Chart");
-        visualizerDock.setPrefWidth(650);
-        visualizerDock.dock(dockPane, DockPos.RIGHT);
-        mainWindowController.setVisualizerDock(visualizerDock);
-
         // Add task table
-        DockNode taskDock = new DockNode(tasksView);
-        taskDock.setPrefHeight(100);
-        taskDock.setVisible(true);
-        taskDock.setClosable(false);
-        taskDock.dock(dockPane, DockPos.BOTTOM);
 
         stage.setTitle("MZmine " + MZmineCore.getMZmineVersion());
         stage.setMinWidth(300);
@@ -181,7 +107,6 @@ public final class MZmineGUI extends Application {
         MZmineGUI.activateProject(project);
 
         stage.show();
-        DockPane.initializeDefaultUserAgentStylesheet();
 
     }
 
@@ -242,53 +167,11 @@ public final class MZmineGUI extends Application {
     }
 
     public static void setSelectedTab(String tabName) {
-        switch (tabName) {
-        case "RawData":
-            tabs.getSelectionModel().select(0);
-            break;
-        case "FeatureTable":
-            tabs.getSelectionModel().select(1);
-            break;
-        default:
-            tabs.getSelectionModel().select(0);
-            break;
-        }
+        mainWindowController.setSelectedTab(tabName);
     }
 
     public static void addWindow(Node node, String title) {
-
-        // New dock
-        final DockNode newDock = new DockNode(node, " " + title);
-        newDock.getStylesheets().add("Windows.css");
-
-        // Add default button
-        ToggleButton DefaultButton;
-        DefaultButton = new ToggleButton();
-        DefaultButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("Selected property: "
-                        + DefaultButton.selectedProperty());
-            }
-        });
-        DefaultButton.setMinSize(16, 20);
-        DefaultButton.setMaxSize(16, 20);
-        newDock.getDockTitleBar().getChildren().add(DefaultButton);
-
-        DockPane mainDockPane = mainWindowController.getMainDockPane();
-
-        newDock.setPrefSize(1000, 600);
-        newDock.dock(mainDockPane, DockPos.RIGHT);
-        newDock.setFloatable(true);
-
-        // Fix for DockFX bug
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                newDock.setFloating(true);
-            }
-        });
-
+        mainWindowController.addWindow(node, title);
     }
 
     public static void activateProject(MZmineGUIProject project) {
