@@ -61,34 +61,41 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
             @Nonnull Collection<Task<?>> tasks) {
 
         final RawDataFilesSelection fileSelection = parameters
-                .getParameter(MsSpectrumPlotParameters.inputFiles).getValue()
-                ;
+                .getParameter(MsSpectrumPlotParameters.inputFiles).getValue();
 
         final ScanSelection scanSelection = parameters
-                .getParameter(MsSpectrumPlotParameters.scanSelection).getValue()
-                ;
-        
+                .getParameter(MsSpectrumPlotParameters.scanSelection)
+                .getValue();
+
+        final PlottingLibrary library = parameters
+                .getParameter(MsSpectrumPlotParameters.plottingLibrary)
+                .getValue();
+
         Preconditions.checkNotNull(fileSelection);
         Preconditions.checkNotNull(scanSelection);
-        
-        final List<RawDataFile> dataFiles  = fileSelection.getMatchingRawDataFiles();
-        
+
+        final List<RawDataFile> dataFiles = fileSelection
+                .getMatchingRawDataFiles();
+
         // Add the window to the desktop only if we actually have any raw
         // data to show.
         boolean weHaveData = false;
         for (RawDataFile dataFile : dataFiles) {
-            if (! scanSelection.getMatchingScans(dataFile).isEmpty()) {
-                weHaveData = true; break;
+            if (!scanSelection.getMatchingScans(dataFile).isEmpty()) {
+                weHaveData = true;
+                break;
             }
         }
         weHaveData = true;
 
         if (weHaveData) {
-            MsSpectrumPlotWindow spectrumPlotWindow = new MsSpectrumPlotWindow();
+            MsSpectrumPlotWindow spectrumPlotWindow = new MsSpectrumPlotWindow(
+                    library);
             MZmineGUI.addWindow(spectrumPlotWindow, "MS spectrum");
             Platform.runLater(() -> {
                 for (RawDataFile dataFile : dataFiles) {
-                    for (MsScan scan : scanSelection.getMatchingScans(dataFile) ) {
+                    for (MsScan scan : scanSelection
+                            .getMatchingScans(dataFile)) {
                         spectrumPlotWindow.addSpectrum(scan);
                     }
                 }

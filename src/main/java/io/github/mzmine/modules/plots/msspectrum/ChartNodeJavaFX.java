@@ -22,6 +22,7 @@ package io.github.mzmine.modules.plots.msspectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.util.JavaFXUtil;
 import javafx.scene.Node;
@@ -30,16 +31,17 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 
 /**
- * Chromatogram plot chart
+ * Chart using JavaFX charts library
  */
-public class MsSpectrumPlotChartNode extends BorderPane {
+public class ChartNodeJavaFX extends BorderPane implements ChartNode {
 
     private final NumberAxis xAxis, yAxis;
     private final LineChart<Number, Number> lineChart;
 
-    MsSpectrumPlotChartNode() {
+    ChartNodeJavaFX() {
 
         xAxis = new NumberAxis();
         yAxis = new NumberAxis();
@@ -58,15 +60,17 @@ public class MsSpectrumPlotChartNode extends BorderPane {
 
     }
 
-    void addSpectrum(MsSpectrum spectrum) {
+    public synchronized void addSpectrum(MsSpectrum spectrum) {
 
         XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
 
         String spectrumTitle = "MS spectrum";
         if (spectrum instanceof MsScan) {
             MsScan scan = (MsScan) spectrum;
-            spectrumTitle += " " + scan.getRawDataFile().getName() + "#"
-                    + scan.getScanNumber();
+            RawDataFile dataFile = scan.getRawDataFile();
+            if (dataFile != null)
+                spectrumTitle += " " + dataFile.getName();
+            spectrumTitle += "#" + scan.getScanNumber();
         }
         newSeries.setName(spectrumTitle);
 
@@ -78,12 +82,12 @@ public class MsSpectrumPlotChartNode extends BorderPane {
         for (int i = 0; i < spectrum.getNumberOfDataPoints(); i++) {
             final float intensity = intensityValues[i];
             final double mz = mzValues[i];
-            String tooltipText = MZmineCore.getConfiguration().getMZFormat()
-                    .format(mz);
             XYChart.Data<Number, Number> newData = new XYChart.Data<>(mz,
                     intensity);
-            Tooltip.install(newData.getNode(), new Tooltip(tooltipText));
-
+            String labelText = MZmineCore.getConfiguration().getMZFormat()
+                    .format(mz);
+            Text labelNode = new Text(labelText);
+            newData.setNode(labelNode);
             if (centroided) {
                 XYChart.Data<Number, Number> zeroPoint = new XYChart.Data<>(mz,
                         0.0);
@@ -98,8 +102,38 @@ public class MsSpectrumPlotChartNode extends BorderPane {
 
         }
 
+        xAxis.lowerBoundProperty().addListener(e -> {
+            // updateLabels();
+        });
+
+        lineChart.setStyle("-fx-stroke-width: 5px");
         lineChart.getData().add(newSeries);
 
     }
 
+    private void updateLabels() {
+
+        System.out.println("zoomed");
+        for (XYChart.Series<Number, Number> series : lineChart.getData()) {
+            for (XYChart.Data<Number, Number> data : series.getData()) {
+                double mz = data.getXValue().doubleValue();
+                float intensity = data.getYValue().floatValue();
+                if (intensity == 0f)
+                    continue;
+                String tooltipText = "m/z: "
+                        + MZmineCore.getConfiguration().getMZFormat().format(mz)
+                        + "\\nIntensity: " + MZmineCore.getConfiguration()
+                                .getIntensityFormat().format(intensity);
+                Text labelNode = new Text("Test");
+                System.out.println(data.getNode());
+                data.setNode(labelNode);
+                Tooltip.install(data.getNode(), new Tooltip(tooltipText));
+                System.out.println(
+                        "adding label to mz  " + mz + " " + tooltipText);
+            }
+            // series.setNode(new Text("seriesXX"));
+            // lineChart.getData().remove(series);
+        }
+
+    }
 }

@@ -134,9 +134,33 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.dockfx</groupId>
+			<groupId>dockfx</groupId>
 			<artifactId>dockfx</artifactId>
 			<version>0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jfreechart</groupId>
+			<artifactId>jfreechart</artifactId>
+			<version>1.0.19-fx</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jcommon</artifactId>
+			<version>1.0.23</version>
+		</dependency>
+
+		<dependency>
+			<groupId>waterloofx</groupId>
+			<artifactId>waterloofx</artifactId>
+			<version>0.8-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jfxchartext</groupId>
+			<artifactId>jfxchartext</artifactId>
+			<version>1.0</version>
 		</dependency>
 
 		<dependency>

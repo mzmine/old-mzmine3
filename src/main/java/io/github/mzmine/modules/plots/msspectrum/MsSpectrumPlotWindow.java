@@ -31,11 +31,27 @@ import javafx.scene.layout.BorderPane;
  */
 public class MsSpectrumPlotWindow extends BorderPane {
 
-    private final MsSpectrumPlotChartNode chartNode;
+    private final ChartNode chart;
 
-    MsSpectrumPlotWindow() {
-        this.chartNode = new MsSpectrumPlotChartNode();
-        setCenter(chartNode);
+    MsSpectrumPlotWindow(PlottingLibrary library) {
+        switch (library) {
+        case JFREECHART:
+            ChartNodeJFreeChart jfreeNode = new ChartNodeJFreeChart();
+            this.chart = jfreeNode;
+            setCenter(jfreeNode);
+            break;
+        case WATERLOOFX:
+            ChartNodeWaterlooFX waterlooNode = new ChartNodeWaterlooFX();
+            this.chart = waterlooNode;
+            setCenter(waterlooNode);
+            break;
+        default:
+        case JAVAFX_CHARTS:
+            ChartNodeJavaFX jfxNode = new ChartNodeJavaFX();
+            this.chart = jfxNode;
+            setCenter(jfxNode);
+            break;
+        }
     }
 
     /**
@@ -45,7 +61,7 @@ public class MsSpectrumPlotWindow extends BorderPane {
      */
     public void addSpectrum(@Nonnull MsSpectrum spectrum) {
         Preconditions.checkNotNull(spectrum);
-        chartNode.addSpectrum(spectrum);
+        chart.addSpectrum(spectrum);
     }
 
 }
