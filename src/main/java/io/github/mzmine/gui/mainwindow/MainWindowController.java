@@ -63,6 +63,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -76,6 +77,9 @@ import javafx.util.Duration;
 public class MainWindowController implements Initializable {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    private static final Image mzMineIcon = new Image(
+            "file:icon/mzmine-icon.png");
 
     @FXML
     private BorderPane mainWindowPane;
@@ -317,6 +321,7 @@ public class MainWindowController implements Initializable {
 
         Stage newStage = new Stage();
         newStage.setTitle(currentNodeTitle);
+        newStage.getIcons().add(mzMineIcon);
         newStage.setScene(newScene);
         newStage.show();
 
