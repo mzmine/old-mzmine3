@@ -19,6 +19,8 @@
 
 package io.github.mzmine.modules.plots.msspectrum;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,14 +30,18 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.util.JavaFXUtil;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import javafx.util.StringConverter;
 
 /**
  * Chart using JavaFX charts library
@@ -49,6 +55,25 @@ public class ChartNodeJavaFX extends BorderPane implements ChartNode {
 
         xAxis = new NumberAxis();
         yAxis = new NumberAxis();
+
+        NumberFormat intensityFormat = MZmineCore.getConfiguration()
+                .getIntensityFormat();
+        yAxis.setTickLabelFormatter(new StringConverter<Number>() {
+            @Override
+            public String toString(Number number) {
+                return intensityFormat.format(number.doubleValue());
+            }
+
+            @Override
+            public Number fromString(String string) {
+                try {
+                    return intensityFormat.parse(string);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return 0;
+                }
+            }
+        });
 
         xAxis.setLabel("m/z");
         yAxis.setLabel("Intensity");
@@ -68,6 +93,8 @@ public class ChartNodeJavaFX extends BorderPane implements ChartNode {
     public synchronized void addSpectrum(MsSpectrum spectrum) {
 
         XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
+        ObservableList<Data<Number, Number>> dataSet = FXCollections
+                .<Data<Number, Number>> observableArrayList();
 
         String spectrumTitle = "MS spectrum";
         if (spectrum instanceof MsScan) {
@@ -89,29 +116,27 @@ public class ChartNodeJavaFX extends BorderPane implements ChartNode {
             final double mz = mzValues[i];
             XYChart.Data<Number, Number> newData = new XYChart.Data<>(mz,
                     intensity);
-            Text labelNode = new Text();
 
+            Text labelNode = new Text();
             labelNode.getStyleClass().add("chart-item-label");
-            String tooltipText = "m/z: "
-                    + MZmineCore.getConfiguration().getMZFormat().format(mz)
-                    + "\nIntensity: " + MZmineCore.getConfiguration()
-                            .getIntensityFormat().format(intensity);
-            Tooltip.install(labelNode, new Tooltip(tooltipText));
             newData.setNode(labelNode);
 
             if (centroided) {
                 XYChart.Data<Number, Number> zeroPoint = new XYChart.Data<>(mz,
                         0.0);
-                newSeries.getData().add(zeroPoint);
+                dataSet.add(zeroPoint);
             }
-            newSeries.getData().add(newData);
+            dataSet.add(newData);
             if (centroided) {
                 XYChart.Data<Number, Number> zeroPoint = new XYChart.Data<>(mz,
                         0.0);
-                newSeries.getData().add(zeroPoint);
+                dataSet.add(zeroPoint);
             }
 
         }
+
+        // Add data set to the series
+        newSeries.setData(dataSet);
 
         xAxis.lowerBoundProperty().addListener(e -> {
             updateLabels();
