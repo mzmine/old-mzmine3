@@ -37,6 +37,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
+import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
@@ -115,14 +116,9 @@ public class ChartNodeJavaFX extends BorderPane implements ChartNode {
             final double mz = mzValues[i];
             XYChart.Data<Number, Number> newData = new XYChart.Data<>(mz,
                     intensity);
-            Text labelNode = new Text();
 
+            Text labelNode = new Text();
             labelNode.getStyleClass().add("chart-item-label");
-            String tooltipText = "m/z: "
-                    + MZmineCore.getConfiguration().getMZFormat().format(mz)
-                    + "\nIntensity: " + MZmineCore.getConfiguration()
-                            .getIntensityFormat().format(intensity);
-            Tooltip.install(labelNode, new Tooltip(tooltipText));
             newData.setNode(labelNode);
 
             if (centroided) {
