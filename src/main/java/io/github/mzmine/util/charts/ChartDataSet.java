@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 The MZmine 3 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 3.
  * 
@@ -17,10 +17,31 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.plots.msspectrum;
+package io.github.mzmine.util.charts;
 
-public enum PlottingLibrary {
+/**
+ * Data set for chart rendering
+ */
+public interface ChartDataSet {
 
-    JAVAFX_CHARTS, JFREECHART, WATERLOOFX
+    ChartType getType();
+
+    String getTitle();
+
+    String getXAxisName();
+
+    String getYAxisName();
+
+    double getX(int index);
+
+    double getY(int index);
+
+    int getNumOfDataPoints();
+
+    String getName();
+
+    String getLabel(int index);
+
+    String getToolTip(int index);
 
 }

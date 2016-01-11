@@ -24,34 +24,35 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Preconditions;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
+import io.github.mzmine.util.charts.MZmineChartViewer;
+import javafx.event.Event;
+import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;
 
 /**
  * MS spectrum plot window
  */
-public class MsSpectrumPlotWindow extends BorderPane {
+public class MsSpectrumPlotWindowController {
 
-    private final ChartNode chart;
+    @FXML
+    private BorderPane chartPane;
 
-    MsSpectrumPlotWindow(PlottingLibrary library) {
-        switch (library) {
-        case JFREECHART:
-            ChartNodeJFreeChart jfreeNode = new ChartNodeJFreeChart();
-            this.chart = jfreeNode;
-            setCenter(jfreeNode);
-            break;
-        case WATERLOOFX:
-            ChartNodeWaterlooFX waterlooNode = new ChartNodeWaterlooFX();
-            this.chart = waterlooNode;
-            setCenter(waterlooNode);
-            break;
-        default:
-        case JAVAFX_CHARTS:
-            ChartNodeJavaFX jfxNode = new ChartNodeJavaFX();
-            this.chart = jfxNode;
-            setCenter(jfxNode);
-            break;
-        }
+    @FXML
+    private MZmineChartViewer chartNode;
+
+    @FXML
+    public void previousScan(Event e) {
+
+    }
+
+    @FXML
+    public void setupLayers(Event e) {
+
+    }
+
+    @FXML
+    public void nextScan(Event e) {
+
     }
 
     /**
@@ -60,8 +61,12 @@ public class MsSpectrumPlotWindow extends BorderPane {
      * @param spectrum
      */
     public void addSpectrum(@Nonnull MsSpectrum spectrum) {
+
         Preconditions.checkNotNull(spectrum);
-        chart.addSpectrum(spectrum);
+
+        MsSpectrumDataSet newDataSet = new MsSpectrumDataSet(spectrum);
+        chartNode.addDataSet(newDataSet);
+
     }
 
 }

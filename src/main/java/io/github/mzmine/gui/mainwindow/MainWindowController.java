@@ -19,11 +19,9 @@
 
 package io.github.mzmine.gui.mainwindow;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.TaskProgressView;
@@ -53,7 +51,6 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -74,7 +71,7 @@ import javafx.util.Duration;
  * This class controls the main window of the application
  * 
  */
-public class MainWindowController implements Initializable {
+public class MainWindowController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -113,8 +110,8 @@ public class MainWindowController implements Initializable {
 
     private String currentNodeTitle;
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    @FXML
+    public void initialize() {
 
         rawDataTree.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
@@ -316,8 +313,7 @@ public class MainWindowController implements Initializable {
         Scene newScene = new Scene(parent);
 
         // Copy CSS styles
-        newScene.getStylesheets()
-                .addAll(mainWindowPane.getScene().getStylesheets());
+        newScene.getStylesheets().addAll(mainWindowPane.getStylesheets());
 
         Stage newStage = new Stage();
         newStage.setTitle(currentNodeTitle);

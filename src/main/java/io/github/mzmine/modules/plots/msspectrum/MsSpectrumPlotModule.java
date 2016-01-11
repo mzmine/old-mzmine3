@@ -19,6 +19,7 @@
 
 package io.github.mzmine.modules.plots.msspectrum;
 
+import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 
@@ -36,6 +37,8 @@ import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.project.MZmineProject;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 
 /**
  * MS spectrum plot
@@ -67,10 +70,6 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
                 .getParameter(MsSpectrumPlotParameters.scanSelection)
                 .getValue();
 
-        final PlottingLibrary library = parameters
-                .getParameter(MsSpectrumPlotParameters.plottingLibrary)
-                .getValue();
-
         Preconditions.checkNotNull(fileSelection);
         Preconditions.checkNotNull(scanSelection);
 
@@ -89,17 +88,31 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
         weHaveData = true;
 
         if (weHaveData) {
-            MsSpectrumPlotWindow spectrumPlotWindow = new MsSpectrumPlotWindow(
-                    library);
-            MZmineGUI.addWindow(spectrumPlotWindow, "MS spectrum");
-            Platform.runLater(() -> {
-                for (RawDataFile dataFile : dataFiles) {
-                    for (MsScan scan : scanSelection
-                            .getMatchingScans(dataFile)) {
-                        spectrumPlotWindow.addSpectrum(scan);
+            try {
+                // Load the main window
+                URL mainFXML = this.getClass()
+                        .getResource("MsSpectrumPlotWindow.fxml");
+                FXMLLoader loader = new FXMLLoader(mainFXML);
+
+                Parent node = loader.load();
+                MZmineGUI.addWindow(node, "MS spectrum");
+                MsSpectrumPlotWindowController controller = loader
+                        .getController();
+
+                Platform.runLater(() -> {
+                    for (RawDataFile dataFile : dataFiles) {
+                        for (MsScan scan : scanSelection
+                                .getMatchingScans(dataFile)) {
+                            controller.addSpectrum(scan);
+                        }
                     }
-                }
-            });
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+
         } else {
             MZmineGUI.displayMessage("No scans found");
         }

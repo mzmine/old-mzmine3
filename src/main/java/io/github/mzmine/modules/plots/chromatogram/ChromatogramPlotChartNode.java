@@ -51,9 +51,9 @@ public class ChromatogramPlotChartNode extends BorderPane {
         lineChart.setTitle("Chromatogram");
         lineChart.setCreateSymbols(true);
 
-        Node zoomedChart = JavaFXUtil.addZoomSupport(lineChart);
+        // Node zoomedChart = JavaFXUtil.addZoomSupport(lineChart);
 
-        setCenter(zoomedChart);
+        // setCenter(zoomedChart);
 
     }
 

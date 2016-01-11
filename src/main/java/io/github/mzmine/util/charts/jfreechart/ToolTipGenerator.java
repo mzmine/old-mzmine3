@@ -17,17 +17,18 @@
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.plots.twod;
+package io.github.mzmine.util.charts.jfreechart;
 
-import javafx.scene.layout.BorderPane;
+import org.jfree.chart.labels.XYToolTipGenerator;
+import org.jfree.data.xy.XYDataset;
 
-/**
- * 2D plot window
- */
-public class TwoDPlotWindow extends BorderPane {
+class ToolTipGenerator implements XYToolTipGenerator {
 
-    TwoDPlotWindow() {
-
+    @Override
+    public String generateToolTip(XYDataset dataset, int series, int item) {
+        String tooltip = ((XYDataSetWrapper) dataset).generateToolTip(series,
+                item);
+        return tooltip;
     }
 
 }

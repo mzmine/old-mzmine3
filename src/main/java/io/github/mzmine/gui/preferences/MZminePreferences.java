@@ -20,6 +20,7 @@
 package io.github.mzmine.gui.preferences;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
 
 import javax.annotation.Nullable;
 
@@ -31,8 +32,10 @@ import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.BooleanParameter;
+import io.github.mzmine.parameters.parametertypes.ComboParameter;
 import io.github.mzmine.parameters.parametertypes.OptionalModuleParameter;
 import io.github.mzmine.parameters.parametertypes.filenames.FileNameParameter;
+import io.github.mzmine.util.charts.ChartLibrary;
 import javafx.scene.control.ButtonType;
 
 public class MZminePreferences extends ParameterSet {
@@ -80,12 +83,18 @@ public class MZminePreferences extends ParameterSet {
             "Allow MZmine to send anonymous statistics on the usage of its modules?",
             "Statistics", true);
 
+    @SuppressWarnings("null")
+    public static final ComboParameter<ChartLibrary> chartLibrary = new ComboParameter<>(
+            "Chart library", "Select which library is used to render charts",
+            "GUI", Arrays.asList(ChartLibrary.values()),
+            ChartLibrary.JFREECHART);
+
     // public static final WindowSettingsParameter windowSetttings = new
     // WindowSettingsParameter();
 
     public MZminePreferences() {
         super(mzFormat, rtFormat, intensityFormat, numOfThreads, proxySettings,
-                rExecPath, sendStatistics);
+                rExecPath, sendStatistics, chartLibrary);
     }
 
     @Override

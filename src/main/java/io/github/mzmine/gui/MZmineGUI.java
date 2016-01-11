@@ -19,7 +19,6 @@
 
 package io.github.mzmine.gui;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -68,7 +67,6 @@ public final class MZmineGUI extends Application {
     private static final Image mzMineIcon = new Image(
             "file:icon/mzmine-icon.png");
     private static final String mzMineFXML = "file:conf/MainWindow.fxml";
-    private static final String mzMineCSS = "file:conf/MZmine.css";
 
     private static MainWindowController mainWindowController;
 
@@ -76,14 +74,12 @@ public final class MZmineGUI extends Application {
 
         try {
             // Load the main window
-            URL mainFXML = new File(mzMineFXML).toURI().toURL();
-            mainFXML = new URL(mzMineFXML);
+            URL mainFXML = new URL(mzMineFXML);
             FXMLLoader loader = new FXMLLoader(mainFXML);
 
             BorderPane rootPane = (BorderPane) loader.load();
             mainWindowController = loader.getController();
             Scene scene = new Scene(rootPane, 1000, 600, Color.WHITE);
-            scene.getStylesheets().add(mzMineCSS);
             stage.setScene(scene);
 
         } catch (IOException e) {
@@ -91,8 +87,6 @@ public final class MZmineGUI extends Application {
             logger.error("Error loading MZmine GUI from FXML: " + e);
             Platform.exit();
         }
-
-        // Add task table
 
         stage.setTitle("MZmine " + MZmineCore.getMZmineVersion());
         stage.setMinWidth(300);

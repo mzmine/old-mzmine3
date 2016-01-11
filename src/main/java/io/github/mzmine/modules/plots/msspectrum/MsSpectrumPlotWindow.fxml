@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import io.github.mzmine.util.charts.MZmineChartViewer ?>
+
+<BorderPane fx:id="chartPane" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="io.github.mzmine.modules.plots.msspectrum.MsSpectrumPlotWindowController">
+	<center>
+		<MZmineChartViewer fx:id="chartNode">
+		</MZmineChartViewer>
+	</center>
+	<right>
+		<ToolBar orientation="VERTICAL">
+			<items>
+				<Button onAction="#previousScan">
+					<graphic>
+						<ImageView>
+							<Image url="icons/centroidicon.png" />
+						</ImageView>
+					</graphic>
+					<tooltip>
+						<Tooltip text="Click here for previous scan" />
+					</tooltip>
+				</Button>
+				<Button onAction="#previousScan">
+					<graphic>
+						<ImageView>
+							<Image url="icons/centroidicon.png" />
+						</ImageView>
+					</graphic>
+					<tooltip>
+						<Tooltip text="Click here for previous scan" />
+					</tooltip>
+				</Button>
+			</items>
+		</ToolBar>
+	</right>
+	<bottom>
+		<ToolBar>
+			<items>
+				<Button mnemonicParsing="false" onAction="#previousScan"
+					text="Previous">
+					<tooltip>
+						<Tooltip text="Click here for previous scan" />
+					</tooltip>
+				</Button>
+				<Separator orientation="VERTICAL" />
+				<Button mnemonicParsing="false" text="Add spectrum" />
+				<Button mnemonicParsing="false" onAction="#setupLayers" text="Setup layers">
+					<tooltip>
+						<Tooltip text="Click here to add or remove data" />
+					</tooltip>
+				</Button>
+				<Separator orientation="VERTICAL" />
+				<Button onAction="#nextScan" text="Next">
+					<tooltip>
+						<Tooltip text="Click here for next scan" />
+					</tooltip>
+				</Button>
+			</items>
+		</ToolBar>
+	</bottom>
+</BorderPane>
