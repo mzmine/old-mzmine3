@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 The MZmine 3 Development Team
+ * Copyright 2006-2015 The MZmine 3 Development Team
  * 
  * This file is part of MZmine 3.
  * 
@@ -17,15 +17,13 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.plots.msspectrum;
-
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
+package io.github.mzmine.util.charts;
 
 /**
- * Chart node
+ * Type of chart
  */
-public interface ChartNode {
+public enum ChartType {
 
-    void addSpectrum(MsSpectrum spectrum);
-    
+    LINE, BAR, SCATTER
+
 }

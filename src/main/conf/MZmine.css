@@ -11,6 +11,10 @@
     -fx-font-size: 10.0pt;
 }
 
+.tool-bar {
+	-fx-background-color: white;
+}
+
 .chart-item-label {
 	-fx-font-size: 8.0pt;
 }

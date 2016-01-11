@@ -17,41 +17,39 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.plots.msspectrum;
+package io.github.mzmine.util.charts.javafxcharts;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.mzmine.main.MZmineCore;
-import io.github.mzmine.util.JavaFXUtil;
+import io.github.mzmine.util.charts.ChartDataSet;
+import io.github.mzmine.util.charts.ChartType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
+import javafx.geometry.Point2D;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
-import javafx.scene.chart.XYChart.Series;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.input.MouseButton;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 
 /**
  * Chart using JavaFX charts library
  */
-public class ChartNodeJavaFX extends BorderPane implements ChartNode {
+public class ChartNodeJavaFX extends StackPane {
 
     private final NumberAxis xAxis, yAxis;
     private final LineChart<Number, Number> lineChart;
 
-    ChartNodeJavaFX() {
+    public ChartNodeJavaFX() {
 
         xAxis = new NumberAxis();
         yAxis = new NumberAxis();
@@ -75,68 +73,68 @@ public class ChartNodeJavaFX extends BorderPane implements ChartNode {
             }
         });
 
-        xAxis.setLabel("m/z");
-        yAxis.setLabel("Intensity");
 
         lineChart = new LineChart<>(xAxis, yAxis);
 
         lineChart.setTitle("MS spectrum");
         lineChart.setCreateSymbols(false);
         lineChart.setAnimated(false);
+        
+        
+        final Rectangle rect = new Rectangle();
+        final Text zoomOut = new Text("Zoom out");
+        
+        addZoomSupport(lineChart, rect, zoomOut);
+        getChildren().addAll(lineChart, rect, zoomOut);
+        
+        
+        
 
-        Node zoomedChart = JavaFXUtil.addZoomSupport(lineChart);
-
-        setCenter(zoomedChart);
+        
 
     }
 
-    public synchronized void addSpectrum(MsSpectrum spectrum) {
+    public synchronized void addDataSet(ChartDataSet newDataSet) {
 
+        
+        xAxis.setLabel(newDataSet.getXAxisName());
+        yAxis.setLabel(newDataSet.getYAxisName());
+
+        
         XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
-        ObservableList<Data<Number, Number>> dataSet = FXCollections
-                .<Data<Number, Number>> observableArrayList();
+        ObservableList<Data<Number, Number>> newSeriesData = FXCollections
+                .observableArrayList();
 
-        String spectrumTitle = "MS spectrum";
-        if (spectrum instanceof MsScan) {
-            MsScan scan = (MsScan) spectrum;
-            RawDataFile dataFile = scan.getRawDataFile();
-            if (dataFile != null)
-                spectrumTitle += " " + dataFile.getName();
-            spectrumTitle += "#" + scan.getScanNumber();
-        }
+        String spectrumTitle = newDataSet.getName();
         newSeries.setName(spectrumTitle);
 
-        double mzValues[] = spectrum.getMzValues();
-        float intensityValues[] = spectrum.getIntensityValues();
-        final boolean centroided = spectrum
-                .getSpectrumType() == MsSpectrumType.CENTROIDED;
+        final boolean isBarChart = newDataSet.getType() == ChartType.BAR;
 
-        for (int i = 0; i < spectrum.getNumberOfDataPoints(); i++) {
-            final float intensity = intensityValues[i];
-            final double mz = mzValues[i];
-            XYChart.Data<Number, Number> newData = new XYChart.Data<>(mz,
-                    intensity);
+        for (int i = 0; i < newDataSet.getNumOfDataPoints(); i++) {
+            final double x = newDataSet.getX(i);
+            final double y = newDataSet.getY(i);
+            XYChart.Data<Number, Number> newData = new XYChart.Data<>(x,
+                    y);
 
             Text labelNode = new Text();
             labelNode.getStyleClass().add("chart-item-label");
             newData.setNode(labelNode);
 
-            if (centroided) {
-                XYChart.Data<Number, Number> zeroPoint = new XYChart.Data<>(mz,
-                        0.0);
-                dataSet.add(zeroPoint);
+            if (isBarChart) {
+                XYChart.Data<Number, Number> zeroPoint = new XYChart.Data<>(x,0.0);
+                newSeriesData.add(zeroPoint);
             }
-            dataSet.add(newData);
-            if (centroided) {
-                XYChart.Data<Number, Number> zeroPoint = new XYChart.Data<>(mz,
+            newSeriesData.add(newData);
+            if (isBarChart) {
+                XYChart.Data<Number, Number> zeroPoint = new XYChart.Data<>(x,
                         0.0);
-                dataSet.add(zeroPoint);
+                newSeriesData.add(zeroPoint);
             }
 
         }
 
         // Add data set to the series
-        newSeries.setData(dataSet);
+        newSeries.setData(newSeriesData);
 
         xAxis.lowerBoundProperty().addListener(e -> {
             updateLabels();
@@ -236,4 +234,117 @@ public class ChartNodeJavaFX extends BorderPane implements ChartNode {
         return true;
 
     }
+    
+    private void addZoomSupport(XYChart<Number, Number> chart, Rectangle rect, Text zoomOut) {
+
+
+        rect.setManaged(false);
+        rect.setFill(Color.LIGHTBLUE.deriveColor(0, 1, 1, 0.5));
+        final NumberAxis yAxis = (NumberAxis) chart.getYAxis();
+        final NumberAxis xAxis = (NumberAxis) chart.getXAxis();
+        yAxis.setForceZeroInRange(true);
+        xAxis.setForceZeroInRange(false);
+        
+        zoomOut.setVisible(false);
+        zoomOut.setManaged(false);
+        zoomOut.setFill(Color.BLUE);
+        
+
+        chart.setOnMousePressed(event -> {
+            if (event.getButton() != MouseButton.PRIMARY)
+                return;
+            rect.setX(event.getX());
+            rect.setY(event.getY());
+        });
+        chart.setOnMouseDragged(event -> {
+            if (event.getButton() != MouseButton.PRIMARY)
+                return;
+            double mouseX = event.getX();
+            double mouseY = event.getY();
+            double rectX = rect.getX();
+            double rectY = rect.getY();
+            final boolean isZoomedOut = xAxis.isAutoRanging()
+                    && yAxis.isAutoRanging();
+            if ((!isZoomedOut) && (mouseX < rectX - 5.0)
+                    && (mouseY < rectY - 5.0)) {
+                rect.setVisible(false);
+                zoomOut.setVisible(true);
+                zoomOut.setX(rect.getX() - 60.0);
+                zoomOut.setY(rect.getY() - 5.0);
+            } else if ((mouseX > rectX) && (mouseY > rectY)) {
+                zoomOut.setVisible(false);
+                rect.setWidth(mouseX - rectX);
+                rect.setHeight(mouseY - rectY);
+                rect.setVisible(true);
+            } else {
+                rect.setVisible(false);
+                zoomOut.setVisible(false);
+            }
+        });
+
+        chart.setOnMouseReleased(event -> {
+            if (event.getButton() != MouseButton.PRIMARY)
+                return;
+
+            rect.setVisible(false);
+            zoomOut.setVisible(false);
+
+            double mouseX = event.getX();
+            double mouseY = event.getY();
+            double rectX = rect.getX();
+            double rectY = rect.getY();
+            if ((mouseX < rectX - 5.0) && (mouseY < rectY - 5.0)) {
+                xAxis.setAutoRanging(true);
+                yAxis.setAutoRanging(true);
+                return;
+            }
+
+            if ((rect.getWidth() < 5) || (rect.getHeight() < 5)) {
+                return;
+            }
+
+            xAxis.setAutoRanging(false);
+            yAxis.setAutoRanging(false);
+            Point2D xAxisInScene = xAxis.localToScene(0, 0);
+            Point2D mouseInScene = chart.localToScene(rect.getX(), rect.getY());
+
+            double xOffset = mouseInScene.getX() - xAxisInScene.getX();
+            double yOffset = xAxisInScene.getY() - mouseInScene.getY();
+            if (xOffset < 0)
+                xOffset = 0;
+            if (yOffset < 0)
+                yOffset = 0;
+            if (xOffset > xAxis.getWidth())
+                xOffset = xAxis.getWidth();
+            if (yOffset > yAxis.getHeight())
+                yOffset = yAxis.getHeight();
+
+            double xAxisScale = xAxis.getScale();
+            double yAxisScale = yAxis.getScale();
+
+            double newXLowerBound = xAxis.getLowerBound()
+                    + xOffset / xAxisScale;
+            double newXUpperBound = newXLowerBound
+                    + rect.getWidth() / xAxisScale;
+            double newYLowerBound = yAxis.getLowerBound()
+                    - (yOffset - rect.getHeight()) / yAxisScale;
+            double newYUpperBound = yAxis.getLowerBound()
+                    - yOffset / yAxisScale;
+            newYLowerBound = Math.max(newYLowerBound, 0.0);
+            newYUpperBound = Math.max(newYUpperBound, newYLowerBound + 1.0);
+            xAxis.setLowerBound(newXLowerBound);
+            xAxis.setUpperBound(newXUpperBound);
+            yAxis.setLowerBound(newYLowerBound);
+            yAxis.setUpperBound(newYUpperBound);
+
+            xAxis.setTickUnit((newXUpperBound - newXLowerBound) / 10);
+            yAxis.setTickUnit((newYUpperBound - newYLowerBound) / 10);
+
+            rect.setWidth(0);
+            rect.setHeight(0);
+
+        });
+
+    }
+
 }
