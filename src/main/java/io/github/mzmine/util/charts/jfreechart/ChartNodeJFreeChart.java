@@ -20,16 +20,21 @@
 package io.github.mzmine.util.charts.jfreechart;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.text.NumberFormat;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.fx.ChartViewer;
+import org.jfree.chart.labels.XYItemLabelGenerator;
 import org.jfree.chart.plot.DatasetRenderingOrder;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.data.xy.XYDataset;
+import org.jfree.chart.renderer.xy.DefaultXYItemRenderer;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.ui.RectangleInsets;
 
 import io.github.mzmine.main.MZmineCore;
@@ -40,8 +45,14 @@ import io.github.mzmine.util.charts.ChartDataSet;
  */
 public class ChartNodeJFreeChart extends ChartViewer {
 
-    // grid color
+    // Colors
     private static final Color gridColor = Color.lightGray;
+    private static final Color labelsColor = Color.darkGray;
+    private static final Color backgroundColor = Color.white;
+
+    // Font
+    private static final Font legendFont = new Font("SansSerif", Font.PLAIN,
+            11);
 
     private final JFreeChart chart;
     private final XYPlot plot;
@@ -61,36 +72,33 @@ public class ChartNodeJFreeChart extends ChartViewer {
 
         this.chart = getChart();
 
-        chart.setBackgroundPaint(Color.white);
+        // chart properties
+        chart.setBackgroundPaint(backgroundColor);
 
-        NumberFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
-        NumberFormat intensityFormat = MZmineCore.getConfiguration()
-                .getIntensityFormat();
+        // legend properties
+        LegendTitle legend = chart.getLegend();
+        legend.setItemFont(legendFont);
+        legend.setFrame(BlockBorder.NONE);
 
-        // set the plot properties
+        // plot properties
         plot = chart.getXYPlot();
-        plot.setBackgroundPaint(Color.white);
+        plot.setBackgroundPaint(backgroundColor);
         plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
-
-        // set rendering order
         plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
-
-        // set grid properties
         plot.setDomainGridlinePaint(gridColor);
         plot.setRangeGridlinePaint(gridColor);
-
-        // set crosshair (selection) properties
         plot.setDomainCrosshairVisible(false);
         plot.setRangeCrosshairVisible(false);
 
         // set the X axis (retention time) properties
         NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
-        xAxis.setNumberFormatOverride(mzFormat);
         xAxis.setUpperMargin(0.001);
         xAxis.setLowerMargin(0.001);
         xAxis.setTickLabelInsets(new RectangleInsets(0, 0, 20, 20));
 
         // set the Y axis (intensity) properties
+        NumberFormat intensityFormat = MZmineCore.getConfiguration()
+                .getIntensityFormat();
         NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
         yAxis.setNumberFormatOverride(intensityFormat);
 
@@ -99,13 +107,28 @@ public class ChartNodeJFreeChart extends ChartViewer {
 
     }
 
-    public synchronized void addDataSet(ChartDataSet newDataSet) {
+    public synchronized void addDataSet(final ChartDataSet newDataSet) {
 
-        XYDataset dataset = new XYDataSetWrapper(newDataSet);
-        plot.setDataset(numberOfDataSets, dataset);
-        ItemLabelGenerator labelGen = new ItemLabelGenerator(this, plot);
-        plot.getRenderer().setBaseItemLabelGenerator(labelGen);
-        plot.getRenderer().setBaseItemLabelsVisible(true);
+        // Create the dataset
+        final XYDataSetWrapper datasetWrapper = new XYDataSetWrapper(
+                newDataSet);
+
+        // Set renderer
+        final XYItemRenderer newRenderer = new DefaultXYItemRenderer();
+        plot.setRenderer(numberOfDataSets, newRenderer);
+        newRenderer.setBaseItemLabelPaint(labelsColor);
+
+        // Set label generator
+        XYItemLabelGenerator intelligentLabelGenerator = new IntelligentItemLabelGenerator(
+                this, plot, 100, datasetWrapper);
+        newRenderer.setBaseItemLabelGenerator(intelligentLabelGenerator);
+        newRenderer.setBaseItemLabelsVisible(true);
+
+        // Set tooltip generator
+        newRenderer.setBaseToolTipGenerator(datasetWrapper);
+
+        // Once everything is configured, add the dataset to the plot
+        plot.setDataset(numberOfDataSets, datasetWrapper);
         numberOfDataSets++;
 
     }

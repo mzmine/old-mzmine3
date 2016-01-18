@@ -39,9 +39,9 @@ public class MsSpectrumDataSet implements ChartDataSet {
     private final double mzValues[];
     private final float intensityValues[];
     private final int numOfDataPoints;
-    
+
     MsSpectrumDataSet(MsSpectrum spectrum) {
-        
+
         String spectrumTitle = "MS spectrum";
         if (spectrum instanceof MsScan) {
             MsScan scan = (MsScan) spectrum;
@@ -50,17 +50,18 @@ public class MsSpectrumDataSet implements ChartDataSet {
                 spectrumTitle += " " + dataFile.getName();
             spectrumTitle += "#" + scan.getScanNumber();
         }
-        this.name= spectrumTitle;
-        
-        if (spectrum
-                .getSpectrumType() == MsSpectrumType.CENTROIDED) this.type=ChartType.BAR; else this.type=ChartType.LINE; 
+        this.name = spectrumTitle;
+
+        if (spectrum.getSpectrumType() == MsSpectrumType.CENTROIDED)
+            this.type = ChartType.BAR;
+        else
+            this.type = ChartType.LINE;
 
         this.mzValues = spectrum.getMzValues();
         this.intensityValues = spectrum.getIntensityValues();
         this.numOfDataPoints = spectrum.getNumberOfDataPoints();
     }
-    
-    
+
     @Override
     public ChartType getType() {
         return type;
@@ -102,23 +103,19 @@ public class MsSpectrumDataSet implements ChartDataSet {
         return label;
     }
 
-
     @Override
     public String getTitle() {
         return "MS spectrum";
     }
-
 
     @Override
     public String getXAxisName() {
         return "m/z";
     }
 
-
     @Override
     public String getYAxisName() {
         return "Intensity";
     }
-
 
 }

@@ -19,6 +19,8 @@
 
 package io.github.mzmine.modules.plots.msspectrum;
 
+import java.net.URL;
+
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
@@ -27,6 +29,9 @@ import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.mzmine.util.charts.MZmineChartViewer;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.BorderPane;
 
 /**
@@ -39,6 +44,30 @@ public class MsSpectrumPlotWindowController {
 
     @FXML
     private MZmineChartViewer chartNode;
+
+    private ContextMenu contextMenu;
+
+    @FXML
+    public void initialize() {
+        try {
+            URL fxmlUrl = this.getClass()
+                    .getResource("MsSpectrumContextMenu.fxml");
+            FXMLLoader loader = new FXMLLoader(fxmlUrl);
+            contextMenu = (ContextMenu) loader.load();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void showContextMenu(ContextMenuEvent event) {
+        System.out.println(
+                "MsSpectrumPlotWindowController.showContentMenu()" + event);
+
+        contextMenu.show(chartPane, event.getScreenX(), event.getScreenY());
+
+        event.consume();
+    }
 
     @FXML
     public void previousScan(Event e) {
