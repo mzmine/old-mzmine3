@@ -146,12 +146,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>waterloofx</groupId>
-			<artifactId>waterloofx</artifactId>
-			<version>0.8-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
 			<groupId>jfxchartext</groupId>
 			<artifactId>jfxchartext</artifactId>
 			<version>1.0</version>

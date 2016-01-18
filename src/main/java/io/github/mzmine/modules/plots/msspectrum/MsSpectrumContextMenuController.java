@@ -17,18 +17,30 @@
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.util.charts.jfreechart;
+package io.github.mzmine.modules.plots.msspectrum;
 
-import org.jfree.chart.labels.XYToolTipGenerator;
-import org.jfree.data.xy.XYDataset;
+import javafx.event.Event;
+import javafx.fxml.FXML;
 
-class ToolTipGenerator implements XYToolTipGenerator {
+/**
+ * MS spectrum context menu
+ */
+public class MsSpectrumContextMenuController {
 
-    @Override
-    public String generateToolTip(XYDataset dataset, int series, int item) {
-        String tooltip = ((XYDataSetWrapper) dataset).generateToolTip(series,
-                item);
-        return tooltip;
+    @FXML
+    public void previousScan(Event e) {
+        System.out.println(e);
+    }
+
+    @FXML
+    public void setupLayers(Event e) {
+        System.out.println(e);
+    }
+
+    @FXML
+    public void nextScan(Event e) {
+        System.out.println(e);
+
     }
 
 }

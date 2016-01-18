@@ -73,34 +73,25 @@ public class ChartNodeJavaFX extends StackPane {
             }
         });
 
-
         lineChart = new LineChart<>(xAxis, yAxis);
 
         lineChart.setTitle("MS spectrum");
         lineChart.setCreateSymbols(false);
         lineChart.setAnimated(false);
-        
-        
+
         final Rectangle rect = new Rectangle();
         final Text zoomOut = new Text("Zoom out");
-        
+
         addZoomSupport(lineChart, rect, zoomOut);
         getChildren().addAll(lineChart, rect, zoomOut);
-        
-        
-        
-
-        
 
     }
 
     public synchronized void addDataSet(ChartDataSet newDataSet) {
 
-        
         xAxis.setLabel(newDataSet.getXAxisName());
         yAxis.setLabel(newDataSet.getYAxisName());
 
-        
         XYChart.Series<Number, Number> newSeries = new XYChart.Series<>();
         ObservableList<Data<Number, Number>> newSeriesData = FXCollections
                 .observableArrayList();
@@ -113,15 +104,15 @@ public class ChartNodeJavaFX extends StackPane {
         for (int i = 0; i < newDataSet.getNumOfDataPoints(); i++) {
             final double x = newDataSet.getX(i);
             final double y = newDataSet.getY(i);
-            XYChart.Data<Number, Number> newData = new XYChart.Data<>(x,
-                    y);
+            XYChart.Data<Number, Number> newData = new XYChart.Data<>(x, y);
 
             Text labelNode = new Text();
             labelNode.getStyleClass().add("chart-item-label");
             newData.setNode(labelNode);
 
             if (isBarChart) {
-                XYChart.Data<Number, Number> zeroPoint = new XYChart.Data<>(x,0.0);
+                XYChart.Data<Number, Number> zeroPoint = new XYChart.Data<>(x,
+                        0.0);
                 newSeriesData.add(zeroPoint);
             }
             newSeriesData.add(newData);
@@ -234,9 +225,9 @@ public class ChartNodeJavaFX extends StackPane {
         return true;
 
     }
-    
-    private void addZoomSupport(XYChart<Number, Number> chart, Rectangle rect, Text zoomOut) {
 
+    private void addZoomSupport(XYChart<Number, Number> chart, Rectangle rect,
+            Text zoomOut) {
 
         rect.setManaged(false);
         rect.setFill(Color.LIGHTBLUE.deriveColor(0, 1, 1, 0.5));
@@ -244,11 +235,10 @@ public class ChartNodeJavaFX extends StackPane {
         final NumberAxis xAxis = (NumberAxis) chart.getXAxis();
         yAxis.setForceZeroInRange(true);
         xAxis.setForceZeroInRange(false);
-        
+
         zoomOut.setVisible(false);
         zoomOut.setManaged(false);
         zoomOut.setFill(Color.BLUE);
-        
 
         chart.setOnMousePressed(event -> {
             if (event.getButton() != MouseButton.PRIMARY)

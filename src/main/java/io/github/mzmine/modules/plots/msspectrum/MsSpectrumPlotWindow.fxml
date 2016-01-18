@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.image.*?>
+<?import java.lang.* ?>
+<?import javafx.scene.control.* ?>
+<?import javafx.scene.layout.* ?>
+<?import javafx.scene.image.* ?>
 <?import io.github.mzmine.util.charts.MZmineChartViewer ?>
+<?import org.controlsfx.control.* ?>
+<?import org.controlsfx.glyphfont.Glyph ?>
 
 <BorderPane fx:id="chartPane" xmlns="http://javafx.com/javafx/8"
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="io.github.mzmine.modules.plots.msspectrum.MsSpectrumPlotWindowController">
 	<center>
-		<MZmineChartViewer fx:id="chartNode">
-		</MZmineChartViewer>
+		<HiddenSidesPane>
+			<content>
+				<MZmineChartViewer fx:id="chartNode"
+					onContextMenuRequested="#showContextMenu">
+				</MZmineChartViewer>
+			</content>
+			<bottom>
+				<ImageView>
+					<Image url="icons/centroidicon.png" />
+				</ImageView>
+			</bottom>
+		</HiddenSidesPane>
 	</center>
 	<right>
 		<ToolBar orientation="VERTICAL">
@@ -28,9 +40,7 @@
 				</Button>
 				<Button onAction="#previousScan">
 					<graphic>
-						<ImageView>
-							<Image url="icons/centroidicon.png" />
-						</ImageView>
+						<Glyph fontFamily="FontAwesome" icon="EDIT" />
 					</graphic>
 					<tooltip>
 						<Tooltip text="Click here for previous scan" />

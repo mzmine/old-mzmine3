@@ -19,14 +19,18 @@
 
 package io.github.mzmine.util.charts.jfreechart;
 
+import org.jfree.chart.labels.XYItemLabelGenerator;
+import org.jfree.chart.labels.XYToolTipGenerator;
 import org.jfree.data.xy.AbstractXYDataset;
+import org.jfree.data.xy.XYDataset;
 
 import io.github.mzmine.util.charts.ChartDataSet;
 
 /**
  * Chart using JfreeChart library
  */
-class XYDataSetWrapper extends AbstractXYDataset {
+class XYDataSetWrapper extends AbstractXYDataset
+        implements XYItemLabelGenerator, XYToolTipGenerator {
 
     private final ChartDataSet dataSet;
 
@@ -59,11 +63,13 @@ class XYDataSetWrapper extends AbstractXYDataset {
         return dataSet.getName();
     }
 
-    public String generateToolTip(int series, int index) {
+    @Override
+    public String generateLabel(XYDataset ds, int series, int index) {
         return dataSet.getLabel(index);
     }
 
-    public String generateLabel(int series, int index) {
+    @Override
+    public String generateToolTip(XYDataset ds, int series, int index) {
         return dataSet.getToolTip(index);
     }
 

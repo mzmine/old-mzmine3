@@ -43,16 +43,22 @@ public class MZmineChartViewer extends BorderPane {
 
         switch (selectedLibrary) {
         case JAVAFX:
-            this.chart = new ChartNodeJavaFX();
+            ChartNodeJavaFX chartJavaFX = new ChartNodeJavaFX();
+            onContextMenuRequestedProperty().bindBidirectional(
+                    chartJavaFX.onContextMenuRequestedProperty());
+            this.chart = chartJavaFX;
             break;
         default:
         case JFREECHART:
-            this.chart = new ChartNodeJFreeChart();
+            ChartNodeJFreeChart chartJFree = new ChartNodeJFreeChart();
+            onContextMenuRequestedProperty().bindBidirectional(
+                    chartJFree.onContextMenuRequestedProperty());
+            this.chart = chartJFree;
             break;
         }
 
         setCenter(chart);
-        
+
     }
 
     public void addDataSet(ChartDataSet newDataSet) {
