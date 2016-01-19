@@ -68,7 +68,7 @@ public class ChartNodeJFreeChart extends ChartViewer {
                 true, // create legend?
                 true, // generate tooltips?
                 false // generate URLs?
-        ));
+        ), false);
 
         this.chart = getChart();
 

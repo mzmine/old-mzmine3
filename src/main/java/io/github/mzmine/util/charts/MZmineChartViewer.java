@@ -23,7 +23,10 @@ import io.github.mzmine.gui.preferences.MZminePreferences;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.util.charts.javafxcharts.ChartNodeJavaFX;
 import io.github.mzmine.util.charts.jfreechart.ChartNodeJFreeChart;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.layout.BorderPane;
 
 /**
@@ -32,6 +35,12 @@ import javafx.scene.layout.BorderPane;
 public class MZmineChartViewer extends BorderPane {
 
     private final Node chart;
+    
+    private ObjectProperty<ContextMenu> contextMenu = new SimpleObjectProperty<ContextMenu>(this, "contextMenu");
+    
+    public final ObjectProperty<ContextMenu> contextMenuProperty() { return contextMenu; }
+    public final void setContextMenu(ContextMenu value) { contextMenu.setValue(value); }
+    public final ContextMenu getContextMenu() { return contextMenu == null ? null : contextMenu.getValue(); }
 
     public MZmineChartViewer() {
 
@@ -51,8 +60,7 @@ public class MZmineChartViewer extends BorderPane {
         default:
         case JFREECHART:
             ChartNodeJFreeChart chartJFree = new ChartNodeJFreeChart();
-            onContextMenuRequestedProperty().bindBidirectional(
-                    chartJFree.onContextMenuRequestedProperty());
+            contextMenu.bindBidirectional(chartJFree.contextMenuProperty());
             this.chart = chartJFree;
             break;
         }
