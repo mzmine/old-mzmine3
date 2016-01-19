@@ -22,7 +22,12 @@
 						</Menu>
 						<Menu text="Find MS/MS">
 						</Menu>
-						<MenuItem text="Show TIC..." />
+						<MenuItem text="Show XIC..." />
+						<Menu text="Search...">
+							<MenuItem text="Similar spectra in the project" />
+							<MenuItem text="MassBank database" />
+							<MenuItem text="MoNA database" />
+						</Menu>
 						<Menu text="Export image to...">
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="FILE_IMAGE_ALT" />
@@ -73,17 +78,6 @@
 						<Tooltip text="Add spectrum" />
 					</tooltip>
 				</Button>
-
-				<Button>
-					<graphic>
-						<ImageView>
-							<Image url="icons/datapointsicon.png" />
-						</ImageView>
-					</graphic>
-					<tooltip>
-						<Tooltip text="Toggle displaying of data points" />
-					</tooltip>
-				</Button>
 				<Button>
 					<graphic>
 						<ImageView>
@@ -91,11 +85,11 @@
 						</ImageView>
 					</graphic>
 					<tooltip>
-						<Tooltip text="Setup ranges of axes" />
+						<Tooltip text="Setup ranges of both axes" />
 					</tooltip>
 				</Button>
 
-				<Region VBox.vgrow="ALWAYS"></Region>
+				<Region VBox.vgrow="ALWAYS" />
 
 				<Button onAction="#previousScan">
 					<graphic>
