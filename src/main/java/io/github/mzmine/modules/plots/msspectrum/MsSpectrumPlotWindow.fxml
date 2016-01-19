@@ -12,66 +12,108 @@
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="io.github.mzmine.modules.plots.msspectrum.MsSpectrumPlotWindowController">
 	<center>
-		<HiddenSidesPane>
-			<content>
-				<MZmineChartViewer fx:id="chartNode"
-					onContextMenuRequested="#showContextMenu">
-				</MZmineChartViewer>
-			</content>
-			<bottom>
-				<ImageView>
-					<Image url="icons/centroidicon.png" />
-				</ImageView>
-			</bottom>
-		</HiddenSidesPane>
+		<MZmineChartViewer fx:id="chartNode">
+			<contextMenu>
+				<ContextMenu>
+					<items>
+						<Menu text="Set relative mass">
+							<MenuItem text="Define" />
+							<MenuItem text="Reset" />
+						</Menu>
+						<Menu text="Find MS/MS">
+						</Menu>
+						<MenuItem text="Show TIC..." />
+						<Menu text="Export image to...">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="FILE_IMAGE_ALT" />
+							</graphic>
+							<MenuItem text="Clipboard" />
+							<MenuItem text="JPG" />
+							<MenuItem text="PNG" />
+							<MenuItem text="PDF" />
+							<MenuItem text="SVG" />
+							<MenuItem text="EMF" />
+							<MenuItem text="EPS" />
+						</Menu>
+						<Menu text="Export spectrum to...">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="SAVE" />
+							</graphic>
+							<MenuItem text="Clipboard" />
+							<MenuItem text="mzML" />
+							<MenuItem text="MGF" />
+							<MenuItem text="MSP" />
+						</Menu>
+						<MenuItem text="Print">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="PRINT" />
+							</graphic>
+						</MenuItem>
+					</items>
+				</ContextMenu>
+			</contextMenu>
+		</MZmineChartViewer>
 	</center>
 	<right>
 		<ToolBar orientation="VERTICAL">
 			<items>
-				<Button onAction="#previousScan">
+				<Button onAction="#setupLayers">
+					<graphic>
+						<Glyph fontFamily="FontAwesome" icon="BAR_CHART" />
+					</graphic>
+					<tooltip>
+						<Tooltip text="Setup layers" />
+					</tooltip>
+				</Button>
+				<Button onAction="#addSpectrum">
+					<graphic>
+						<Glyph fontFamily="FontAwesome" icon="SEARCH_PLUS" />
+					</graphic>
+					<tooltip>
+						<Tooltip text="Add spectrum" />
+					</tooltip>
+				</Button>
+
+				<Button>
 					<graphic>
 						<ImageView>
-							<Image url="icons/centroidicon.png" />
+							<Image url="icons/datapointsicon.png" />
 						</ImageView>
 					</graphic>
 					<tooltip>
-						<Tooltip text="Click here for previous scan" />
+						<Tooltip text="Toggle displaying of data points" />
 					</tooltip>
 				</Button>
-				<Button onAction="#previousScan">
+				<Button>
 					<graphic>
-						<Glyph fontFamily="FontAwesome" icon="EDIT" />
+						<ImageView>
+							<Image url="icons/axesicon.png" />
+						</ImageView>
 					</graphic>
 					<tooltip>
-						<Tooltip text="Click here for previous scan" />
+						<Tooltip text="Setup ranges of axes" />
+					</tooltip>
+				</Button>
+
+				<Region VBox.vgrow="ALWAYS"></Region>
+
+				<Button onAction="#previousScan">
+					<graphic>
+						<Glyph fontFamily="FontAwesome" icon="ARROW_LEFT" />
+					</graphic>
+					<tooltip>
+						<Tooltip text="Click here to load previous scan" />
+					</tooltip>
+				</Button>
+				<Button onAction="#nextScan">
+					<graphic>
+						<Glyph fontFamily="FontAwesome" icon="ARROW_RIGHT" />
+					</graphic>
+					<tooltip>
+						<Tooltip text="Click here to load next scan" />
 					</tooltip>
 				</Button>
 			</items>
 		</ToolBar>
 	</right>
-	<bottom>
-		<ToolBar>
-			<items>
-				<Button mnemonicParsing="false" onAction="#previousScan"
-					text="Previous">
-					<tooltip>
-						<Tooltip text="Click here for previous scan" />
-					</tooltip>
-				</Button>
-				<Separator orientation="VERTICAL" />
-				<Button mnemonicParsing="false" text="Add spectrum" />
-				<Button mnemonicParsing="false" onAction="#setupLayers" text="Setup layers">
-					<tooltip>
-						<Tooltip text="Click here to add or remove data" />
-					</tooltip>
-				</Button>
-				<Separator orientation="VERTICAL" />
-				<Button onAction="#nextScan" text="Next">
-					<tooltip>
-						<Tooltip text="Click here for next scan" />
-					</tooltip>
-				</Button>
-			</items>
-		</ToolBar>
-	</bottom>
 </BorderPane>

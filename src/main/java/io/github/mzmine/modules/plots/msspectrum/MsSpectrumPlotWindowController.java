@@ -45,30 +45,22 @@ public class MsSpectrumPlotWindowController {
     @FXML
     private MZmineChartViewer chartNode;
 
-    private ContextMenu contextMenu;
 
-    @FXML
-    public void initialize() {
-        try {
-            URL fxmlUrl = this.getClass()
-                    .getResource("MsSpectrumContextMenu.fxml");
-            FXMLLoader loader = new FXMLLoader(fxmlUrl);
-            contextMenu = (ContextMenu) loader.load();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @FXML
     public void showContextMenu(ContextMenuEvent event) {
-        System.out.println(
-                "MsSpectrumPlotWindowController.showContentMenu()" + event);
-
-        contextMenu.show(chartPane, event.getScreenX(), event.getScreenY());
-
-        event.consume();
     }
 
+    @FXML
+    public void hideContextMenu(ContextMenuEvent event) {
+    }
+
+    @FXML
+    public void addSpectrum(Event e) {
+
+    }
+
+    
     @FXML
     public void previousScan(Event e) {
 

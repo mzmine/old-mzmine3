@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import org.controlsfx.control.*?>
+<?import org.controlsfx.glyphfont.Glyph ?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
@@ -56,15 +57,21 @@
 								</Tab>
 							</tabs>
 						</TabPane>
-						<BorderPane fx:id="mainContentPane">
-							<center>
+						<HiddenSidesPane fx:id="mainContentPane" triggerDistance="10">
+							<content>
 								<Text text="Welcome to MZmine 3" />
-							</center>
+							</content>
 							<right>
-								<Button fx:id="detachButton" text="Detach" disable="true"
-									onAction="#detachCurrentNode" />
+								<Button fx:id="detachButton" disable="true" onAction="#detachCurrentNode">
+									<graphic>
+										<Glyph fontFamily="FontAwesome" icon="SIGN_OUT" />
+									</graphic>
+									<tooltip>
+										<Tooltip text="Detach current component into a separate window" />
+									</tooltip>
+								</Button>
 							</right>
-						</BorderPane>
+						</HiddenSidesPane>
 					</items>
 				</SplitPane>
 				<BorderPane>

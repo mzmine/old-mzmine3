@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.controlsfx.control.HiddenSidesPane;
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.TaskProgressView;
 import org.slf4j.Logger;
@@ -82,7 +83,7 @@ public class MainWindowController {
     private BorderPane mainWindowPane;
 
     @FXML
-    private BorderPane mainContentPane;
+    private HiddenSidesPane mainContentPane;
 
     @FXML
     private TabPane mainTabPane;
@@ -302,11 +303,11 @@ public class MainWindowController {
     @FXML
     protected void detachCurrentNode(ActionEvent event) {
 
-        Node currentNode = mainContentPane.getCenter();
+        Node currentNode = mainContentPane.getContent();
         if (currentNode == null)
             return;
 
-        mainContentPane.setCenter(new Pane());
+        mainContentPane.setContent(new Pane());
 
         BorderPane parent = new BorderPane();
         parent.setCenter(currentNode);
@@ -326,7 +327,7 @@ public class MainWindowController {
     }
 
     public void addWindow(Node node, String title) {
-        mainContentPane.setCenter(node);
+        mainContentPane.setContent(node);
         this.currentNodeTitle = title;
         detachButton.setDisable(false);
     }
