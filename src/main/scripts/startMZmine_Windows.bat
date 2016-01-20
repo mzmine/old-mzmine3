@@ -93,8 +93,12 @@ echo Java maximum heap size set to %HEAP_SIZE% MB
 set JAVA_PARAMETERS=-showversion -classpath lib\* -XX:+UseG1GC -Djava.io.tmpdir=%TMP_FILE_DIRECTORY% -Xms1024m -Xmx%HEAP_SIZE%m
 set MAIN_CLASS=io.github.mzmine.main.MZmineMain
 
-rem This command starts the Java Virtual Machine
+:: Make sure we are in the correct directory
+set SCRIPTDIR=%~dp0
+cd %SCRIPTDIR%
+
+:: This command starts the Java Virtual Machine
 %JAVA_COMMAND% %JAVA_PARAMETERS% %MAIN_CLASS% %*
 
-rem If there was an error, give the user chance to see it
+:: If there was an error, give the user chance to see it
 IF ERRORLEVEL 1 pause
