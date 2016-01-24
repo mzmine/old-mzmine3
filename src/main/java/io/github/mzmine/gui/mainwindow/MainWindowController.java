@@ -80,6 +80,9 @@ public class MainWindowController {
             "file:icon/mzmine-icon.png");
 
     @FXML
+    private Scene mainScene;
+    
+    @FXML
     private BorderPane mainWindowPane;
 
     @FXML
@@ -314,7 +317,7 @@ public class MainWindowController {
         Scene newScene = new Scene(parent);
 
         // Copy CSS styles
-        newScene.getStylesheets().addAll(mainWindowPane.getStylesheets());
+        newScene.getStylesheets().addAll(mainScene.getStylesheets());
 
         Stage newStage = new Stage();
         newStage.setTitle(currentNodeTitle);
