@@ -26,8 +26,6 @@ public interface ChartDataSet {
 
     ChartType getType();
 
-    String getTitle();
-
     String getXAxisName();
 
     String getYAxisName();

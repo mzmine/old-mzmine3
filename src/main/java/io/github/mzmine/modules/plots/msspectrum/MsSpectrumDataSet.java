@@ -28,17 +28,83 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.util.charts.ChartDataSet;
 import io.github.mzmine.util.charts.ChartType;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.scene.paint.Color;
 
 /**
  * MS spectrum data set
  */
 public class MsSpectrumDataSet implements ChartDataSet {
 
-    private final String name;
     private final ChartType type;
     private final double mzValues[];
     private final float intensityValues[];
     private final int numOfDataPoints;
+
+    private final StringProperty name = new SimpleStringProperty(this, "name",
+            "MS spectrum");
+
+    public String getName() {
+        return name.get();
+    }
+
+    public void setName(String newName) {
+        name.set(newName);
+    }
+
+    public StringProperty nameProperty() {
+        return name;
+    }
+
+    private final DoubleProperty mzShift = new SimpleDoubleProperty(this,
+            "mzShift", 0.0);
+
+    public Double getMzShift() {
+        return mzShift.get();
+    }
+
+    public void setMzShift(Double newMzShift) {
+        mzShift.set(newMzShift);
+    }
+
+    public DoubleProperty mzShiftProperty() {
+        return mzShift;
+    }
+
+    private final ObjectProperty<MsSpectrumType> renderingType = new SimpleObjectProperty<>(
+            this, "renderingType", MsSpectrumType.CENTROIDED);
+
+    public MsSpectrumType getRenderingType() {
+        return renderingType.get();
+    }
+
+    public void setRenderingType(MsSpectrumType newType) {
+        renderingType.set(newType);
+    }
+
+    public ObjectProperty<MsSpectrumType> renderingTypeProperty() {
+        return renderingType;
+    }
+
+    private final ObjectProperty<Color> color = new SimpleObjectProperty<>(this,
+            "color", Color.BLUE);
+
+    public Color getColor() {
+        return color.get();
+    }
+
+    public void setColor(Color newColor) {
+        color.set(newColor);
+    }
+
+    public ObjectProperty<Color> colorProperty() {
+        return color;
+    }
 
     MsSpectrumDataSet(MsSpectrum spectrum) {
 
@@ -50,7 +116,7 @@ public class MsSpectrumDataSet implements ChartDataSet {
                 spectrumTitle += " " + dataFile.getName();
             spectrumTitle += "#" + scan.getScanNumber();
         }
-        this.name = spectrumTitle;
+        setName(spectrumTitle);
 
         if (spectrum.getSpectrumType() == MsSpectrumType.CENTROIDED)
             this.type = ChartType.BAR;
@@ -83,11 +149,6 @@ public class MsSpectrumDataSet implements ChartDataSet {
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
     public String getLabel(int index) {
         NumberFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
         final double mz = mzValues[index];
@@ -101,11 +162,6 @@ public class MsSpectrumDataSet implements ChartDataSet {
         final double mz = mzValues[index];
         String label = mzFormat.format(mz);
         return label;
-    }
-
-    @Override
-    public String getTitle() {
-        return "MS spectrum";
     }
 
     @Override

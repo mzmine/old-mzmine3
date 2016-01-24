@@ -19,6 +19,7 @@
 
 package io.github.mzmine.modules.plots.msspectrum;
 
+import java.io.IOException;
 import java.net.URL;
 
 import javax.annotation.Nonnull;
@@ -27,17 +28,21 @@ import com.google.common.base.Preconditions;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.mzmine.util.charts.MZmineChartViewer;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 /**
  * MS spectrum plot window
  */
 public class MsSpectrumPlotWindowController {
+
+    private static final String LAYERS_DIALOG_FXML = "MsSpectrumLayersDialog.fxml";
 
     @FXML
     private BorderPane chartPane;
@@ -45,7 +50,8 @@ public class MsSpectrumPlotWindowController {
     @FXML
     private MZmineChartViewer chartNode;
 
-
+    private final ObservableList<MsSpectrumDataSet> dataSets = FXCollections
+            .observableArrayList();
 
     @FXML
     public void showContextMenu(ContextMenuEvent event) {
@@ -60,15 +66,24 @@ public class MsSpectrumPlotWindowController {
 
     }
 
-    
     @FXML
     public void previousScan(Event e) {
 
     }
 
     @FXML
-    public void setupLayers(Event e) {
-
+    public void setupLayers(Event event) {
+        try {
+            URL layersDialogFXML = getClass().getResource(LAYERS_DIALOG_FXML);
+            FXMLLoader loader = new FXMLLoader(layersDialogFXML);
+            Stage dialog = loader.load();
+            MsSpectrumLayersDialogController controller = loader
+                    .getController();
+            controller.setItems(dataSets);
+            dialog.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -86,6 +101,7 @@ public class MsSpectrumPlotWindowController {
         Preconditions.checkNotNull(spectrum);
 
         MsSpectrumDataSet newDataSet = new MsSpectrumDataSet(spectrum);
+        dataSets.add(newDataSet);
         chartNode.addDataSet(newDataSet);
 
     }

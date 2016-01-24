@@ -28,6 +28,18 @@
 							<MenuItem text="MassBank database" />
 							<MenuItem text="MoNA database" />
 						</Menu>
+						<MenuItem text="Setup layers" onAction="#setupLayers">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="BAR_CHART" />
+							</graphic>
+						</MenuItem>
+						<Menu text="Add...">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="SEARCH_PLUS" />
+							</graphic>
+							<MenuItem text="Scan from file" />
+							<MenuItem text="Simulated isotope pattern" />
+						</Menu>
 						<Menu text="Export image to...">
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="FILE_IMAGE_ALT" />
@@ -54,28 +66,36 @@
 								<Glyph fontFamily="FontAwesome" icon="PRINT" />
 							</graphic>
 						</MenuItem>
+						<MenuItem text="Set axes ranges">
+							<graphic>
+								<ImageView>
+									<Image url="icons/axesicon.png" />
+								</ImageView>
+							</graphic>
+						</MenuItem>
 					</items>
 				</ContextMenu>
 			</contextMenu>
 		</MZmineChartViewer>
 	</center>
-	<right>
-		<ToolBar orientation="VERTICAL">
+	<bottom>
+		<ToolBar orientation="HORIZONTAL">
 			<items>
+				<Button onAction="#previousScan">
+					<graphic>
+						<Glyph fontFamily="FontAwesome" icon="ARROW_LEFT" />
+					</graphic>
+					<tooltip>
+						<Tooltip text="Click here to load previous scan" />
+					</tooltip>
+				</Button>
+				<Region HBox.hgrow="ALWAYS" />
 				<Button onAction="#setupLayers">
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="BAR_CHART" />
 					</graphic>
 					<tooltip>
 						<Tooltip text="Setup layers" />
-					</tooltip>
-				</Button>
-				<Button onAction="#addSpectrum">
-					<graphic>
-						<Glyph fontFamily="FontAwesome" icon="SEARCH_PLUS" />
-					</graphic>
-					<tooltip>
-						<Tooltip text="Add spectrum" />
 					</tooltip>
 				</Button>
 				<Button>
@@ -88,17 +108,7 @@
 						<Tooltip text="Setup ranges of both axes" />
 					</tooltip>
 				</Button>
-
-				<Region VBox.vgrow="ALWAYS" />
-
-				<Button onAction="#previousScan">
-					<graphic>
-						<Glyph fontFamily="FontAwesome" icon="ARROW_LEFT" />
-					</graphic>
-					<tooltip>
-						<Tooltip text="Click here to load previous scan" />
-					</tooltip>
-				</Button>
+				<Region HBox.hgrow="ALWAYS" />
 				<Button onAction="#nextScan">
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="ARROW_RIGHT" />
@@ -109,5 +119,5 @@
 				</Button>
 			</items>
 		</ToolBar>
-	</right>
+	</bottom>
 </BorderPane>
