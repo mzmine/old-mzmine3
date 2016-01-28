@@ -24,9 +24,13 @@
 						</Menu>
 						<MenuItem text="Show XIC..." />
 						<Menu text="Search...">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="SEARCH" />
+							</graphic>
 							<MenuItem text="Similar spectra in the project" />
-							<MenuItem text="MassBank database" />
-							<MenuItem text="MoNA database" />
+							<MenuItem text="Predict chemical formula" />
+							<MenuItem text="Compound database" />
+							<MenuItem text="Spectral database" />
 						</Menu>
 						<MenuItem text="Setup layers" onAction="#setupLayers">
 							<graphic>
@@ -35,9 +39,10 @@
 						</MenuItem>
 						<Menu text="Add...">
 							<graphic>
-								<Glyph fontFamily="FontAwesome" icon="SEARCH_PLUS" />
+								<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
 							</graphic>
-							<MenuItem text="Scan from file" />
+							<MenuItem text="MS scan from file" />
+							<MenuItem text="Parsed MS spectrum" />
 							<MenuItem text="Simulated isotope pattern" />
 						</Menu>
 						<Menu text="Export image to...">
@@ -96,6 +101,14 @@
 					</graphic>
 					<tooltip>
 						<Tooltip text="Setup layers" />
+					</tooltip>
+				</Button>
+				<Button>
+					<graphic>
+						<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
+					</graphic>
+					<tooltip>
+						<Tooltip text="Add spectrum" />
 					</tooltip>
 				</Button>
 				<Button>

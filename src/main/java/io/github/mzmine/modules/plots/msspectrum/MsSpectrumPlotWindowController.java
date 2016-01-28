@@ -35,6 +35,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -76,11 +77,12 @@ public class MsSpectrumPlotWindowController {
         try {
             URL layersDialogFXML = getClass().getResource(LAYERS_DIALOG_FXML);
             FXMLLoader loader = new FXMLLoader(layersDialogFXML);
-            Stage dialog = loader.load();
+            Stage layersDialog = loader.load();
             MsSpectrumLayersDialogController controller = loader
                     .getController();
             controller.setItems(dataSets);
-            dialog.show();
+            layersDialog.initModality(Modality.APPLICATION_MODAL);
+            layersDialog.show();
         } catch (IOException e) {
             e.printStackTrace();
         }

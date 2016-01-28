@@ -28,9 +28,13 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.util.charts.ChartDataSet;
 import io.github.mzmine.util.charts.ChartType;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -75,7 +79,38 @@ public class MsSpectrumDataSet implements ChartDataSet {
     public DoubleProperty mzShiftProperty() {
         return mzShift;
     }
+    
+    private final IntegerProperty lineThickness = new SimpleIntegerProperty(this,
+            "lineThickness", 1);
 
+    public Integer getLineThickness() {
+        return lineThickness.get();
+    }
+
+    public void setMzShift(Integer newLineThickness) {
+        lineThickness.set(newLineThickness);
+    }
+
+    public IntegerProperty lineThicknessProperty() {
+        return lineThickness;
+    }
+
+    private final BooleanProperty showDataPoints = new SimpleBooleanProperty(this,
+            "showDataPoints", false);
+
+    public Boolean getShowDataPoints() {
+        return showDataPoints.get();
+    }
+
+    public void setMzShift(Boolean newShowDataPoints) {
+        showDataPoints.set(newShowDataPoints);
+    }
+
+    public BooleanProperty showDataPointsProperty() {
+        return showDataPoints;
+    }
+
+    
     private final ObjectProperty<MsSpectrumType> renderingType = new SimpleObjectProperty<>(
             this, "renderingType", MsSpectrumType.CENTROIDED);
 

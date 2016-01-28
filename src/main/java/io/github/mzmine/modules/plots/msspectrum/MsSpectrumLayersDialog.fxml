@@ -20,9 +20,9 @@
 			<stylesheets>
 				<URL value="file:conf/MZmine.css" />
 			</stylesheets>
-			<BorderPane>
+			<BorderPane prefWidth="800" prefHeight="500">
 				<center>
-					<TableView fx:id="layersTable">
+					<TableView fx:id="layersTable" editable="true">
 						<contextMenu>
 							<ContextMenu>
 								<items>
@@ -33,7 +33,7 @@
 									</MenuItem>
 									<Menu text="Add...">
 										<graphic>
-											<Glyph fontFamily="FontAwesome" icon="SEARCH_PLUS" />
+											<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
 										</graphic>
 										<MenuItem text="Scan from file" />
 										<MenuItem text="Simulated isotope pattern" />
@@ -42,27 +42,38 @@
 							</ContextMenu>
 						</contextMenu>
 						<columns>
-							<TableColumn text="Name" editable="true">
+							<TableColumn text="Name" editable="true" fx:id="nameColumn">
 								<cellValueFactory>
 									<PropertyValueFactory property="name" />
 								</cellValueFactory>
+								<cellFactory>
+ 									<TextFieldTableCell fx:factory="forTableColumn" />
+								</cellFactory>								
 							</TableColumn>
-							<TableColumn text="Mass shift" editable="true">
+							<TableColumn text="m/z shift" editable="true" fx:id="mzShiftColumn">
 								<cellValueFactory>
 									<PropertyValueFactory property="mzShift" />
 								</cellValueFactory>
 							</TableColumn>
-							<TableColumn text="Rendering" editable="true">
+							<TableColumn text="Rendering" editable="true" fx:id="renderingTypeColumn">
 								<cellValueFactory>
 									<PropertyValueFactory property="renderingType" />
 								</cellValueFactory>
 							</TableColumn>
-							<TableColumn text="Color" editable="true">
+							<TableColumn text="Color" editable="true" fx:id="colorColumn">
 								<cellValueFactory>
 									<PropertyValueFactory property="color" />
 								</cellValueFactory>
 							</TableColumn>
-							<TableColumn text="Show data points" editable="true">
+							<TableColumn text="Line thickness" editable="true" fx:id="lineThicknessColumn">
+								<cellValueFactory>
+									<PropertyValueFactory property="lineThickness" />
+								</cellValueFactory>
+							</TableColumn>
+							<TableColumn text="Show data points" editable="true" fx:id="showDataPointsColumn">
+								<cellValueFactory>
+									<PropertyValueFactory property="showDataPoints" />
+								</cellValueFactory>
 							</TableColumn>
 						</columns>
 					</TableView>
@@ -73,7 +84,7 @@
 							<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
 						</BorderPane.margin>
 						<buttons>
-							<Button text="Close" onAction="#close"
+							<Button text="Close" onAction="#handleClose"
 								ButtonBar.buttonData="OK_DONE" />
 						</buttons>
 					</ButtonBar>

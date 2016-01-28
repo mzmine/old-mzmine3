@@ -19,10 +19,16 @@
 
 package io.github.mzmine.modules.plots.msspectrum;
 
+import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.ChoiceBoxTableCell;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -37,10 +43,33 @@ public class MsSpectrumLayersDialogController {
     private TableView<MsSpectrumDataSet> layersTable;
 
     @FXML
-    public void close(Event event) {
+    private TableColumn<MsSpectrumDataSet, MsSpectrumType> renderingTypeColumn;
+
+    @FXML
+    private TableColumn<MsSpectrumDataSet, Color> colorColumn;
+
+    @FXML
+    private TableColumn<MsSpectrumDataSet, Integer> lineThicknessColumn;
+
+    @FXML
+    private TableColumn<MsSpectrumDataSet, Boolean> showDataPointsColumn;
+
+    @FXML
+    public void initialize() {
+        ObservableList<MsSpectrumType> choices = FXCollections
+                .observableArrayList(MsSpectrumType.CENTROIDED,
+                        MsSpectrumType.PROFILE);
+        renderingTypeColumn
+                .setCellFactory(ChoiceBoxTableCell.forTableColumn(choices));
+        
+        showDataPointsColumn.setCellFactory(CheckBoxTableCell.forTableColumn(showDataPointsColumn));
+    }
+
+    @FXML
+    public void handleClose(Event event) {
         dialogStage.close();
     }
-    
+
     public void setItems(ObservableList<MsSpectrumDataSet> items) {
         layersTable.setItems(items);
     }
