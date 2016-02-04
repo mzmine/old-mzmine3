@@ -20,6 +20,7 @@
 package io.github.mzmine.util;
 
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
 
 /**
  * JavaFX related utilities
@@ -43,6 +44,17 @@ public class JavaFXUtil {
         }
 
         return null;
+    }
+
+    public static java.awt.Color convertColorToAWT(Color col) {
+        int r = (int) (col.getRed() * 255);
+        int g = (int) (col.getGreen() * 255);
+        int b = (int) (col.getBlue() * 255);
+        return new java.awt.Color(r, g, b);
+    }
+
+    public static Color convertColorToJavaFX(java.awt.Color col) {
+        return Color.rgb(col.getRed(), col.getGreen(), col.getBlue());
     }
 
 }

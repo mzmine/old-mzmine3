@@ -4,7 +4,7 @@
 <?import javafx.scene.control.* ?>
 <?import javafx.scene.layout.* ?>
 <?import javafx.scene.image.* ?>
-<?import io.github.mzmine.util.charts.MZmineChartViewer ?>
+<?import io.github.mzmine.util.charts.jfreechart.* ?>
 <?import org.controlsfx.control.* ?>
 <?import org.controlsfx.glyphfont.Glyph ?>
 
@@ -12,7 +12,7 @@
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="io.github.mzmine.modules.plots.msspectrum.MsSpectrumPlotWindowController">
 	<center>
-		<MZmineChartViewer fx:id="chartNode">
+		<ChartNodeJFreeChart fx:id="chartNode">
 			<contextMenu>
 				<ContextMenu>
 					<items>
@@ -24,9 +24,26 @@
 						</Menu>
 						<MenuItem text="Show XIC..." />
 						<Menu text="Search...">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="SEARCH" />
+							</graphic>
 							<MenuItem text="Similar spectra in the project" />
-							<MenuItem text="MassBank database" />
-							<MenuItem text="MoNA database" />
+							<MenuItem text="Predict chemical formula" />
+							<MenuItem text="Compound database" />
+							<MenuItem text="Spectral database" />
+						</Menu>
+						<MenuItem text="Setup layers" onAction="#handleSetupLayers">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="BAR_CHART" />
+							</graphic>
+						</MenuItem>
+						<Menu text="Add...">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
+							</graphic>
+							<MenuItem text="MS scan from file" />
+							<MenuItem text="Parsed MS spectrum" />
+							<MenuItem text="Simulated isotope pattern" />
 						</Menu>
 						<Menu text="Export image to...">
 							<graphic>
@@ -54,15 +71,31 @@
 								<Glyph fontFamily="FontAwesome" icon="PRINT" />
 							</graphic>
 						</MenuItem>
+						<MenuItem text="Set axes ranges">
+							<graphic>
+								<ImageView>
+									<Image url="icons/axesicon.png" />
+								</ImageView>
+							</graphic>
+						</MenuItem>
 					</items>
 				</ContextMenu>
 			</contextMenu>
-		</MZmineChartViewer>
+		</ChartNodeJFreeChart>
 	</center>
-	<right>
-		<ToolBar orientation="VERTICAL">
+	<bottom>
+		<ToolBar orientation="HORIZONTAL">
 			<items>
-				<Button onAction="#setupLayers">
+				<Button onAction="#previousScan">
+					<graphic>
+						<Glyph fontFamily="FontAwesome" icon="ARROW_LEFT" />
+					</graphic>
+					<tooltip>
+						<Tooltip text="Click here to load previous scan" />
+					</tooltip>
+				</Button>
+				<Region HBox.hgrow="ALWAYS" />
+				<Button onAction="#handleSetupLayers">
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="BAR_CHART" />
 					</graphic>
@@ -70,9 +103,9 @@
 						<Tooltip text="Setup layers" />
 					</tooltip>
 				</Button>
-				<Button onAction="#addSpectrum">
+				<Button>
 					<graphic>
-						<Glyph fontFamily="FontAwesome" icon="SEARCH_PLUS" />
+						<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
 					</graphic>
 					<tooltip>
 						<Tooltip text="Add spectrum" />
@@ -88,17 +121,7 @@
 						<Tooltip text="Setup ranges of both axes" />
 					</tooltip>
 				</Button>
-
-				<Region VBox.vgrow="ALWAYS" />
-
-				<Button onAction="#previousScan">
-					<graphic>
-						<Glyph fontFamily="FontAwesome" icon="ARROW_LEFT" />
-					</graphic>
-					<tooltip>
-						<Tooltip text="Click here to load previous scan" />
-					</tooltip>
-				</Button>
+				<Region HBox.hgrow="ALWAYS" />
 				<Button onAction="#nextScan">
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="ARROW_RIGHT" />
@@ -109,5 +132,5 @@
 				</Button>
 			</items>
 		</ToolBar>
-	</right>
+	</bottom>
 </BorderPane>

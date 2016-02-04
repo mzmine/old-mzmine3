@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.* ?>
+<?import java.net.URL ?>
+<?import javafx.geometry.Insets ?>
+<?import javafx.stage.Stage ?>
+<?import javafx.scene.Scene ?>
+<?import javafx.scene.control.* ?>
+<?import javafx.scene.control.cell.* ?>
+<?import javafx.scene.layout.* ?>
+<?import javafx.scene.image.* ?>
+<?import org.controlsfx.control.* ?>
+<?import org.controlsfx.glyphfont.Glyph ?>
+
+<Stage title="Setup layers" fx:id="dialogStage" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="io.github.mzmine.modules.plots.msspectrum.MsSpectrumLayersDialogController">
+	<scene>
+		<Scene>
+			<stylesheets>
+				<URL value="file:conf/MZmine.css" />
+			</stylesheets>
+			<BorderPane prefWidth="800" prefHeight="500">
+				<center>
+					<TableView fx:id="layersTable" editable="true">
+						<contextMenu>
+							<ContextMenu>
+								<items>
+									<MenuItem text="Delete layer">
+										<graphic>
+											<Glyph fontFamily="FontAwesome" icon="REMOVE" />
+										</graphic>
+									</MenuItem>
+									<Menu text="Add...">
+										<graphic>
+											<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
+										</graphic>
+										<MenuItem text="Scan from file" />
+										<MenuItem text="Simulated isotope pattern" />
+									</Menu>
+								</items>
+							</ContextMenu>
+						</contextMenu>
+						<columns>
+							<TableColumn text="Name" editable="true" fx:id="nameColumn">
+								<cellValueFactory>
+									<PropertyValueFactory property="name" />
+								</cellValueFactory>
+								<cellFactory>
+ 									<TextFieldTableCell fx:factory="forTableColumn" />
+								</cellFactory>								
+							</TableColumn>
+							<TableColumn text="m/z shift" editable="true" fx:id="mzShiftColumn">
+								<cellValueFactory>
+									<PropertyValueFactory property="mzShift" />
+								</cellValueFactory>
+							</TableColumn>
+							<TableColumn text="Intensity scale" editable="true" fx:id="intensityScaleColumn">
+								<cellValueFactory>
+									<PropertyValueFactory property="intensityScale" />
+								</cellValueFactory>
+							</TableColumn>
+							<TableColumn text="Rendering" editable="true" fx:id="renderingTypeColumn">
+								<cellValueFactory>
+									<PropertyValueFactory property="renderingType" />
+								</cellValueFactory>
+							</TableColumn>
+							<TableColumn text="Color" editable="true" fx:id="colorColumn">
+								<cellValueFactory>
+									<PropertyValueFactory property="color" />
+								</cellValueFactory>
+							</TableColumn>
+							<TableColumn text="Line thickness" editable="true" fx:id="lineThicknessColumn">
+								<cellValueFactory>
+									<PropertyValueFactory property="lineThickness" />
+								</cellValueFactory>
+							</TableColumn>
+							<TableColumn text="Show data points" editable="true" fx:id="showDataPointsColumn">
+								<cellValueFactory>
+									<PropertyValueFactory property="showDataPoints" />
+								</cellValueFactory>
+							</TableColumn>
+						</columns>
+					</TableView>
+				</center>
+				<bottom>
+					<ButtonBar>
+						<BorderPane.margin>
+							<Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+						</BorderPane.margin>
+						<buttons>
+							<Button text="Close" onAction="#handleClose"
+								ButtonBar.buttonData="OK_DONE" />
+						</buttons>
+					</ButtonBar>
+				</bottom>
+			</BorderPane>
+		</Scene>
+	</scene>
+</Stage>

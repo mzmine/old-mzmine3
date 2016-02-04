@@ -40,7 +40,7 @@ public class IntelligentItemLabelGenerator implements XYItemLabelGenerator {
      *            labels do not overlap
      * @param underlyingGenerator
      */
-    IntelligentItemLabelGenerator(ChartViewer chartNode, XYPlot plot,
+    public IntelligentItemLabelGenerator(ChartViewer chartNode, XYPlot plot,
             int reservedPoints, XYItemLabelGenerator underlyingGenerator) {
         this.chartNode = chartNode;
         this.plot = plot;

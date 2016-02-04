@@ -53,8 +53,6 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 /**
@@ -77,10 +75,9 @@ public final class MZmineGUI extends Application {
             URL mainFXML = new URL(mzMineFXML);
             FXMLLoader loader = new FXMLLoader(mainFXML);
 
-            BorderPane rootPane = (BorderPane) loader.load();
+            Scene rootScene = loader.load();
             mainWindowController = loader.getController();
-            Scene scene = new Scene(rootPane, 1000, 600, Color.WHITE);
-            stage.setScene(scene);
+            stage.setScene(rootScene);
 
         } catch (IOException e) {
             e.printStackTrace();
