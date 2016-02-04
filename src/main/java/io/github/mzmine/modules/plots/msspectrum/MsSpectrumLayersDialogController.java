@@ -20,16 +20,24 @@
 package io.github.mzmine.modules.plots.msspectrum;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import io.github.mzmine.main.MZmineCore;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ChoiceBoxTableCell;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.IntegerStringConverter;
+import javafx.util.converter.NumberStringConverter;
 
 /**
  * MS spectrum layer setup dialog controller
@@ -49,6 +57,12 @@ public class MsSpectrumLayersDialogController {
     private TableColumn<MsSpectrumDataSet, Color> colorColumn;
 
     @FXML
+    private TableColumn<MsSpectrumDataSet, Double> mzShiftColumn;
+
+    @FXML
+    private TableColumn<MsSpectrumDataSet, Number> intensityScaleColumn;
+
+    @FXML
     private TableColumn<MsSpectrumDataSet, Integer> lineThicknessColumn;
 
     @FXML
@@ -61,8 +75,52 @@ public class MsSpectrumLayersDialogController {
                         MsSpectrumType.PROFILE);
         renderingTypeColumn
                 .setCellFactory(ChoiceBoxTableCell.forTableColumn(choices));
-        
-        showDataPointsColumn.setCellFactory(CheckBoxTableCell.forTableColumn(showDataPointsColumn));
+
+        colorColumn.setCellFactory(column -> {
+            TableCell<MsSpectrumDataSet, Color> cell = new TableCell<MsSpectrumDataSet, Color>() {
+                private final ColorPicker colorPicker = new ColorPicker();
+
+                {
+
+                    tableRowProperty().addListener(e -> {
+                        TableRow row = getTableRow();
+                        if (row != null) {
+                            MsSpectrumDataSet dataSet = (MsSpectrumDataSet) row
+                                    .getItem();
+                            if (dataSet != null)
+                                colorPicker.valueProperty().bindBidirectional(
+                                        dataSet.colorProperty());
+                        }
+                    });
+                }
+
+                @Override
+                protected void updateItem(Color c, boolean empty) {
+
+                    super.updateItem(c, empty);
+                    if (empty || c == null) {
+                        setText(null);
+                        setGraphic(null);
+                        return;
+                    }
+                    colorPicker.setValue(c);
+
+                    setGraphic(colorPicker);
+                }
+            };
+            return cell;
+        });
+
+        mzShiftColumn.setCellFactory(
+                TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        intensityScaleColumn.setCellFactory(
+                TextFieldTableCell.forTableColumn(new NumberStringConverter(
+                        MZmineCore.getConfiguration().getIntensityFormat())));
+        lineThicknessColumn.setCellFactory(TextFieldTableCell
+                .forTableColumn(new IntegerStringConverter()));
+        showDataPointsColumn.setCellFactory(
+                CheckBoxTableCell.forTableColumn(showDataPointsColumn));
+
     }
 
     @FXML

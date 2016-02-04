@@ -55,6 +55,11 @@
 									<PropertyValueFactory property="mzShift" />
 								</cellValueFactory>
 							</TableColumn>
+							<TableColumn text="Intensity scale" editable="true" fx:id="intensityScaleColumn">
+								<cellValueFactory>
+									<PropertyValueFactory property="intensityScale" />
+								</cellValueFactory>
+							</TableColumn>
 							<TableColumn text="Rendering" editable="true" fx:id="renderingTypeColumn">
 								<cellValueFactory>
 									<PropertyValueFactory property="renderingType" />

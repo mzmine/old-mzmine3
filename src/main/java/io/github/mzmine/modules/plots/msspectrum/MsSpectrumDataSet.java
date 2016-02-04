@@ -21,13 +21,18 @@ package io.github.mzmine.modules.plots.msspectrum;
 
 import java.text.NumberFormat;
 
+import org.jfree.chart.labels.XYItemLabelGenerator;
+import org.jfree.chart.labels.XYToolTipGenerator;
+import org.jfree.data.xy.AbstractXYDataset;
+import org.jfree.data.xy.IntervalXYDataset;
+import org.jfree.data.xy.XYDataset;
+
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.util.MsSpectrumUtil;
 import io.github.mzmine.main.MZmineCore;
-import io.github.mzmine.util.charts.ChartDataSet;
-import io.github.mzmine.util.charts.ChartType;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -41,17 +46,31 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
 
 /**
- * MS spectrum data set
+ * MS spectrum data set. Implements IntervalXYDataset for centroid spectra
+ * support (rendered by XYBarRenderer).
  */
-public class MsSpectrumDataSet implements ChartDataSet {
+public class MsSpectrumDataSet extends AbstractXYDataset
+        implements XYItemLabelGenerator, XYToolTipGenerator, IntervalXYDataset {
 
-    private final ChartType type;
     private final double mzValues[];
     private final float intensityValues[];
+    private final float topIndensity;
     private final int numOfDataPoints;
 
     private final StringProperty name = new SimpleStringProperty(this, "name",
             "MS spectrum");
+    private final DoubleProperty mzShift = new SimpleDoubleProperty(this,
+            "mzShift", 0.0);
+    private final DoubleProperty intensityScale = new SimpleDoubleProperty(this,
+            "intensityScale", 0.0);
+    private final IntegerProperty lineThickness = new SimpleIntegerProperty(
+            this, "lineThickness", 1);
+    private final ObjectProperty<MsSpectrumType> renderingType = new SimpleObjectProperty<>(
+            this, "renderingType", MsSpectrumType.CENTROIDED);
+    private final ObjectProperty<Color> color = new SimpleObjectProperty<>(this,
+            "color", Color.BLUE);
+    private final BooleanProperty showDataPoints = new SimpleBooleanProperty(
+            this, "showDataPoints", false);
 
     public String getName() {
         return name.get();
@@ -65,9 +84,6 @@ public class MsSpectrumDataSet implements ChartDataSet {
         return name;
     }
 
-    private final DoubleProperty mzShift = new SimpleDoubleProperty(this,
-            "mzShift", 0.0);
-
     public Double getMzShift() {
         return mzShift.get();
     }
@@ -79,9 +95,18 @@ public class MsSpectrumDataSet implements ChartDataSet {
     public DoubleProperty mzShiftProperty() {
         return mzShift;
     }
-    
-    private final IntegerProperty lineThickness = new SimpleIntegerProperty(this,
-            "lineThickness", 1);
+
+    public Double getIntensityScale() {
+        return intensityScale.get();
+    }
+
+    public void setIntensityScale(Double newIntensityScale) {
+        intensityScale.set(newIntensityScale);
+    }
+
+    public DoubleProperty intensityScaleProperty() {
+        return intensityScale;
+    }
 
     public Integer getLineThickness() {
         return lineThickness.get();
@@ -95,9 +120,6 @@ public class MsSpectrumDataSet implements ChartDataSet {
         return lineThickness;
     }
 
-    private final BooleanProperty showDataPoints = new SimpleBooleanProperty(this,
-            "showDataPoints", false);
-
     public Boolean getShowDataPoints() {
         return showDataPoints.get();
     }
@@ -110,10 +132,6 @@ public class MsSpectrumDataSet implements ChartDataSet {
         return showDataPoints;
     }
 
-    
-    private final ObjectProperty<MsSpectrumType> renderingType = new SimpleObjectProperty<>(
-            this, "renderingType", MsSpectrumType.CENTROIDED);
-
     public MsSpectrumType getRenderingType() {
         return renderingType.get();
     }
@@ -125,9 +143,6 @@ public class MsSpectrumDataSet implements ChartDataSet {
     public ObjectProperty<MsSpectrumType> renderingTypeProperty() {
         return renderingType;
     }
-
-    private final ObjectProperty<Color> color = new SimpleObjectProperty<>(this,
-            "color", Color.BLUE);
 
     public Color getColor() {
         return color.get();
@@ -153,38 +168,48 @@ public class MsSpectrumDataSet implements ChartDataSet {
         }
         setName(spectrumTitle);
 
-        if (spectrum.getSpectrumType() == MsSpectrumType.CENTROIDED)
-            this.type = ChartType.BAR;
-        else
-            this.type = ChartType.LINE;
-
         this.mzValues = spectrum.getMzValues();
         this.intensityValues = spectrum.getIntensityValues();
         this.numOfDataPoints = spectrum.getNumberOfDataPoints();
+
+        this.topIndensity = MsSpectrumUtil.getMaxIntensity(intensityValues,
+                numOfDataPoints);
+        setIntensityScale((double) topIndensity);
+        intensityScale.addListener(e -> {
+            fireDatasetChanged();
+        });
+        name.addListener(e -> {
+            fireDatasetChanged();
+        });
     }
 
     @Override
-    public ChartType getType() {
-        return type;
-    }
-
-    @Override
-    public double getX(int index) {
-        return mzValues[index];
-    }
-
-    @Override
-    public double getY(int index) {
-        return intensityValues[index];
-    }
-
-    @Override
-    public int getNumOfDataPoints() {
+    public int getItemCount(int series) {
         return numOfDataPoints;
     }
 
     @Override
-    public String getLabel(int index) {
+    public Number getX(int series, int index) {
+        return mzValues[index];
+    }
+
+    @Override
+    public Number getY(int series, int index) {
+        return intensityValues[index] * (getIntensityScale() / topIndensity);
+    }
+
+    @Override
+    public int getSeriesCount() {
+        return 1;
+    }
+
+    @Override
+    public Comparable getSeriesKey(int series) {
+        return getName();
+    }
+
+    @Override
+    public String generateLabel(XYDataset ds, int series, int index) {
         NumberFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
         final double mz = mzValues[index];
         String label = mzFormat.format(mz);
@@ -192,21 +217,52 @@ public class MsSpectrumDataSet implements ChartDataSet {
     }
 
     @Override
-    public String getToolTip(int index) {
+    public String generateToolTip(XYDataset ds, int series, int index) {
         NumberFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
         final double mz = mzValues[index];
         String label = mzFormat.format(mz);
         return label;
+
     }
 
     @Override
-    public String getXAxisName() {
-        return "m/z";
+    public Number getStartX(int series, int item) {
+        return getX(series, item);
     }
 
     @Override
-    public String getYAxisName() {
-        return "Intensity";
+    public double getStartXValue(int series, int item) {
+        return getXValue(series, item);
+    }
+
+    @Override
+    public Number getEndX(int series, int item) {
+        return getX(series, item);
+    }
+
+    @Override
+    public double getEndXValue(int series, int item) {
+        return getXValue(series, item);
+    }
+
+    @Override
+    public Number getStartY(int series, int item) {
+        return getY(series, item);
+    }
+
+    @Override
+    public double getStartYValue(int series, int item) {
+        return getYValue(series, item);
+    }
+
+    @Override
+    public Number getEndY(int series, int item) {
+        return getY(series, item);
+    }
+
+    @Override
+    public double getEndYValue(int series, int item) {
+        return getYValue(series, item);
     }
 
 }
