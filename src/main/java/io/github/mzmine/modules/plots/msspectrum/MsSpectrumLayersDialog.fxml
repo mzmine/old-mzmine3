@@ -42,40 +42,47 @@
 							</ContextMenu>
 						</contextMenu>
 						<columns>
-							<TableColumn text="Name" editable="true" fx:id="nameColumn">
+							<TableColumn text="Name" editable="true" fx:id="nameColumn"
+								minWidth="200">
 								<cellValueFactory>
 									<PropertyValueFactory property="name" />
 								</cellValueFactory>
 								<cellFactory>
- 									<TextFieldTableCell fx:factory="forTableColumn" />
-								</cellFactory>								
+									<TextFieldTableCell fx:factory="forTableColumn" />
+								</cellFactory>
 							</TableColumn>
-							<TableColumn text="m/z shift" editable="true" fx:id="mzShiftColumn">
+							<TableColumn text="m/z shift" editable="true"
+								fx:id="mzShiftColumn" minWidth="60">
 								<cellValueFactory>
 									<PropertyValueFactory property="mzShift" />
 								</cellValueFactory>
 							</TableColumn>
-							<TableColumn text="Intensity scale" editable="true" fx:id="intensityScaleColumn">
+							<TableColumn text="Intensity scale" editable="true"
+								fx:id="intensityScaleColumn" minWidth="120">
 								<cellValueFactory>
 									<PropertyValueFactory property="intensityScale" />
 								</cellValueFactory>
 							</TableColumn>
-							<TableColumn text="Rendering" editable="true" fx:id="renderingTypeColumn">
+							<TableColumn text="Rendering" editable="true"
+								fx:id="renderingTypeColumn" minWidth="80">
 								<cellValueFactory>
 									<PropertyValueFactory property="renderingType" />
 								</cellValueFactory>
 							</TableColumn>
-							<TableColumn text="Color" editable="true" fx:id="colorColumn">
+							<TableColumn text="Color" editable="true" fx:id="colorColumn"
+								minWidth="120">
 								<cellValueFactory>
 									<PropertyValueFactory property="color" />
 								</cellValueFactory>
 							</TableColumn>
-							<TableColumn text="Line thickness" editable="true" fx:id="lineThicknessColumn">
+							<TableColumn text="Line" editable="true"
+								fx:id="lineThicknessColumn" minWidth="70" prefWidth="70">
 								<cellValueFactory>
 									<PropertyValueFactory property="lineThickness" />
 								</cellValueFactory>
 							</TableColumn>
-							<TableColumn text="Show data points" editable="true" fx:id="showDataPointsColumn">
+							<TableColumn text="Points" editable="true"
+								fx:id="showDataPointsColumn" minWidth="50">
 								<cellValueFactory>
 									<PropertyValueFactory property="showDataPoints" />
 								</cellValueFactory>

@@ -165,6 +165,9 @@ public class MsSpectrumPlotWindowController {
         newDataSet.lineThicknessProperty().addListener(e -> {
             configureRenderer(newDataSet, datasetIndex);
         });
+        newDataSet.showDataPointsProperty().addListener(e -> {
+            configureRenderer(newDataSet, datasetIndex);
+        });
         numberOfDataSets++;
 
     }
@@ -183,7 +186,7 @@ public class MsSpectrumPlotWindowController {
             XYLineAndShapeRenderer newLineRenderer = new XYLineAndShapeRenderer();
             newLineRenderer.setBaseShape(new Ellipse2D.Double(-2, -2, 5, 5));
             newLineRenderer.setBaseShapesFilled(true);
-            newLineRenderer.setBaseShapesVisible(false);
+            newLineRenderer.setBaseShapesVisible(dataSet.getShowDataPoints());
             newLineRenderer.setDrawOutlines(false);
             Stroke baseStroke = new BasicStroke(dataSet.getLineThickness());
             newLineRenderer.setBaseStroke(baseStroke);

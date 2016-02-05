@@ -26,6 +26,7 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -36,7 +37,6 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.converter.DoubleStringConverter;
-import javafx.util.converter.IntegerStringConverter;
 import javafx.util.converter.NumberStringConverter;
 
 /**
@@ -75,13 +75,10 @@ public class MsSpectrumLayersDialogController {
                         MsSpectrumType.PROFILE);
         renderingTypeColumn
                 .setCellFactory(ChoiceBoxTableCell.forTableColumn(choices));
-
         colorColumn.setCellFactory(column -> {
             TableCell<MsSpectrumDataSet, Color> cell = new TableCell<MsSpectrumDataSet, Color>() {
                 private final ColorPicker colorPicker = new ColorPicker();
-
                 {
-
                     tableRowProperty().addListener(e -> {
                         TableRow row = getTableRow();
                         if (row != null) {
@@ -92,6 +89,7 @@ public class MsSpectrumLayersDialogController {
                                         dataSet.colorProperty());
                         }
                     });
+                    
                 }
 
                 @Override
@@ -111,13 +109,48 @@ public class MsSpectrumLayersDialogController {
             return cell;
         });
 
+        
+        lineThicknessColumn.setCellFactory(column -> {
+            TableCell<MsSpectrumDataSet, Integer> cell = new TableCell<MsSpectrumDataSet, Integer>() {
+                private final Spinner<Number> spinner = new Spinner<>(1, 20, 1);
+
+                {
+
+                    tableRowProperty().addListener(e -> {
+                        TableRow row = getTableRow();
+                        if (row != null) {
+                            MsSpectrumDataSet dataSet = (MsSpectrumDataSet) row
+                                    .getItem();
+                            if (dataSet != null)
+                                spinner.getValueFactory().valueProperty().bindBidirectional(
+                                        dataSet.lineThicknessProperty());
+                        }
+                    });
+                }
+
+                @Override
+                protected void updateItem(Integer c, boolean empty) {
+
+                    super.updateItem(c, empty);
+                    if (empty || c == null) {
+                        setText(null);
+                        setGraphic(null);
+                        return;
+                    }
+                    spinner.getValueFactory().setValue(c);
+
+                    setGraphic(spinner);
+                }
+            };
+            return cell;
+        });
+        
         mzShiftColumn.setCellFactory(
                 TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         intensityScaleColumn.setCellFactory(
                 TextFieldTableCell.forTableColumn(new NumberStringConverter(
                         MZmineCore.getConfiguration().getIntensityFormat())));
-        lineThicknessColumn.setCellFactory(TextFieldTableCell
-                .forTableColumn(new IntegerStringConverter()));
+        
         showDataPointsColumn.setCellFactory(
                 CheckBoxTableCell.forTableColumn(showDataPointsColumn));
 
