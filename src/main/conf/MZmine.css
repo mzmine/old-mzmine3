@@ -2,6 +2,11 @@
     -fx-font-size: 10.0pt;
 }
 
+/* Table cell alignment */
+.table-column {
+  -fx-alignment: CENTER-LEFT;
+}
+
 #memoryBarLabel { 
 	-fx-font-size: 9.0pt; 
 	-fx-label-padding: 0.0 20.0 0.0 20.0; 

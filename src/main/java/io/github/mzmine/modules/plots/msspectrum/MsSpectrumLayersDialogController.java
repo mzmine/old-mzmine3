@@ -78,6 +78,7 @@ public class MsSpectrumLayersDialogController {
         colorColumn.setCellFactory(column -> {
             TableCell<MsSpectrumDataSet, Color> cell = new TableCell<MsSpectrumDataSet, Color>() {
                 private final ColorPicker colorPicker = new ColorPicker();
+
                 {
                     tableRowProperty().addListener(e -> {
                         TableRow row = getTableRow();
@@ -89,7 +90,7 @@ public class MsSpectrumLayersDialogController {
                                         dataSet.colorProperty());
                         }
                     });
-                    
+
                 }
 
                 @Override
@@ -109,22 +110,25 @@ public class MsSpectrumLayersDialogController {
             return cell;
         });
 
-        
         lineThicknessColumn.setCellFactory(column -> {
             TableCell<MsSpectrumDataSet, Integer> cell = new TableCell<MsSpectrumDataSet, Integer>() {
-                private final Spinner<Number> spinner = new Spinner<>(1, 20, 1);
+                private final Spinner<Number> spinner = new Spinner<>(1, 5, 1);
 
                 {
-
                     tableRowProperty().addListener(e -> {
                         TableRow row = getTableRow();
-                        if (row != null) {
-                            MsSpectrumDataSet dataSet = (MsSpectrumDataSet) row
-                                    .getItem();
-                            if (dataSet != null)
-                                spinner.getValueFactory().valueProperty().bindBidirectional(
+                        if (row == null)
+                            return;
+                        MsSpectrumDataSet dataSet = (MsSpectrumDataSet) row
+                                .getItem();
+                        if (dataSet == null)
+                            return;
+                        spinner.getValueFactory().valueProperty()
+                                .bindBidirectional(
                                         dataSet.lineThicknessProperty());
-                        }
+                        disableProperty().bind(dataSet.renderingTypeProperty()
+                                .isEqualTo(MsSpectrumType.CENTROIDED));
+
                     });
                 }
 
@@ -144,15 +148,32 @@ public class MsSpectrumLayersDialogController {
             };
             return cell;
         });
-        
+
         mzShiftColumn.setCellFactory(
                 TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         intensityScaleColumn.setCellFactory(
                 TextFieldTableCell.forTableColumn(new NumberStringConverter(
                         MZmineCore.getConfiguration().getIntensityFormat())));
-        
-        showDataPointsColumn.setCellFactory(
-                CheckBoxTableCell.forTableColumn(showDataPointsColumn));
+
+        showDataPointsColumn.setCellFactory(column -> {
+            TableCell<MsSpectrumDataSet, Boolean> cell = new CheckBoxTableCell<MsSpectrumDataSet, Boolean>() {
+                {
+                    tableRowProperty().addListener(e -> {
+                        TableRow row = getTableRow();
+                        if (row == null)
+                            return;
+                        MsSpectrumDataSet dataSet = (MsSpectrumDataSet) row
+                                .getItem();
+                        if (dataSet == null)
+                            return;
+                        disableProperty().bind(dataSet.renderingTypeProperty()
+                                .isEqualTo(MsSpectrumType.CENTROIDED));
+
+                    });
+                }
+            };
+            return cell;
+        });
 
     }
 

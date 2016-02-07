@@ -16,7 +16,7 @@
 			<contextMenu>
 				<ContextMenu>
 					<items>
-						<Menu text="Set relative mass">
+						<Menu text="Set m/z shift">
 							<MenuItem text="Define" />
 							<MenuItem text="Reset" />
 						</Menu>
@@ -86,7 +86,7 @@
 	<bottom>
 		<ToolBar orientation="HORIZONTAL">
 			<items>
-				<Button onAction="#previousScan">
+				<Button onAction="#handlePreviousScan">
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="ARROW_LEFT" />
 					</graphic>
@@ -103,7 +103,7 @@
 						<Tooltip text="Setup layers" />
 					</tooltip>
 				</Button>
-				<Button>
+				<Button onAction="#handleAddSpectrum">
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
 					</graphic>
@@ -122,7 +122,7 @@
 					</tooltip>
 				</Button>
 				<Region HBox.hgrow="ALWAYS" />
-				<Button onAction="#nextScan">
+				<Button onAction="#handleNextScan">
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="ARROW_RIGHT" />
 					</graphic>

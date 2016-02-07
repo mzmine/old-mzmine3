@@ -21,7 +21,7 @@ package io.github.mzmine.util.charts.jfreechart;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.text.NumberFormat;
+import java.text.DecimalFormat;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -97,10 +97,13 @@ public class ChartNodeJFreeChart extends ChartViewer {
         xAxis.setTickLabelInsets(new RectangleInsets(0, 0, 20, 20));
 
         // set the Y axis (intensity) properties
-        NumberFormat intensityFormat = MZmineCore.getConfiguration()
-                .getIntensityFormat();
         NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
-        yAxis.setNumberFormatOverride(intensityFormat);
+        DecimalFormat intensityFormat = MZmineCore.getConfiguration()
+                .getIntensityFormat();
+        // Use the intensity number format only if we show exponent
+        System.out.println(intensityFormat.toPattern());
+        if (intensityFormat.toPattern().contains("E"))
+            yAxis.setNumberFormatOverride(intensityFormat);
 
         // set focusable state to receive key events
         setFocusTraversable(true);

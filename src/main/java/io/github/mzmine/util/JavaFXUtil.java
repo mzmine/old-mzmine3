@@ -50,11 +50,14 @@ public class JavaFXUtil {
         int r = (int) (col.getRed() * 255);
         int g = (int) (col.getGreen() * 255);
         int b = (int) (col.getBlue() * 255);
-        return new java.awt.Color(r, g, b);
+        int a = (int) (col.getOpacity() * 255);
+
+        return new java.awt.Color(r, g, b, a);
     }
 
     public static Color convertColorToJavaFX(java.awt.Color col) {
-        return Color.rgb(col.getRed(), col.getGreen(), col.getBlue());
+        return Color.rgb(col.getRed(), col.getGreen(), col.getBlue(),
+                (double) col.getAlpha() / 255.0);
     }
 
 }

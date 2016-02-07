@@ -21,6 +21,8 @@ package io.github.mzmine.modules.plots.msspectrum;
 
 import java.text.NumberFormat;
 
+import javax.annotation.Nonnull;
+
 import org.jfree.chart.labels.XYItemLabelGenerator;
 import org.jfree.chart.labels.XYToolTipGenerator;
 import org.jfree.data.xy.AbstractXYDataset;
@@ -52,8 +54,8 @@ import javafx.scene.paint.Color;
 public class MsSpectrumDataSet extends AbstractXYDataset
         implements XYItemLabelGenerator, XYToolTipGenerator, IntervalXYDataset {
 
-    private final double mzValues[];
-    private final float intensityValues[];
+    private final @Nonnull double mzValues[];
+    private final @Nonnull float intensityValues[];
     private final float topIndensity;
     private final int numOfDataPoints;
 
@@ -112,7 +114,7 @@ public class MsSpectrumDataSet extends AbstractXYDataset
         return lineThickness.get();
     }
 
-    public void setMzShift(Integer newLineThickness) {
+    public void setLineThickness(Integer newLineThickness) {
         lineThickness.set(newLineThickness);
     }
 
@@ -124,7 +126,7 @@ public class MsSpectrumDataSet extends AbstractXYDataset
         return showDataPoints.get();
     }
 
-    public void setMzShift(Boolean newShowDataPoints) {
+    public void setShowDataPoints(Boolean newShowDataPoints) {
         showDataPoints.set(newShowDataPoints);
     }
 
@@ -175,12 +177,18 @@ public class MsSpectrumDataSet extends AbstractXYDataset
         this.topIndensity = MsSpectrumUtil.getMaxIntensity(intensityValues,
                 numOfDataPoints);
         setIntensityScale((double) topIndensity);
+        
+        // Listen for property changes
+        mzShift.addListener(e -> {
+            fireDatasetChanged();
+        });
         intensityScale.addListener(e -> {
             fireDatasetChanged();
         });
         name.addListener(e -> {
             fireDatasetChanged();
         });
+        
     }
 
     @Override
@@ -190,7 +198,7 @@ public class MsSpectrumDataSet extends AbstractXYDataset
 
     @Override
     public Number getX(int series, int index) {
-        return mzValues[index];
+        return mzValues[index] - mzShift.doubleValue();
     }
 
     @Override
@@ -211,7 +219,7 @@ public class MsSpectrumDataSet extends AbstractXYDataset
     @Override
     public String generateLabel(XYDataset ds, int series, int index) {
         NumberFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
-        final double mz = mzValues[index];
+        final double mz = getX(series, index).doubleValue();
         String label = mzFormat.format(mz);
         return label;
     }

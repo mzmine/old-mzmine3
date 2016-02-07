@@ -46,6 +46,7 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -58,7 +59,7 @@ import javafx.stage.Stage;
 public class MsSpectrumPlotWindowController {
 
     // Colors
-    private static final Color gridColor = Color.rgb(220, 220, 220);
+    private static final Color gridColor = Color.rgb(220, 220, 220, 0.3);
     private static final Color labelsColor = Color.BLACK;
     private static final Color[] plotColors = { Color.rgb(0, 0, 192), // blue
             Color.rgb(192, 0, 0), // red
@@ -92,10 +93,12 @@ public class MsSpectrumPlotWindowController {
         plot.setDomainGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
         plot.setRangeGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
 
+        chartNode.setCursor(Cursor.CROSSHAIR);
     }
 
     @FXML
     public void showContextMenu(ContextMenuEvent event) {
+        // Update context menu items
     }
 
     @FXML
@@ -103,12 +106,17 @@ public class MsSpectrumPlotWindowController {
     }
 
     @FXML
-    public void addSpectrum(Event e) {
+    public void handleAddSpectrum(Event e) {
 
     }
 
     @FXML
-    public void previousScan(Event e) {
+    public void handlePreviousScan(Event e) {
+
+    }
+
+    @FXML
+    public void handleNextScan(Event e) {
 
     }
 
@@ -126,11 +134,6 @@ public class MsSpectrumPlotWindowController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @FXML
-    public void nextScan(Event e) {
-
     }
 
     /**
@@ -184,11 +187,14 @@ public class MsSpectrumPlotWindowController {
         case PROFILE:
         case THRESHOLDED:
             XYLineAndShapeRenderer newLineRenderer = new XYLineAndShapeRenderer();
-            newLineRenderer.setBaseShape(new Ellipse2D.Double(-2, -2, 5, 5));
+            final int lineThickness = dataSet.getLineThickness();
+            newLineRenderer.setBaseShape(
+                    new Ellipse2D.Double(-2 * lineThickness, -2 * lineThickness,
+                            4 * lineThickness + 1, 4 * lineThickness + 1));
             newLineRenderer.setBaseShapesFilled(true);
             newLineRenderer.setBaseShapesVisible(dataSet.getShowDataPoints());
             newLineRenderer.setDrawOutlines(false);
-            Stroke baseStroke = new BasicStroke(dataSet.getLineThickness());
+            Stroke baseStroke = new BasicStroke(lineThickness);
             newLineRenderer.setBaseStroke(baseStroke);
             newRenderer = newLineRenderer;
             break;

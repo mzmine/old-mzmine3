@@ -20,7 +20,7 @@
 			<stylesheets>
 				<URL value="file:conf/MZmine.css" />
 			</stylesheets>
-			<BorderPane prefWidth="800" prefHeight="500">
+			<BorderPane prefWidth="900" prefHeight="500">
 				<center>
 					<TableView fx:id="layersTable" editable="true">
 						<contextMenu>
@@ -43,7 +43,7 @@
 						</contextMenu>
 						<columns>
 							<TableColumn text="Name" editable="true" fx:id="nameColumn"
-								minWidth="200">
+								minWidth="300">
 								<cellValueFactory>
 									<PropertyValueFactory property="name" />
 								</cellValueFactory>
@@ -63,19 +63,19 @@
 									<PropertyValueFactory property="intensityScale" />
 								</cellValueFactory>
 							</TableColumn>
-							<TableColumn text="Rendering" editable="true"
-								fx:id="renderingTypeColumn" minWidth="80">
-								<cellValueFactory>
-									<PropertyValueFactory property="renderingType" />
-								</cellValueFactory>
-							</TableColumn>
 							<TableColumn text="Color" editable="true" fx:id="colorColumn"
 								minWidth="120">
 								<cellValueFactory>
 									<PropertyValueFactory property="color" />
 								</cellValueFactory>
 							</TableColumn>
-							<TableColumn text="Line" editable="true"
+							<TableColumn text="Rendering" editable="true"
+								fx:id="renderingTypeColumn" minWidth="120">
+								<cellValueFactory>
+									<PropertyValueFactory property="renderingType" />
+								</cellValueFactory>
+							</TableColumn>
+							<TableColumn text="Width" editable="true"
 								fx:id="lineThicknessColumn" minWidth="70" prefWidth="70">
 								<cellValueFactory>
 									<PropertyValueFactory property="lineThickness" />

@@ -22,7 +22,7 @@ package io.github.mzmine.main;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.NumberFormat;
+import java.text.DecimalFormat;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -97,16 +97,16 @@ public final class MZmineConfiguration {
 
     }
 
-    public NumberFormat getIntensityFormat() {
+    public DecimalFormat getIntensityFormat() {
         return preferences.getParameter(MZminePreferences.intensityFormat)
                 .getValue();
     }
 
-    public NumberFormat getMZFormat() {
+    public DecimalFormat getMZFormat() {
         return preferences.getParameter(MZminePreferences.mzFormat).getValue();
     }
 
-    public NumberFormat getRTFormat() {
+    public DecimalFormat getRTFormat() {
         return preferences.getParameter(MZminePreferences.rtFormat).getValue();
     }
 
