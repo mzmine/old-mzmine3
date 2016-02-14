@@ -101,7 +101,6 @@ public class ChartNodeJFreeChart extends ChartViewer {
         DecimalFormat intensityFormat = MZmineCore.getConfiguration()
                 .getIntensityFormat();
         // Use the intensity number format only if we show exponent
-        System.out.println(intensityFormat.toPattern());
         if (intensityFormat.toPattern().contains("E"))
             yAxis.setNumberFormatOverride(intensityFormat);
 

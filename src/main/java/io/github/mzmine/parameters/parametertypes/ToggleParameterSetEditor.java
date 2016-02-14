@@ -26,7 +26,7 @@ import org.controlsfx.control.PropertySheet;
 import org.controlsfx.control.SegmentedButton;
 
 import io.github.mzmine.main.MZmineCore;
-import io.github.mzmine.modules.featuretableexport.CsvExportModule;
+import io.github.mzmine.modules.io.csvexport.CsvExportModule;
 import io.github.mzmine.parameters.ParameterEditor;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterSheetView;

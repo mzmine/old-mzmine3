@@ -80,7 +80,7 @@ public class MsSpectrumLayersDialogController {
                 private final ColorPicker colorPicker = new ColorPicker();
 
                 {
-                    tableRowProperty().addListener(e -> {
+                   tableRowProperty().addListener(e -> {
                         TableRow row = getTableRow();
                         if (row != null) {
                             MsSpectrumDataSet dataSet = (MsSpectrumDataSet) row

@@ -48,7 +48,7 @@ echo Java maximum heap size set to $HEAP_SIZE MB
 # Java specific commands
 # **********************
 
-JAVA_PARAMETERS="-showversion -classpath lib/\* -XX:+UseG1GC -Xdock:name='MZmine 3' -Xdock:icon=icon/mzmine-icon.png -Djava.io.tmpdir=$TMP_FILE_DIRECTORY -Dapple.laf.useScreenMenuBar=true -Xms1024m -Xmx${HEAP_SIZE}m -Djava.library.path=${JRI_LIB_PATH}"
+JAVA_PARAMETERS="-showversion -classpath lib/\* -XX:+UseG1GC -Xdock:name='MZmine 3' -Xdock:icon=icon/mzmine-icon.png -Djava.io.tmpdir=$TMP_FILE_DIRECTORY -Dapple.laf.useScreenMenuBar=true -Xms256m -Xmx${HEAP_SIZE}m -Djava.library.path=${JRI_LIB_PATH}"
 MAIN_CLASS=io.github.mzmine.main.MZmineMain
 
 # Make sure we are in the correct directory
