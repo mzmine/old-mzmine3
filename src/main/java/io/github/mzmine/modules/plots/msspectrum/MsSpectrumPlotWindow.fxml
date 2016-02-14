@@ -17,6 +17,7 @@
 				<ContextMenu>
 					<items>
 						<Menu text="Set m/z shift">
+							<MenuItem text="Set to " />
 							<MenuItem text="Define" />
 							<MenuItem text="Reset" />
 						</Menu>

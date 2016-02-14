@@ -35,7 +35,6 @@ import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;
 import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.project.MZmineProject;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -99,14 +98,12 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
                 MsSpectrumPlotWindowController controller = loader
                         .getController();
 
-                Platform.runLater(() -> {
-                    for (RawDataFile dataFile : dataFiles) {
-                        for (MsScan scan : scanSelection
-                                .getMatchingScans(dataFile)) {
-                            controller.addSpectrum(scan);
-                        }
+                for (RawDataFile dataFile : dataFiles) {
+                    for (MsScan scan : scanSelection
+                            .getMatchingScans(dataFile)) {
+                        controller.addSpectrum(scan);
                     }
-                });
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();

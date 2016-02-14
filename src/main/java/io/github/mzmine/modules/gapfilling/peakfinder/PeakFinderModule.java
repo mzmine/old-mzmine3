@@ -70,7 +70,6 @@ public class PeakFinderModule implements MZmineProcessingModule {
             return;
         }
 
-        System.out.println("nameSuffix: " + nameSuffix);
     }
 
     @Override

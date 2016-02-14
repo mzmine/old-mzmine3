@@ -20,8 +20,7 @@
 package io.github.mzmine.modules.plots.msspectrum;
 
 import java.text.NumberFormat;
-
-import javax.annotation.Nonnull;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import org.jfree.chart.labels.XYItemLabelGenerator;
 import org.jfree.chart.labels.XYToolTipGenerator;
@@ -35,6 +34,7 @@ import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.util.MsSpectrumUtil;
 import io.github.mzmine.main.MZmineCore;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -54,10 +54,13 @@ import javafx.scene.paint.Color;
 public class MsSpectrumDataSet extends AbstractXYDataset
         implements XYItemLabelGenerator, XYToolTipGenerator, IntervalXYDataset {
 
-    private final @Nonnull double mzValues[];
-    private final @Nonnull float intensityValues[];
-    private final float topIndensity;
-    private final int numOfDataPoints;
+    private static final ScheduledThreadPoolExecutor threadPool = new ScheduledThreadPoolExecutor(
+            1);
+
+    private double mzValues[];
+    private float intensityValues[];
+    private float topIndensity = 0f;
+    private int numOfDataPoints = 0;
 
     private final StringProperty name = new SimpleStringProperty(this, "name",
             "MS spectrum");
@@ -73,6 +76,43 @@ public class MsSpectrumDataSet extends AbstractXYDataset
             "color", Color.BLUE);
     private final BooleanProperty showDataPoints = new SimpleBooleanProperty(
             this, "showDataPoints", false);
+
+    MsSpectrumDataSet(MsSpectrum spectrum) {
+
+        String spectrumTitle = "MS spectrum";
+        if (spectrum instanceof MsScan) {
+            MsScan scan = (MsScan) spectrum;
+            RawDataFile dataFile = scan.getRawDataFile();
+            if (dataFile != null)
+                spectrumTitle += " " + dataFile.getName();
+            spectrumTitle += "#" + scan.getScanNumber();
+        }
+        setName(spectrumTitle);
+
+        // Listen for property changes
+        mzShift.addListener(e -> {
+            Platform.runLater(() -> fireDatasetChanged());
+        });
+        intensityScale.addListener(e -> {
+            Platform.runLater(() -> fireDatasetChanged());
+        });
+        name.addListener(e -> {
+            Platform.runLater(() -> fireDatasetChanged());
+        });
+
+        // Load the actual data in a separate thread to avoid blocking the GUI
+        threadPool.execute(() -> {
+
+            this.mzValues = spectrum.getMzValues();
+            this.intensityValues = spectrum.getIntensityValues();
+            this.numOfDataPoints = spectrum.getNumberOfDataPoints();
+            this.topIndensity = MsSpectrumUtil.getMaxIntensity(intensityValues,
+                    numOfDataPoints);
+            setIntensityScale((double) topIndensity);
+
+        });
+
+    }
 
     public String getName() {
         return name.get();
@@ -156,39 +196,6 @@ public class MsSpectrumDataSet extends AbstractXYDataset
 
     public ObjectProperty<Color> colorProperty() {
         return color;
-    }
-
-    MsSpectrumDataSet(MsSpectrum spectrum) {
-
-        String spectrumTitle = "MS spectrum";
-        if (spectrum instanceof MsScan) {
-            MsScan scan = (MsScan) spectrum;
-            RawDataFile dataFile = scan.getRawDataFile();
-            if (dataFile != null)
-                spectrumTitle += " " + dataFile.getName();
-            spectrumTitle += "#" + scan.getScanNumber();
-        }
-        setName(spectrumTitle);
-
-        this.mzValues = spectrum.getMzValues();
-        this.intensityValues = spectrum.getIntensityValues();
-        this.numOfDataPoints = spectrum.getNumberOfDataPoints();
-
-        this.topIndensity = MsSpectrumUtil.getMaxIntensity(intensityValues,
-                numOfDataPoints);
-        setIntensityScale((double) topIndensity);
-        
-        // Listen for property changes
-        mzShift.addListener(e -> {
-            fireDatasetChanged();
-        });
-        intensityScale.addListener(e -> {
-            fireDatasetChanged();
-        });
-        name.addListener(e -> {
-            fireDatasetChanged();
-        });
-        
     }
 
     @Override

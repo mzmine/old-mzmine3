@@ -41,6 +41,7 @@ import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.mzmine.util.JavaFXUtil;
 import io.github.mzmine.util.charts.jfreechart.ChartNodeJFreeChart;
 import io.github.mzmine.util.charts.jfreechart.IntelligentItemLabelGenerator;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -84,6 +85,7 @@ public class MsSpectrumPlotWindowController {
 
     @FXML
     public void initialize() {
+
         final XYPlot plot = chartNode.getChart().getXYPlot();
 
         // Do not set colors and strokes dynamically. They are instead provided
@@ -148,6 +150,7 @@ public class MsSpectrumPlotWindowController {
         MsSpectrumDataSet newDataSet = new MsSpectrumDataSet(spectrum);
         dataSets.add(newDataSet);
         final int datasetIndex = numberOfDataSets;
+        numberOfDataSets++;
 
         final XYPlot plot = chartNode.getChart().getXYPlot();
 
@@ -155,9 +158,6 @@ public class MsSpectrumPlotWindowController {
         newDataSet.setColor(newColor);
 
         configureRenderer(newDataSet, datasetIndex);
-
-        // Once everything is configured, add the dataset to the plot
-        plot.setDataset(datasetIndex, newDataSet);
 
         newDataSet.renderingTypeProperty().addListener(e -> {
             configureRenderer(newDataSet, datasetIndex);
@@ -171,7 +171,9 @@ public class MsSpectrumPlotWindowController {
         newDataSet.showDataPointsProperty().addListener(e -> {
             configureRenderer(newDataSet, datasetIndex);
         });
-        numberOfDataSets++;
+
+        // Once everything is configured, add the dataset to the plot
+        Platform.runLater(() -> plot.setDataset(datasetIndex, newDataSet));
 
     }
 
@@ -215,7 +217,7 @@ public class MsSpectrumPlotWindowController {
         // Set label generator
         XYItemLabelGenerator intelligentLabelGenerator = new IntelligentItemLabelGenerator(
                 chartNode, plot, 100, dataSet);
-        newRenderer.setBaseItemLabelGenerator(intelligentLabelGenerator);
+        // newRenderer.setBaseItemLabelGenerator(intelligentLabelGenerator);
         newRenderer.setBaseItemLabelPaint(
                 JavaFXUtil.convertColorToAWT(labelsColor));
         newRenderer.setBaseItemLabelsVisible(true);

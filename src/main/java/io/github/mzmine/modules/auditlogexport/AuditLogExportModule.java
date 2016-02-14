@@ -87,12 +87,10 @@ public class AuditLogExportModule implements MZmineProcessingModule {
                 /*
                  * TODO
                  */
-                System.out.println(moduleName);
                 for (Parameter<?> pramaeter : logEntry.getParameterSet()) {
-                    System.out.println(
+                    logger.debug(
                             pramaeter.getName() + ": " + pramaeter.getValue());
                 }
-                System.out.println();
             }
 
         }
