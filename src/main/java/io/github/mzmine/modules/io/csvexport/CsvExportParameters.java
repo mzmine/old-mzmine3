@@ -17,16 +17,16 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.featuretableexport;
+package io.github.mzmine.modules.io.csvexport;
 
 import java.util.Arrays;
 
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.BooleanParameter;
-import io.github.mzmine.parameters.parametertypes.MultiChoiceParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.filenames.FileNameParameter;
+import io.github.mzmine.parameters.parametertypes.selectors.FeatureTableColumnsParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesParameter;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -59,17 +59,11 @@ public class CsvExportParameters extends ParameterSet {
             "If checked, all possible identifications of a feature will be exported.",
             "Algorithm Parameters", false);
 
-    public static final MultiChoiceParameter<CommonColumns> commonData = new MultiChoiceParameter<CommonColumns>(
-            "Common data", "Selection of common row data to export",
-            "Algorithm Parameters", Arrays.asList(CommonColumns.values()));
-
-    public static final MultiChoiceParameter<String> sampleData = new MultiChoiceParameter<String>(
-            "Sample data", "Selection of sample specific data to export",
-            "Algorithm Parameters", SampleColumns.getSampleColumns());
+    public static final FeatureTableColumnsParameter tableColumns = new FeatureTableColumnsParameter();
 
     public CsvExportParameters() {
         super(featureTables, exportFileCSV, separator, separatorIDs,
-                exportAllIds, commonData, sampleData);
+                exportAllIds, tableColumns);
     }
 
 }

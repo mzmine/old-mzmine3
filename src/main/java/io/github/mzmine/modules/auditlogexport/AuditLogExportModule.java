@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.modules.MZmineProcessingModule;
-import io.github.mzmine.modules.featuretableexport.CsvExportModule;
+import io.github.mzmine.modules.io.csvexport.CsvExportModule;
 import io.github.mzmine.parameters.Parameter;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineProject;

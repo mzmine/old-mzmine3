@@ -47,7 +47,7 @@
 				<Menu text="Export Feature Tables...">
 					<items>
 						<ModuleMenuItem text="CSV"
-							moduleClass="io.github.mzmine.modules.featuretableexport.CsvExportModule" />
+							moduleClass="io.github.mzmine.modules.io.csvexport.CsvExportModule" />
 						<MenuItem text="mzTab" />
 						<MenuItem text="XML" />
 						<MenuItem text="SQL Database" />

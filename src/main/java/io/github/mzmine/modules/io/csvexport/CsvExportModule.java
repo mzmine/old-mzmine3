@@ -17,7 +17,7 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.featuretableexport;
+package io.github.mzmine.modules.io.csvexport;
 
 import java.util.Collection;
 
