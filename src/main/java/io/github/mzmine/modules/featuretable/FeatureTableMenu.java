@@ -50,60 +50,58 @@ public class FeatureTableMenu {
         // Enable table menu
         treeTableView.setTableMenuButtonVisible(true);
 
-        // Check that table has been populated
-        TreeTableViewSkin<?> tableSkin = (TreeTableViewSkin<?>) treeTableView
-                .getSkin();
+        // Replace internal mouse listener with custom listener
+        setCustomContextMenu(treeTableView);
 
-        if (tableSkin == null) {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    setCustomContextMenu(treeTableView);
-                }
-            });
-
-        } else {
-            // Replace internal mouse listener with custom listener
-            setCustomContextMenu(treeTableView);
-        }
     }
 
     private static void setCustomContextMenu(
             TreeTableView<FeatureTableRow> table) {
 
+        // Check that table has been populated
         TreeTableViewSkin<?> tableSkin = (TreeTableViewSkin<?>) table.getSkin();
 
-        // Get all children of the skin
-        ObservableList<Node> children = tableSkin.getChildren();
-
-        // Find the TableHeaderRow child
-        for (int i = 0; i < children.size(); i++) {
-            Node node = children.get(i);
-
-            if (node instanceof TableHeaderRow) {
-                TableHeaderRow tableHeaderRow = (TableHeaderRow) node;
-
-                // Make sure that the header row always has a height and thus is
-                // visible
-                double defaultHeight = tableHeaderRow.getHeight();
-                tableHeaderRow.setPrefHeight(defaultHeight);
-
-                for (Node child : tableHeaderRow.getChildren()) {
-
-                    if (child.getStyleClass()
-                            .contains("show-hide-columns-button")) {
-
-                        // Create a context menu
-                        ContextMenu columnPopupMenu = createContextMenu(table);
-
-                        // Replace the mouse listener
-                        child.setOnMousePressed(me -> {
-                            columnPopupMenu.show(child, Side.BOTTOM, 0, 0);
-                            me.consume();
-                        });
-                    }
+        if (tableSkin == null) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    setCustomContextMenu(table);
                 }
+            });
+        } else {
+            // Get all children of the skin
+            ObservableList<Node> children = tableSkin.getChildren();
 
+            // Find the TableHeaderRow child
+            for (int i = 0; i < children.size(); i++) {
+                Node node = children.get(i);
+
+                if (node instanceof TableHeaderRow) {
+                    TableHeaderRow tableHeaderRow = (TableHeaderRow) node;
+
+                    // Make sure that the header row always has a height and
+                    // thus is visible
+                    double defaultHeight = tableHeaderRow.getHeight();
+                    tableHeaderRow.setPrefHeight(defaultHeight);
+
+                    for (Node child : tableHeaderRow.getChildren()) {
+
+                        if (child.getStyleClass()
+                                .contains("show-hide-columns-button")) {
+
+                            // Create a context menu
+                            ContextMenu columnPopupMenu = createContextMenu(
+                                    table);
+
+                            // Replace the mouse listener
+                            child.setOnMousePressed(me -> {
+                                columnPopupMenu.show(child, Side.BOTTOM, 0, 0);
+                                me.consume();
+                            });
+                        }
+                    }
+
+                }
             }
         }
     }
