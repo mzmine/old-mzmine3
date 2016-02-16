@@ -73,6 +73,7 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.print.PrinterJob;
 import javafx.scene.Cursor;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
@@ -337,6 +338,23 @@ public class MsSpectrumPlotWindowController {
     @FXML
     public void handleResetMzShift(Event event) {
         mzShift.set(0.0);
+    }
+
+    @FXML
+    public void handlePrint(Event event) {
+        PrinterJob job = PrinterJob.createPrinterJob();
+        if (job == null)
+            return;
+        boolean confirm = job.showPrintDialog(chartNode.getScene().getWindow());
+        if (!confirm) {
+            job.cancelJob();
+            return;
+        }
+        boolean success = job.printPage(chartNode);
+        if (success) {
+            job.endJob();
+        }
+
     }
 
     /**

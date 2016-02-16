@@ -70,7 +70,7 @@
 							<MenuItem text="MGF" />
 							<MenuItem text="MSP" />
 						</Menu>
-						<MenuItem text="Print">
+						<MenuItem text="Print" onAction="#handlePrint">
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="PRINT" />
 							</graphic>
