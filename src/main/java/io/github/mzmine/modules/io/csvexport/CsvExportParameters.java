@@ -48,9 +48,9 @@ public class CsvExportParameters extends ParameterSet {
             "Algorithm Parameters",
             ParameterValidator.createNonEmptyValidator(), ",");
 
-    public static final StringParameter separatorIDs = new StringParameter(
-            "Identification separator",
-            "Character(s) used to separate identification results in the exported file.",
+    public static final StringParameter itemSeparator = new StringParameter(
+            "Item separator",
+            "Character(s) used to separate multiple items in the same cell (e.g. identifications).",
             "Algorithm Parameters",
             ParameterValidator.createNonEmptyValidator(), ";");
 
@@ -62,7 +62,7 @@ public class CsvExportParameters extends ParameterSet {
     public static final FeatureTableColumnsParameter tableColumns = new FeatureTableColumnsParameter();
 
     public CsvExportParameters() {
-        super(featureTables, exportFileCSV, separator, separatorIDs,
+        super(featureTables, exportFileCSV, separator, itemSeparator,
                 exportAllIds, tableColumns);
     }
 
