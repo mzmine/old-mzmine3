@@ -19,17 +19,26 @@
 
 package io.github.mzmine.modules.io.csvexport;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.mzmine.main.MZmineCore;
+import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
+import io.github.msdk.io.csv.CsvFileExportMethod;
+import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.parameters.parametertypes.selectors.FeatureTableColumnsSelection;
+import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesSelection;
 import io.github.mzmine.project.MZmineProject;
+import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.concurrent.Task;
 
 /**
@@ -59,10 +68,59 @@ public class CsvExportModule implements MZmineProcessingModule {
             @Nonnull ParameterSet parameters,
             @Nonnull Collection<Task<?>> tasks) {
 
-        /*
-         * TODO
-         */
-        System.out.println("Export to CSV");
+        // Parameters
+        final FeatureTablesSelection featureTables = parameters
+                .getParameter(CsvExportParameters.featureTables).getValue();
+        final File exportFileCSV = parameters
+                .getParameter(CsvExportParameters.exportFileCSV).getValue();
+        final String separator = parameters
+                .getParameter(CsvExportParameters.separator).getValue();
+        final String itemSeparator = parameters
+                .getParameter(CsvExportParameters.itemSeparator).getValue();
+        final Boolean exportAllIds = parameters
+                .getParameter(CsvExportParameters.exportAllIds).getValue();
+        final FeatureTableColumnsSelection tableColumns = parameters
+                .getParameter(CsvExportParameters.tableColumns).getValue();
+
+        if (featureTables == null
+                || featureTables.getMatchingFeatureTables().isEmpty()) {
+            MZmineGUI.displayMessage(
+                    "Feature table export module started with no feature table selected.");
+            logger.warn(
+                    "Feature table export module started with no feature table selected.");
+            return;
+        }
+        List<FeatureTableColumn<?>> columns;
+
+        // Add a task for each feature table
+        for (FeatureTable featureTable : featureTables
+                .getMatchingFeatureTables()) {
+
+            // Map FeatureTableColumnsSelection to MSDK FeatureTableColumn
+            columns = new ArrayList<FeatureTableColumn<?>>();
+            /*
+             * TODO: Map FeatureTableColumnsSelection to column of the current
+             * featureTable
+             */
+            columns = featureTable.getColumns();
+
+            /*
+             * TODO: Handle export of multiple tables using pattern in
+             * exportFileCSV
+             */
+
+            // New feature filter task
+            CsvFileExportMethod method = new CsvFileExportMethod(featureTable,
+                    exportFileCSV, separator, itemSeparator, exportAllIds,
+                    columns);
+
+            MSDKTask newTask = new MSDKTask("Exporting feature table",
+                    featureTable.getName(), method);
+
+            // Add the task to the queue
+            tasks.add(newTask);
+
+        }
 
     }
 
