@@ -28,17 +28,13 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.fx.ChartViewer;
-import org.jfree.chart.labels.XYItemLabelGenerator;
 import org.jfree.chart.plot.DatasetRenderingOrder;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.DefaultXYItemRenderer;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.ui.RectangleInsets;
 
 import io.github.mzmine.main.MZmineCore;
-import io.github.mzmine.util.charts.ChartDataSet;
 
 /**
  * Chart using JfreeChart library
@@ -52,7 +48,7 @@ public class ChartNodeJFreeChart extends ChartViewer {
 
     // Font
     private static final Font legendFont = new Font("SansSerif", Font.PLAIN,
-            11);
+            12);
 
     private final JFreeChart chart;
     private final XYPlot plot;
@@ -77,7 +73,7 @@ public class ChartNodeJFreeChart extends ChartViewer {
 
         // legend properties
         LegendTitle legend = chart.getLegend();
-        legend.setItemFont(legendFont);
+        // legend.setItemFont(legendFont);
         legend.setFrame(BlockBorder.NONE);
 
         // plot properties
@@ -98,40 +94,17 @@ public class ChartNodeJFreeChart extends ChartViewer {
 
         // set the Y axis (intensity) properties
         NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
+
+        // set the fixed number formats, because otherwise JFreeChart sometimes
+        // shows exponent, sometimes it doesn't
+        DecimalFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
+        xAxis.setNumberFormatOverride(mzFormat);
         DecimalFormat intensityFormat = MZmineCore.getConfiguration()
                 .getIntensityFormat();
-        // Use the intensity number format only if we show exponent
-        if (intensityFormat.toPattern().contains("E"))
-            yAxis.setNumberFormatOverride(intensityFormat);
+        yAxis.setNumberFormatOverride(intensityFormat);
 
         // set focusable state to receive key events
         setFocusTraversable(true);
-
-    }
-
-    public synchronized void addDataSet(final ChartDataSet newDataSet) {
-
-        // Create the dataset
-        final XYDataSetWrapper datasetWrapper = new XYDataSetWrapper(
-                newDataSet);
-
-        // Set renderer
-        final XYItemRenderer newRenderer = new DefaultXYItemRenderer();
-        plot.setRenderer(numberOfDataSets, newRenderer);
-        newRenderer.setBaseItemLabelPaint(labelsColor);
-
-        // Set label generator
-        XYItemLabelGenerator intelligentLabelGenerator = new IntelligentItemLabelGenerator(
-                this, plot, 100, datasetWrapper);
-        newRenderer.setBaseItemLabelGenerator(intelligentLabelGenerator);
-        newRenderer.setBaseItemLabelsVisible(true);
-
-        // Set tooltip generator
-        newRenderer.setBaseToolTipGenerator(datasetWrapper);
-
-        // Once everything is configured, add the dataset to the plot
-        plot.setDataset(numberOfDataSets, datasetWrapper);
-        numberOfDataSets++;
 
     }
 

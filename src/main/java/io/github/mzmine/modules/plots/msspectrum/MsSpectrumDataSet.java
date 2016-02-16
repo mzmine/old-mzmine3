@@ -64,10 +64,9 @@ public class MsSpectrumDataSet extends AbstractXYDataset
 
     private final StringProperty name = new SimpleStringProperty(this, "name",
             "MS spectrum");
-    private final DoubleProperty mzShift = new SimpleDoubleProperty(this,
-            "mzShift", 0.0);
     private final DoubleProperty intensityScale = new SimpleDoubleProperty(this,
             "intensityScale", 0.0);
+    private final DoubleProperty mzShift;
     private final IntegerProperty lineThickness = new SimpleIntegerProperty(
             this, "lineThickness", 1);
     private final ObjectProperty<MsSpectrumType> renderingType = new SimpleObjectProperty<>(
@@ -77,7 +76,9 @@ public class MsSpectrumDataSet extends AbstractXYDataset
     private final BooleanProperty showDataPoints = new SimpleBooleanProperty(
             this, "showDataPoints", false);
 
-    MsSpectrumDataSet(MsSpectrum spectrum) {
+    MsSpectrumDataSet(MsSpectrum spectrum, DoubleProperty mzShift) {
+
+        this.mzShift = mzShift;
 
         String spectrumTitle = "MS spectrum";
         if (spectrum instanceof MsScan) {
@@ -88,6 +89,7 @@ public class MsSpectrumDataSet extends AbstractXYDataset
             spectrumTitle += "#" + scan.getScanNumber();
         }
         setName(spectrumTitle);
+        setRenderingType(spectrum.getSpectrumType());
 
         // Listen for property changes
         mzShift.addListener(e -> {
@@ -124,18 +126,6 @@ public class MsSpectrumDataSet extends AbstractXYDataset
 
     public StringProperty nameProperty() {
         return name;
-    }
-
-    public Double getMzShift() {
-        return mzShift.get();
-    }
-
-    public void setMzShift(Double newMzShift) {
-        mzShift.set(newMzShift);
-    }
-
-    public DoubleProperty mzShiftProperty() {
-        return mzShift;
     }
 
     public Double getIntensityScale() {
@@ -205,7 +195,7 @@ public class MsSpectrumDataSet extends AbstractXYDataset
 
     @Override
     public Number getX(int series, int index) {
-        return mzValues[index] - mzShift.doubleValue();
+        return mzValues[index];
     }
 
     @Override
@@ -225,18 +215,38 @@ public class MsSpectrumDataSet extends AbstractXYDataset
 
     @Override
     public String generateLabel(XYDataset ds, int series, int index) {
+        final double mz = mzValues[index] - mzShift.doubleValue();
         NumberFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
-        final double mz = getX(series, index).doubleValue();
         String label = mzFormat.format(mz);
         return label;
     }
 
     @Override
     public String generateToolTip(XYDataset ds, int series, int index) {
+        final double actualMz = mzValues[index];
+        final float scaledIntensity = getY(series, index).floatValue();
+        final float actualIntensity = intensityValues[index];
         NumberFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
-        final double mz = mzValues[index];
-        String label = mzFormat.format(mz);
-        return label;
+        NumberFormat intensityFormat = MZmineCore.getConfiguration()
+                .getIntensityFormat();
+        StringBuilder sb = new StringBuilder();
+
+        if (mzShift.doubleValue() != 0.0) {
+            final double displayMz = mzValues[index] - mzShift.doubleValue();
+            sb.append("Display m/z: ");
+            sb.append(mzFormat.format(displayMz));
+            sb.append(" (shift ");
+            sb.append(mzFormat.format(mzShift.doubleValue()));
+            sb.append(" m/z\n");
+        }
+        sb.append("Actual m/z: " + mzFormat.format(actualMz));
+        sb.append("\n");
+        sb.append(
+                "Scaled intensity: " + intensityFormat.format(scaledIntensity));
+        sb.append("\n");
+        sb.append(
+                "Actual intensity: " + intensityFormat.format(actualIntensity));
+        return sb.toString();
 
     }
 

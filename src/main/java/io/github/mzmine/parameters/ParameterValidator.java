@@ -60,4 +60,23 @@ public interface ParameterValidator<ValueType> {
         };
     };
 
+    /**
+     * Simple validator that checks the value against a regular expression
+     */
+    static <T> ParameterValidator<T> createRegexValidator(String regex) {
+        return (value, messages) -> {
+            if (value == null) {
+                messages.add("Value is not set");
+                return false;
+            }
+            String strValue = value.toString();
+            if (strValue.matches(regex)) {
+                return true;
+            } else {
+                messages.add("Invalid format");
+                return false;
+            }
+        };
+    };
+
 }

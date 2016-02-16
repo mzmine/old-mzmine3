@@ -10,6 +10,8 @@
 	<module>io.github.mzmine.modules.featuretableimport.FeatureTableImportModule</module>
 	<module>io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotModule</module>
 	<module>io.github.mzmine.modules.plots.msspectrum.MsSpectrumPlotModule</module>
+	<module>io.github.mzmine.modules.plots.isotopepattern.IsotopePatternPlotModule</module>
+	<module>io.github.mzmine.modules.plots.spectrumparser.SpectrumParserPlotModule</module>
 	<module>io.github.mzmine.modules.plots.twod.TwoDPlotModule</module>
 	<module>io.github.mzmine.modules.plots.threed.ThreeDPlotModule</module>
 	<module>io.github.mzmine.modules.featuretable.FeatureTableModule</module>

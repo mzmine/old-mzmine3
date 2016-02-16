@@ -51,12 +51,6 @@
 									<TextFieldTableCell fx:factory="forTableColumn" />
 								</cellFactory>
 							</TableColumn>
-							<TableColumn text="m/z shift" editable="true"
-								fx:id="mzShiftColumn" minWidth="60">
-								<cellValueFactory>
-									<PropertyValueFactory property="mzShift" />
-								</cellValueFactory>
-							</TableColumn>
 							<TableColumn text="Intensity scale" editable="true"
 								fx:id="intensityScaleColumn" minWidth="120">
 								<cellValueFactory>
@@ -64,7 +58,7 @@
 								</cellValueFactory>
 							</TableColumn>
 							<TableColumn text="Color" editable="true" fx:id="colorColumn"
-								minWidth="120">
+								minWidth="150">
 								<cellValueFactory>
 									<PropertyValueFactory property="color" />
 								</cellValueFactory>

@@ -21,13 +21,12 @@ package io.github.mzmine.modules.plots.msspectrum;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.util.fxcomponents.ColorTableCell;
+import io.github.mzmine.util.fxcomponents.SpinnerTableCell;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -36,7 +35,6 @@ import javafx.scene.control.cell.ChoiceBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.NumberStringConverter;
 
 /**
@@ -57,9 +55,6 @@ public class MsSpectrumLayersDialogController {
     private TableColumn<MsSpectrumDataSet, Color> colorColumn;
 
     @FXML
-    private TableColumn<MsSpectrumDataSet, Double> mzShiftColumn;
-
-    @FXML
     private TableColumn<MsSpectrumDataSet, Number> intensityScaleColumn;
 
     @FXML
@@ -70,111 +65,42 @@ public class MsSpectrumLayersDialogController {
 
     @FXML
     public void initialize() {
-        ObservableList<MsSpectrumType> choices = FXCollections
+
+        final ObservableList<MsSpectrumType> renderingChoices = FXCollections
                 .observableArrayList(MsSpectrumType.CENTROIDED,
                         MsSpectrumType.PROFILE);
-        renderingTypeColumn
-                .setCellFactory(ChoiceBoxTableCell.forTableColumn(choices));
-        colorColumn.setCellFactory(column -> {
-            TableCell<MsSpectrumDataSet, Color> cell = new TableCell<MsSpectrumDataSet, Color>() {
-                private final ColorPicker colorPicker = new ColorPicker();
+        renderingTypeColumn.setCellFactory(
+                ChoiceBoxTableCell.forTableColumn(renderingChoices));
 
-                {
-                   tableRowProperty().addListener(e -> {
-                        TableRow row = getTableRow();
-                        if (row != null) {
-                            MsSpectrumDataSet dataSet = (MsSpectrumDataSet) row
-                                    .getItem();
-                            if (dataSet != null)
-                                colorPicker.valueProperty().bindBidirectional(
-                                        dataSet.colorProperty());
-                        }
-                    });
+        colorColumn.setCellFactory(
+                column -> new ColorTableCell<MsSpectrumDataSet>(column));
 
-                }
+        lineThicknessColumn.setCellFactory(
+                column -> new SpinnerTableCell<MsSpectrumDataSet>(column, 1,
+                        5));
 
-                @Override
-                protected void updateItem(Color c, boolean empty) {
-
-                    super.updateItem(c, empty);
-                    if (empty || c == null) {
-                        setText(null);
-                        setGraphic(null);
-                        return;
-                    }
-                    colorPicker.setValue(c);
-
-                    setGraphic(colorPicker);
-                }
-            };
-            return cell;
-        });
-
-        lineThicknessColumn.setCellFactory(column -> {
-            TableCell<MsSpectrumDataSet, Integer> cell = new TableCell<MsSpectrumDataSet, Integer>() {
-                private final Spinner<Number> spinner = new Spinner<>(1, 5, 1);
-
-                {
-                    tableRowProperty().addListener(e -> {
-                        TableRow row = getTableRow();
-                        if (row == null)
-                            return;
-                        MsSpectrumDataSet dataSet = (MsSpectrumDataSet) row
-                                .getItem();
-                        if (dataSet == null)
-                            return;
-                        spinner.getValueFactory().valueProperty()
-                                .bindBidirectional(
-                                        dataSet.lineThicknessProperty());
-                        disableProperty().bind(dataSet.renderingTypeProperty()
-                                .isEqualTo(MsSpectrumType.CENTROIDED));
-
-                    });
-                }
-
-                @Override
-                protected void updateItem(Integer c, boolean empty) {
-
-                    super.updateItem(c, empty);
-                    if (empty || c == null) {
-                        setText(null);
-                        setGraphic(null);
-                        return;
-                    }
-                    spinner.getValueFactory().setValue(c);
-
-                    setGraphic(spinner);
-                }
-            };
-            return cell;
-        });
-
-        mzShiftColumn.setCellFactory(
-                TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
         intensityScaleColumn.setCellFactory(
                 TextFieldTableCell.forTableColumn(new NumberStringConverter(
                         MZmineCore.getConfiguration().getIntensityFormat())));
 
-        showDataPointsColumn.setCellFactory(column -> {
-            TableCell<MsSpectrumDataSet, Boolean> cell = new CheckBoxTableCell<MsSpectrumDataSet, Boolean>() {
-                {
-                    tableRowProperty().addListener(e -> {
-                        TableRow row = getTableRow();
-                        if (row == null)
-                            return;
-                        MsSpectrumDataSet dataSet = (MsSpectrumDataSet) row
-                                .getItem();
-                        if (dataSet == null)
-                            return;
-                        disableProperty().bind(dataSet.renderingTypeProperty()
-                                .isEqualTo(MsSpectrumType.CENTROIDED));
+        showDataPointsColumn.setCellFactory(
+                column -> new CheckBoxTableCell<MsSpectrumDataSet, Boolean>() {
+                    {
+                        tableRowProperty().addListener(e -> {
+                            TableRow row = getTableRow();
+                            if (row == null)
+                                return;
+                            MsSpectrumDataSet dataSet = (MsSpectrumDataSet) row
+                                    .getItem();
+                            if (dataSet == null)
+                                return;
+                            disableProperty().bind(
+                                    dataSet.renderingTypeProperty().isEqualTo(
+                                            MsSpectrumType.CENTROIDED));
 
-                    });
-                }
-            };
-            return cell;
-        });
-
+                        });
+                    }
+                });
     }
 
     @FXML
