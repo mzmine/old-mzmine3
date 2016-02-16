@@ -32,7 +32,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import io.github.mzmine.modules.MZmineModule;
 import javafx.scene.control.ButtonType;
 
 /**
@@ -104,8 +103,8 @@ public class ParameterSet implements Iterable<Parameter<?>>, Cloneable {
         return parameters;
     }
 
-    public ButtonType showSetupDialog(@Nullable MZmineModule module) {
-        ParameterSetupDialog dialog = new ParameterSetupDialog(this, module);
+    public ButtonType showSetupDialog(@Nullable String title) {
+        ParameterSetupDialog dialog = new ParameterSetupDialog(this, title);
         Optional<ButtonType> result = dialog.showAndWait();
         return result.get();
     }

@@ -98,9 +98,9 @@ public class MZminePreferences extends ParameterSet {
     }
 
     @Override
-    public ButtonType showSetupDialog(@Nullable MZmineModule module) {
+    public ButtonType showSetupDialog(@Nullable String title) {
 
-        ButtonType retVal = super.showSetupDialog(null);
+        ButtonType retVal = super.showSetupDialog(title);
         if (retVal == ButtonType.OK) {
 
             // Update system settings

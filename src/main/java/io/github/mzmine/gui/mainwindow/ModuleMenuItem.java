@@ -78,7 +78,8 @@ public final class ModuleMenuItem extends MenuItem {
                     .getModuleParameters(moduleJavaClass);
 
             logger.info("Setting parameters for module " + module.getName());
-            ButtonType exitCode = moduleParameters.showSetupDialog(module);
+            String title = "Set parameters for " + module.getName();
+            ButtonType exitCode = moduleParameters.showSetupDialog(title);
             if (exitCode == ButtonType.OK) {
                 ParameterSet parametersCopy = moduleParameters.clone();
                 logger.debug("Starting module " + module.getName()

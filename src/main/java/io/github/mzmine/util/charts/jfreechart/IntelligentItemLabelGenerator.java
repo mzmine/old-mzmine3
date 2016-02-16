@@ -27,7 +27,7 @@ import org.jfree.data.xy.XYDataset;
 public class IntelligentItemLabelGenerator implements XYItemLabelGenerator {
 
     private final ChartViewer chartNode;
-    private final XYPlot plot;
+
     private final XYItemLabelGenerator underlyingGenerator;
     private final int reservedPoints;
 
@@ -40,10 +40,10 @@ public class IntelligentItemLabelGenerator implements XYItemLabelGenerator {
      *            labels do not overlap
      * @param underlyingGenerator
      */
-    public IntelligentItemLabelGenerator(ChartViewer chartNode, XYPlot plot,
+    public IntelligentItemLabelGenerator(ChartViewer chartNode,
             int reservedPoints, XYItemLabelGenerator underlyingGenerator) {
         this.chartNode = chartNode;
-        this.plot = plot;
+
         this.reservedPoints = reservedPoints;
         this.underlyingGenerator = underlyingGenerator;
     }
@@ -54,6 +54,8 @@ public class IntelligentItemLabelGenerator implements XYItemLabelGenerator {
      */
     public String generateLabel(XYDataset currentDataset, int currentSeries,
             int currentItem) {
+
+        XYPlot plot = chartNode.getChart().getXYPlot();
 
         // X and Y values of current data point
         final double currentXValue = currentDataset
@@ -69,6 +71,7 @@ public class IntelligentItemLabelGenerator implements XYItemLabelGenerator {
         // Calculate the distance from the current point where labels might
         // overlap
         final double dangerZoneX = (reservedPoints / 2) * pixelX;
+        boolean currentItemPassed = false;
 
         // Iterate through data sets
         for (int datasetIndex = 0; datasetIndex < plot
@@ -88,8 +91,10 @@ public class IntelligentItemLabelGenerator implements XYItemLabelGenerator {
                     // Skip the current data point
                     if ((dataset == currentDataset)
                             && (seriesIndex == currentSeries)
-                            && (itemIndex == currentItem))
+                            && (itemIndex == currentItem)) {
+                        currentItemPassed = true;
                         continue;
+                    }
 
                     // Only check points in the danger zone
                     final double xValue = dataset.getXValue(seriesIndex,
@@ -107,7 +112,7 @@ public class IntelligentItemLabelGenerator implements XYItemLabelGenerator {
 
                     // If the values are equal, only add label to the left-most
                     // value
-                    if ((yValue == currentYValue) && (currentXValue > xValue))
+                    if ((yValue == currentYValue) && (currentItemPassed))
                         return null;
 
                 }

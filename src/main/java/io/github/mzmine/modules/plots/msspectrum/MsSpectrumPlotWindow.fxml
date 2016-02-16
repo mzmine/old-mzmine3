@@ -4,6 +4,7 @@
 <?import javafx.scene.control.* ?>
 <?import javafx.scene.layout.* ?>
 <?import javafx.scene.image.* ?>
+<?import javafx.scene.text.* ?>
 <?import io.github.mzmine.util.charts.jfreechart.* ?>
 <?import org.controlsfx.control.* ?>
 <?import org.controlsfx.glyphfont.Glyph ?>
@@ -12,16 +13,18 @@
 	xmlns:fx="http://javafx.com/fxml/1"
 	fx:controller="io.github.mzmine.modules.plots.msspectrum.MsSpectrumPlotWindowController">
 	<center>
-		<ChartNodeJFreeChart fx:id="chartNode">
+		<ChartNodeJFreeChart fx:id="chartNode"
+			onContextMenuRequested="#handleContextMenuShowing">
 			<contextMenu>
 				<ContextMenu>
 					<items>
 						<Menu text="Set m/z shift">
-							<MenuItem text="Set to " />
-							<MenuItem text="Define" />
-							<MenuItem text="Reset" />
+							<MenuItem fx:id="setToMenuItem" text="Set to "
+								onAction="#handleSetMzShiftTo" />
+							<MenuItem text="Set manually" onAction="#handleSetMzShiftManually" />
+							<MenuItem text="Reset" onAction="#handleResetMzShift" />
 						</Menu>
-						<Menu text="Find MS/MS">
+						<Menu fx:id="findMSMSMenu" text="Find MS/MS">
 						</Menu>
 						<MenuItem text="Show XIC..." />
 						<Menu text="Search...">
@@ -42,9 +45,9 @@
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
 							</graphic>
-							<MenuItem text="MS scan from file" />
-							<MenuItem text="Parsed MS spectrum" />
-							<MenuItem text="Simulated isotope pattern" />
+							<MenuItem text="MS scan" onAction="#handleAddScan" />
+							<MenuItem text="MS spectrum from text" onAction="#handleAddSpectrumFromText" />
+							<MenuItem text="Isotope pattern" onAction="#handleAddIsotopePattern" />
 						</Menu>
 						<Menu text="Export image to...">
 							<graphic>
@@ -58,7 +61,7 @@
 							<MenuItem text="EMF" />
 							<MenuItem text="EPS" />
 						</Menu>
-						<Menu text="Export spectrum to...">
+						<Menu text="Export spectra to...">
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="SAVE" />
 							</graphic>
@@ -72,7 +75,7 @@
 								<Glyph fontFamily="FontAwesome" icon="PRINT" />
 							</graphic>
 						</MenuItem>
-						<MenuItem text="Set axes ranges">
+						<MenuItem text="Manual zoom">
 							<graphic>
 								<ImageView>
 									<Image url="icons/axesicon.png" />
@@ -104,12 +107,12 @@
 						<Tooltip text="Setup layers" />
 					</tooltip>
 				</Button>
-				<Button onAction="#handleAddSpectrum">
+				<Button onAction="#handleAddScan">
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
 					</graphic>
 					<tooltip>
-						<Tooltip text="Add spectrum" />
+						<Tooltip text="Add scan" />
 					</tooltip>
 				</Button>
 				<Button>
@@ -119,9 +122,12 @@
 						</ImageView>
 					</graphic>
 					<tooltip>
-						<Tooltip text="Setup ranges of both axes" />
+						<Tooltip text="Manual zoom" />
 					</tooltip>
 				</Button>
+				<Region prefWidth="20.0" />
+				<TextField fx:id="splashField" editable="false" minWidth="250.0" maxWidth="250.0"
+					styleClass="splashText" />
 				<Region HBox.hgrow="ALWAYS" />
 				<Button onAction="#handleNextScan">
 					<graphic>

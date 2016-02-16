@@ -26,7 +26,9 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Range;
 
+import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.mzmine.gui.MZmineGUI;
@@ -65,12 +67,14 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
         final RawDataFilesSelection fileSelection = parameters
                 .getParameter(MsSpectrumPlotParameters.inputFiles).getValue();
 
-        final ScanSelection scanSelection = parameters
-                .getParameter(MsSpectrumPlotParameters.scanSelection)
-                .getValue();
+        final Integer scanNumber = parameters
+                .getParameter(MsSpectrumPlotParameters.scanNumber).getValue();
 
         Preconditions.checkNotNull(fileSelection);
-        Preconditions.checkNotNull(scanSelection);
+        Preconditions.checkNotNull(scanNumber);
+
+        final ScanSelection scanSelection = new ScanSelection(
+                Range.singleton(scanNumber), null, null, null, null, null);
 
         final List<RawDataFile> dataFiles = fileSelection
                 .getMatchingRawDataFiles();
@@ -84,7 +88,6 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
                 break;
             }
         }
-        weHaveData = true;
 
         if (weHaveData) {
             try {
@@ -111,7 +114,7 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
             }
 
         } else {
-            MZmineGUI.displayMessage("No scans found");
+            MZmineGUI.displayMessage("Scan not found");
         }
 
     }
@@ -119,6 +122,23 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
     @Override
     public @Nonnull Class<? extends ParameterSet> getParameterSetClass() {
         return MsSpectrumPlotParameters.class;
+    }
+
+    public static void showNewSpectrumWindow(@Nonnull MsSpectrum spectrum) {
+        try {
+            URL mainFXML = MsSpectrumPlotModule.class
+                    .getResource("MsSpectrumPlotWindow.fxml");
+            FXMLLoader loader = new FXMLLoader(mainFXML);
+
+            Parent node = loader.load();
+            MZmineGUI.addWindow(node, "MS spectrum");
+            MsSpectrumPlotWindowController controller = loader.getController();
+            controller.addSpectrum(spectrum);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
     }
 
 }

@@ -36,7 +36,7 @@ import io.github.mzmine.parameters.ParameterValidator;
 import javafx.stage.FileChooser;
 
 /**
- * This parameter stores filenames
+ * This parameter stores text
  */
 public class TextAreaParameter extends AbstractParameter<String> {
 
