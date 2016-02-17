@@ -26,7 +26,7 @@
 						<contextMenu>
 							<ContextMenu>
 								<items>
-									<MenuItem text="Delete layer">
+									<MenuItem text="Delete layer" onAction="#handleDeleteLayer">
 										<graphic>
 											<Glyph fontFamily="FontAwesome" icon="REMOVE" />
 										</graphic>
@@ -35,8 +35,8 @@
 										<graphic>
 											<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
 										</graphic>
-										<MenuItem text="Scan from file" />
-										<MenuItem text="Simulated isotope pattern" />
+										<MenuItem text="Scan from file" onAction="#handleAddScan" />
+										<MenuItem text="Simulated isotope pattern" onAction="#handleAddIsotopePattern" />
 									</Menu>
 								</items>
 							</ContextMenu>

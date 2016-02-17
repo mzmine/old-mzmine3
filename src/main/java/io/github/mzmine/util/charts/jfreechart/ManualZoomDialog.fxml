@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.65">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="131.99998474121094" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="468.00001525878906" minWidth="10.0" prefWidth="468.00001525878906" />
+  </columnConstraints>
+  <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Label id="xAxisLabel" style="-fx-font-weight: bold;" text="X axis " />
+      <Label text="Auto range" GridPane.rowIndex="1" />
+      <Label text="Range" GridPane.rowIndex="2" />
+      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+         <children>
+            <TextField id="yAxisRangeMin">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </TextField>
+            <Label text="-" textAlignment="JUSTIFY">
+               <opaqueInsets>
+                  <Insets left="20.0" right="20.0" />
+               </opaqueInsets>
+            </Label>
+            <TextField id="yAxisRangeMax" />
+         </children>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <children>
+            <TextField id="xAxisRangeMin">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </TextField>
+            <Label text="-" textAlignment="JUSTIFY">
+               <opaqueInsets>
+                  <Insets left="20.0" right="20.0" />
+               </opaqueInsets>
+            </Label>
+            <TextField id="xAxisRangeMax" />
+         </children>
+      </HBox>
+      <Label id="yAxisLabel" style="-fx-font-weight: bold;" text="Y axis" GridPane.rowIndex="5" />
+      <Label text="Range" GridPane.rowIndex="7" />
+      <CheckBox id="xAxisAutoRange" mnemonicParsing="false" text="CheckBox" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <CheckBox id="yAxisAutoRange" mnemonicParsing="false" text="CheckBox" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+      <Label text="Auto range" GridPane.rowIndex="6" />
+      <Label text="Auto tick size" GridPane.rowIndex="8" />
+      <Label text="Auto tick size" GridPane.rowIndex="3" />
+      <Label text="Tick size" GridPane.rowIndex="4" />
+      <Label text="Tick size" GridPane.rowIndex="9" />
+      <TextField id="yAxisTickSize" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+      <TextField id="xAxisTickSize" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <CheckBox id="xAxisAutoTickSize" mnemonicParsing="false" text="CheckBox" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <CheckBox id="yAxisAutoTickSize" mnemonicParsing="false" text="CheckBox" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+   </children>
+   <opaqueInsets>
+      <Insets left="10.0" right="10.0" />
+   </opaqueInsets>
+</GridPane>

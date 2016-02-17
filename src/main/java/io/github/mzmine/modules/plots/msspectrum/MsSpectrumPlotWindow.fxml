@@ -27,6 +27,13 @@
 						<Menu fx:id="findMSMSMenu" text="Find MS/MS">
 						</Menu>
 						<MenuItem text="Show XIC..." />
+						<Menu text="Intensity scale...">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="LONG_ARROW_UP" />
+							</graphic>
+							<MenuItem text="Normalize" onAction="#handleNormalizeIntensityScale" />
+							<MenuItem text="Reset to original" onAction="#handleResetIntensityScale" />
+						</Menu>
 						<Menu text="Search...">
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="SEARCH" />
@@ -99,6 +106,24 @@
 					</tooltip>
 				</Button>
 				<Region HBox.hgrow="ALWAYS" />
+				<Button onAction="#handleZoomOut">
+					<graphic>
+						<Glyph fontFamily="FontAwesome" icon="ARROWS_ALT" />
+					</graphic>
+					<tooltip>
+						<Tooltip text="Zoom out" />
+					</tooltip>
+				</Button>
+				<Button onAction="#handleManualZoom">
+					<graphic>
+						<ImageView>
+							<Image url="icons/axesicon.png" />
+						</ImageView>
+					</graphic>
+					<tooltip>
+						<Tooltip text="Manual zoom" />
+					</tooltip>
+				</Button>
 				<Button onAction="#handleSetupLayers">
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="BAR_CHART" />
@@ -115,19 +140,10 @@
 						<Tooltip text="Add scan" />
 					</tooltip>
 				</Button>
-				<Button>
-					<graphic>
-						<ImageView>
-							<Image url="icons/axesicon.png" />
-						</ImageView>
-					</graphic>
-					<tooltip>
-						<Tooltip text="Manual zoom" />
-					</tooltip>
-				</Button>
+
 				<Region prefWidth="20.0" />
-				<TextField fx:id="splashField" editable="false" minWidth="250.0" maxWidth="250.0"
-					styleClass="splashText" />
+				<TextField fx:id="splashField" editable="false" minWidth="250.0"
+					maxWidth="250.0" styleClass="splashText" />
 				<Region HBox.hgrow="ALWAYS" />
 				<Button onAction="#handleNextScan">
 					<graphic>
