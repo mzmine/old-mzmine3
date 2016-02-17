@@ -115,6 +115,10 @@ public class MsSpectrumDataSet extends AbstractXYDataset
         });
 
     }
+    
+    public void resetIntensityScale() {
+        setIntensityScale((double) topIndensity);
+    }
 
     public String getName() {
         return name.get();

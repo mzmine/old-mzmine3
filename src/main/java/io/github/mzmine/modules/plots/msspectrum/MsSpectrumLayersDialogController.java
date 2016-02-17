@@ -19,6 +19,8 @@
 
 package io.github.mzmine.modules.plots.msspectrum;
 
+import java.util.List;
+
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.util.fxcomponents.ColorTableCell;
@@ -63,6 +65,8 @@ public class MsSpectrumLayersDialogController {
     @FXML
     private TableColumn<MsSpectrumDataSet, Boolean> showDataPointsColumn;
 
+    private MsSpectrumPlotWindowController plotController;
+    
     @FXML
     public void initialize() {
 
@@ -104,12 +108,30 @@ public class MsSpectrumLayersDialogController {
     }
 
     @FXML
+    public void handleDeleteLayer(Event event) {
+        List<MsSpectrumDataSet> selected = layersTable.getSelectionModel()
+                .getSelectedItems();
+        layersTable.getItems().removeAll(selected);
+    }
+
+    @FXML
+    public void handleAddScan(Event event) {
+        plotController.handleAddScan(event);
+    }
+
+    @FXML
+    public void handleAddIsotopePattern(Event event) {
+        plotController.handleAddIsotopePattern(event);
+    }
+
+    @FXML
     public void handleClose(Event event) {
         dialogStage.close();
     }
 
-    public void setItems(ObservableList<MsSpectrumDataSet> items) {
+    public void configure(ObservableList<MsSpectrumDataSet> items, MsSpectrumPlotWindowController plotController) {
         layersTable.setItems(items);
+        this.plotController = plotController;
     }
 
 }

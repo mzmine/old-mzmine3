@@ -26,6 +26,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,7 @@ import com.google.common.collect.Range;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -65,6 +67,7 @@ import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.util.JavaFXUtil;
 import io.github.mzmine.util.charts.jfreechart.ChartNodeJFreeChart;
 import io.github.mzmine.util.charts.jfreechart.IntelligentItemLabelGenerator;
+import io.github.mzmine.util.charts.jfreechart.ManualZoomDialog;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -73,6 +76,7 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.print.PrinterJob;
 import javafx.scene.Cursor;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
@@ -84,6 +88,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 /**
  * MS spectrum plot window
@@ -248,7 +253,7 @@ public class MsSpectrumPlotWindowController {
             Stage layersDialog = loader.load();
             MsSpectrumLayersDialogController controller = loader
                     .getController();
-            controller.setItems(dataSets);
+            controller.configure(dataSets, this);
             layersDialog.initModality(Modality.APPLICATION_MODAL);
             layersDialog.show();
         } catch (Exception e) {
@@ -286,8 +291,13 @@ public class MsSpectrumPlotWindowController {
                         continue;
                     String menuLabel = file.getName() + " scan #"
                             + scan.getScanNumber();
-                    if (scan.getChromatographyInfo() != null)
-                        menuLabel += " @" + scan.getChromatographyInfo();
+                    ChromatographyInfo scanRt = scan.getChromatographyInfo();
+                    if (scanRt != null) {
+                        NumberFormat rtFormat = MZmineCore.getConfiguration()
+                                .getRTFormat();
+                        menuLabel += " @"
+                                + rtFormat.format(scanRt.getRetentionTime());
+                    }
                     MenuItem msmsItem = new MenuItem(menuLabel);
                     msmsItem.setOnAction(e -> MsSpectrumPlotModule
                             .showNewSpectrumWindow(scan));
@@ -337,6 +347,52 @@ public class MsSpectrumPlotWindowController {
     @FXML
     public void handleResetMzShift(Event event) {
         mzShift.set(0.0);
+    }
+
+    @FXML
+    public void handlePrint(Event event) {
+        PrinterJob job = PrinterJob.createPrinterJob();
+        if (job == null)
+            return;
+        boolean confirm = job.showPrintDialog(chartNode.getScene().getWindow());
+        if (!confirm) {
+            job.cancelJob();
+            return;
+        }
+        boolean success = job.printPage(chartNode);
+        if (success) {
+            job.endJob();
+        }
+
+    }
+
+    @FXML
+    public void handleNormalizeIntensityScale(Event event) {
+        for (MsSpectrumDataSet dataSet : dataSets) {
+            dataSet.setIntensityScale(100.0);
+        }
+    }
+
+    @FXML
+    public void handleResetIntensityScale(Event event) {
+        for (MsSpectrumDataSet dataSet : dataSets) {
+            dataSet.resetIntensityScale();
+        }
+    }
+
+    @FXML
+    public void handleZoomOut(Event event) {
+        XYPlot plot = chartNode.getChart().getXYPlot();
+        plot.getDomainAxis().setAutoRange(true);
+        plot.getRangeAxis().setAutoRange(true);
+    }
+
+    @FXML
+    public void handleManualZoom(Event event) {
+        XYPlot plot = chartNode.getChart().getXYPlot();
+        Window parent = chartNode.getScene().getWindow();
+        ManualZoomDialog dialog = new ManualZoomDialog(parent, plot);
+        dialog.show();
     }
 
     /**
