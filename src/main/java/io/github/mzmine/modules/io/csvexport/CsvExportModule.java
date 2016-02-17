@@ -23,6 +23,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
@@ -47,6 +48,7 @@ import javafx.concurrent.Task;
 public class CsvExportModule implements MZmineProcessingModule {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private String namePattern = "{}";
 
     @Nonnull
     private static final String MODULE_NAME = "Feature table export";
@@ -71,7 +73,7 @@ public class CsvExportModule implements MZmineProcessingModule {
         // Parameters
         final FeatureTablesSelection featureTables = parameters
                 .getParameter(CsvExportParameters.featureTables).getValue();
-        final File exportFileCSV = parameters
+        final File exportFilePattern = parameters
                 .getParameter(CsvExportParameters.exportFileCSV).getValue();
         final String separator = parameters
                 .getParameter(CsvExportParameters.separator).getValue();
@@ -90,6 +92,15 @@ public class CsvExportModule implements MZmineProcessingModule {
                     "Feature table export module started with no feature table selected.");
             return;
         }
+
+        if (exportFilePattern == null) {
+            MZmineGUI.displayMessage(
+                    "The path and name of the CSV output file cannot be empty.");
+            logger.warn(
+                    "The path and name of the CSV output file cannot be empty.");
+            return;
+        }
+
         List<FeatureTableColumn<?>> columns;
 
         // Add a task for each feature table
@@ -98,16 +109,12 @@ public class CsvExportModule implements MZmineProcessingModule {
 
             // Map FeatureTableColumnsSelection to MSDK FeatureTableColumn
             columns = new ArrayList<FeatureTableColumn<?>>();
-            /*
-             * TODO: Map FeatureTableColumnsSelection to column of the current
-             * featureTable
-             */
-            columns = featureTable.getColumns();
+            columns = tableColumns.getMatchingColumns(featureTable);
 
-            /*
-             * TODO: Handle export of multiple tables using pattern in
-             * exportFileCSV
-             */
+            // Multi-CSV export: substitute pattern in name
+            String newFilename = exportFilePattern.getPath().replaceAll(
+                    Pattern.quote(namePattern), featureTable.getName());
+            File exportFileCSV = new File(newFilename);
 
             // New feature filter task
             CsvFileExportMethod method = new CsvFileExportMethod(featureTable,
