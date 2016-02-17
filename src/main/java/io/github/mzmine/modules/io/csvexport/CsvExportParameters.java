@@ -36,7 +36,9 @@ public class CsvExportParameters extends ParameterSet {
 
     public static final FileNameParameter exportFileCSV = new FileNameParameter(
             "Output file",
-            "Path and name of the exported CSV file. If the file already exists, it will be overwritten.",
+            "Path and name of the exported CSV file. If the file already exists, it will be overwritten.\n"
+                    + "Use pattern \"{}\" in the file name to substitute with the feature table name.\n"
+                    + "I.e. \"123_{}_456.csv\" would become \"123_SourcePeakListName_456.csv\".",
             "Algorithm Parameters",
             ParameterValidator.createNonEmptyValidator(),
             FileNameParameter.Type.SAVE,

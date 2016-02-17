@@ -143,7 +143,7 @@ public final class MZmineGUI extends Application {
             Dialog<ButtonType> dialog = new Dialog<>();
             Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
             stage.getIcons().add(mzMineIcon);
-            dialog.setTitle("Exit MZmine");
+            dialog.setTitle("Warning");
             dialog.setContentText(msg);
             dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
             dialog.showAndWait();

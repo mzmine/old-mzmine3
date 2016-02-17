@@ -51,7 +51,7 @@ public class FeatureTableColumnsEditor extends HBox
 
         namePatternList = new ListView<>();
         namePatternList.setEditable(true);
-        namePatternList.setPrefHeight(100);
+        namePatternList.setPrefHeight(150);
         namePatternList.setCellFactory(TextFieldListCell.forListView());
 
         Button addButton = new Button("Add");
