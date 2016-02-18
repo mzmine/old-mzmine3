@@ -65,9 +65,9 @@ import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelectio
 import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.util.JavaFXUtil;
-import io.github.mzmine.util.charts.jfreechart.ChartNodeJFreeChart;
-import io.github.mzmine.util.charts.jfreechart.IntelligentItemLabelGenerator;
-import io.github.mzmine.util.charts.jfreechart.ManualZoomDialog;
+import io.github.mzmine.util.jfreechart.ChartNodeJFreeChart;
+import io.github.mzmine.util.jfreechart.IntelligentItemLabelGenerator;
+import io.github.mzmine.util.jfreechart.ManualZoomDialog;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;

@@ -17,7 +17,7 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.util.charts.jfreechart;
+package io.github.mzmine.util.jfreechart;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -88,8 +88,8 @@ public class ChartNodeJFreeChart extends ChartViewer {
 
         // set the X axis (retention time) properties
         NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
-        xAxis.setUpperMargin(0.001);
-        xAxis.setLowerMargin(0.001);
+        xAxis.setUpperMargin(0.03);
+        xAxis.setLowerMargin(0.03);
         xAxis.setTickLabelInsets(new RectangleInsets(0, 0, 20, 20));
 
         // set the Y axis (intensity) properties
