@@ -48,7 +48,8 @@
 					<items>
 						<ModuleMenuItem text="CSV"
 							moduleClass="io.github.mzmine.modules.io.csvexport.CsvExportModule" />
-						<MenuItem text="mzTab" />
+						<ModuleMenuItem text="mzTab"
+							moduleClass="io.github.mzmine.modules.io.mztabexport.MzTabExportModule" />
 						<MenuItem text="XML" />
 						<MenuItem text="SQL Database" />
 					</items>

@@ -23,6 +23,7 @@
 	<module>io.github.mzmine.modules.alignment.joinaligner.JoinAlignerModule</module>
 	<module>io.github.mzmine.modules.gapfilling.peakfinder.PeakFinderModule</module>
 	<module>io.github.mzmine.modules.io.csvexport.CsvExportModule</module>
+	<module>io.github.mzmine.modules.io.mztabexport.MzTabExportModule</module>
 	<module>io.github.mzmine.modules.auditlogexport.AuditLogExportModule</module>
 	<module>io.github.mzmine.modules.identification.ms.localdatabasesearch.LocalDatabaseSearchModule</module>
 	<module>io.github.mzmine.modules.isotopes.isotopegrouper.IsotopeGrouperModule</module>
