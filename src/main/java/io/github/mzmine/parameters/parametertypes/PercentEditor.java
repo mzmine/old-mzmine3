@@ -59,7 +59,6 @@ public class PercentEditor extends FlowPane implements ParameterEditor<Double> {
 
     @Override
     public Double getValue() {
-
         String stringValue = percentField.getText();
         try {
             double doubleValue = Double.parseDouble(stringValue) / 100;
@@ -71,13 +70,13 @@ public class PercentEditor extends FlowPane implements ParameterEditor<Double> {
 
     @Override
     public void setValue(Double value) {
+        if (value == null) return;
         String stringValue = String.valueOf(value * 100);
         percentField.setText(stringValue);
     }
 
     @Override
     public Control getMainControl() {
-        // TODO Auto-generated method stub
         return percentField;
     }
 
