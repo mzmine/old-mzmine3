@@ -53,6 +53,7 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 /**
@@ -67,6 +68,8 @@ public final class MZmineGUI extends Application {
     private static final String mzMineFXML = "file:conf/MainWindow.fxml";
 
     private static MainWindowController mainWindowController;
+    
+    private static Scene rootScene;
 
     public void start(Stage stage) {
 
@@ -75,7 +78,7 @@ public final class MZmineGUI extends Application {
             URL mainFXML = new URL(mzMineFXML);
             FXMLLoader loader = new FXMLLoader(mainFXML);
 
-            Scene rootScene = loader.load();
+            rootScene = loader.load();
             mainWindowController = loader.getController();
             stage.setScene(rootScene);
 
@@ -165,8 +168,26 @@ public final class MZmineGUI extends Application {
         mainWindowController.setSelectedTab(tabName);
     }
 
-    public static void addWindow(Node node, String title) {
-        mainWindowController.addWindow(node, title);
+    public static void addWindow(Node node, String title,
+            boolean openNewWindow) {
+        if (openNewWindow) {
+        
+            BorderPane parent = new BorderPane();
+            parent.setCenter(node);
+            Scene newScene = new Scene(parent);
+
+            // Copy CSS styles
+            newScene.getStylesheets().addAll(rootScene.getStylesheets());
+
+            Stage newStage = new Stage();
+            newStage.setTitle(title);
+            newStage.getIcons().add(mzMineIcon);
+            newStage.setScene(newScene);
+            newStage.show();
+
+        } else {
+            mainWindowController.addWindow(node, title);
+        }
     }
 
     public static void activateProject(MZmineGUIProject project) {

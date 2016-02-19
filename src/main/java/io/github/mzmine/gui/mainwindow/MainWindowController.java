@@ -81,7 +81,7 @@ public class MainWindowController {
 
     @FXML
     private Scene mainScene;
-    
+
     @FXML
     private BorderPane mainWindowPane;
 
@@ -163,12 +163,17 @@ public class MainWindowController {
 
         statusBar.setText("Welcome to MZmine " + MZmineCore.getMZmineVersion());
 
+        /*
+         * tasksView.setGraphicFactory(task -> { return new Glyph("FontAwesome",
+         * FontAwesome.Glyph.COG).size(24.0) .color(Color.BLUE); });
+         */
+
         // Setup the Timeline to update the memory indicator periodically
         final Timeline memoryUpdater = new Timeline();
         int UPDATE_FREQUENCY = 500; // ms
         memoryUpdater.setCycleCount(Animation.INDEFINITE);
-        memoryUpdater.getKeyFrames().add(new KeyFrame(
-                Duration.millis(UPDATE_FREQUENCY), (ActionEvent e) -> {
+        memoryUpdater.getKeyFrames()
+                .add(new KeyFrame(Duration.millis(UPDATE_FREQUENCY), e -> {
 
                     final long freeMemMB = Runtime.getRuntime().freeMemory()
                             / (1024 * 1024);
@@ -187,8 +192,8 @@ public class MainWindowController {
         final Timeline msdkTaskUpdater = new Timeline();
         UPDATE_FREQUENCY = 50; // ms
         msdkTaskUpdater.setCycleCount(Animation.INDEFINITE);
-        msdkTaskUpdater.getKeyFrames().add(new KeyFrame(
-                Duration.millis(UPDATE_FREQUENCY), (ActionEvent e) -> {
+        msdkTaskUpdater.getKeyFrames()
+                .add(new KeyFrame(Duration.millis(UPDATE_FREQUENCY), e -> {
 
                     Collection<Task<?>> tasks = tasksView.getTasks();
                     for (Task<?> task : tasks) {

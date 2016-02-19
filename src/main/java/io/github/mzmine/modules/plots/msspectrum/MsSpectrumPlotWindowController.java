@@ -65,9 +65,9 @@ import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelectio
 import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.util.JavaFXUtil;
-import io.github.mzmine.util.charts.jfreechart.ChartNodeJFreeChart;
-import io.github.mzmine.util.charts.jfreechart.IntelligentItemLabelGenerator;
-import io.github.mzmine.util.charts.jfreechart.ManualZoomDialog;
+import io.github.mzmine.util.jfreechart.ChartNodeJFreeChart;
+import io.github.mzmine.util.jfreechart.IntelligentItemLabelGenerator;
+import io.github.mzmine.util.jfreechart.ManualZoomDialog;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -189,7 +189,7 @@ public class MsSpectrumPlotWindowController {
                 .getParameter(SpectrumParserPlotParameters.spectrumType)
                 .getValue();
         final Double normalizedIntensity = parameters
-                .getParameter(SpectrumParserPlotParameters.normalizedIntensity)
+                .getParameter(SpectrumParserPlotParameters.intensity)
                 .getValue();
 
         Preconditions.checkNotNull(spectrumText);
@@ -208,7 +208,7 @@ public class MsSpectrumPlotWindowController {
                 normalizedIntensity.floatValue());
         spectrum.setDataPoints(mzValues, intensityValues, size);
 
-        addSpectrum(spectrum);
+        addSpectrum(spectrum, "Manual spectrum");
     }
 
     @FXML
@@ -232,7 +232,7 @@ public class MsSpectrumPlotWindowController {
         final MsSpectrum pattern = IsotopePatternGeneratorAlgorithm
                 .generateIsotopes(formula, minAbundance,
                         normalizedIntensity.floatValue(), mzTolerance);
-        addSpectrum(pattern);
+        addSpectrum(pattern, formula);
     }
 
     @FXML
@@ -300,7 +300,7 @@ public class MsSpectrumPlotWindowController {
                     }
                     MenuItem msmsItem = new MenuItem(menuLabel);
                     msmsItem.setOnAction(e -> MsSpectrumPlotModule
-                            .showNewSpectrumWindow(scan));
+                            .showNewSpectrumWindow(scan, true));
                     findMSMSMenu.getItems().add(msmsItem);
                     continue scans;
                 }
@@ -400,11 +400,27 @@ public class MsSpectrumPlotWindowController {
      * 
      * @param spectrum
      */
-    public synchronized void addSpectrum(@Nonnull MsSpectrum spectrum) {
+    public synchronized void addSpectrum(@Nonnull MsScan scan) {
+        String spectrumTitle = "MS scan";
+        RawDataFile dataFile = scan.getRawDataFile();
+        if (dataFile != null)
+            spectrumTitle += " " + dataFile.getName();
+        spectrumTitle += "#" + scan.getScanNumber();
+        addSpectrum(scan, spectrumTitle);
+    }
+
+    /**
+     * Add a new spectrum to the plot.
+     * 
+     * @param spectrum
+     */
+    public synchronized void addSpectrum(@Nonnull MsSpectrum spectrum,
+            @Nonnull String name) {
 
         Preconditions.checkNotNull(spectrum);
 
-        MsSpectrumDataSet newDataSet = new MsSpectrumDataSet(spectrum, mzShift);
+        MsSpectrumDataSet newDataSet = new MsSpectrumDataSet(spectrum, name);
+        newDataSet.mzShiftProperty().bind(mzShift);
         dataSets.add(newDataSet);
 
         if (dataSets.size() == 1) {
@@ -467,6 +483,11 @@ public class MsSpectrumPlotWindowController {
             newLineRenderer.setBaseShapesFilled(true);
             newLineRenderer.setBaseShapesVisible(dataSet.getShowDataPoints());
             newLineRenderer.setDrawOutlines(false);
+
+            // Important for keeping one line per series in exported vector
+            // formats such as PDF or SVG
+            newLineRenderer.setDrawSeriesLineAsPath(true);
+
             Stroke baseStroke = new BasicStroke(lineThickness);
             newLineRenderer.setBaseStroke(baseStroke);
             newRenderer = newLineRenderer;

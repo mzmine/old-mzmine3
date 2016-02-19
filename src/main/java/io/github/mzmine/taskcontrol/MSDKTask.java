@@ -44,14 +44,7 @@ public class MSDKTask extends Task<Object> implements MZmineTask {
         this.method = method;
         refreshStatus();
 
-        EventHandler<WorkerStateEvent> cancelEvent = new EventHandler<WorkerStateEvent>() {
-            @Override
-            public void handle(WorkerStateEvent workerEvent) {
-                method.cancel();
-            }
-        };
-
-        setOnCancelled(cancelEvent);
+        setOnCancelled(event -> method.cancel());
     }
 
     @Override

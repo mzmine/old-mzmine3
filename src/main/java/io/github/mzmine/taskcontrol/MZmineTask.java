@@ -19,6 +19,8 @@
 
 package io.github.mzmine.taskcontrol;
 
+import javafx.scene.Node;
+
 public interface MZmineTask {
 
     /**
