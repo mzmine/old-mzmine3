@@ -73,11 +73,11 @@ public class IsotopePatternPlotModule implements MZmineRunnableModule {
         Preconditions.checkNotNull(minAbundance);
         Preconditions.checkNotNull(normalizedIntensity);
 
-        final MsSpectrum pattern = IsotopePatternGeneratorAlgorithm.generateIsotopes(
-                formula, minAbundance, normalizedIntensity.floatValue(),
-                mzTolerance);
-        
-        MsSpectrumPlotModule.showNewSpectrumWindow(pattern);
+        final MsSpectrum pattern = IsotopePatternGeneratorAlgorithm
+                .generateIsotopes(formula, minAbundance,
+                        normalizedIntensity.floatValue(), mzTolerance);
+
+        MsSpectrumPlotModule.showNewSpectrumWindow(pattern, formula, false);
 
     }
 

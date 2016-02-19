@@ -97,7 +97,7 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
                 FXMLLoader loader = new FXMLLoader(mainFXML);
 
                 Parent node = loader.load();
-                MZmineGUI.addWindow(node, "MS spectrum");
+                MZmineGUI.addWindow(node, "MS spectrum", false);
                 MsSpectrumPlotWindowController controller = loader
                         .getController();
 
@@ -124,16 +124,43 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
         return MsSpectrumPlotParameters.class;
     }
 
-    public static void showNewSpectrumWindow(@Nonnull MsSpectrum spectrum) {
+    public static void showNewSpectrumWindow(@Nonnull MsScan scan,
+            @Nonnull Boolean openNewWindow) {
         try {
             URL mainFXML = MsSpectrumPlotModule.class
                     .getResource("MsSpectrumPlotWindow.fxml");
             FXMLLoader loader = new FXMLLoader(mainFXML);
 
             Parent node = loader.load();
-            MZmineGUI.addWindow(node, "MS spectrum");
+
+            String title;
+            final RawDataFile rdf = scan.getRawDataFile();
+            if (rdf != null)
+                title = rdf.getName() + " scan #" + scan.getScanNumber();
+            else
+                title = "Scan #" + scan.getScanNumber();
+
+            MZmineGUI.addWindow(node, title, openNewWindow);
             MsSpectrumPlotWindowController controller = loader.getController();
-            controller.addSpectrum(spectrum);
+            controller.addSpectrum(scan);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+    }
+
+    public static void showNewSpectrumWindow(@Nonnull MsSpectrum spectrum,
+            @Nonnull String name, @Nonnull Boolean openNewWindow) {
+        try {
+            URL mainFXML = MsSpectrumPlotModule.class
+                    .getResource("MsSpectrumPlotWindow.fxml");
+            FXMLLoader loader = new FXMLLoader(mainFXML);
+
+            Parent node = loader.load();
+            MZmineGUI.addWindow(node, name, openNewWindow);
+            MsSpectrumPlotWindowController controller = loader.getController();
+            controller.addSpectrum(spectrum, name);
 
         } catch (Exception e) {
             e.printStackTrace();

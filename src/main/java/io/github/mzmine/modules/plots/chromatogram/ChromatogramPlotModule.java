@@ -67,7 +67,7 @@ public class ChromatogramPlotModule implements MZmineRunnableModule {
                 .getParameter(ChromatogramPlotParameters.mzRange).getValue();
 
         ChromatogramPlotWindow newWindow = new ChromatogramPlotWindow();
-        MZmineGUI.addWindow(newWindow, "Chromatogram");
+        MZmineGUI.addWindow(newWindow, "Chromatogram", false);
 
     }
 

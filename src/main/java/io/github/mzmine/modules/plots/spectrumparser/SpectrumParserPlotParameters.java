@@ -48,8 +48,8 @@ public class SpectrumParserPlotParameters extends ParameterSet {
                     MsSpectrumType.PROFILE }),
             MsSpectrumType.CENTROIDED);
 
-    public static final DoubleParameter normalizedIntensity = new DoubleParameter(
-            "Normalize intensity",
+    public static final DoubleParameter intensity = new DoubleParameter(
+            "Intensity",
             "The intensity value the highest peak will be normalized to",
             "Input", MZmineCore.getConfiguration().getIntensityFormat(),
             ParameterValidator.createNonEmptyValidator(), 100.0);
@@ -58,7 +58,7 @@ public class SpectrumParserPlotParameters extends ParameterSet {
      * Create the parameter set.
      */
     public SpectrumParserPlotParameters() {
-        super(spectrumText, spectrumType, normalizedIntensity);
+        super(spectrumText, spectrumType, intensity);
     }
 
 }

@@ -30,8 +30,6 @@ import org.jfree.data.xy.XYDataset;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.util.MsSpectrumUtil;
 import io.github.mzmine.main.MZmineCore;
 import javafx.application.Platform;
@@ -66,7 +64,8 @@ public class MsSpectrumDataSet extends AbstractXYDataset
             "MS spectrum");
     private final DoubleProperty intensityScale = new SimpleDoubleProperty(this,
             "intensityScale", 0.0);
-    private final DoubleProperty mzShift;
+    private final DoubleProperty mzShift = new SimpleDoubleProperty(this,
+            "mzShift", 0.0);
     private final IntegerProperty lineThickness = new SimpleIntegerProperty(
             this, "lineThickness", 1);
     private final ObjectProperty<MsSpectrumType> renderingType = new SimpleObjectProperty<>(
@@ -76,19 +75,9 @@ public class MsSpectrumDataSet extends AbstractXYDataset
     private final BooleanProperty showDataPoints = new SimpleBooleanProperty(
             this, "showDataPoints", false);
 
-    MsSpectrumDataSet(MsSpectrum spectrum, DoubleProperty mzShift) {
+    MsSpectrumDataSet(MsSpectrum spectrum, String dataSetName) {
 
-        this.mzShift = mzShift;
-
-        String spectrumTitle = "MS spectrum";
-        if (spectrum instanceof MsScan) {
-            MsScan scan = (MsScan) spectrum;
-            RawDataFile dataFile = scan.getRawDataFile();
-            if (dataFile != null)
-                spectrumTitle += " " + dataFile.getName();
-            spectrumTitle += "#" + scan.getScanNumber();
-        }
-        setName(spectrumTitle);
+        setName(dataSetName);
         setRenderingType(spectrum.getSpectrumType());
 
         // Listen for property changes
@@ -115,7 +104,7 @@ public class MsSpectrumDataSet extends AbstractXYDataset
         });
 
     }
-    
+
     public void resetIntensityScale() {
         setIntensityScale((double) topIndensity);
     }
@@ -142,6 +131,18 @@ public class MsSpectrumDataSet extends AbstractXYDataset
 
     public DoubleProperty intensityScaleProperty() {
         return intensityScale;
+    }
+
+    public Double getMzShift() {
+        return mzShift.get();
+    }
+
+    public void setMzShift(Double newMzShift) {
+        mzShift.set(newMzShift);
+    }
+
+    public DoubleProperty mzShiftProperty() {
+        return mzShift;
     }
 
     public Integer getLineThickness() {

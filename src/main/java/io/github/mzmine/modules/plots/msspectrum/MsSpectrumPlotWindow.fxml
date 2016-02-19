@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.* ?>
 <?import javafx.scene.image.* ?>
 <?import javafx.scene.text.* ?>
-<?import io.github.mzmine.util.charts.jfreechart.* ?>
+<?import io.github.mzmine.util.jfreechart.* ?>
 <?import org.controlsfx.control.* ?>
 <?import org.controlsfx.glyphfont.Glyph ?>
 
@@ -29,7 +29,7 @@
 						<MenuItem text="Show XIC..." />
 						<Menu text="Intensity scale...">
 							<graphic>
-								<Glyph fontFamily="FontAwesome" icon="LONG_ARROW_UP" />
+								<Glyph fontFamily="FontAwesome" icon="ARROWS_V" />
 							</graphic>
 							<MenuItem text="Normalize" onAction="#handleNormalizeIntensityScale" />
 							<MenuItem text="Reset to original" onAction="#handleResetIntensityScale" />
