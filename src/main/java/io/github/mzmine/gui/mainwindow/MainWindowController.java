@@ -26,8 +26,6 @@ import java.util.List;
 import org.controlsfx.control.HiddenSidesPane;
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.TaskProgressView;
-import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.Glyph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +65,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 

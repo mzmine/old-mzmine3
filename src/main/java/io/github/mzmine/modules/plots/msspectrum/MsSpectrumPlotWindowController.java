@@ -189,7 +189,7 @@ public class MsSpectrumPlotWindowController {
                 .getParameter(SpectrumParserPlotParameters.spectrumType)
                 .getValue();
         final Double normalizedIntensity = parameters
-                .getParameter(SpectrumParserPlotParameters.normalizedIntensity)
+                .getParameter(SpectrumParserPlotParameters.intensity)
                 .getValue();
 
         Preconditions.checkNotNull(spectrumText);
@@ -208,7 +208,7 @@ public class MsSpectrumPlotWindowController {
                 normalizedIntensity.floatValue());
         spectrum.setDataPoints(mzValues, intensityValues, size);
 
-        addSpectrum(spectrum);
+        addSpectrum(spectrum, "Manual spectrum");
     }
 
     @FXML
@@ -232,7 +232,7 @@ public class MsSpectrumPlotWindowController {
         final MsSpectrum pattern = IsotopePatternGeneratorAlgorithm
                 .generateIsotopes(formula, minAbundance,
                         normalizedIntensity.floatValue(), mzTolerance);
-        addSpectrum(pattern);
+        addSpectrum(pattern, formula);
     }
 
     @FXML
@@ -300,7 +300,7 @@ public class MsSpectrumPlotWindowController {
                     }
                     MenuItem msmsItem = new MenuItem(menuLabel);
                     msmsItem.setOnAction(e -> MsSpectrumPlotModule
-                            .showNewSpectrumWindow(scan));
+                            .showNewSpectrumWindow(scan, true));
                     findMSMSMenu.getItems().add(msmsItem);
                     continue scans;
                 }
@@ -400,11 +400,27 @@ public class MsSpectrumPlotWindowController {
      * 
      * @param spectrum
      */
-    public synchronized void addSpectrum(@Nonnull MsSpectrum spectrum) {
+    public synchronized void addSpectrum(@Nonnull MsScan scan) {
+        String spectrumTitle = "MS scan";
+        RawDataFile dataFile = scan.getRawDataFile();
+        if (dataFile != null)
+            spectrumTitle += " " + dataFile.getName();
+        spectrumTitle += "#" + scan.getScanNumber();
+        addSpectrum(scan, spectrumTitle);
+    }
+
+    /**
+     * Add a new spectrum to the plot.
+     * 
+     * @param spectrum
+     */
+    public synchronized void addSpectrum(@Nonnull MsSpectrum spectrum,
+            @Nonnull String name) {
 
         Preconditions.checkNotNull(spectrum);
 
-        MsSpectrumDataSet newDataSet = new MsSpectrumDataSet(spectrum, mzShift);
+        MsSpectrumDataSet newDataSet = new MsSpectrumDataSet(spectrum, name);
+        newDataSet.mzShiftProperty().bind(mzShift);
         dataSets.add(newDataSet);
 
         if (dataSets.size() == 1) {

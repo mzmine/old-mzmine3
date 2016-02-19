@@ -64,7 +64,7 @@ public class SpectrumParserPlotModule implements MZmineRunnableModule {
                 .getParameter(SpectrumParserPlotParameters.spectrumType)
                 .getValue();
         final Double normalizedIntensity = parameters
-                .getParameter(SpectrumParserPlotParameters.normalizedIntensity)
+                .getParameter(SpectrumParserPlotParameters.intensity)
                 .getValue();
 
         Preconditions.checkNotNull(spectrumText);
@@ -75,7 +75,7 @@ public class SpectrumParserPlotModule implements MZmineRunnableModule {
                 .parseMsSpectrum(spectrumText);
         spectrum.setSpectrumType(spectrumType);
 
-        MsSpectrumPlotModule.showNewSpectrumWindow(spectrum);
+        MsSpectrumPlotModule.showNewSpectrumWindow(spectrum, "Manual spectrum", false);
 
     }
 

@@ -308,7 +308,7 @@ public class FeatureTableModule implements MZmineRunnableModule {
         TableUtils.addCopyHandler(treeTable, columnMap);
 
         // Add new window with table
-        MZmineGUI.addWindow(treeTable, featureTable.getName());
+        MZmineGUI.addWindow(treeTable, featureTable.getName(), false);
 
         // Add custom table menu
         FeatureTableMenu.addCustomTableMenu(treeTable);
