@@ -60,7 +60,7 @@
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="FILE_IMAGE_ALT" />
 							</graphic>
-							<MenuItem text="Clipboard" onAction="#handleExportToClipboard" />
+							<MenuItem text="Clipboard" onAction="#handleExportImageToClipboard" />
 							<MenuItem text="JPG" onAction="#handleExportJPG" />
 							<MenuItem text="PNG" onAction="#handleExportPNG"/>
 							<MenuItem text="SVG" onAction="#handleExportSVG"/>
@@ -72,7 +72,7 @@
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="SAVE" />
 							</graphic>
-							<MenuItem text="Clipboard" />
+							<MenuItem text="Clipboard" onAction="#handleExportSpectraToClipboard" />
 							<MenuItem text="mzML" onAction="#handleExportMzML" />
 							<MenuItem text="MGF" onAction="#handleExportMGF" />
 							<MenuItem text="MSP" onAction="#handleExportMSP" />

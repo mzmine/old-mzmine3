@@ -543,7 +543,7 @@ public class MsSpectrumPlotWindowController {
         dialog.show();
     }
 
-    public void handleExportToClipboard(Event event) {
+    public void handleExportImageToClipboard(Event event) {
         ChartExportToImage.exportToClipboard(chartNode);
     }
 
@@ -570,6 +570,11 @@ public class MsSpectrumPlotWindowController {
     public void handleExportEPS(Event event) {
         ChartExportToImage.showSaveDialog(chartNode, FileType.EPS);
     }
+    
+    public void handleExportSpectraToClipboard(Event event) {
+        
+    }
+
 
     public void handleExportMzML(Event event) {
     }
