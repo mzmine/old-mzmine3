@@ -24,6 +24,7 @@ import java.awt.Font;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -33,11 +34,12 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.fx.ChartViewer;
 import org.jfree.chart.labels.XYItemLabelGenerator;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.AbstractXYItemRenderer;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.ui.RectangleEdge;
 
@@ -53,9 +55,10 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.io.txt.MsSpectrumParserAlgorithm;
 import io.github.msdk.spectra.isotopepattern.IsotopePatternGeneratorAlgorithm;
 import io.github.msdk.spectra.splash.SplashCalculationAlgorithm;
-import io.github.msdk.util.MsSpectrumUtil;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotModule;
+import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotParameters;
 import io.github.mzmine.modules.plots.isotopepattern.IsotopePatternPlotModule;
 import io.github.mzmine.modules.plots.isotopepattern.IsotopePatternPlotParameters;
 import io.github.mzmine.modules.plots.spectrumparser.SpectrumParserPlotModule;
@@ -65,27 +68,36 @@ import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelectio
 import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.util.JavaFXUtil;
+import io.github.mzmine.util.MsScanUtils;
 import io.github.mzmine.util.jfreechart.ChartNodeJFreeChart;
 import io.github.mzmine.util.jfreechart.IntelligentItemLabelGenerator;
 import io.github.mzmine.util.jfreechart.ManualZoomDialog;
+import io.github.mzmine.util.jfreechart.ChartExportToImage;
+import io.github.mzmine.util.jfreechart.ChartExportToImage.FileType;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.print.PrinterJob;
 import javafx.scene.Cursor;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -123,7 +135,7 @@ public class MsSpectrumPlotWindowController {
     private ChartNodeJFreeChart chartNode;
 
     @FXML
-    private MenuItem setToMenuItem;
+    private MenuItem setToMenuItem, showXICMenuItem;
 
     @FXML
     private Menu findMSMSMenu;
@@ -131,7 +143,6 @@ public class MsSpectrumPlotWindowController {
     @FXML
     private TextField splashField;
 
-    @FXML
     public void initialize() {
 
         final XYPlot plot = chartNode.getChart().getXYPlot();
@@ -144,255 +155,19 @@ public class MsSpectrumPlotWindowController {
         plot.setRangeGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
 
         chartNode.setCursor(Cursor.CROSSHAIR);
-    }
 
-    @FXML
-    public void handleAddScan(Event e) {
-        ParameterSet parameters = MZmineCore.getConfiguration()
-                .getModuleParameters(MsSpectrumPlotModule.class);
-        ButtonType exitCode = parameters.showSetupDialog("Add scan");
-        if (exitCode != ButtonType.OK)
-            return;
-
-        final RawDataFilesSelection fileSelection = parameters
-                .getParameter(MsSpectrumPlotParameters.inputFiles).getValue();
-        final Integer scanNumber = parameters
-                .getParameter(MsSpectrumPlotParameters.scanNumber).getValue();
-        final ScanSelection scanSelection = new ScanSelection(
-                Range.singleton(scanNumber), null, null, null, null, null);
-        final List<RawDataFile> dataFiles = fileSelection
-                .getMatchingRawDataFiles();
-        boolean spectrumAdded = false;
-        for (RawDataFile dataFile : dataFiles) {
-            for (MsScan scan : scanSelection.getMatchingScans(dataFile)) {
-                addSpectrum(scan);
-                spectrumAdded = true;
-            }
-        }
-        if (!spectrumAdded) {
-            MZmineGUI.displayMessage("Scan not found");
-        }
-    }
-
-    @FXML
-    public void handleAddSpectrumFromText(Event e) {
-        ParameterSet parameters = MZmineCore.getConfiguration()
-                .getModuleParameters(SpectrumParserPlotModule.class);
-        ButtonType exitCode = parameters.showSetupDialog("Parse spectrum");
-        if (exitCode != ButtonType.OK)
-            return;
-
-        final String spectrumText = parameters
-                .getParameter(SpectrumParserPlotParameters.spectrumText)
-                .getValue();
-        final MsSpectrumType spectrumType = parameters
-                .getParameter(SpectrumParserPlotParameters.spectrumType)
-                .getValue();
-        final Double normalizedIntensity = parameters
-                .getParameter(SpectrumParserPlotParameters.intensity)
-                .getValue();
-
-        Preconditions.checkNotNull(spectrumText);
-        Preconditions.checkNotNull(spectrumType);
-        Preconditions.checkNotNull(normalizedIntensity);
-
-        final MsSpectrum spectrum = MsSpectrumParserAlgorithm
-                .parseMsSpectrum(spectrumText);
-        spectrum.setSpectrumType(spectrumType);
-
-        // Normalize the intensity
-        double mzValues[] = spectrum.getMzValues();
-        float intensityValues[] = spectrum.getIntensityValues();
-        int size = spectrum.getNumberOfDataPoints();
-        MsSpectrumUtil.normalizeIntensity(intensityValues, size,
-                normalizedIntensity.floatValue());
-        spectrum.setDataPoints(mzValues, intensityValues, size);
-
-        addSpectrum(spectrum, "Manual spectrum");
-    }
-
-    @FXML
-    public void handleAddIsotopePattern(Event e) {
-        ParameterSet parameters = MZmineCore.getConfiguration()
-                .getModuleParameters(IsotopePatternPlotModule.class);
-        ButtonType exitCode = parameters.showSetupDialog("Add isotope pattern");
-        if (exitCode != ButtonType.OK)
-            return;
-        final String formula = parameters
-                .getParameter(IsotopePatternPlotParameters.formula).getValue();
-        final Double mzTolerance = parameters
-                .getParameter(IsotopePatternPlotParameters.mzTolerance)
-                .getValue();
-        final Double minAbundance = parameters
-                .getParameter(IsotopePatternPlotParameters.minAbundance)
-                .getValue();
-        final Double normalizedIntensity = parameters
-                .getParameter(IsotopePatternPlotParameters.normalizedIntensity)
-                .getValue();
-        final MsSpectrum pattern = IsotopePatternGeneratorAlgorithm
-                .generateIsotopes(formula, minAbundance,
-                        normalizedIntensity.floatValue(), mzTolerance);
-        addSpectrum(pattern, formula);
-    }
-
-    @FXML
-    public void handlePreviousScan(Event e) {
-
-    }
-
-    @FXML
-    public void handleNextScan(Event e) {
-
-    }
-
-    @FXML
-    public void handleSetupLayers(Event event) {
-        try {
-            URL layersDialogFXML = getClass().getResource(LAYERS_DIALOG_FXML);
-            FXMLLoader loader = new FXMLLoader(layersDialogFXML);
-            Stage layersDialog = loader.load();
-            MsSpectrumLayersDialogController controller = loader
-                    .getController();
-            controller.configure(dataSets, this);
-            layersDialog.initModality(Modality.APPLICATION_MODAL);
-            layersDialog.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    public void handleContextMenuShowing(ContextMenuEvent event) {
-
-        // Calculate the m/z value of the clicked point
-        final double clickedX = event.getX();
-        XYPlot plot = chartNode.getChart().getXYPlot();
-        Rectangle2D chartArea = chartNode.getRenderingInfo().getPlotInfo()
-                .getDataArea();
-        RectangleEdge axisEdge = plot.getDomainAxisEdge();
-        ValueAxis domainAxis = plot.getDomainAxis();
-        final double clickedMz = domainAxis.java2DToValue(clickedX, chartArea,
-                axisEdge);
-
-        // Update the "Set to xxx" m/z shift menu item
-        DecimalFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
-        setToMenuItem.setText("Set to " + mzFormat.format(clickedMz));
-        setToMenuItem.setUserData(clickedMz);
-
-        // Update the MS/MS menu
-        findMSMSMenu.getItems().clear();
-        MZmineProject project = MZmineCore.getCurrentProject();
-        for (RawDataFile file : project.getRawDataFiles()) {
-            scans: for (MsScan scan : file.getScans()) {
-                if (scan.getMsFunction().getMsLevel() == 1)
-                    continue;
-                for (IsolationInfo isolation : scan.getIsolations()) {
-                    if (!isolation.getIsolationMzRange().contains(clickedMz))
-                        continue;
-                    String menuLabel = file.getName() + " scan #"
-                            + scan.getScanNumber();
-                    ChromatographyInfo scanRt = scan.getChromatographyInfo();
-                    if (scanRt != null) {
-                        NumberFormat rtFormat = MZmineCore.getConfiguration()
-                                .getRTFormat();
-                        menuLabel += " @"
-                                + rtFormat.format(scanRt.getRetentionTime());
+        // Remove the dataset if it is removed from the list
+        dataSets.addListener((Change<? extends MsSpectrumDataSet> c) -> {
+            while (c.next()) {
+                if (c.wasRemoved()) {
+                    for (MsSpectrumDataSet ds : c.getRemoved()) {
+                        int index = plot.indexOf(ds);
+                        plot.setDataset(index, null);
                     }
-                    MenuItem msmsItem = new MenuItem(menuLabel);
-                    msmsItem.setOnAction(e -> MsSpectrumPlotModule
-                            .showNewSpectrumWindow(scan, true));
-                    findMSMSMenu.getItems().add(msmsItem);
-                    continue scans;
                 }
-            }
-        }
-        if (findMSMSMenu.getItems().isEmpty()) {
-            MenuItem noneItem = new MenuItem("None");
-            noneItem.setDisable(true);
-            findMSMSMenu.getItems().add(noneItem);
-        }
-
-    }
-
-    @FXML
-    public void handleSetMzShiftTo(Event event) {
-        Double newMzShift = (Double) setToMenuItem.getUserData();
-        if (newMzShift == null)
-            return;
-        mzShift.set(newMzShift);
-    }
-
-    @FXML
-    public void handleSetMzShiftManually(Event event) {
-        DecimalFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
-        String newMzShiftString = "0.0";
-        Double newMzShift = (Double) setToMenuItem.getUserData();
-        if (newMzShift != null)
-            newMzShiftString = mzFormat.format(newMzShift);
-        TextInputDialog dialog = new TextInputDialog(newMzShiftString);
-        dialog.setTitle("m/z shift");
-        dialog.setHeaderText("Set m/z shift value");
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(value -> {
-            try {
-                double newValue = Double.parseDouble(value);
-                mzShift.set(newValue);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         });
 
-    }
-
-    @FXML
-    public void handleResetMzShift(Event event) {
-        mzShift.set(0.0);
-    }
-
-    @FXML
-    public void handlePrint(Event event) {
-        PrinterJob job = PrinterJob.createPrinterJob();
-        if (job == null)
-            return;
-        boolean confirm = job.showPrintDialog(chartNode.getScene().getWindow());
-        if (!confirm) {
-            job.cancelJob();
-            return;
-        }
-        boolean success = job.printPage(chartNode);
-        if (success) {
-            job.endJob();
-        }
-
-    }
-
-    @FXML
-    public void handleNormalizeIntensityScale(Event event) {
-        for (MsSpectrumDataSet dataSet : dataSets) {
-            dataSet.setIntensityScale(100.0);
-        }
-    }
-
-    @FXML
-    public void handleResetIntensityScale(Event event) {
-        for (MsSpectrumDataSet dataSet : dataSets) {
-            dataSet.resetIntensityScale();
-        }
-    }
-
-    @FXML
-    public void handleZoomOut(Event event) {
-        XYPlot plot = chartNode.getChart().getXYPlot();
-        plot.getDomainAxis().setAutoRange(true);
-        plot.getRangeAxis().setAutoRange(true);
-    }
-
-    @FXML
-    public void handleManualZoom(Event event) {
-        XYPlot plot = chartNode.getChart().getXYPlot();
-        Window parent = chartNode.getScene().getWindow();
-        ManualZoomDialog dialog = new ManualZoomDialog(parent, plot);
-        dialog.show();
     }
 
     /**
@@ -471,7 +246,7 @@ public class MsSpectrumPlotWindowController {
         final XYPlot plot = chartNode.getChart().getXYPlot();
 
         // Set renderer
-        XYItemRenderer newRenderer;
+        AbstractXYItemRenderer newRenderer;
         switch (renderingType) {
         case PROFILE:
         case THRESHOLDED:
@@ -502,6 +277,14 @@ public class MsSpectrumPlotWindowController {
             break;
         }
 
+        // Set tooltips for legend
+        newRenderer.setLegendItemToolTipGenerator((dataset, series) -> {
+            if (dataset instanceof MsSpectrumDataSet) {
+                return ((MsSpectrumDataSet) dataset).getDescription();
+            } else
+                return null;
+        });
+
         // Set color
         Color baseColor = dataSet.getColor();
         newRenderer.setBasePaint(JavaFXUtil.convertColorToAWT(baseColor));
@@ -519,6 +302,282 @@ public class MsSpectrumPlotWindowController {
 
         plot.setRenderer(dataSetIndex, newRenderer);
 
+    }
+
+    public void handleAddScan(Event e) {
+        ParameterSet parameters = MZmineCore.getConfiguration()
+                .getModuleParameters(MsSpectrumPlotModule.class);
+        ButtonType exitCode = parameters.showSetupDialog("Add scan");
+        if (exitCode != ButtonType.OK)
+            return;
+
+        final RawDataFilesSelection fileSelection = parameters
+                .getParameter(MsSpectrumPlotParameters.inputFiles).getValue();
+        final Integer scanNumber = parameters
+                .getParameter(MsSpectrumPlotParameters.scanNumber).getValue();
+        final ScanSelection scanSelection = new ScanSelection(
+                Range.singleton(scanNumber), null, null, null, null, null);
+        final List<RawDataFile> dataFiles = fileSelection
+                .getMatchingRawDataFiles();
+        boolean spectrumAdded = false;
+        for (RawDataFile dataFile : dataFiles) {
+            for (MsScan scan : scanSelection.getMatchingScans(dataFile)) {
+                addSpectrum(scan);
+                spectrumAdded = true;
+            }
+        }
+        if (!spectrumAdded) {
+            MZmineGUI.displayMessage("Scan not found");
+        }
+    }
+
+    public void handleAddSpectrumFromText(Event e) {
+        ParameterSet parameters = MZmineCore.getConfiguration()
+                .getModuleParameters(SpectrumParserPlotModule.class);
+        ButtonType exitCode = parameters.showSetupDialog("Parse spectrum");
+        if (exitCode != ButtonType.OK)
+            return;
+
+        final String spectrumText = parameters
+                .getParameter(SpectrumParserPlotParameters.spectrumText)
+                .getValue();
+        final MsSpectrumType spectrumType = parameters
+                .getParameter(SpectrumParserPlotParameters.spectrumType)
+                .getValue();
+
+        Preconditions.checkNotNull(spectrumText);
+        Preconditions.checkNotNull(spectrumType);
+
+        final MsSpectrum spectrum = MsSpectrumParserAlgorithm
+                .parseMsSpectrum(spectrumText);
+        spectrum.setSpectrumType(spectrumType);
+
+        String spectrumName = "Manual spectrum";
+
+        addSpectrum(spectrum, spectrumName);
+    }
+
+    public void handleAddIsotopePattern(Event e) {
+        ParameterSet parameters = MZmineCore.getConfiguration()
+                .getModuleParameters(IsotopePatternPlotModule.class);
+        ButtonType exitCode = parameters.showSetupDialog("Add isotope pattern");
+        if (exitCode != ButtonType.OK)
+            return;
+        final String formula = parameters
+                .getParameter(IsotopePatternPlotParameters.formula).getValue();
+        final Double mzTolerance = parameters
+                .getParameter(IsotopePatternPlotParameters.mzTolerance)
+                .getValue();
+        final Double minAbundance = parameters
+                .getParameter(IsotopePatternPlotParameters.minAbundance)
+                .getValue();
+        final Double normalizedIntensity = parameters
+                .getParameter(IsotopePatternPlotParameters.normalizedIntensity)
+                .getValue();
+        final MsSpectrum pattern = IsotopePatternGeneratorAlgorithm
+                .generateIsotopes(formula, minAbundance,
+                        normalizedIntensity.floatValue(), mzTolerance);
+        addSpectrum(pattern, formula);
+    }
+
+    public void handlePreviousScan(Event e) {
+
+    }
+
+    public void handleNextScan(Event e) {
+
+    }
+
+    public void handleSetupLayers(Event event) {
+        try {
+            URL layersDialogFXML = getClass().getResource(LAYERS_DIALOG_FXML);
+            FXMLLoader loader = new FXMLLoader(layersDialogFXML);
+            Stage layersDialog = loader.load();
+            MsSpectrumLayersDialogController controller = loader
+                    .getController();
+            controller.configure(dataSets, this);
+            layersDialog.initModality(Modality.APPLICATION_MODAL);
+            layersDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void handleContextMenuShowing(ContextMenuEvent event) {
+
+        // Calculate the m/z value of the clicked point
+        final double clickedX = event.getX();
+        XYPlot plot = chartNode.getChart().getXYPlot();
+        Rectangle2D chartArea = chartNode.getRenderingInfo().getPlotInfo()
+                .getDataArea();
+        RectangleEdge axisEdge = plot.getDomainAxisEdge();
+        ValueAxis domainAxis = plot.getDomainAxis();
+        final double clickedMz = domainAxis.java2DToValue(clickedX, chartArea,
+                axisEdge);
+        final double clickedMzWithShift = Math.abs(clickedMz - mzShift.get());
+
+        // Update the m/z shift menu item
+        DecimalFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
+        setToMenuItem.setText("Set to " + mzFormat.format(clickedMz) + " m/z");
+        setToMenuItem.setUserData(clickedMz);
+
+        // Update the Show XIC menu item
+        showXICMenuItem.setText(
+                "Show XIC of " + mzFormat.format(clickedMzWithShift) + " m/z");
+        showXICMenuItem.setUserData(clickedMzWithShift);
+
+        // Update the MS/MS menu
+        findMSMSMenu.setText("Find MS/MS of "
+                + mzFormat.format(clickedMzWithShift) + " m/z");
+        findMSMSMenu.getItems().clear();
+        MZmineProject project = MZmineCore.getCurrentProject();
+        for (RawDataFile file : project.getRawDataFiles()) {
+            scans: for (MsScan scan : file.getScans()) {
+                if (scan.getMsFunction().getMsLevel() == 1)
+                    continue;
+                for (IsolationInfo isolation : scan.getIsolations()) {
+                    if (!isolation.getIsolationMzRange()
+                            .contains(clickedMzWithShift))
+                        continue;
+                    String menuLabel = MsScanUtils
+                            .createSingleLineMsScanDescription(scan, isolation);
+                    MenuItem msmsItem = new MenuItem(menuLabel);
+                    msmsItem.setOnAction(e -> MsSpectrumPlotModule
+                            .showNewSpectrumWindow(scan, true));
+                    findMSMSMenu.getItems().add(msmsItem);
+                    continue scans;
+                }
+            }
+        }
+        if (findMSMSMenu.getItems().isEmpty()) {
+            MenuItem noneItem = new MenuItem("None");
+            noneItem.setDisable(true);
+            findMSMSMenu.getItems().add(noneItem);
+        }
+
+    }
+
+    public void handleShowXIC(Event event) {
+        Double xicMz = (Double) showXICMenuItem.getUserData();
+        if (xicMz == null)
+            return;
+
+        ParameterSet chromatogramParams = MZmineCore.getConfiguration()
+                .getModuleParameters(ChromatogramPlotModule.class);
+        chromatogramParams.getParameter(ChromatogramPlotParameters.mzRange)
+                .setValue(Range.closed(xicMz - 0.005, xicMz + 0.005));
+        chromatogramParams.showSetupDialog("Show XIC");
+
+    }
+
+    public void handleSetMzShiftTo(Event event) {
+        Double newMzShift = (Double) setToMenuItem.getUserData();
+        if (newMzShift == null)
+            return;
+        mzShift.set(newMzShift);
+    }
+
+    public void handleSetMzShiftManually(Event event) {
+        DecimalFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
+        String newMzShiftString = "0.0";
+        Double newMzShift = (Double) setToMenuItem.getUserData();
+        if (newMzShift != null)
+            newMzShiftString = mzFormat.format(newMzShift);
+        TextInputDialog dialog = new TextInputDialog(newMzShiftString);
+        dialog.setTitle("m/z shift");
+        dialog.setHeaderText("Set m/z shift value");
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(value -> {
+            try {
+                double newValue = Double.parseDouble(value);
+                mzShift.set(newValue);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+    }
+
+    public void handleResetMzShift(Event event) {
+        mzShift.set(0.0);
+    }
+
+    public void handlePrint(Event event) {
+        PrinterJob job = PrinterJob.createPrinterJob();
+        if (job == null)
+            return;
+        boolean confirm = job.showPrintDialog(chartNode.getScene().getWindow());
+        if (!confirm) {
+            job.cancelJob();
+            return;
+        }
+        boolean success = job.printPage(chartNode);
+        if (success) {
+            job.endJob();
+        }
+
+    }
+
+    public void handleNormalizeIntensityScale(Event event) {
+        for (MsSpectrumDataSet dataSet : dataSets) {
+            dataSet.setIntensityScale(100.0);
+        }
+    }
+
+    public void handleResetIntensityScale(Event event) {
+        for (MsSpectrumDataSet dataSet : dataSets) {
+            dataSet.resetIntensityScale();
+        }
+    }
+
+    public void handleZoomOut(Event event) {
+        XYPlot plot = chartNode.getChart().getXYPlot();
+        plot.getDomainAxis().setAutoRange(true);
+        plot.getRangeAxis().setAutoRange(true);
+    }
+
+    public void handleManualZoom(Event event) {
+        XYPlot plot = chartNode.getChart().getXYPlot();
+        Window parent = chartNode.getScene().getWindow();
+        ManualZoomDialog dialog = new ManualZoomDialog(parent, plot);
+        dialog.show();
+    }
+
+    public void handleExportToClipboard(Event event) {
+        ChartExportToImage.exportToClipboard(chartNode);
+    }
+
+    public void handleExportJPG(Event event) {
+        ChartExportToImage.showSaveDialog(chartNode, FileType.JPG);
+    }
+
+    public void handleExportPNG(Event event) {
+        ChartExportToImage.showSaveDialog(chartNode, FileType.PNG);
+    }
+
+    public void handleExportPDF(Event event) {
+        ChartExportToImage.showSaveDialog(chartNode, FileType.PDF);
+    }
+
+    public void handleExportSVG(Event event) {
+        ChartExportToImage.showSaveDialog(chartNode, FileType.SVG);
+    }
+
+    public void handleExportEMF(Event event) {
+        ChartExportToImage.showSaveDialog(chartNode, FileType.EMF);
+    }
+
+    public void handleExportEPS(Event event) {
+        ChartExportToImage.showSaveDialog(chartNode, FileType.EPS);
+    }
+
+    public void handleExportMzML(Event event) {
+    }
+
+    public void handleExportMGF(Event event) {
+    }
+
+    public void handleExportMSP(Event event) {
     }
 
 }

@@ -46,6 +46,8 @@ import javafx.scene.Parent;
  */
 public class MsSpectrumPlotModule implements MZmineRunnableModule {
 
+    private static final String PLOT_FXML = "MsSpectrumPlotWindow.fxml";
+
     private static final @Nonnull String MODULE_NAME = "MS spectrum plot";
     private static final @Nonnull String MODULE_DESCRIPTION = "MS spectrum plot";
 
@@ -92,8 +94,7 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
         if (weHaveData) {
             try {
                 // Load the main window
-                URL mainFXML = this.getClass()
-                        .getResource("MsSpectrumPlotWindow.fxml");
+                URL mainFXML = this.getClass().getResource(PLOT_FXML);
                 FXMLLoader loader = new FXMLLoader(mainFXML);
 
                 Parent node = loader.load();
@@ -127,8 +128,7 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
     public static void showNewSpectrumWindow(@Nonnull MsScan scan,
             @Nonnull Boolean openNewWindow) {
         try {
-            URL mainFXML = MsSpectrumPlotModule.class
-                    .getResource("MsSpectrumPlotWindow.fxml");
+            URL mainFXML = MsSpectrumPlotModule.class.getResource(PLOT_FXML);
             FXMLLoader loader = new FXMLLoader(mainFXML);
 
             Parent node = loader.load();
@@ -154,7 +154,7 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
             @Nonnull String name, @Nonnull Boolean openNewWindow) {
         try {
             URL mainFXML = MsSpectrumPlotModule.class
-                    .getResource("MsSpectrumPlotWindow.fxml");
+                    .getResource(PLOT_FXML);
             FXMLLoader loader = new FXMLLoader(mainFXML);
 
             Parent node = loader.load();

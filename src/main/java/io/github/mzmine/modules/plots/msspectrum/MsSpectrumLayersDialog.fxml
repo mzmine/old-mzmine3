@@ -35,8 +35,9 @@
 										<graphic>
 											<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
 										</graphic>
-										<MenuItem text="Scan from file" onAction="#handleAddScan" />
-										<MenuItem text="Simulated isotope pattern" onAction="#handleAddIsotopePattern" />
+										<MenuItem text="MS scan" onAction="#handleAddScan" />
+										<MenuItem text="Spectrum from text" onAction="#handleAddSpectrumFromText" />
+										<MenuItem text="Isotope pattern" onAction="#handleAddIsotopePattern" />
 									</Menu>
 								</items>
 							</ContextMenu>

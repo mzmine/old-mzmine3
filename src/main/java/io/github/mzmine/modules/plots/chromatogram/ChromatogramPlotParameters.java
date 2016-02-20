@@ -38,7 +38,8 @@ public class ChromatogramPlotParameters extends ParameterSet {
     public static final ComboParameter<ChromatogramPlotType> plotType = new ComboParameter<>(
             "Plot type",
             "Type of Y value calculation (TIC = sum, base peak = max)",
-            "Category", Arrays.asList(ChromatogramPlotType.values()));
+            "Category", Arrays.asList(ChromatogramPlotType.values()),
+            ChromatogramPlotType.BASEPEAK);
 
     public static final MZRangeParameter mzRange = new MZRangeParameter();
 
