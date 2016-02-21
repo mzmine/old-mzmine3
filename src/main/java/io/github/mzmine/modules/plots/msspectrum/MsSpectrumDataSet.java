@@ -30,8 +30,10 @@ import org.jfree.data.xy.XYDataset;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.MsSpectrumUtil;
 import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.util.MsScanUtils;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
@@ -55,6 +57,7 @@ public class MsSpectrumDataSet extends AbstractXYDataset
     private static final ScheduledThreadPoolExecutor threadPool = new ScheduledThreadPoolExecutor(
             1);
 
+    private final MsSpectrum spectrum;
     private double mzValues[];
     private float intensityValues[];
     private float topIndensity = 0f;
@@ -80,6 +83,8 @@ public class MsSpectrumDataSet extends AbstractXYDataset
         setName(dataSetName);
         setRenderingType(spectrum.getSpectrumType());
 
+        this.spectrum = spectrum;
+
         // Listen for property changes
         mzShift.addListener(e -> {
             Platform.runLater(() -> fireDatasetChanged());
@@ -99,14 +104,32 @@ public class MsSpectrumDataSet extends AbstractXYDataset
             this.numOfDataPoints = spectrum.getNumberOfDataPoints();
             this.topIndensity = MsSpectrumUtil.getMaxIntensity(intensityValues,
                     numOfDataPoints);
+
+            // The following call will also trigger fireDataSetChanged()
             setIntensityScale((double) topIndensity);
 
         });
 
     }
 
-    public void resetIntensityScale() {
-        setIntensityScale((double) topIndensity);
+    public String getDescription() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name.get());
+        sb.append("\n");
+        if (spectrum instanceof MsScan) {
+            MsScan scan = (MsScan) spectrum;
+            String scanDesc = MsScanUtils.createFullMsScanDescription(scan);
+            sb.append(scanDesc);
+        }
+
+        sb.append("Number of data points: " + numOfDataPoints + "\n");
+
+        NumberFormat intensityFormat = MZmineCore.getConfiguration()
+                .getRTFormat();
+        sb.append(
+                "Base peak intensity: " + intensityFormat.format(topIndensity));
+
+        return sb.toString();
     }
 
     public String getName() {
@@ -131,6 +154,10 @@ public class MsSpectrumDataSet extends AbstractXYDataset
 
     public DoubleProperty intensityScaleProperty() {
         return intensityScale;
+    }
+
+    public void resetIntensityScale() {
+        setIntensityScale((double) topIndensity);
     }
 
     public Double getMzShift() {

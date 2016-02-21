@@ -66,8 +66,7 @@ public class MsSpectrumLayersDialogController {
     private TableColumn<MsSpectrumDataSet, Boolean> showDataPointsColumn;
 
     private MsSpectrumPlotWindowController plotController;
-    
-    @FXML
+
     public void initialize() {
 
         final ObservableList<MsSpectrumType> renderingChoices = FXCollections
@@ -107,29 +106,30 @@ public class MsSpectrumLayersDialogController {
                 });
     }
 
-    @FXML
     public void handleDeleteLayer(Event event) {
         List<MsSpectrumDataSet> selected = layersTable.getSelectionModel()
                 .getSelectedItems();
         layersTable.getItems().removeAll(selected);
     }
 
-    @FXML
     public void handleAddScan(Event event) {
         plotController.handleAddScan(event);
     }
 
-    @FXML
+    public void handleAddSpectrumFromText(Event event) {
+        plotController.handleAddSpectrumFromText(event);
+    }
+
     public void handleAddIsotopePattern(Event event) {
         plotController.handleAddIsotopePattern(event);
     }
 
-    @FXML
     public void handleClose(Event event) {
         dialogStage.close();
     }
 
-    public void configure(ObservableList<MsSpectrumDataSet> items, MsSpectrumPlotWindowController plotController) {
+    public void configure(ObservableList<MsSpectrumDataSet> items,
+            MsSpectrumPlotWindowController plotController) {
         layersTable.setItems(items);
         this.plotController = plotController;
     }

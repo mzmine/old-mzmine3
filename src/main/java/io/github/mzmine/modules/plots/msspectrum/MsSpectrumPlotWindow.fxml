@@ -26,7 +26,7 @@
 						</Menu>
 						<Menu fx:id="findMSMSMenu" text="Find MS/MS">
 						</Menu>
-						<MenuItem text="Show XIC..." />
+						<MenuItem fx:id="showXICMenuItem" text="Show XIC..." onAction="#handleShowXIC" />
 						<Menu text="Intensity scale...">
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="ARROWS_V" />
@@ -53,29 +53,29 @@
 								<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
 							</graphic>
 							<MenuItem text="MS scan" onAction="#handleAddScan" />
-							<MenuItem text="MS spectrum from text" onAction="#handleAddSpectrumFromText" />
+							<MenuItem text="Spectrum from text" onAction="#handleAddSpectrumFromText" />
 							<MenuItem text="Isotope pattern" onAction="#handleAddIsotopePattern" />
 						</Menu>
 						<Menu text="Export image to...">
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="FILE_IMAGE_ALT" />
 							</graphic>
-							<MenuItem text="Clipboard" />
-							<MenuItem text="JPG" />
-							<MenuItem text="PNG" />
-							<MenuItem text="PDF" />
-							<MenuItem text="SVG" />
-							<MenuItem text="EMF" />
-							<MenuItem text="EPS" />
+							<MenuItem text="Clipboard" onAction="#handleExportImageToClipboard" />
+							<MenuItem text="JPG" onAction="#handleExportJPG" />
+							<MenuItem text="PNG" onAction="#handleExportPNG"/>
+							<MenuItem text="SVG" onAction="#handleExportSVG"/>
+							<MenuItem text="PDF" onAction="#handleExportPDF"/>
+							<MenuItem text="EMF" onAction="#handleExportEMF"/>
+							<MenuItem text="EPS" onAction="#handleExportEPS"/>
 						</Menu>
 						<Menu text="Export spectra to...">
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="SAVE" />
 							</graphic>
-							<MenuItem text="Clipboard" />
-							<MenuItem text="mzML" />
-							<MenuItem text="MGF" />
-							<MenuItem text="MSP" />
+							<MenuItem text="Clipboard" onAction="#handleExportSpectraToClipboard" />
+							<MenuItem text="mzML" onAction="#handleExportMzML" />
+							<MenuItem text="MGF" onAction="#handleExportMGF" />
+							<MenuItem text="MSP" onAction="#handleExportMSP" />
 						</Menu>
 						<MenuItem text="Print" onAction="#handlePrint">
 							<graphic>
@@ -105,7 +105,9 @@
 						<Tooltip text="Click here to load previous scan" />
 					</tooltip>
 				</Button>
+
 				<Region HBox.hgrow="ALWAYS" />
+
 				<Button onAction="#handleZoomOut">
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="ARROWS_ALT" />
@@ -132,19 +134,27 @@
 						<Tooltip text="Setup layers" />
 					</tooltip>
 				</Button>
-				<Button onAction="#handleAddScan">
+				<MenuButton>
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
 					</graphic>
+					<items>
+						<MenuItem text="MS scan" onAction="#handleAddScan" />
+						<MenuItem text="Spectrum from text" onAction="#handleAddSpectrumFromText" />
+						<MenuItem text="Isotope pattern" onAction="#handleAddIsotopePattern" />
+					</items>
 					<tooltip>
-						<Tooltip text="Add scan" />
+						<Tooltip text="Add spectrum" />
 					</tooltip>
-				</Button>
+				</MenuButton>
 
 				<Region prefWidth="20.0" />
+
 				<TextField fx:id="splashField" editable="false" minWidth="250.0"
 					maxWidth="250.0" styleClass="splashText" />
+
 				<Region HBox.hgrow="ALWAYS" />
+
 				<Button onAction="#handleNextScan">
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="ARROW_RIGHT" />

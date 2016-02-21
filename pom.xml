@@ -152,14 +152,26 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.jfree</groupId>
+			<artifactId>jfreesvg</artifactId>
+			<version>3.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>com.orsonpdf</groupId>
 			<artifactId>orsonpdf</artifactId>
 			<version>1.7</version>
 		</dependency>
 
 		<dependency>
-			<groupId>jfxchartext</groupId>
-			<artifactId>jfxchartext</artifactId>
+			<groupId>org.freehep</groupId>
+			<artifactId>freehep-graphicsio-emf</artifactId>
+			<version>2.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.xmlgraphics</groupId>
+			<artifactId>fop</artifactId>
 			<version>1.0</version>
 		</dependency>
 

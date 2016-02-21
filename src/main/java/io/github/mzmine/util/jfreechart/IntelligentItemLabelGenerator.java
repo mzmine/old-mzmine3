@@ -24,12 +24,21 @@ import org.jfree.chart.labels.XYItemLabelGenerator;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYDataset;
 
+import com.google.common.collect.Range;
+
+/**
+ * This implementation of XYItemLabelGenerator assumes that the data points in
+ * each series are sorted in the X-axis order. It places the item labels only on
+ * local maxima, or on left-most data points in case multiple data points have
+ * the same maximal Y value.
+ *
+ */
 public class IntelligentItemLabelGenerator implements XYItemLabelGenerator {
 
     private final ChartViewer chartNode;
 
     private final XYItemLabelGenerator underlyingGenerator;
-    private final int reservedPoints;
+    private final int reservedPixels;
 
     /**
      * 
@@ -41,10 +50,10 @@ public class IntelligentItemLabelGenerator implements XYItemLabelGenerator {
      * @param underlyingGenerator
      */
     public IntelligentItemLabelGenerator(ChartViewer chartNode,
-            int reservedPoints, XYItemLabelGenerator underlyingGenerator) {
+            int reservedPixels, XYItemLabelGenerator underlyingGenerator) {
         this.chartNode = chartNode;
 
-        this.reservedPoints = reservedPoints;
+        this.reservedPixels = reservedPixels;
         this.underlyingGenerator = underlyingGenerator;
     }
 
@@ -57,27 +66,35 @@ public class IntelligentItemLabelGenerator implements XYItemLabelGenerator {
 
         XYPlot plot = chartNode.getChart().getXYPlot();
 
-        // X and Y values of current data point
-        final double currentXValue = currentDataset
-                .getX(currentSeries, currentItem).doubleValue();
-        final double currentYValue = currentDataset
-                .getY(currentSeries, currentItem).doubleValue();
+        // X and Y values of the current data point
+        final double currentXValue = currentDataset.getXValue(currentSeries,
+                currentItem);
+        final double currentYValue = currentDataset.getYValue(currentSeries,
+                currentItem);
 
         // Calculate X axis span of 1 screen pixel
-        final double xLength = (double) plot.getDomainAxis().getRange()
-                .getLength();
+        final double xLength = plot.getDomainAxis().getRange().getLength();
         final double pixelX = xLength / chartNode.getWidth();
 
         // Calculate the distance from the current point where labels might
         // overlap
-        final double dangerZoneX = (reservedPoints / 2) * pixelX;
-        boolean currentItemPassed = false;
+        final double dangerZoneX = (reservedPixels / 2) * pixelX;
+
+        // Range on X axis that we're going to check for higher data points. If
+        // a higher data point is found, we don't place a label on this one.
+        final Range<Double> dangerZoneRange = Range.closed(
+                currentXValue - dangerZoneX, currentXValue + dangerZoneX);
 
         // Iterate through data sets
         for (int datasetIndex = 0; datasetIndex < plot
                 .getDatasetCount(); datasetIndex++) {
 
             XYDataset dataset = plot.getDataset(datasetIndex);
+
+            // Some data sets could have been removed
+            if (dataset == null)
+                continue;
+
             final int seriesCount = dataset.getSeriesCount();
 
             // Iterate through series
@@ -85,46 +102,84 @@ public class IntelligentItemLabelGenerator implements XYItemLabelGenerator {
 
                 final int itemCount = dataset.getItemCount(seriesIndex);
 
-                // Iterate through items
-                for (int itemIndex = 0; itemIndex < itemCount; itemIndex++) {
+                // Find the index of a data point that is closest to
+                // currentXValue
+                int closestValueIndex;
+                if (dataset == currentDataset && seriesIndex == currentSeries) {
+                    closestValueIndex = currentItem;
+                } else {
+                    closestValueIndex = findClosestXIndex(dataset, seriesIndex,
+                            currentXValue, 0, itemCount - 1);
+                }
 
-                    // Skip the current data point
-                    if ((dataset == currentDataset)
-                            && (seriesIndex == currentSeries)
-                            && (itemIndex == currentItem)) {
-                        currentItemPassed = true;
-                        continue;
-                    }
-
-                    // Only check points in the danger zone
-                    final double xValue = dataset.getXValue(seriesIndex,
-                            itemIndex);
-                    if (Math.abs(xValue - currentXValue) > dangerZoneX)
-                        continue;
-
-                    final double yValue = dataset.getYValue(seriesIndex,
-                            itemIndex);
-
-                    // If we find a higher data point, do not add a label to
-                    // this one
-                    if (yValue > currentYValue)
+                // Search to the left of the closest data point
+                for (int i = closestValueIndex; (i >= 0)
+                        && (dangerZoneRange.contains(dataset
+                                .getX(seriesIndex, i).doubleValue())); i--) {
+                    if (dataset.getYValue(seriesIndex, i) > currentYValue)
                         return null;
 
-                    // If the values are equal, only add label to the left-most
-                    // value
-                    if ((yValue == currentYValue) && (currentItemPassed))
+                    // In the case there are equal values, only place the label
+                    // on the leftmost value
+                    if (dataset.getYValue(seriesIndex, i) == currentYValue
+                            && (dataset.getXValue(seriesIndex,
+                                    i) < currentXValue))
                         return null;
 
                 }
 
+                // Search to the right of the closest data point
+                for (int i = closestValueIndex + 1; (i < itemCount)
+                        && (dangerZoneRange.contains(dataset
+                                .getX(seriesIndex, i).doubleValue())); i++) {
+                    if (dataset.getYValue(seriesIndex, i) > currentYValue)
+                        return null;
+                }
+
             }
+
         }
 
-        // Create label
+        // If no higher data point was found, create the label
         String label = underlyingGenerator.generateLabel(currentDataset,
                 currentSeries, currentItem);
 
         return label;
+
+    }
+
+    /**
+     * Finds the data point in given dataset/series that is closest to the given
+     * xValue. Uses recursion and binary search , minIndex and maxIndex provide
+     * the boundaries of the currently examined region.
+     */
+    private int findClosestXIndex(XYDataset dataset, int series, double xValue,
+            int minIndex, int maxIndex) {
+
+        if (minIndex == maxIndex)
+            return minIndex;
+
+        if (minIndex == maxIndex - 1) {
+            double minIndexValue = dataset.getXValue(series, minIndex);
+            double maxIndexValue = dataset.getXValue(series, maxIndex);
+
+            if (Math.abs(minIndexValue - xValue) < Math
+                    .abs(maxIndexValue - xValue))
+                return minIndex;
+            else
+                return maxIndex;
+        }
+
+        int middleIndex = (maxIndex + minIndex) / 2;
+        double middleValue = dataset.getXValue(series, middleIndex);
+        if (middleValue == xValue)
+            return middleIndex;
+        else if (middleValue > xValue)
+            return findClosestXIndex(dataset, series, xValue, minIndex,
+                    middleIndex);
+        else
+            return findClosestXIndex(dataset, series, xValue, middleIndex,
+                    maxIndex);
 
     }
 

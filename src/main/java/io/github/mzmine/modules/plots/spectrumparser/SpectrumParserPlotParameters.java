@@ -22,11 +22,9 @@ package io.github.mzmine.modules.plots.spectrumparser;
 import java.util.Arrays;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.ComboParameter;
-import io.github.mzmine.parameters.parametertypes.DoubleParameter;
 import io.github.mzmine.parameters.parametertypes.TextAreaParameter;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -48,17 +46,11 @@ public class SpectrumParserPlotParameters extends ParameterSet {
                     MsSpectrumType.PROFILE }),
             MsSpectrumType.CENTROIDED);
 
-    public static final DoubleParameter intensity = new DoubleParameter(
-            "Intensity",
-            "The intensity value the highest peak will be normalized to",
-            "Input", MZmineCore.getConfiguration().getIntensityFormat(),
-            ParameterValidator.createNonEmptyValidator(), 100.0);
-
     /**
      * Create the parameter set.
      */
     public SpectrumParserPlotParameters() {
-        super(spectrumText, spectrumType, intensity);
+        super(spectrumText, spectrumType);
     }
 
 }
