@@ -84,13 +84,13 @@ public class MsSpectrumDataSet extends AbstractXYDataset
 
         // Listen for property changes
         mzShift.addListener(e -> {
-            Platform.runLater(() -> fireDatasetChanged());
+            fireDatasetChanged();
         });
         intensityScale.addListener(e -> {
-            Platform.runLater(() -> fireDatasetChanged());
+            fireDatasetChanged();
         });
         name.addListener(e -> {
-            Platform.runLater(() -> fireDatasetChanged());
+            fireDatasetChanged();
         });
 
         setSpectrum(spectrum, datasetName);
@@ -102,18 +102,26 @@ public class MsSpectrumDataSet extends AbstractXYDataset
         // Load the actual data in a separate thread to avoid blocking the GUI
         threadPool.execute(() -> {
 
-            this.spectrum = spectrum;
+            // Turn notify to off, to avoid redrawing the plot after each
+            // property change
+            setNotify(false);
 
+            this.spectrum = spectrum;
             this.mzValues = spectrum.getMzValues();
             this.intensityValues = spectrum.getIntensityValues();
             this.numOfDataPoints = spectrum.getNumberOfDataPoints();
             this.topIndensity = MsSpectrumUtil.getMaxIntensity(intensityValues,
                     numOfDataPoints);
 
-            // The following call will also trigger fireDataSetChanged()
             setIntensityScale((double) topIndensity);
             setName(datasetName);
+            renderingType.get();
             setRenderingType(spectrum.getSpectrumType());
+
+            // Finally, update the GUI
+            Platform.runLater(() -> {
+                setNotify(true);
+            });
 
         });
 
@@ -128,18 +136,23 @@ public class MsSpectrumDataSet extends AbstractXYDataset
         }
 
         NumberFormat intensityFormat = MZmineCore.getConfiguration()
-                .getRTFormat();
+                .getIntensityFormat();
         NumberFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
 
+        sb.append("Spectrum type: ");
+        sb.append(spectrum.getSpectrumType());
+        sb.append("\n");
         sb.append("Number of data points: ");
         sb.append(numOfDataPoints);
         sb.append("\n");
         Range<Double> mzRange = spectrum.getMzRange();
-        sb.append("m/z range: ");
-        sb.append(mzFormat.format(mzRange.lowerEndpoint()));
-        sb.append(" - ");
-        sb.append(mzFormat.format(mzRange.upperEndpoint()));
-        sb.append(" m/z\n");
+        if (mzRange != null) {
+            sb.append("m/z range: ");
+            sb.append(mzFormat.format(mzRange.lowerEndpoint()));
+            sb.append(" - ");
+            sb.append(mzFormat.format(mzRange.upperEndpoint()));
+            sb.append(" m/z\n");
+        }
         sb.append("Base peak intensity: ");
         sb.append(intensityFormat.format(topIndensity));
 
@@ -289,13 +302,18 @@ public class MsSpectrumDataSet extends AbstractXYDataset
             sb.append(mzFormat.format(mzShift.doubleValue()));
             sb.append(" m/z\n");
         }
-        sb.append("Actual m/z: " + mzFormat.format(actualMz));
+        sb.append("Actual m/z: ");
+        sb.append(mzFormat.format(actualMz));
         sb.append("\n");
-        sb.append(
-                "Scaled intensity: " + intensityFormat.format(scaledIntensity));
-        sb.append("\n");
-        sb.append(
-                "Actual intensity: " + intensityFormat.format(actualIntensity));
+
+        if (intensityScale.get() != topIndensity) {
+            sb.append("Scaled intensity: ");
+            sb.append(intensityFormat.format(scaledIntensity));
+            sb.append("\n");
+        }
+
+        sb.append("Actual intensity: ");
+        sb.append(intensityFormat.format(actualIntensity));
         return sb.toString();
 
     }

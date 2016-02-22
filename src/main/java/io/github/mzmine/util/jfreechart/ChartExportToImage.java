@@ -30,6 +30,9 @@ import org.apache.xmlgraphics.java2d.ps.EPSDocumentGraphics2D;
 import org.freehep.graphicsio.emf.EMFGraphics2D;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.fx.ChartViewer;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.util.ExportUtils;
 
 import io.github.mzmine.gui.MZmineGUI;
@@ -153,29 +156,37 @@ public class ChartExportToImage {
                 break;
 
             case SVG:
+                setDrawSeriesLineAsPath(chart, true);
                 ExportUtils.writeAsSVG(chart, width, height, file);
+                setDrawSeriesLineAsPath(chart, false);
                 break;
 
             case PDF:
+                setDrawSeriesLineAsPath(chart, true);
                 ExportUtils.writeAsPDF(chart, width, height, file);
+                setDrawSeriesLineAsPath(chart, false);
                 break;
 
             case EMF:
                 FileOutputStream out2 = new FileOutputStream(file);
+                setDrawSeriesLineAsPath(chart, true);
                 EMFGraphics2D g2d2 = new EMFGraphics2D(out2,
                         new Dimension(width, height));
                 g2d2.startExport();
                 chart.draw(g2d2, new Rectangle(width, height));
                 g2d2.endExport();
+                setDrawSeriesLineAsPath(chart, false);
                 break;
 
             case EPS:
                 FileOutputStream out = new FileOutputStream(file);
+                setDrawSeriesLineAsPath(chart, true);
                 EPSDocumentGraphics2D g2d = new EPSDocumentGraphics2D(false);
                 g2d.setGraphicContext(new GraphicContext());
                 g2d.setupDocument(out, width, height);
                 chart.draw(g2d, new Rectangle(width, height));
                 g2d.finish();
+                setDrawSeriesLineAsPath(chart, false);
                 out.close();
                 break;
 
@@ -184,6 +195,20 @@ public class ChartExportToImage {
         } catch (IOException e) {
             MZmineGUI.displayMessage("Unable to save image: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    private static void setDrawSeriesLineAsPath(JFreeChart chart,
+            boolean usePath) {
+
+        final XYPlot plot = chart.getXYPlot();
+
+        for (int i = 0; i < plot.getRendererCount(); i++) {
+            XYItemRenderer renderer = plot.getRenderer(i);
+            if (renderer instanceof XYLineAndShapeRenderer) {
+                XYLineAndShapeRenderer r = (XYLineAndShapeRenderer) renderer;
+                r.setDrawSeriesLineAsPath(usePath);
+            }
         }
     }
 

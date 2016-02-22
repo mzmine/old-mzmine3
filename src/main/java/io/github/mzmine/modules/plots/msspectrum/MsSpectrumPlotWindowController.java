@@ -268,10 +268,6 @@ public class MsSpectrumPlotWindowController {
             newLineRenderer.setBaseShapesVisible(dataSet.getShowDataPoints());
             newLineRenderer.setDrawOutlines(false);
 
-            // Important for keeping one line per series in exported vector
-            // formats such as PDF or SVG
-            newLineRenderer.setDrawSeriesLineAsPath(true);
-
             Stroke baseStroke = new BasicStroke(lineThickness);
             newLineRenderer.setBaseStroke(baseStroke);
             newRenderer = newLineRenderer;
