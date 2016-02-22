@@ -50,10 +50,6 @@ public class MsScanUtils {
             sb.append("Raw data file: " + rdf.getName() + "\n");
 
         sb.append("Scan number: " + scanNum + "\n");
-        sb.append("MS function: " + msFunc.getName() + "\n");
-
-        if (msLevel != null)
-            sb.append("MS level: " + msLevel + "\n");
 
         if (chromInfo != null) {
             NumberFormat rtFormat = MZmineCore.getConfiguration().getRTFormat();
@@ -69,12 +65,27 @@ public class MsScanUtils {
             }
         }
 
+        sb.append("MS function: " + msFunc.getName() + "\n");
+
+        if (msLevel != null)
+            sb.append("MS level: " + msLevel + "\n");
+
+        sb.append("Polarity: " + scan.getPolarity() + "\n");
+
         return sb.toString();
     }
 
     /**
-     * Generates a single-line textual description of a given MS/MS scan,
-     * considering the precursor m/z of a given isolation
+     * Generates a single-line textual description of a given MS/MS scan.
+     */
+    public static String createSingleLineMsScanDescription(MsScan scan) {
+        return createSingleLineMsScanDescription(scan, null);
+    }
+
+    /**
+     * Generates a single-line textual description of a given MS/MS scan, taking
+     * the precursor m/z from a given isolation (a single scan can have multiple
+     * isolations)
      */
     public static String createSingleLineMsScanDescription(MsScan scan,
             IsolationInfo isolation) {
@@ -97,12 +108,15 @@ public class MsScanUtils {
             sb.append(rtFormat.format(scanRt.getRetentionTime() / 60f));
             sb.append(" min");
         }
-        Double precursorMz = isolation.getPrecursorMz();
-        if (precursorMz != null) {
-            NumberFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
-            sb.append(", precursor ");
-            sb.append(mzFormat.format(precursorMz));
-            sb.append(" m/z");
+        if (isolation != null) {
+            Double precursorMz = isolation.getPrecursorMz();
+            if (precursorMz != null) {
+                NumberFormat mzFormat = MZmineCore.getConfiguration()
+                        .getMZFormat();
+                sb.append(", precursor ");
+                sb.append(mzFormat.format(precursorMz));
+                sb.append(" m/z");
+            }
         }
         return sb.toString();
     }

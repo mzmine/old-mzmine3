@@ -43,12 +43,12 @@ public class ChartExportToImage {
 
     private static File lastSaveDirectory;
 
-    public enum FileType {
+    public enum ImgFileType {
         JPG, PNG, SVG, PDF, EMF, EPS
     };
 
     public static void showSaveDialog(ChartViewer chartNode,
-            FileType fileType) {
+            ImgFileType fileType) {
         FileChooser fileChooser = new FileChooser();
         switch (fileType) {
 
@@ -134,7 +134,7 @@ public class ChartExportToImage {
     }
 
     public static void exportToImageFile(ChartViewer chartNode, File file,
-            FileType fileType) {
+            ImgFileType fileType) {
 
         final JFreeChart chart = chartNode.getChart();
         final int width = (int) chartNode.getWidth();
@@ -182,7 +182,7 @@ public class ChartExportToImage {
             }
 
         } catch (IOException e) {
-            MZmineGUI.displayMessage("Unable to save image.");
+            MZmineGUI.displayMessage("Unable to save image: " + e.getMessage());
             e.printStackTrace();
         }
     }

@@ -37,6 +37,7 @@ import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;
 import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.project.MZmineProject;
+import io.github.mzmine.util.MsScanUtils;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -105,7 +106,9 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
                 for (RawDataFile dataFile : dataFiles) {
                     for (MsScan scan : scanSelection
                             .getMatchingScans(dataFile)) {
-                        controller.addSpectrum(scan);
+                        String title = MsScanUtils
+                                .createSingleLineMsScanDescription(scan);
+                        controller.addSpectrum(scan, title);
                     }
                 }
 
@@ -130,19 +133,11 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
         try {
             URL mainFXML = MsSpectrumPlotModule.class.getResource(PLOT_FXML);
             FXMLLoader loader = new FXMLLoader(mainFXML);
-
             Parent node = loader.load();
-
-            String title;
-            final RawDataFile rdf = scan.getRawDataFile();
-            if (rdf != null)
-                title = rdf.getName() + " scan #" + scan.getScanNumber();
-            else
-                title = "Scan #" + scan.getScanNumber();
-
+            String title = MsScanUtils.createSingleLineMsScanDescription(scan);
             MZmineGUI.addWindow(node, title, openNewWindow);
             MsSpectrumPlotWindowController controller = loader.getController();
-            controller.addSpectrum(scan);
+            controller.addSpectrum(scan, title);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -153,8 +148,7 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
     public static void showNewSpectrumWindow(@Nonnull MsSpectrum spectrum,
             @Nonnull String name, @Nonnull Boolean openNewWindow) {
         try {
-            URL mainFXML = MsSpectrumPlotModule.class
-                    .getResource(PLOT_FXML);
+            URL mainFXML = MsSpectrumPlotModule.class.getResource(PLOT_FXML);
             FXMLLoader loader = new FXMLLoader(mainFXML);
 
             Parent node = loader.load();

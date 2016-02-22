@@ -103,8 +103,6 @@ public class ChartNodeJFreeChart extends ChartViewer {
                 .getIntensityFormat();
         yAxis.setNumberFormatOverride(intensityFormat);
 
-        // set focusable state to receive key events
-        setFocusTraversable(true);
 
     }
 
