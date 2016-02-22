@@ -25,36 +25,44 @@ import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
 import org.jfree.chart.axis.ValueAxis;
-import org.jfree.chart.fx.ChartViewer;
 import org.jfree.chart.labels.XYItemLabelGenerator;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.AbstractXYItemRenderer;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.ui.RectangleEdge;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
+import io.github.msdk.MSDKException;
+import io.github.msdk.datamodel.datastore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
+import io.github.msdk.datamodel.files.FileType;
+import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.IsolationInfo;
+import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.txt.MsSpectrumParserAlgorithm;
+import io.github.msdk.io.mzml.MzMLFileExportMethod;
+import io.github.msdk.io.txt.TxtExportAlgorithm;
+import io.github.msdk.io.txt.TxtImportAlgorithm;
 import io.github.msdk.spectra.isotopepattern.IsotopePatternGeneratorAlgorithm;
 import io.github.msdk.spectra.splash.SplashCalculationAlgorithm;
+import io.github.msdk.util.MsScanUtil;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotModule;
@@ -69,13 +77,15 @@ import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.util.JavaFXUtil;
 import io.github.mzmine.util.MsScanUtils;
+import io.github.mzmine.util.jfreechart.ChartExportToImage;
+import io.github.mzmine.util.jfreechart.ChartExportToImage.ImgFileType;
 import io.github.mzmine.util.jfreechart.ChartNodeJFreeChart;
 import io.github.mzmine.util.jfreechart.IntelligentItemLabelGenerator;
 import io.github.mzmine.util.jfreechart.ManualZoomDialog;
-import io.github.mzmine.util.jfreechart.ChartExportToImage;
-import io.github.mzmine.util.jfreechart.ChartExportToImage.FileType;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener.Change;
@@ -85,22 +95,23 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.print.PrinterJob;
 import javafx.scene.Cursor;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.ContextMenuEvent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import jersey.repackaged.com.google.common.collect.Lists;
 
 /**
  * MS spectrum plot window
@@ -127,6 +138,10 @@ public class MsSpectrumPlotWindowController {
 
     private final DoubleProperty mzShift = new SimpleDoubleProperty(this,
             "mzShift", 0.0);
+    private final BooleanProperty itemLabelsVisible = new SimpleBooleanProperty(
+            this, "itemLabelsVisible", true);
+
+    private File lastSaveDirectory;
 
     @FXML
     private BorderPane chartPane;
@@ -168,20 +183,14 @@ public class MsSpectrumPlotWindowController {
             }
         });
 
-    }
+        itemLabelsVisible.addListener((prop, oldVal, newVal) -> {
+            for (MsSpectrumDataSet dataset : dataSets) {
+                int dataSetIndex = plot.indexOf(dataset);
+                XYItemRenderer renderer = plot.getRenderer(dataSetIndex);
+                renderer.setBaseItemLabelsVisible(newVal);
+            }
+        });
 
-    /**
-     * Add a new spectrum to the plot.
-     * 
-     * @param spectrum
-     */
-    public synchronized void addSpectrum(@Nonnull MsScan scan) {
-        String spectrumTitle = "MS scan";
-        RawDataFile dataFile = scan.getRawDataFile();
-        if (dataFile != null)
-            spectrumTitle += " " + dataFile.getName();
-        spectrumTitle += "#" + scan.getScanNumber();
-        addSpectrum(scan, spectrumTitle);
     }
 
     /**
@@ -218,16 +227,20 @@ public class MsSpectrumPlotWindowController {
         configureRenderer(newDataSet, datasetIndex);
 
         newDataSet.renderingTypeProperty().addListener(e -> {
-            configureRenderer(newDataSet, datasetIndex);
+            Platform.runLater(
+                    () -> configureRenderer(newDataSet, datasetIndex));
         });
         newDataSet.colorProperty().addListener(e -> {
-            configureRenderer(newDataSet, datasetIndex);
+            Platform.runLater(
+                    () -> configureRenderer(newDataSet, datasetIndex));
         });
         newDataSet.lineThicknessProperty().addListener(e -> {
-            configureRenderer(newDataSet, datasetIndex);
+            Platform.runLater(
+                    () -> configureRenderer(newDataSet, datasetIndex));
         });
         newDataSet.showDataPointsProperty().addListener(e -> {
-            configureRenderer(newDataSet, datasetIndex);
+            Platform.runLater(
+                    () -> configureRenderer(newDataSet, datasetIndex));
         });
 
         // Once everything is configured, add the dataset to the plot
@@ -237,10 +250,6 @@ public class MsSpectrumPlotWindowController {
 
     private void configureRenderer(MsSpectrumDataSet dataSet,
             int dataSetIndex) {
-
-        if (!Platform.isFxApplicationThread())
-            throw new IllegalStateException(
-                    "configureRenderer() must be called on JavaFX thread");
 
         final MsSpectrumType renderingType = dataSet.getRenderingType();
         final XYPlot plot = chartNode.getChart().getXYPlot();
@@ -258,10 +267,6 @@ public class MsSpectrumPlotWindowController {
             newLineRenderer.setBaseShapesFilled(true);
             newLineRenderer.setBaseShapesVisible(dataSet.getShowDataPoints());
             newLineRenderer.setDrawOutlines(false);
-
-            // Important for keeping one line per series in exported vector
-            // formats such as PDF or SVG
-            newLineRenderer.setDrawSeriesLineAsPath(true);
 
             Stroke baseStroke = new BasicStroke(lineThickness);
             newLineRenderer.setBaseStroke(baseStroke);
@@ -295,7 +300,7 @@ public class MsSpectrumPlotWindowController {
         newRenderer.setBaseItemLabelGenerator(intelligentLabelGenerator);
         newRenderer.setBaseItemLabelPaint(
                 JavaFXUtil.convertColorToAWT(labelsColor));
-        newRenderer.setBaseItemLabelsVisible(true);
+        newRenderer.setBaseItemLabelsVisible(itemLabelsVisible.get());
 
         // Set tooltip generator
         newRenderer.setBaseToolTipGenerator(dataSet);
@@ -322,7 +327,9 @@ public class MsSpectrumPlotWindowController {
         boolean spectrumAdded = false;
         for (RawDataFile dataFile : dataFiles) {
             for (MsScan scan : scanSelection.getMatchingScans(dataFile)) {
-                addSpectrum(scan);
+                String title = MsScanUtils
+                        .createSingleLineMsScanDescription(scan);
+                addSpectrum(scan, title);
                 spectrumAdded = true;
             }
         }
@@ -348,7 +355,7 @@ public class MsSpectrumPlotWindowController {
         Preconditions.checkNotNull(spectrumText);
         Preconditions.checkNotNull(spectrumType);
 
-        final MsSpectrum spectrum = MsSpectrumParserAlgorithm
+        final MsSpectrum spectrum = TxtImportAlgorithm
                 .parseMsSpectrum(spectrumText);
         spectrum.setSpectrumType(spectrumType);
 
@@ -381,11 +388,73 @@ public class MsSpectrumPlotWindowController {
     }
 
     public void handlePreviousScan(Event e) {
-
+        for (MsSpectrumDataSet dataset : dataSets) {
+            MsSpectrum spectrum = dataset.getSpectrum();
+            if (!(spectrum instanceof MsScan))
+                continue;
+            MsScan scan = (MsScan) spectrum;
+            RawDataFile rawFile = scan.getRawDataFile();
+            if (rawFile == null)
+                return;
+            int scanIndex = rawFile.getScans().indexOf(scan);
+            if (scanIndex <= 0)
+                return;
+            MsScan prevScan = rawFile.getScans().get(scanIndex - 1);
+            String title = MsScanUtils
+                    .createSingleLineMsScanDescription(prevScan);
+            dataset.setSpectrum(prevScan, title);
+        }
     }
 
     public void handleNextScan(Event e) {
+        for (MsSpectrumDataSet dataset : dataSets) {
+            MsSpectrum spectrum = dataset.getSpectrum();
+            if (!(spectrum instanceof MsScan))
+                continue;
+            MsScan scan = (MsScan) spectrum;
+            RawDataFile rawFile = scan.getRawDataFile();
+            if (rawFile == null)
+                return;
+            int scanIndex = rawFile.getScans().indexOf(scan);
+            if (scanIndex == rawFile.getScans().size() - 1)
+                return;
+            MsScan nextScan = rawFile.getScans().get(scanIndex + 1);
+            String title = MsScanUtils
+                    .createSingleLineMsScanDescription(nextScan);
+            dataset.setSpectrum(nextScan, title);
+        }
+    }
 
+    public void handleChartKeyPressed(KeyEvent e) {
+        final KeyCode key = e.getCode();
+        switch (key) {
+        case RIGHT:
+            handleNextScan(e);
+            e.consume();
+            break;
+        case LEFT:
+            handlePreviousScan(e);
+            e.consume();
+            break;
+        case F:
+            handleZoomOut(e);
+            e.consume();
+            break;
+        case M:
+            handleManualZoom(e);
+            e.consume();
+            break;
+        case S:
+            handleSetupLayers(e);
+            e.consume();
+            break;
+        default:
+        }
+
+    }
+
+    public void handleChartMousePressed(Event e) {
+        chartNode.requestFocus();
     }
 
     public void handleSetupLayers(Event event) {
@@ -401,6 +470,10 @@ public class MsSpectrumPlotWindowController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void handleToggleLabels(Event event) {
+        itemLabelsVisible.set(!itemLabelsVisible.get());
     }
 
     public void handleContextMenuShowing(ContextMenuEvent event) {
@@ -548,41 +621,163 @@ public class MsSpectrumPlotWindowController {
     }
 
     public void handleExportJPG(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, FileType.JPG);
+        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.JPG);
     }
 
     public void handleExportPNG(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, FileType.PNG);
+        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.PNG);
     }
 
     public void handleExportPDF(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, FileType.PDF);
+        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.PDF);
     }
 
     public void handleExportSVG(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, FileType.SVG);
+        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.SVG);
     }
 
     public void handleExportEMF(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, FileType.EMF);
+        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.EMF);
     }
 
     public void handleExportEPS(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, FileType.EPS);
-    }
-    
-    public void handleExportSpectraToClipboard(Event event) {
-        
+        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.EPS);
     }
 
+    public void handleExportSpectraToClipboard(Event event) {
+        StringBuilder sb = new StringBuilder();
+        for (MsSpectrumDataSet dataSet : dataSets) {
+            MsSpectrum spectrum = dataSet.getSpectrum();
+            String spectrumString = TxtExportAlgorithm
+                    .spectrumToString(spectrum);
+            sb.append(spectrumString);
+            sb.append("\n");
+        }
+        final Clipboard clipboard = Clipboard.getSystemClipboard();
+        final ClipboardContent content = new ClipboardContent();
+        content.putString(sb.toString());
+        clipboard.setContent(content);
+    }
 
     public void handleExportMzML(Event event) {
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export to TXT");
+        fileChooser.setSelectedExtensionFilter(
+                new FileChooser.ExtensionFilter("TXT", "txt"));
+
+        // Remember last directory
+        if (lastSaveDirectory != null && lastSaveDirectory.isDirectory())
+            fileChooser.setInitialDirectory(lastSaveDirectory);
+
+        // Show the file chooser
+        File file = fileChooser
+                .showSaveDialog(chartNode.getScene().getWindow());
+
+        // If nothing was chosen, quit
+        if (file == null)
+            return;
+
+        // If no file extension, add it
+        if (!file.getName().contains(".")) {
+            String newName = file.getPath() + ".txt";
+            file = new File(newName);
+        }
+
+        // Save the last open directory
+        lastSaveDirectory = file.getParentFile();
+
+        final List<MsSpectrum> spectra = Lists.newArrayList();
+        for (MsSpectrumDataSet dataSet : dataSets) {
+            spectra.add(dataSet.getSpectrum());
+        }
+
+        // Do the export in a new thread
+        final File finalFile = file;
+        new Thread(() -> {
+            try {
+
+                // Create a temporary raw data file
+                DataPointStore tmpStore = DataPointStoreFactory
+                        .getMemoryDataStore();
+                RawDataFile tmpRawFile = MSDKObjectBuilder.getRawDataFile(
+                        "Exported spectra", null, FileType.UNKNOWN, tmpStore);
+                int scanNum = 1;
+                for (MsSpectrumDataSet dataSet : dataSets) {
+                    MsSpectrum spectrum = dataSet.getSpectrum();
+                    MsScan newScan;
+                    if (spectrum instanceof MsScan) {
+                        newScan = MsScanUtil.clone(tmpStore, (MsScan) spectrum,
+                                true);
+                    } else {
+                        MsFunction msf = MSDKObjectBuilder.getMsFunction(
+                                MsFunction.DEFAULT_MS_FUNCTION_NAME);
+                        newScan = MSDKObjectBuilder.getMsScan(tmpStore, scanNum,
+                                msf);
+                    }
+                    tmpRawFile.addScan(newScan);
+                }
+                MzMLFileExportMethod exporter = new MzMLFileExportMethod(
+                        tmpRawFile, finalFile);
+                exporter.execute();
+                tmpRawFile.dispose();
+            } catch (MSDKException e) {
+                MZmineGUI.displayMessage("Unable to export: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }).start();
+
     }
 
     public void handleExportMGF(Event event) {
     }
 
     public void handleExportMSP(Event event) {
+
+    }
+
+    public void handleExportTXT(Event event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export to TXT");
+        fileChooser.setSelectedExtensionFilter(
+                new FileChooser.ExtensionFilter("TXT", "txt"));
+
+        // Remember last directory
+        if (lastSaveDirectory != null && lastSaveDirectory.isDirectory())
+            fileChooser.setInitialDirectory(lastSaveDirectory);
+
+        // Show the file chooser
+        File file = fileChooser
+                .showSaveDialog(chartNode.getScene().getWindow());
+
+        // If nothing was chosen, quit
+        if (file == null)
+            return;
+
+        // If no file extension, add it
+        if (!file.getName().contains(".")) {
+            String newName = file.getPath() + ".txt";
+            file = new File(newName);
+        }
+
+        // Save the last open directory
+        lastSaveDirectory = file.getParentFile();
+
+        final List<MsSpectrum> spectra = Lists.newArrayList();
+        for (MsSpectrumDataSet dataSet : dataSets) {
+            spectra.add(dataSet.getSpectrum());
+        }
+
+        // Do the export in a new thread
+        final File finalFile = file;
+        new Thread(() -> {
+            try {
+                TxtExportAlgorithm.exportSpectra(finalFile, spectra);
+            } catch (IOException e) {
+                MZmineGUI.displayMessage("Unable to export: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }).start();
     }
 
 }

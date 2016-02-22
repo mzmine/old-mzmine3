@@ -27,7 +27,7 @@ import com.google.common.base.Preconditions;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.io.txt.MsSpectrumParserAlgorithm;
+import io.github.msdk.io.txt.TxtImportAlgorithm;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.modules.plots.msspectrum.MsSpectrumPlotModule;
 import io.github.mzmine.parameters.ParameterSet;
@@ -67,7 +67,7 @@ public class SpectrumParserPlotModule implements MZmineRunnableModule {
         Preconditions.checkNotNull(spectrumText);
         Preconditions.checkNotNull(spectrumType);
 
-        final MsSpectrum spectrum = MsSpectrumParserAlgorithm
+        final MsSpectrum spectrum = TxtImportAlgorithm
                 .parseMsSpectrum(spectrumText);
         spectrum.setSpectrumType(spectrumType);
 

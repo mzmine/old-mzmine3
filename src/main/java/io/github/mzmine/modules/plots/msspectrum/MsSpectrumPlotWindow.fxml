@@ -14,7 +14,8 @@
 	fx:controller="io.github.mzmine.modules.plots.msspectrum.MsSpectrumPlotWindowController">
 	<center>
 		<ChartNodeJFreeChart fx:id="chartNode"
-			onContextMenuRequested="#handleContextMenuShowing">
+			onContextMenuRequested="#handleContextMenuShowing" onKeyPressed="#handleChartKeyPressed"
+			onMousePressed="#handleChartMousePressed">
 			<contextMenu>
 				<ContextMenu>
 					<items>
@@ -26,7 +27,8 @@
 						</Menu>
 						<Menu fx:id="findMSMSMenu" text="Find MS/MS">
 						</Menu>
-						<MenuItem fx:id="showXICMenuItem" text="Show XIC..." onAction="#handleShowXIC" />
+						<MenuItem fx:id="showXICMenuItem" text="Show XIC..."
+							onAction="#handleShowXIC" />
 						<Menu text="Intensity scale...">
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="ARROWS_V" />
@@ -62,11 +64,11 @@
 							</graphic>
 							<MenuItem text="Clipboard" onAction="#handleExportImageToClipboard" />
 							<MenuItem text="JPG" onAction="#handleExportJPG" />
-							<MenuItem text="PNG" onAction="#handleExportPNG"/>
-							<MenuItem text="SVG" onAction="#handleExportSVG"/>
-							<MenuItem text="PDF" onAction="#handleExportPDF"/>
-							<MenuItem text="EMF" onAction="#handleExportEMF"/>
-							<MenuItem text="EPS" onAction="#handleExportEPS"/>
+							<MenuItem text="PNG" onAction="#handleExportPNG" />
+							<MenuItem text="SVG" onAction="#handleExportSVG" />
+							<MenuItem text="PDF" onAction="#handleExportPDF" />
+							<MenuItem text="EMF" onAction="#handleExportEMF" />
+							<MenuItem text="EPS" onAction="#handleExportEPS" />
 						</Menu>
 						<Menu text="Export spectra to...">
 							<graphic>
@@ -75,7 +77,8 @@
 							<MenuItem text="Clipboard" onAction="#handleExportSpectraToClipboard" />
 							<MenuItem text="mzML" onAction="#handleExportMzML" />
 							<MenuItem text="MGF" onAction="#handleExportMGF" />
-							<MenuItem text="MSP" onAction="#handleExportMSP" />
+							<MenuItem text="MSP (NIST)" onAction="#handleExportMSP" />
+							<MenuItem text="TXT" onAction="#handleExportTXT" />
 						</Menu>
 						<MenuItem text="Print" onAction="#handlePrint">
 							<graphic>
@@ -132,6 +135,16 @@
 					</graphic>
 					<tooltip>
 						<Tooltip text="Setup layers" />
+					</tooltip>
+				</Button>
+				<Button onAction="#handleToggleLabels">
+					<graphic>
+						<ImageView>
+							<Image url="icons/annotationsicon.png" />
+						</ImageView>
+					</graphic>
+					<tooltip>
+						<Tooltip text="Toggle the visibility of peak labels" />
 					</tooltip>
 				</Button>
 				<MenuButton>

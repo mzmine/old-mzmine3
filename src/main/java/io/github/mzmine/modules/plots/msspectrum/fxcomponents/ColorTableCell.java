@@ -17,7 +17,7 @@
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.util.fxcomponents;
+package io.github.mzmine.modules.plots.msspectrum.fxcomponents;
 
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ContentDisplay;
