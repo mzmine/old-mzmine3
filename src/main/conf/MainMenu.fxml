@@ -174,18 +174,24 @@
 					</items>
 				</Menu>
 				<Menu text="Identification">
-					<items>
-						<ModuleMenuItem text="Local Database Search"
-							moduleClass="io.github.mzmine.modules.identification.ms.localdatabasesearch.LocalDatabaseSearchModule" />
-						<MenuItem text="Online Database Search" />
-						<MenuItem text="Fragment Search" />
-						<MenuItem text="Adduct Search" />
-						<MenuItem text="Complex Search" />
-						<MenuItem text="Glycerophospholipid Preciction" />
-						<MenuItem text="CAMERA Search" />
-						<MenuItem text="NIST MS Search" />
-						<MenuItem text="Formula Prediction" />
-					</items>
+					<Menu text="MS">
+						<items>
+							<ModuleMenuItem text="Local Database Search"
+								moduleClass="io.github.mzmine.modules.identification.ms.localdatabasesearch.LocalDatabaseSearchModule" />
+							<MenuItem text="Online Database Search" />
+							<MenuItem text="Fragment Search" />
+							<MenuItem text="Adduct Search" />
+							<MenuItem text="Complex Search" />
+							<MenuItem text="Glycerophospholipid Preciction" />
+							<MenuItem text="CAMERA Search" />
+							<MenuItem text="NIST MS Search" />
+							<MenuItem text="Formula Prediction" />
+						</items>
+					</Menu>
+					<Menu text="MS/MS">
+						<items>
+						</items>
+					</Menu>
 				</Menu>
 			</items>
 		</Menu>
