@@ -25,9 +25,9 @@ import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +46,6 @@ import org.jfree.ui.RectangleEdge;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 
-import io.github.msdk.MSDKException;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.files.FileType;
@@ -57,6 +56,8 @@ import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.io.mgf.MgfExportAlgorithm;
+import io.github.msdk.io.msp.MspExportAlgorithm;
 import io.github.msdk.io.mzml.MzMLFileExportMethod;
 import io.github.msdk.io.txt.TxtExportAlgorithm;
 import io.github.msdk.io.txt.TxtImportAlgorithm;
@@ -662,9 +663,9 @@ public class MsSpectrumPlotWindowController {
     public void handleExportMzML(Event event) {
 
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Export to TXT");
+        fileChooser.setTitle("Export to mzML");
         fileChooser.setSelectedExtensionFilter(
-                new FileChooser.ExtensionFilter("TXT", "txt"));
+                new FileChooser.ExtensionFilter("mzML", "mzML"));
 
         // Remember last directory
         if (lastSaveDirectory != null && lastSaveDirectory.isDirectory())
@@ -680,23 +681,23 @@ public class MsSpectrumPlotWindowController {
 
         // If no file extension, add it
         if (!file.getName().contains(".")) {
-            String newName = file.getPath() + ".txt";
+            String newName = file.getPath() + ".mzML";
             file = new File(newName);
         }
 
         // Save the last open directory
         lastSaveDirectory = file.getParentFile();
 
-        final List<MsSpectrum> spectra = Lists.newArrayList();
+        final List<MsSpectrum> spectra = new ArrayList<>();
         for (MsSpectrumDataSet dataSet : dataSets) {
             spectra.add(dataSet.getSpectrum());
         }
 
         // Do the export in a new thread
         final File finalFile = file;
+
         new Thread(() -> {
             try {
-
                 // Create a temporary raw data file
                 DataPointStore tmpStore = DataPointStoreFactory
                         .getMemoryDataStore();
@@ -721,7 +722,7 @@ public class MsSpectrumPlotWindowController {
                         tmpRawFile, finalFile);
                 exporter.execute();
                 tmpRawFile.dispose();
-            } catch (MSDKException e) {
+            } catch (Exception e) {
                 MZmineGUI.displayMessage("Unable to export: " + e.getMessage());
                 e.printStackTrace();
             }
@@ -730,10 +731,92 @@ public class MsSpectrumPlotWindowController {
     }
 
     public void handleExportMGF(Event event) {
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export to MGF");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter(
+                "Mascot Generic Format", "mgf"));
+
+        // Remember last directory
+        if (lastSaveDirectory != null && lastSaveDirectory.isDirectory())
+            fileChooser.setInitialDirectory(lastSaveDirectory);
+
+        // Show the file chooser
+        File file = fileChooser
+                .showSaveDialog(chartNode.getScene().getWindow());
+
+        // If nothing was chosen, quit
+        if (file == null)
+            return;
+
+        // If no file extension, add it
+        if (!file.getName().contains(".")) {
+            String newName = file.getPath() + ".mgf";
+            file = new File(newName);
+        }
+
+        // Save the last open directory
+        lastSaveDirectory = file.getParentFile();
+
+        final List<MsSpectrum> spectra = new ArrayList<>();
+        for (MsSpectrumDataSet dataSet : dataSets) {
+            spectra.add(dataSet.getSpectrum());
+        }
+
+        // Do the export in a new thread
+        final File finalFile = file;
+        new Thread(() -> {
+            try {
+                MgfExportAlgorithm.exportSpectra(finalFile, spectra);
+            } catch (Exception e) {
+                MZmineGUI.displayMessage("Unable to export: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     public void handleExportMSP(Event event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Export to MSP");
+        fileChooser.setSelectedExtensionFilter(
+                new FileChooser.ExtensionFilter("NIST MSP format", "msp"));
 
+        // Remember last directory
+        if (lastSaveDirectory != null && lastSaveDirectory.isDirectory())
+            fileChooser.setInitialDirectory(lastSaveDirectory);
+
+        // Show the file chooser
+        File file = fileChooser
+                .showSaveDialog(chartNode.getScene().getWindow());
+
+        // If nothing was chosen, quit
+        if (file == null)
+            return;
+
+        // If no file extension, add it
+        if (!file.getName().contains(".")) {
+            String newName = file.getPath() + ".msp";
+            file = new File(newName);
+        }
+
+        // Save the last open directory
+        lastSaveDirectory = file.getParentFile();
+
+        final List<MsSpectrum> spectra = new ArrayList<>();
+        for (MsSpectrumDataSet dataSet : dataSets) {
+            spectra.add(dataSet.getSpectrum());
+        }
+
+        // Do the export in a new thread
+        final File finalFile = file;
+        new Thread(() -> {
+            try {
+                MspExportAlgorithm.exportSpectra(finalFile, spectra);
+            } catch (Exception e) {
+                MZmineGUI.displayMessage("Unable to export: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     public void handleExportTXT(Event event) {
@@ -763,7 +846,7 @@ public class MsSpectrumPlotWindowController {
         // Save the last open directory
         lastSaveDirectory = file.getParentFile();
 
-        final List<MsSpectrum> spectra = Lists.newArrayList();
+        final List<MsSpectrum> spectra = new ArrayList<>();
         for (MsSpectrumDataSet dataSet : dataSets) {
             spectra.add(dataSet.getSpectrum());
         }
@@ -773,7 +856,7 @@ public class MsSpectrumPlotWindowController {
         new Thread(() -> {
             try {
                 TxtExportAlgorithm.exportSpectra(finalFile, spectra);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 MZmineGUI.displayMessage("Unable to export: " + e.getMessage());
                 e.printStackTrace();
             }
