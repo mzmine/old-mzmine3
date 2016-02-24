@@ -58,6 +58,11 @@
 							<MenuItem text="Spectrum from text" onAction="#handleAddSpectrumFromText" />
 							<MenuItem text="Isotope pattern" onAction="#handleAddIsotopePattern" />
 						</Menu>
+						<Menu text="Remove..." fx:id="removeDatasetMenu">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="MINUS_SQUARE_ALT" />
+							</graphic>
+						</Menu>
 						<Menu text="Copy...">
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="COPY" />
@@ -151,6 +156,14 @@
 					</graphic>
 					<tooltip>
 						<Tooltip text="Toggle the visibility of peak labels" />
+					</tooltip>
+				</Button>
+				<Button onAction="#handleToggleLegend">
+					<graphic>
+						<Glyph fontFamily="FontAwesome" icon="KEY" />
+					</graphic>
+					<tooltip>
+						<Tooltip text="Toggle the visibility of the legend" />
 					</tooltip>
 				</Button>
 				<MenuButton>
