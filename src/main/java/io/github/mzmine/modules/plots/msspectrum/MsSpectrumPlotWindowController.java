@@ -41,6 +41,7 @@ import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.title.TextTitle;
 import org.jfree.ui.RectangleEdge;
 
 import com.google.common.base.Preconditions;
@@ -164,6 +165,11 @@ public class MsSpectrumPlotWindowController {
 
         plot.setDomainGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
         plot.setRangeGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
+
+        TextTitle chartTitle = chartNode.getChart().getTitle();
+        chartTitle.setMargin(5, 0, 0, 0);
+        chartTitle.setFont(new Font("SansSerif", Font.BOLD, 13));
+        chartTitle.setText("MS spectrum");
 
         chartNode.setCursor(Cursor.CROSSHAIR);
 
