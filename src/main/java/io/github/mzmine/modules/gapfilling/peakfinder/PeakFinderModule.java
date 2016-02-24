@@ -26,14 +26,21 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.github.msdk.datamodel.datastore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
+import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.features.gapfilling.GapFillingMethod;
+import io.github.msdk.util.MZTolerance;
+import io.github.msdk.util.RTTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesSelection;
 import io.github.mzmine.project.MZmineProject;
+import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.concurrent.Task;
 
 /**
- * Join aligner module
+ * Gap filling module
  */
 public class PeakFinderModule implements MZmineProcessingModule {
 
@@ -57,11 +64,29 @@ public class PeakFinderModule implements MZmineProcessingModule {
             @Nonnull ParameterSet parameters,
             @Nonnull Collection<Task<?>> tasks) {
 
+        // Parameters
         final FeatureTablesSelection featureTables = parameters
                 .getParameter(PeakFinderParameters.featureTables).getValue();
-
+        final MZTolerance mzTolerance = parameters
+                .getParameter(PeakFinderParameters.mzTolerance).getValue();
+        final RTTolerance rtTolerance = parameters
+                .getParameter(PeakFinderParameters.rtTolerance).getValue();
+        final boolean isIntensityTolSet = parameters
+                .getParameter(PeakFinderParameters.intensityTolerance)
+                .getValue();
+        Double intensityTolerance = parameters
+                .getParameter(PeakFinderParameters.intensityTolerance)
+                .getEmbeddedParameter().getValue();
+        final Boolean sameRT = parameters
+                .getParameter(PeakFinderParameters.sameRT).getValue();
+        final Boolean sameMZ = parameters
+                .getParameter(PeakFinderParameters.sameMZ).getValue();
+        final Boolean correctRT = parameters
+                .getParameter(PeakFinderParameters.correctRT).getValue();
         final String nameSuffix = parameters
                 .getParameter(PeakFinderParameters.nameSuffix).getValue();
+        final Boolean removeOldTable = parameters
+                .getParameter(PeakFinderParameters.removeOldTable).getValue();
 
         if (featureTables == null
                 || featureTables.getMatchingFeatureTables().isEmpty()) {
@@ -70,6 +95,43 @@ public class PeakFinderModule implements MZmineProcessingModule {
             return;
         }
 
+        // Add a task for each feature table
+        for (FeatureTable featureTable : featureTables
+                .getMatchingFeatureTables()) {
+
+            // Create the data structures
+            DataPointStore dataStore = DataPointStoreFactory
+                    .getMemoryDataStore();
+
+            // If intensity tolerance is not active then set the
+            // intensityTolerance value to a very high value to avoid any
+            // filtering the peak shape
+            if (!isIntensityTolSet)
+                intensityTolerance = Double.MAX_VALUE;
+
+            // New feature filter task
+            GapFillingMethod method = new GapFillingMethod(featureTable,
+                    dataStore, mzTolerance, rtTolerance, intensityTolerance,
+                    sameRT, sameMZ, correctRT, nameSuffix);
+
+            MSDKTask newTask = new MSDKTask("Gap filling feature table",
+                    featureTable.getName(), method);
+
+            // Add the feature table to the project
+            newTask.setOnSucceeded(e -> {
+                FeatureTable newFeatureTable = method.getResult();
+                project.addFeatureTable(newFeatureTable);
+
+                // If selected, remove old feature table
+                if (removeOldTable) {
+                    project.removeFeatureTable(featureTable);
+                }
+            });
+
+            // Add the task to the queue
+            tasks.add(newTask);
+
+        }
     }
 
     @Override

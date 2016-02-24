@@ -175,18 +175,28 @@
 				</Menu>
 				<Menu text="Identification">
 					<Menu text="MS">
-						<items>
-							<ModuleMenuItem text="Local Database Search"
-								moduleClass="io.github.mzmine.modules.identification.ms.localdatabasesearch.LocalDatabaseSearchModule" />
-							<MenuItem text="Online Database Search" />
-							<MenuItem text="Fragment Search" />
-							<MenuItem text="Adduct Search" />
-							<MenuItem text="Complex Search" />
-							<MenuItem text="Glycerophospholipid Preciction" />
-							<MenuItem text="CAMERA Search" />
-							<MenuItem text="NIST MS Search" />
-							<MenuItem text="Formula Prediction" />
-						</items>
+						<Menu text="Search using m/z and RT">
+							<items>
+								<ModuleMenuItem text="Local Database Search"
+									moduleClass="io.github.mzmine.modules.identification.ms.localdatabasesearch.LocalDatabaseSearchModule" />
+							</items>
+						</Menu>
+						<Menu text="Search using m/z">
+							<items>
+								<MenuItem text="Online Database Search" />
+								<MenuItem text="NIST MS Search" />
+								<MenuItem text="Formula Prediction" />
+								<MenuItem text="Glycerophospholipid Preciction" />
+							</items>
+						</Menu>
+						<Menu text="Search related peaks">
+							<items>
+								<MenuItem text="CAMERA Search" />
+								<MenuItem text="Adduct Search" />
+								<MenuItem text="Fragment Search" />
+								<MenuItem text="Complex Search" />
+							</items>
+						</Menu>
 					</Menu>
 					<Menu text="MS/MS">
 						<items>
