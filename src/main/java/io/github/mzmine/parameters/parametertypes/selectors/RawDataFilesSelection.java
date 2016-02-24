@@ -41,6 +41,10 @@ public class RawDataFilesSelection implements Cloneable {
     private final List<RawDataFile> specificFiles;
     private final String namePattern;
 
+    public RawDataFilesSelection(List<RawDataFile> specificFiles) {
+        this(RawDataFilesSelectionType.SPECIFIC_FILES, specificFiles, null);
+    }
+
     public RawDataFilesSelection(RawDataFilesSelectionType selectionType,
             List<RawDataFile> specificFiles, String namePattern) {
 

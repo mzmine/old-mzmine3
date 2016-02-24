@@ -99,7 +99,6 @@ import javafx.scene.Cursor;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -112,7 +111,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import jersey.repackaged.com.google.common.collect.Lists;
 
 /**
  * MS spectrum plot window
@@ -133,7 +131,7 @@ public class MsSpectrumPlotWindowController {
 
     private static final String LAYERS_DIALOG_FXML = "MsSpectrumLayersDialog.fxml";
 
-    private final ObservableList<MsSpectrumDataSet> dataSets = FXCollections
+    private final ObservableList<MsSpectrumDataSet> datasets = FXCollections
             .observableArrayList();
     private int numberOfDataSets = 0;
 
@@ -156,9 +154,6 @@ public class MsSpectrumPlotWindowController {
     @FXML
     private Menu findMSMSMenu;
 
-    @FXML
-    private TextField splashField;
-
     public void initialize() {
 
         final XYPlot plot = chartNode.getChart().getXYPlot();
@@ -173,7 +168,7 @@ public class MsSpectrumPlotWindowController {
         chartNode.setCursor(Cursor.CROSSHAIR);
 
         // Remove the dataset if it is removed from the list
-        dataSets.addListener((Change<? extends MsSpectrumDataSet> c) -> {
+        datasets.addListener((Change<? extends MsSpectrumDataSet> c) -> {
             while (c.next()) {
                 if (c.wasRemoved()) {
                     for (MsSpectrumDataSet ds : c.getRemoved()) {
@@ -185,9 +180,9 @@ public class MsSpectrumPlotWindowController {
         });
 
         itemLabelsVisible.addListener((prop, oldVal, newVal) -> {
-            for (MsSpectrumDataSet dataset : dataSets) {
-                int dataSetIndex = plot.indexOf(dataset);
-                XYItemRenderer renderer = plot.getRenderer(dataSetIndex);
+            for (MsSpectrumDataSet dataset : datasets) {
+                int datasetIndex = plot.indexOf(dataset);
+                XYItemRenderer renderer = plot.getRenderer(datasetIndex);
                 renderer.setBaseItemLabelsVisible(newVal);
             }
         });
@@ -206,16 +201,7 @@ public class MsSpectrumPlotWindowController {
 
         MsSpectrumDataSet newDataSet = new MsSpectrumDataSet(spectrum, name);
         newDataSet.mzShiftProperty().bind(mzShift);
-        dataSets.add(newDataSet);
-
-        if (dataSets.size() == 1) {
-            String splash = SplashCalculationAlgorithm
-                    .calculateSplash(spectrum);
-            splashField.setText(splash);
-            splashField.setVisible(true);
-        } else {
-            splashField.setVisible(false);
-        }
+        datasets.add(newDataSet);
 
         final int datasetIndex = numberOfDataSets;
         numberOfDataSets++;
@@ -249,10 +235,10 @@ public class MsSpectrumPlotWindowController {
 
     }
 
-    private void configureRenderer(MsSpectrumDataSet dataSet,
-            int dataSetIndex) {
+    private void configureRenderer(MsSpectrumDataSet dataset,
+            int datasetIndex) {
 
-        final MsSpectrumType renderingType = dataSet.getRenderingType();
+        final MsSpectrumType renderingType = dataset.getRenderingType();
         final XYPlot plot = chartNode.getChart().getXYPlot();
 
         // Set renderer
@@ -261,12 +247,12 @@ public class MsSpectrumPlotWindowController {
         case PROFILE:
         case THRESHOLDED:
             XYLineAndShapeRenderer newLineRenderer = new XYLineAndShapeRenderer();
-            final int lineThickness = dataSet.getLineThickness();
+            final int lineThickness = dataset.getLineThickness();
             newLineRenderer.setBaseShape(
                     new Ellipse2D.Double(-2 * lineThickness, -2 * lineThickness,
                             4 * lineThickness + 1, 4 * lineThickness + 1));
             newLineRenderer.setBaseShapesFilled(true);
-            newLineRenderer.setBaseShapesVisible(dataSet.getShowDataPoints());
+            newLineRenderer.setBaseShapesVisible(dataset.getShowDataPoints());
             newLineRenderer.setDrawOutlines(false);
 
             Stroke baseStroke = new BasicStroke(lineThickness);
@@ -284,29 +270,29 @@ public class MsSpectrumPlotWindowController {
         }
 
         // Set tooltips for legend
-        newRenderer.setLegendItemToolTipGenerator((dataset, series) -> {
-            if (dataset instanceof MsSpectrumDataSet) {
-                return ((MsSpectrumDataSet) dataset).getDescription();
+        newRenderer.setLegendItemToolTipGenerator((ds, series) -> {
+            if (ds instanceof MsSpectrumDataSet) {
+                return ((MsSpectrumDataSet) ds).getDescription();
             } else
                 return null;
         });
 
         // Set color
-        Color baseColor = dataSet.getColor();
+        Color baseColor = dataset.getColor();
         newRenderer.setBasePaint(JavaFXUtil.convertColorToAWT(baseColor));
 
         // Set label generator
         XYItemLabelGenerator intelligentLabelGenerator = new IntelligentItemLabelGenerator(
-                chartNode, 100, dataSet);
+                chartNode, 100, dataset);
         newRenderer.setBaseItemLabelGenerator(intelligentLabelGenerator);
         newRenderer.setBaseItemLabelPaint(
                 JavaFXUtil.convertColorToAWT(labelsColor));
         newRenderer.setBaseItemLabelsVisible(itemLabelsVisible.get());
 
         // Set tooltip generator
-        newRenderer.setBaseToolTipGenerator(dataSet);
+        newRenderer.setBaseToolTipGenerator(dataset);
 
-        plot.setRenderer(dataSetIndex, newRenderer);
+        plot.setRenderer(datasetIndex, newRenderer);
 
     }
 
@@ -389,7 +375,7 @@ public class MsSpectrumPlotWindowController {
     }
 
     public void handlePreviousScan(Event e) {
-        for (MsSpectrumDataSet dataset : dataSets) {
+        for (MsSpectrumDataSet dataset : datasets) {
             MsSpectrum spectrum = dataset.getSpectrum();
             if (!(spectrum instanceof MsScan))
                 continue;
@@ -408,7 +394,7 @@ public class MsSpectrumPlotWindowController {
     }
 
     public void handleNextScan(Event e) {
-        for (MsSpectrumDataSet dataset : dataSets) {
+        for (MsSpectrumDataSet dataset : datasets) {
             MsSpectrum spectrum = dataset.getSpectrum();
             if (!(spectrum instanceof MsScan))
                 continue;
@@ -465,7 +451,7 @@ public class MsSpectrumPlotWindowController {
             Stage layersDialog = loader.load();
             MsSpectrumLayersDialogController controller = loader
                     .getController();
-            controller.configure(dataSets, this);
+            controller.configure(datasets, this);
             layersDialog.initModality(Modality.APPLICATION_MODAL);
             layersDialog.show();
         } catch (Exception e) {
@@ -536,10 +522,26 @@ public class MsSpectrumPlotWindowController {
         if (xicMz == null)
             return;
 
+        // Collect all displayed raw data files
+        List<RawDataFile> rawDataFiles = new ArrayList<>();
+        for (MsSpectrumDataSet dataset : datasets) {
+            if (dataset.getSpectrum() instanceof MsScan) {
+                MsScan scan = (MsScan) dataset.getSpectrum();
+                RawDataFile rawFile = scan.getRawDataFile();
+                if (rawFile != null)
+                    rawDataFiles.add(rawFile);
+            }
+        }
+
         ParameterSet chromatogramParams = MZmineCore.getConfiguration()
                 .getModuleParameters(ChromatogramPlotModule.class);
         chromatogramParams.getParameter(ChromatogramPlotParameters.mzRange)
                 .setValue(Range.closed(xicMz - 0.005, xicMz + 0.005));
+        if (!rawDataFiles.isEmpty()) {
+            chromatogramParams
+                    .getParameter(ChromatogramPlotParameters.inputFiles)
+                    .setValue(new RawDataFilesSelection(rawDataFiles));
+        }
         chromatogramParams.showSetupDialog("Show XIC");
 
     }
@@ -593,14 +595,14 @@ public class MsSpectrumPlotWindowController {
     }
 
     public void handleNormalizeIntensityScale(Event event) {
-        for (MsSpectrumDataSet dataSet : dataSets) {
-            dataSet.setIntensityScale(100.0);
+        for (MsSpectrumDataSet dataset : datasets) {
+            dataset.setIntensityScale(100.0);
         }
     }
 
     public void handleResetIntensityScale(Event event) {
-        for (MsSpectrumDataSet dataSet : dataSets) {
-            dataSet.resetIntensityScale();
+        for (MsSpectrumDataSet dataset : datasets) {
+            dataset.resetIntensityScale();
         }
     }
 
@@ -647,11 +649,36 @@ public class MsSpectrumPlotWindowController {
 
     public void handleExportSpectraToClipboard(Event event) {
         StringBuilder sb = new StringBuilder();
-        for (MsSpectrumDataSet dataSet : dataSets) {
-            MsSpectrum spectrum = dataSet.getSpectrum();
+        for (MsSpectrumDataSet dataset : datasets) {
+            MsSpectrum spectrum = dataset.getSpectrum();
             String spectrumString = TxtExportAlgorithm
                     .spectrumToString(spectrum);
+            String splash = SplashCalculationAlgorithm
+                    .calculateSplash(spectrum);
+            sb.append("# ");
+            sb.append(dataset.getName());
+            sb.append("\n");
+            sb.append("# SPLASH ID: ");
+            sb.append(splash);
+            sb.append("\n");
             sb.append(spectrumString);
+            sb.append("\n");
+        }
+        final Clipboard clipboard = Clipboard.getSystemClipboard();
+        final ClipboardContent content = new ClipboardContent();
+        content.putString(sb.toString());
+        clipboard.setContent(content);
+    }
+
+    public void handleExportSplashToClipboard(Event event) {
+        StringBuilder sb = new StringBuilder();
+        for (MsSpectrumDataSet dataset : datasets) {
+            MsSpectrum spectrum = dataset.getSpectrum();
+            String splash = SplashCalculationAlgorithm
+                    .calculateSplash(spectrum);
+            sb.append(dataset.getName());
+            sb.append(" SPLASH ID: ");
+            sb.append(splash);
             sb.append("\n");
         }
         final Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -689,8 +716,8 @@ public class MsSpectrumPlotWindowController {
         lastSaveDirectory = file.getParentFile();
 
         final List<MsSpectrum> spectra = new ArrayList<>();
-        for (MsSpectrumDataSet dataSet : dataSets) {
-            spectra.add(dataSet.getSpectrum());
+        for (MsSpectrumDataSet dataset : datasets) {
+            spectra.add(dataset.getSpectrum());
         }
 
         // Do the export in a new thread
@@ -704,8 +731,8 @@ public class MsSpectrumPlotWindowController {
                 RawDataFile tmpRawFile = MSDKObjectBuilder.getRawDataFile(
                         "Exported spectra", null, FileType.UNKNOWN, tmpStore);
                 int scanNum = 1;
-                for (MsSpectrumDataSet dataSet : dataSets) {
-                    MsSpectrum spectrum = dataSet.getSpectrum();
+                for (MsSpectrumDataSet dataset : datasets) {
+                    MsSpectrum spectrum = dataset.getSpectrum();
                     MsScan newScan;
                     if (spectrum instanceof MsScan) {
                         newScan = MsScanUtil.clone(tmpStore, (MsScan) spectrum,
@@ -759,8 +786,8 @@ public class MsSpectrumPlotWindowController {
         lastSaveDirectory = file.getParentFile();
 
         final List<MsSpectrum> spectra = new ArrayList<>();
-        for (MsSpectrumDataSet dataSet : dataSets) {
-            spectra.add(dataSet.getSpectrum());
+        for (MsSpectrumDataSet dataset : datasets) {
+            spectra.add(dataset.getSpectrum());
         }
 
         // Do the export in a new thread
@@ -803,8 +830,8 @@ public class MsSpectrumPlotWindowController {
         lastSaveDirectory = file.getParentFile();
 
         final List<MsSpectrum> spectra = new ArrayList<>();
-        for (MsSpectrumDataSet dataSet : dataSets) {
-            spectra.add(dataSet.getSpectrum());
+        for (MsSpectrumDataSet dataset : datasets) {
+            spectra.add(dataset.getSpectrum());
         }
 
         // Do the export in a new thread
@@ -847,8 +874,8 @@ public class MsSpectrumPlotWindowController {
         lastSaveDirectory = file.getParentFile();
 
         final List<MsSpectrum> spectra = new ArrayList<>();
-        for (MsSpectrumDataSet dataSet : dataSets) {
-            spectra.add(dataSet.getSpectrum());
+        for (MsSpectrumDataSet dataset : datasets) {
+            spectra.add(dataset.getSpectrum());
         }
 
         // Do the export in a new thread

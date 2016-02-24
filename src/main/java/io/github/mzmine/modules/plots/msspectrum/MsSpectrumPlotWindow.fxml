@@ -58,11 +58,18 @@
 							<MenuItem text="Spectrum from text" onAction="#handleAddSpectrumFromText" />
 							<MenuItem text="Isotope pattern" onAction="#handleAddIsotopePattern" />
 						</Menu>
+						<Menu text="Copy...">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="COPY" />
+							</graphic>
+							<MenuItem text="Image" onAction="#handleExportImageToClipboard" />
+							<MenuItem text="Spectra" onAction="#handleExportSpectraToClipboard" />
+							<MenuItem text="SPLASH IDs" onAction="#handleExportSplashToClipboard" />
+						</Menu>
 						<Menu text="Export image to...">
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="FILE_IMAGE_ALT" />
 							</graphic>
-							<MenuItem text="Clipboard" onAction="#handleExportImageToClipboard" />
 							<MenuItem text="JPG" onAction="#handleExportJPG" />
 							<MenuItem text="PNG" onAction="#handleExportPNG" />
 							<MenuItem text="SVG" onAction="#handleExportSVG" />
@@ -74,7 +81,6 @@
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="SAVE" />
 							</graphic>
-							<MenuItem text="Clipboard" onAction="#handleExportSpectraToClipboard" />
 							<MenuItem text="mzML" onAction="#handleExportMzML" />
 							<MenuItem text="MGF" onAction="#handleExportMGF" />
 							<MenuItem text="MSP (NIST)" onAction="#handleExportMSP" />
@@ -85,7 +91,7 @@
 								<Glyph fontFamily="FontAwesome" icon="PRINT" />
 							</graphic>
 						</MenuItem>
-						<MenuItem text="Manual zoom">
+						<MenuItem text="Manual zoom" onAction="#handleManualZoom">
 							<graphic>
 								<ImageView>
 									<Image url="icons/axesicon.png" />
@@ -160,11 +166,6 @@
 						<Tooltip text="Add spectrum" />
 					</tooltip>
 				</MenuButton>
-
-				<Region prefWidth="20.0" />
-
-				<TextField fx:id="splashField" editable="false" minWidth="250.0"
-					maxWidth="250.0" styleClass="splashText" />
 
 				<Region HBox.hgrow="ALWAYS" />
 
