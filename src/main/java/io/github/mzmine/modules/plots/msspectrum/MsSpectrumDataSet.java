@@ -33,6 +33,7 @@ import com.google.common.collect.Range;
 import io.github.msdk.datamodel.msspectra.MsSpectrum;
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.spectra.splash.SplashCalculationAlgorithm;
 import io.github.msdk.util.MsSpectrumUtil;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.util.MsScanUtils;
@@ -155,6 +156,10 @@ public class MsSpectrumDataSet extends AbstractXYDataset
         }
         sb.append("Base peak intensity: ");
         sb.append(intensityFormat.format(topIndensity));
+        sb.append("\n");
+        sb.append("SPLASH ID: ");
+        String splash = SplashCalculationAlgorithm.calculateSplash(spectrum);
+        sb.append(splash);
 
         return sb.toString();
     }

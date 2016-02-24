@@ -14,7 +14,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<cdk.version>1.5.12</cdk.version>
+		<guava.version>19.0</guava.version>
 		<controlsfx.version>8.40.10</controlsfx.version>
+		<slf4j.version>1.7.14</slf4j.version>
+		<jfreechart.version>1.0.19-fx</jfreechart.version>
 	</properties>
 
 	<mailingLists>
@@ -111,9 +114,8 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>18.0</version>
+			<version>${guava.version}</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>org.controlsfx</groupId>
@@ -124,19 +126,19 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.14</version>
+			<version>${slf4j.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-jdk14</artifactId>
-			<version>1.7.14</version>
+			<version>${slf4j.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>jfreechart</groupId>
 			<artifactId>jfreechart</artifactId>
-			<version>1.0.19-fx</version>
+			<version>${jfreechart.version}</version>
 		</dependency>
 
 		<dependency>

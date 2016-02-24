@@ -68,14 +68,14 @@ public class MsScanUtils {
         sb.append("MS function: ");
         sb.append(msFunc.getName());
         sb.append("\n");
-        sb.append("Scan definition: ");
-        sb.append(scan.getScanDefinition());
-        sb.append("\n");
         if (msLevel != null) {
             sb.append("MS level: ");
             sb.append(msLevel);
             sb.append("\n");
         }
+        sb.append("Scan definition: ");
+        sb.append(scan.getScanDefinition());
+        sb.append("\n");
         sb.append("Polarity: ");
         sb.append(scan.getPolarity());
         sb.append("\n");
