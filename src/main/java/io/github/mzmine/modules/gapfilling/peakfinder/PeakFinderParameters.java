@@ -67,11 +67,6 @@ public class PeakFinderParameters extends ParameterSet {
             "If checked, the m/z range where the new peaks will be sought are obtained using the\nranges of the rest of the peaks in the same row.",
             "Algorithm Parameters", true);
 
-    public static final BooleanParameter correctRT = new BooleanParameter(
-            "Apply RT correction?",
-            "If checked, correction of the retention time will be applied to avoid the\nproblems caused by the deviation of the reteion time between the samples.",
-            "Algorithm Parameters", false);
-
     public static final StringParameter nameSuffix = new StringParameter(
             "Name suffix", "Suffix to be added to the feature table name.",
             "Output", " gapFilled");
@@ -86,7 +81,7 @@ public class PeakFinderParameters extends ParameterSet {
      */
     public PeakFinderParameters() {
         super(featureTables, mzTolerance, rtTolerance, intensityTolerance,
-                sameRT, sameMZ, correctRT, nameSuffix, removeOldTable);
+                sameRT, sameMZ, nameSuffix, removeOldTable);
     }
 
 }
