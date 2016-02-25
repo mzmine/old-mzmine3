@@ -41,6 +41,7 @@ import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.ui.RectangleEdge;
 
@@ -140,6 +141,8 @@ public class MsSpectrumPlotWindowController {
             "mzShift", 0.0);
     private final BooleanProperty itemLabelsVisible = new SimpleBooleanProperty(
             this, "itemLabelsVisible", true);
+    private final BooleanProperty legendVisible = new SimpleBooleanProperty(
+            this, "legendVisible", true);
 
     private File lastSaveDirectory;
 
@@ -153,7 +156,7 @@ public class MsSpectrumPlotWindowController {
     private MenuItem setToMenuItem, showXICMenuItem;
 
     @FXML
-    private Menu findMSMSMenu;
+    private Menu findMSMSMenu, removeDatasetMenu;
 
     public void initialize() {
 
@@ -191,6 +194,11 @@ public class MsSpectrumPlotWindowController {
                 XYItemRenderer renderer = plot.getRenderer(datasetIndex);
                 renderer.setBaseItemLabelsVisible(newVal);
             }
+        });
+
+        legendVisible.addListener((prop, oldVal, newVal) -> {
+            final LegendTitle legend = chartNode.getChart().getLegend();
+            legend.setVisible(newVal);
         });
 
     }
@@ -469,6 +477,10 @@ public class MsSpectrumPlotWindowController {
         itemLabelsVisible.set(!itemLabelsVisible.get());
     }
 
+    public void handleToggleLegend(Event event) {
+        legendVisible.set(!legendVisible.get());
+    }
+
     public void handleContextMenuShowing(ContextMenuEvent event) {
 
         // Calculate the m/z value of the clicked point
@@ -495,7 +507,8 @@ public class MsSpectrumPlotWindowController {
         // Update the MS/MS menu
         findMSMSMenu.setText("Find MS/MS of "
                 + mzFormat.format(clickedMzWithShift) + " m/z");
-        findMSMSMenu.getItems().clear();
+        final ObservableList<MenuItem> msmsItems = findMSMSMenu.getItems();
+        msmsItems.clear();
         MZmineProject project = MZmineCore.getCurrentProject();
         for (RawDataFile file : project.getRawDataFiles()) {
             scans: for (MsScan scan : file.getScans()) {
@@ -510,16 +523,26 @@ public class MsSpectrumPlotWindowController {
                     MenuItem msmsItem = new MenuItem(menuLabel);
                     msmsItem.setOnAction(e -> MsSpectrumPlotModule
                             .showNewSpectrumWindow(scan, true));
-                    findMSMSMenu.getItems().add(msmsItem);
+                    msmsItems.add(msmsItem);
                     continue scans;
                 }
             }
         }
-        if (findMSMSMenu.getItems().isEmpty()) {
+        if (msmsItems.isEmpty()) {
             MenuItem noneItem = new MenuItem("None");
             noneItem.setDisable(true);
-            findMSMSMenu.getItems().add(noneItem);
+            msmsItems.add(noneItem);
         }
+
+        // Update the Remove... menu
+        final ObservableList<MenuItem> rmItems = removeDatasetMenu.getItems();
+        rmItems.clear();
+        for (MsSpectrumDataSet dataset : datasets) {
+            MenuItem msmsItem = new MenuItem(dataset.getName());
+            msmsItem.setOnAction(e -> datasets.remove(dataset));
+            rmItems.add(msmsItem);
+        }
+        removeDatasetMenu.setDisable(rmItems.isEmpty());
 
     }
 
