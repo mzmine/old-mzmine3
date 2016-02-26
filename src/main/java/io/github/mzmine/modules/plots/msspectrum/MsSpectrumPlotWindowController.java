@@ -35,13 +35,17 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
-import javax.swing.JComponent;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.labels.XYItemLabelGenerator;
+import org.jfree.chart.plot.DatasetRenderingOrder;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.AbstractXYItemRenderer;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
@@ -50,7 +54,9 @@ import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
+import org.jfree.data.RangeType;
 import org.jfree.ui.RectangleEdge;
+import org.jfree.ui.RectangleInsets;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
@@ -126,16 +132,13 @@ import javafx.stage.Window;
 public class MsSpectrumPlotWindowController {
 
     // Colors
-    private static final Color gridColor = Color.rgb(220, 220, 220, 0.3);
+    private static final Color gridColor = Color.rgb(220, 220, 220, 0.5);
     private static final Color labelsColor = Color.BLACK;
+    private static final Color backgroundColor = Color.WHITE;
     private static final Color[] plotColors = { Color.rgb(0, 0, 192), // blue
             Color.rgb(192, 0, 0), // red
             Color.rgb(0, 192, 0), // green
             Color.MAGENTA, Color.CYAN, Color.ORANGE };
-
-    // Font
-    private static final Font legendFont = new Font("SansSerif", Font.PLAIN,
-            11);
 
     private static final String LAYERS_DIALOG_FXML = "MsSpectrumLayersDialog.fxml";
 
@@ -166,14 +169,51 @@ public class MsSpectrumPlotWindowController {
 
     public void initialize() {
 
-        final XYPlot plot = chartNode.getChart().getXYPlot();
+        final JFreeChart chart = chartNode.getChart();
+        // Waiting for JFreeChart 1.0.20 to do this properly
+        // chartNode.setChart(chart);
+        final XYPlot plot = chart.getXYPlot();
 
         // Do not set colors and strokes dynamically. They are instead provided
         // by the dataset and configured in configureRenderer()
         plot.setDrawingSupplier(null);
-
         plot.setDomainGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
         plot.setRangeGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
+        plot.setBackgroundPaint(JavaFXUtil.convertColorToAWT(backgroundColor));
+        plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
+        plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
+        plot.setDomainGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
+        plot.setRangeGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
+        plot.setDomainCrosshairVisible(false);
+        plot.setRangeCrosshairVisible(false);
+
+        // chart properties
+        chart.setBackgroundPaint(JavaFXUtil.convertColorToAWT(backgroundColor));
+
+        // legend properties
+        LegendTitle legend = chart.getLegend();
+        // legend.setItemFont(legendFont);
+        legend.setFrame(BlockBorder.NONE);
+
+        // set the X axis (retention time) properties
+        NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
+        xAxis.setUpperMargin(0.03);
+        xAxis.setLowerMargin(0.03);
+        xAxis.setRangeType(RangeType.POSITIVE);
+        xAxis.setTickLabelInsets(new RectangleInsets(0, 0, 20, 20));
+
+        // set the Y axis (intensity) properties
+        NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
+        yAxis.setRangeType(RangeType.POSITIVE);
+        yAxis.setAutoRangeIncludesZero(true);
+
+        // set the fixed number formats, because otherwise JFreeChart sometimes
+        // shows exponent, sometimes it doesn't
+        DecimalFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
+        xAxis.setNumberFormatOverride(mzFormat);
+        DecimalFormat intensityFormat = MZmineCore.getConfiguration()
+                .getIntensityFormat();
+        yAxis.setNumberFormatOverride(intensityFormat);
 
         TextTitle chartTitle = chartNode.getChart().getTitle();
         chartTitle.setMargin(5, 0, 0, 0);
@@ -203,7 +243,6 @@ public class MsSpectrumPlotWindowController {
         });
 
         legendVisible.addListener((prop, oldVal, newVal) -> {
-            final LegendTitle legend = chartNode.getChart().getLegend();
             legend.setVisible(newVal);
         });
 
