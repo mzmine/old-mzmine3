@@ -22,41 +22,22 @@ package io.github.mzmine.modules.plots.chromatogram;
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.mzmine.main.MZmineCore;
-import io.github.mzmine.util.JavaFXUtil;
-import javafx.scene.Node;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.BorderPane;
 
 /**
- * Chromatogram plot chart
+ * Chromatogram plot window
  */
-public class ChromatogramPlotChartNode extends BorderPane {
+public class ChromatogramPlotWindowController {
 
-    private final NumberAxis xAxis, yAxis;
-    private final LineChart<Number, Number> lineChart;
+    ChromatogramPlotWindowController() {
 
-    ChromatogramPlotChartNode() {
+       // ChromatogramPlotChartNode chartNode = new ChromatogramPlotChartNode();
 
-        xAxis = new NumberAxis();
-        yAxis = new NumberAxis();
-
-        xAxis.setLabel("Retention time (min)");
-        yAxis.setLabel("Intensity");
-
-        lineChart = new LineChart<>(xAxis, yAxis);
-
-        lineChart.setTitle("Chromatogram");
-        lineChart.setCreateSymbols(true);
-
-        // Node zoomedChart = JavaFXUtil.addZoomSupport(lineChart);
-
-        // setCenter(zoomedChart);
+        // setCenter(chartNode);
 
     }
-
+    
     void addChromatogram(Chromatogram chromatogram) {
 
         XYChart.Series newSeries = new XYChart.Series();
@@ -78,7 +59,7 @@ public class ChromatogramPlotChartNode extends BorderPane {
             newSeries.getData().add(newData);
         }
 
-        lineChart.getData().addAll(newSeries);
+        //lineChart.getData().addAll(newSeries);
 
     }
 

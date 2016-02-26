@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.* ?>
+<?import javafx.scene.control.* ?>
+<?import javafx.scene.layout.* ?>
+<?import javafx.scene.image.* ?>
+<?import javafx.scene.text.* ?>
+<?import io.github.mzmine.util.jfreechart.* ?>
+<?import org.controlsfx.control.* ?>
+<?import org.controlsfx.glyphfont.Glyph ?>
+
+<BorderPane fx:id="chartPane" xmlns="http://javafx.com/javafx/8"
+	xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotWindowController">
+	<center>
+		<ChartNodeJFreeChart fx:id="chartNode"
+			onContextMenuRequested="#handleContextMenuShowing" onKeyPressed="#handleChartKeyPressed"
+			onMousePressed="#handleChartMousePressed">
+			<contextMenu>
+				<ContextMenu>
+					<items>
+						<MenuItem fx:id="showXICMenuItem" text="Show spectrum..."
+							onAction="#handleShowXIC" />
+						<Menu text="Intensity scale...">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="ARROWS_V" />
+							</graphic>
+							<MenuItem text="Normalize" onAction="#handleNormalizeIntensityScale" />
+							<MenuItem text="Reset to original" onAction="#handleResetIntensityScale" />
+						</Menu>
+						<MenuItem text="Setup layers" onAction="#handleSetupLayers">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="BAR_CHART" />
+							</graphic>
+						</MenuItem>
+						<Menu text="Add...">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
+							</graphic>
+							<MenuItem text="Chromatogram from file" onAction="#handleAddChromatogram" />
+							<MenuItem text="Chromatogram from text" onAction="#handleAddChromatogramFromText" />
+						</Menu>
+						<Menu text="Remove..." fx:id="removeDatasetMenu">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="MINUS_SQUARE_ALT" />
+							</graphic>
+						</Menu>
+						<Menu text="Copy...">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="COPY" />
+							</graphic>
+							<MenuItem text="Image" onAction="#handleExportImageToClipboard" />
+							<MenuItem text="Chromatogram" onAction="#handleExportChromatogramToClipboard" />
+						</Menu>
+						<Menu text="Export image to...">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="FILE_IMAGE_ALT" />
+							</graphic>
+							<MenuItem text="JPG" onAction="#handleExportJPG" />
+							<MenuItem text="PNG" onAction="#handleExportPNG" />
+							<MenuItem text="SVG" onAction="#handleExportSVG" />
+							<MenuItem text="PDF" onAction="#handleExportPDF" />
+							<MenuItem text="EMF" onAction="#handleExportEMF" />
+							<MenuItem text="EPS" onAction="#handleExportEPS" />
+						</Menu>
+						<Menu text="Export chromatogram to...">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="SAVE" />
+							</graphic>
+							<MenuItem text="mzML" onAction="#handleExportMzML" />
+							<MenuItem text="CSV" onAction="#handleExportCSV" />
+							<MenuItem text="TXT" onAction="#handleExportTXT" />
+						</Menu>
+						<MenuItem text="Print" onAction="#handlePrint">
+							<graphic>
+								<Glyph fontFamily="FontAwesome" icon="PRINT" />
+							</graphic>
+						</MenuItem>
+						<MenuItem text="Manual zoom" onAction="#handleManualZoom">
+							<graphic>
+								<ImageView>
+									<Image url="icons/axesicon.png" />
+								</ImageView>
+							</graphic>
+						</MenuItem>
+					</items>
+				</ContextMenu>
+			</contextMenu>
+		</ChartNodeJFreeChart>
+	</center>
+	<bottom>
+		<ToolBar orientation="HORIZONTAL">
+			<items>
+
+				<Button onAction="#handleZoomOut">
+					<graphic>
+						<Glyph fontFamily="FontAwesome" icon="ARROWS_ALT" />
+					</graphic>
+					<tooltip>
+						<Tooltip text="Zoom out" />
+					</tooltip>
+				</Button>
+				<Button onAction="#handleManualZoom">
+					<graphic>
+						<ImageView>
+							<Image url="icons/axesicon.png" />
+						</ImageView>
+					</graphic>
+					<tooltip>
+						<Tooltip text="Manual zoom" />
+					</tooltip>
+				</Button>
+				<Button onAction="#handleSetupLayers">
+					<graphic>
+						<Glyph fontFamily="FontAwesome" icon="BAR_CHART" />
+					</graphic>
+					<tooltip>
+						<Tooltip text="Setup layers" />
+					</tooltip>
+				</Button>
+				<Button onAction="#handleToggleLabels">
+					<graphic>
+						<ImageView>
+							<Image url="icons/annotationsicon.png" />
+						</ImageView>
+					</graphic>
+					<tooltip>
+						<Tooltip text="Toggle the visibility of peak labels" />
+					</tooltip>
+				</Button>
+				<Button onAction="#handleToggleLegend">
+					<graphic>
+						<Glyph fontFamily="FontAwesome" icon="KEY" />
+					</graphic>
+					<tooltip>
+						<Tooltip text="Toggle the visibility of the legend" />
+					</tooltip>
+				</Button>
+				<MenuButton>
+					<graphic>
+						<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
+					</graphic>
+					<items>
+						<MenuItem text="Chromatogram from file" onAction="#handleAddChromatogram" />
+						<MenuItem text="Chromatogram from text" onAction="#handleAddChromatogramFromText" />
+					</items>
+					<tooltip>
+						<Tooltip text="Add chromatogram" />
+					</tooltip>
+				</MenuButton>
+			</items>
+		</ToolBar>
+	</bottom>
+</BorderPane>
