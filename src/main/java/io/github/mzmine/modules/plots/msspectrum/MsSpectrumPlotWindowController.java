@@ -139,6 +139,8 @@ public class MsSpectrumPlotWindowController {
             Color.rgb(0, 192, 0), // green
             Color.MAGENTA, Color.CYAN, Color.ORANGE };
 
+    private static final Font titleFont = new Font("SansSerif", Font.BOLD, 12);
+
     private static final String LAYERS_DIALOG_FXML = "MsSpectrumLayersDialog.fxml";
 
     private final ObservableList<MsSpectrumDataSet> datasets = FXCollections
@@ -153,6 +155,8 @@ public class MsSpectrumPlotWindowController {
             this, "legendVisible", true);
 
     private File lastSaveDirectory;
+
+    private TextTitle chartTitle, chartSubTitle;
 
     @FXML
     private BorderPane chartPane;
@@ -214,9 +218,9 @@ public class MsSpectrumPlotWindowController {
                 .getIntensityFormat();
         yAxis.setNumberFormatOverride(intensityFormat);
 
-        TextTitle chartTitle = chartNode.getChart().getTitle();
+        chartTitle = chartNode.getChart().getTitle();
         chartTitle.setMargin(5, 0, 0, 0);
-        chartTitle.setFont(new Font("SansSerif", Font.BOLD, 13));
+        chartTitle.setFont(titleFont);
         chartTitle.setText("MS spectrum");
 
         chartNode.setCursor(Cursor.CROSSHAIR);
