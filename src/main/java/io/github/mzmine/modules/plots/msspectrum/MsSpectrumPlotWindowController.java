@@ -24,6 +24,9 @@ import java.awt.Font;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.print.PageFormat;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -32,7 +35,11 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
+import org.jfree.chart.ChartPanel;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.labels.XYItemLabelGenerator;
 import org.jfree.chart.plot.XYPlot;
@@ -96,7 +103,6 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.print.PrinterJob;
 import javafx.scene.Cursor;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
@@ -608,19 +614,28 @@ public class MsSpectrumPlotWindowController {
     }
 
     public void handlePrint(Event event) {
-        PrinterJob job = PrinterJob.createPrinterJob();
-        if (job == null)
-            return;
-        boolean confirm = job.showPrintDialog(chartNode.getScene().getWindow());
-        if (!confirm) {
-            job.cancelJob();
-            return;
-        }
-        boolean success = job.printPage(chartNode);
-        if (success) {
-            job.endJob();
-        }
 
+        // As of java 1.8.0_74, the JavaFX printing support seems to do poor
+        // job. It creates pixelated, low-resolution print outs. For that
+        // reason, we use the AWT PrinterJob class, until the JavaFX printing
+        // support is improved.
+        SwingUtilities.invokeLater(() -> {
+            PrinterJob job = PrinterJob.getPrinterJob();
+            PageFormat pf = job.defaultPage();
+            PageFormat pf2 = job.pageDialog(pf);
+            if (pf2 == pf)
+                return;
+            ChartPanel p = new ChartPanel(chartNode.getChart());
+            job.setPrintable(p, pf2);
+            if (!job.printDialog())
+                return;
+            try {
+                job.print();
+            } catch (PrinterException e) {
+                e.printStackTrace();
+                MZmineGUI.displayMessage("Error printing: " + e.getMessage());
+            }
+        });
     }
 
     public void handleNormalizeIntensityScale(Event event) {
