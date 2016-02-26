@@ -37,7 +37,6 @@ import java.util.Optional;
 import javax.annotation.Nonnull;
 import javax.swing.SwingUtilities;
 
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
@@ -45,7 +44,6 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.labels.XYItemLabelGenerator;
 import org.jfree.chart.plot.DatasetRenderingOrder;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.AbstractXYItemRenderer;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
@@ -122,6 +120,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -774,8 +773,8 @@ public class MsSpectrumPlotWindowController {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Export to mzML");
-        fileChooser.setSelectedExtensionFilter(
-                new FileChooser.ExtensionFilter("mzML", "mzML"));
+        fileChooser.getExtensionFilters()
+                .add(new ExtensionFilter("mzML", "*.mzML"));
 
         // Remember last directory
         if (lastSaveDirectory != null && lastSaveDirectory.isDirectory())
@@ -788,12 +787,6 @@ public class MsSpectrumPlotWindowController {
         // If nothing was chosen, quit
         if (file == null)
             return;
-
-        // If no file extension, add it
-        if (!file.getName().contains(".")) {
-            String newName = file.getPath() + ".mzML";
-            file = new File(newName);
-        }
 
         // Save the last open directory
         lastSaveDirectory = file.getParentFile();
@@ -844,8 +837,8 @@ public class MsSpectrumPlotWindowController {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Export to MGF");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter(
-                "Mascot Generic Format", "mgf"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
+                "Mascot Generic Format", "*.mgf"));
 
         // Remember last directory
         if (lastSaveDirectory != null && lastSaveDirectory.isDirectory())
@@ -858,12 +851,6 @@ public class MsSpectrumPlotWindowController {
         // If nothing was chosen, quit
         if (file == null)
             return;
-
-        // If no file extension, add it
-        if (!file.getName().contains(".")) {
-            String newName = file.getPath() + ".mgf";
-            file = new File(newName);
-        }
 
         // Save the last open directory
         lastSaveDirectory = file.getParentFile();
@@ -888,8 +875,8 @@ public class MsSpectrumPlotWindowController {
     public void handleExportMSP(Event event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Export to MSP");
-        fileChooser.setSelectedExtensionFilter(
-                new FileChooser.ExtensionFilter("NIST MSP format", "msp"));
+        fileChooser.getExtensionFilters()
+                .add(new ExtensionFilter("NIST MSP format", "*.msp"));
 
         // Remember last directory
         if (lastSaveDirectory != null && lastSaveDirectory.isDirectory())
@@ -902,12 +889,6 @@ public class MsSpectrumPlotWindowController {
         // If nothing was chosen, quit
         if (file == null)
             return;
-
-        // If no file extension, add it
-        if (!file.getName().contains(".")) {
-            String newName = file.getPath() + ".msp";
-            file = new File(newName);
-        }
 
         // Save the last open directory
         lastSaveDirectory = file.getParentFile();
@@ -932,8 +913,8 @@ public class MsSpectrumPlotWindowController {
     public void handleExportTXT(Event event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Export to TXT");
-        fileChooser.setSelectedExtensionFilter(
-                new FileChooser.ExtensionFilter("TXT", "txt"));
+        fileChooser.getExtensionFilters()
+                .add(new ExtensionFilter("TXT", "*.txt"));
 
         // Remember last directory
         if (lastSaveDirectory != null && lastSaveDirectory.isDirectory())
@@ -946,12 +927,6 @@ public class MsSpectrumPlotWindowController {
         // If nothing was chosen, quit
         if (file == null)
             return;
-
-        // If no file extension, add it
-        if (!file.getName().contains(".")) {
-            String newName = file.getPath() + ".txt";
-            file = new File(newName);
-        }
 
         // Save the last open directory
         lastSaveDirectory = file.getParentFile();

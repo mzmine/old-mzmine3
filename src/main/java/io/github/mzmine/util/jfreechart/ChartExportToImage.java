@@ -105,13 +105,6 @@ public class ChartExportToImage {
         if (file == null)
             return;
 
-        // If no file extension, add it
-        if (!file.getName().contains(".")) {
-            String newName = file.getPath() + "."
-                    + fileType.toString().toLowerCase();
-            file = new File(newName);
-        }
-
         // Save the last open directory
         lastSaveDirectory = file.getParentFile();
 
