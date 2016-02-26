@@ -107,6 +107,9 @@ public class MsSpectrumDataSet extends AbstractXYDataset
             // property change
             setNotify(false);
 
+            // Remember if the current intensity scale was modified
+            boolean modifiedIntensityScale = (getIntensityScale() != this.topIndensity);
+
             this.spectrum = spectrum;
             this.mzValues = spectrum.getMzValues();
             this.intensityValues = spectrum.getIntensityValues();
@@ -114,7 +117,11 @@ public class MsSpectrumDataSet extends AbstractXYDataset
             this.topIndensity = MsSpectrumUtil.getMaxIntensity(intensityValues,
                     numOfDataPoints);
 
-            setIntensityScale((double) topIndensity);
+            // If the intensity scale was not modified by the user, set the new
+            // scale to max intensity
+            if (!modifiedIntensityScale)
+                setIntensityScale((double) topIndensity);
+
             setName(datasetName);
             renderingType.get();
             setRenderingType(spectrum.getSpectrumType());
