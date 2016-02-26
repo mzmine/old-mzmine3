@@ -19,6 +19,7 @@
 
 package io.github.mzmine.modules.plots.chromatogram;
 
+import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,11 +34,15 @@ import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.project.MZmineProject;
 import javafx.concurrent.Task;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 
 /**
  * Chromatogram plot
  */
 public class ChromatogramPlotModule implements MZmineRunnableModule {
+
+    private static final String PLOT_FXML = "ChromatogramPlotWindow.fxml";
 
     private static final @Nonnull String MODULE_NAME = "TIC/XIC visualizer";
     private static final @Nonnull String MODULE_DESCRIPTION = "TIC/XIC visualizer."; // TODO
@@ -66,9 +71,23 @@ public class ChromatogramPlotModule implements MZmineRunnableModule {
         final Range<Double> mzRange = parameters
                 .getParameter(ChromatogramPlotParameters.mzRange).getValue();
 
-        ChromatogramPlotWindow newWindow = new ChromatogramPlotWindow();
-        MZmineGUI.addWindow(newWindow, "Chromatogram", false);
+        try {
+            // Load the main window
+            URL mainFXML = this.getClass().getResource(PLOT_FXML);
+            FXMLLoader loader = new FXMLLoader(mainFXML);
 
+            Parent node = loader.load();
+            MZmineGUI.addWindow(node, "Chromatogram", false);
+            ChromatogramPlotWindowController controller = loader.getController();
+
+            for (RawDataFile dataFile : dataFiles) {
+                // controller.addChromatogram(dataFile, scanSelection);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
     }
 
     @Override

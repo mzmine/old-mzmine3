@@ -24,6 +24,9 @@ import java.awt.Font;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.print.PageFormat;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -32,9 +35,15 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
+import javax.swing.SwingUtilities;
 
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.labels.XYItemLabelGenerator;
+import org.jfree.chart.plot.DatasetRenderingOrder;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.AbstractXYItemRenderer;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
@@ -43,7 +52,9 @@ import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
+import org.jfree.data.RangeType;
 import org.jfree.ui.RectangleEdge;
+import org.jfree.ui.RectangleInsets;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
@@ -96,7 +107,6 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.print.PrinterJob;
 import javafx.scene.Cursor;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Menu;
@@ -110,6 +120,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -120,16 +131,15 @@ import javafx.stage.Window;
 public class MsSpectrumPlotWindowController {
 
     // Colors
-    private static final Color gridColor = Color.rgb(220, 220, 220, 0.3);
+    private static final Color gridColor = Color.rgb(220, 220, 220, 0.5);
     private static final Color labelsColor = Color.BLACK;
+    private static final Color backgroundColor = Color.WHITE;
     private static final Color[] plotColors = { Color.rgb(0, 0, 192), // blue
             Color.rgb(192, 0, 0), // red
             Color.rgb(0, 192, 0), // green
             Color.MAGENTA, Color.CYAN, Color.ORANGE };
 
-    // Font
-    private static final Font legendFont = new Font("SansSerif", Font.PLAIN,
-            11);
+    private static final Font titleFont = new Font("SansSerif", Font.BOLD, 12);
 
     private static final String LAYERS_DIALOG_FXML = "MsSpectrumLayersDialog.fxml";
 
@@ -146,6 +156,8 @@ public class MsSpectrumPlotWindowController {
 
     private File lastSaveDirectory;
 
+    private TextTitle chartTitle, chartSubTitle;
+
     @FXML
     private BorderPane chartPane;
 
@@ -160,18 +172,55 @@ public class MsSpectrumPlotWindowController {
 
     public void initialize() {
 
-        final XYPlot plot = chartNode.getChart().getXYPlot();
+        final JFreeChart chart = chartNode.getChart();
+        // Waiting for JFreeChart 1.0.20 to do this properly
+        // chartNode.setChart(chart);
+        final XYPlot plot = chart.getXYPlot();
 
         // Do not set colors and strokes dynamically. They are instead provided
         // by the dataset and configured in configureRenderer()
         plot.setDrawingSupplier(null);
-
         plot.setDomainGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
         plot.setRangeGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
+        plot.setBackgroundPaint(JavaFXUtil.convertColorToAWT(backgroundColor));
+        plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
+        plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
+        plot.setDomainGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
+        plot.setRangeGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
+        plot.setDomainCrosshairVisible(false);
+        plot.setRangeCrosshairVisible(false);
 
-        TextTitle chartTitle = chartNode.getChart().getTitle();
+        // chart properties
+        chart.setBackgroundPaint(JavaFXUtil.convertColorToAWT(backgroundColor));
+
+        // legend properties
+        LegendTitle legend = chart.getLegend();
+        // legend.setItemFont(legendFont);
+        legend.setFrame(BlockBorder.NONE);
+
+        // set the X axis (retention time) properties
+        NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
+        xAxis.setUpperMargin(0.03);
+        xAxis.setLowerMargin(0.03);
+        xAxis.setRangeType(RangeType.POSITIVE);
+        xAxis.setTickLabelInsets(new RectangleInsets(0, 0, 20, 20));
+
+        // set the Y axis (intensity) properties
+        NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
+        yAxis.setRangeType(RangeType.POSITIVE);
+        yAxis.setAutoRangeIncludesZero(true);
+
+        // set the fixed number formats, because otherwise JFreeChart sometimes
+        // shows exponent, sometimes it doesn't
+        DecimalFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
+        xAxis.setNumberFormatOverride(mzFormat);
+        DecimalFormat intensityFormat = MZmineCore.getConfiguration()
+                .getIntensityFormat();
+        yAxis.setNumberFormatOverride(intensityFormat);
+
+        chartTitle = chartNode.getChart().getTitle();
         chartTitle.setMargin(5, 0, 0, 0);
-        chartTitle.setFont(new Font("SansSerif", Font.BOLD, 13));
+        chartTitle.setFont(titleFont);
         chartTitle.setText("MS spectrum");
 
         chartNode.setCursor(Cursor.CROSSHAIR);
@@ -197,7 +246,6 @@ public class MsSpectrumPlotWindowController {
         });
 
         legendVisible.addListener((prop, oldVal, newVal) -> {
-            final LegendTitle legend = chartNode.getChart().getLegend();
             legend.setVisible(newVal);
         });
 
@@ -608,19 +656,28 @@ public class MsSpectrumPlotWindowController {
     }
 
     public void handlePrint(Event event) {
-        PrinterJob job = PrinterJob.createPrinterJob();
-        if (job == null)
-            return;
-        boolean confirm = job.showPrintDialog(chartNode.getScene().getWindow());
-        if (!confirm) {
-            job.cancelJob();
-            return;
-        }
-        boolean success = job.printPage(chartNode);
-        if (success) {
-            job.endJob();
-        }
 
+        // As of java 1.8.0_74, the JavaFX printing support seems to do poor
+        // job. It creates pixelated, low-resolution print outs. For that
+        // reason, we use the AWT PrinterJob class, until the JavaFX printing
+        // support is improved.
+        SwingUtilities.invokeLater(() -> {
+            PrinterJob job = PrinterJob.getPrinterJob();
+            PageFormat pf = job.defaultPage();
+            PageFormat pf2 = job.pageDialog(pf);
+            if (pf2 == pf)
+                return;
+            ChartPanel p = new ChartPanel(chartNode.getChart());
+            job.setPrintable(p, pf2);
+            if (!job.printDialog())
+                return;
+            try {
+                job.print();
+            } catch (PrinterException e) {
+                e.printStackTrace();
+                MZmineGUI.displayMessage("Error printing: " + e.getMessage());
+            }
+        });
     }
 
     public void handleNormalizeIntensityScale(Event event) {
@@ -720,8 +777,8 @@ public class MsSpectrumPlotWindowController {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Export to mzML");
-        fileChooser.setSelectedExtensionFilter(
-                new FileChooser.ExtensionFilter("mzML", "mzML"));
+        fileChooser.getExtensionFilters()
+                .add(new ExtensionFilter("mzML", "*.mzML"));
 
         // Remember last directory
         if (lastSaveDirectory != null && lastSaveDirectory.isDirectory())
@@ -734,12 +791,6 @@ public class MsSpectrumPlotWindowController {
         // If nothing was chosen, quit
         if (file == null)
             return;
-
-        // If no file extension, add it
-        if (!file.getName().contains(".")) {
-            String newName = file.getPath() + ".mzML";
-            file = new File(newName);
-        }
 
         // Save the last open directory
         lastSaveDirectory = file.getParentFile();
@@ -790,8 +841,8 @@ public class MsSpectrumPlotWindowController {
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Export to MGF");
-        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter(
-                "Mascot Generic Format", "mgf"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(
+                "Mascot Generic Format", "*.mgf"));
 
         // Remember last directory
         if (lastSaveDirectory != null && lastSaveDirectory.isDirectory())
@@ -804,12 +855,6 @@ public class MsSpectrumPlotWindowController {
         // If nothing was chosen, quit
         if (file == null)
             return;
-
-        // If no file extension, add it
-        if (!file.getName().contains(".")) {
-            String newName = file.getPath() + ".mgf";
-            file = new File(newName);
-        }
 
         // Save the last open directory
         lastSaveDirectory = file.getParentFile();
@@ -834,8 +879,8 @@ public class MsSpectrumPlotWindowController {
     public void handleExportMSP(Event event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Export to MSP");
-        fileChooser.setSelectedExtensionFilter(
-                new FileChooser.ExtensionFilter("NIST MSP format", "msp"));
+        fileChooser.getExtensionFilters()
+                .add(new ExtensionFilter("NIST MSP format", "*.msp"));
 
         // Remember last directory
         if (lastSaveDirectory != null && lastSaveDirectory.isDirectory())
@@ -848,12 +893,6 @@ public class MsSpectrumPlotWindowController {
         // If nothing was chosen, quit
         if (file == null)
             return;
-
-        // If no file extension, add it
-        if (!file.getName().contains(".")) {
-            String newName = file.getPath() + ".msp";
-            file = new File(newName);
-        }
 
         // Save the last open directory
         lastSaveDirectory = file.getParentFile();
@@ -878,8 +917,8 @@ public class MsSpectrumPlotWindowController {
     public void handleExportTXT(Event event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Export to TXT");
-        fileChooser.setSelectedExtensionFilter(
-                new FileChooser.ExtensionFilter("TXT", "txt"));
+        fileChooser.getExtensionFilters()
+                .add(new ExtensionFilter("TXT", "*.txt"));
 
         // Remember last directory
         if (lastSaveDirectory != null && lastSaveDirectory.isDirectory())
@@ -892,12 +931,6 @@ public class MsSpectrumPlotWindowController {
         // If nothing was chosen, quit
         if (file == null)
             return;
-
-        // If no file extension, add it
-        if (!file.getName().contains(".")) {
-            String newName = file.getPath() + ".txt";
-            file = new File(newName);
-        }
 
         // Save the last open directory
         lastSaveDirectory = file.getParentFile();

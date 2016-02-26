@@ -19,40 +19,15 @@
 
 package io.github.mzmine.util.jfreechart;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.text.DecimalFormat;
-
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.fx.ChartViewer;
-import org.jfree.chart.plot.DatasetRenderingOrder;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.title.LegendTitle;
-import org.jfree.ui.RectangleInsets;
-
-import io.github.mzmine.main.MZmineCore;
 
 /**
- * Chart using JfreeChart library
+ * This adds a no-parameter constructor to ChartViewer, so it can be constructed
+ * from FXML. Should be unnecessary once JFreeChart 1.0.20 is released.
  */
 public class ChartNodeJFreeChart extends ChartViewer {
-
-    // Colors
-    private static final Color gridColor = Color.lightGray;
-    private static final Color labelsColor = Color.darkGray;
-    private static final Color backgroundColor = Color.white;
-
-    // Font
-    private static final Font legendFont = new Font("SansSerif", Font.PLAIN,
-            12);
-
-    private final JFreeChart chart;
-    private final XYPlot plot;
-    private int numberOfDataSets = 0;
 
     public ChartNodeJFreeChart() {
 
@@ -65,44 +40,6 @@ public class ChartNodeJFreeChart extends ChartViewer {
                 true, // generate tooltips?
                 false // generate URLs?
         ), false);
-
-        this.chart = getChart();
-
-        // chart properties
-        chart.setBackgroundPaint(backgroundColor);
-
-        // legend properties
-        LegendTitle legend = chart.getLegend();
-        // legend.setItemFont(legendFont);
-        legend.setFrame(BlockBorder.NONE);
-
-        // plot properties
-        plot = chart.getXYPlot();
-        plot.setBackgroundPaint(backgroundColor);
-        plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
-        plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
-        plot.setDomainGridlinePaint(gridColor);
-        plot.setRangeGridlinePaint(gridColor);
-        plot.setDomainCrosshairVisible(false);
-        plot.setRangeCrosshairVisible(false);
-
-        // set the X axis (retention time) properties
-        NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
-        xAxis.setUpperMargin(0.03);
-        xAxis.setLowerMargin(0.03);
-        xAxis.setTickLabelInsets(new RectangleInsets(0, 0, 20, 20));
-
-        // set the Y axis (intensity) properties
-        NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
-
-        // set the fixed number formats, because otherwise JFreeChart sometimes
-        // shows exponent, sometimes it doesn't
-        DecimalFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
-        xAxis.setNumberFormatOverride(mzFormat);
-        DecimalFormat intensityFormat = MZmineCore.getConfiguration()
-                .getIntensityFormat();
-        yAxis.setNumberFormatOverride(intensityFormat);
-
 
     }
 

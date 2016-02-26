@@ -91,34 +91,30 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
                 break;
             }
         }
+        if (!weHaveData) {
+            MZmineGUI.displayMessage("Scan not found");
+            return;
+        }
 
-        if (weHaveData) {
-            try {
-                // Load the main window
-                URL mainFXML = this.getClass().getResource(PLOT_FXML);
-                FXMLLoader loader = new FXMLLoader(mainFXML);
+        try {
+            // Load the main window
+            URL mainFXML = this.getClass().getResource(PLOT_FXML);
+            FXMLLoader loader = new FXMLLoader(mainFXML);
 
-                Parent node = loader.load();
-                MZmineGUI.addWindow(node, "MS spectrum", false);
-                MsSpectrumPlotWindowController controller = loader
-                        .getController();
+            Parent node = loader.load();
+            MZmineGUI.addWindow(node, "MS spectrum", false);
+            MsSpectrumPlotWindowController controller = loader.getController();
 
-                for (RawDataFile dataFile : dataFiles) {
-                    for (MsScan scan : scanSelection
-                            .getMatchingScans(dataFile)) {
-                        String title = MsScanUtils
-                                .createSingleLineMsScanDescription(scan);
-                        controller.addSpectrum(scan, title);
-                    }
+            for (RawDataFile dataFile : dataFiles) {
+                for (MsScan scan : scanSelection.getMatchingScans(dataFile)) {
+                    String title = MsScanUtils
+                            .createSingleLineMsScanDescription(scan);
+                    controller.addSpectrum(scan, title);
                 }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
             }
 
-        } else {
-            MZmineGUI.displayMessage("Scan not found");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
