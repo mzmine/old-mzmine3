@@ -41,6 +41,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 
 public class ChartExportToImage {
 
@@ -57,41 +58,38 @@ public class ChartExportToImage {
 
         case JPG:
             fileChooser.setTitle("Export to JPG");
-            fileChooser.setSelectedExtensionFilter(
-                    new FileChooser.ExtensionFilter("JPEG", "jpg"));
+            fileChooser.getExtensionFilters()
+                    .add(new ExtensionFilter("JPEG", "*.jpg"));
             break;
 
         case PNG:
             fileChooser.setTitle("Export to PNG");
-            fileChooser
-                    .setSelectedExtensionFilter(new FileChooser.ExtensionFilter(
-                            "Portable Network Graphics (PNG)", "png"));
+            fileChooser.getExtensionFilters().add(new ExtensionFilter(
+                    "Portable Network Graphics (PNG)", "*.png"));
             break;
 
         case SVG:
             fileChooser.setTitle("Export to SVG");
-            fileChooser
-                    .setSelectedExtensionFilter(new FileChooser.ExtensionFilter(
-                            "Scalable Vector Graphics (SVG)", "svg"));
+            fileChooser.getExtensionFilters().add(new ExtensionFilter(
+                    "Scalable Vector Graphics (SVG)", "*.svg"));
             break;
 
         case PDF:
             fileChooser.setTitle("Export to PDF");
-            fileChooser
-                    .setSelectedExtensionFilter(new FileChooser.ExtensionFilter(
-                            "Portable Document Format (PDF)", "pdf"));
+            fileChooser.getExtensionFilters().add(new ExtensionFilter(
+                    "Portable Document Format (PDF)", "*.pdf"));
             break;
 
         case EMF:
             fileChooser.setTitle("Export to EMF");
-            fileChooser.setSelectedExtensionFilter(
-                    new FileChooser.ExtensionFilter("EMF image", "emf"));
+            fileChooser.getExtensionFilters()
+                    .add(new ExtensionFilter("EMF image", "*.emf"));
             break;
 
         case EPS:
             fileChooser.setTitle("Export to EPS");
-            fileChooser.setSelectedExtensionFilter(
-                    new FileChooser.ExtensionFilter("EPS Image", "eps"));
+            fileChooser.getExtensionFilters()
+                    .add(new ExtensionFilter("EPS Image", "*.eps"));
             break;
         }
 
