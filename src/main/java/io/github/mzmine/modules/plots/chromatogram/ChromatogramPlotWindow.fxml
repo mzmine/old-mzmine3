@@ -30,7 +30,7 @@
 						</Menu>
 						<MenuItem text="Setup layers" onAction="#handleSetupLayers">
 							<graphic>
-								<Glyph fontFamily="FontAwesome" icon="BAR_CHART" />
+								<Glyph fontFamily="FontAwesome" icon="REORDER" />
 							</graphic>
 						</MenuItem>
 						<Menu text="Add...">
@@ -112,7 +112,7 @@
 				</Button>
 				<Button onAction="#handleSetupLayers">
 					<graphic>
-						<Glyph fontFamily="FontAwesome" icon="BAR_CHART" />
+						<Glyph fontFamily="FontAwesome" icon="REORDER" />
 					</graphic>
 					<tooltip>
 						<Tooltip text="Setup layers" />
