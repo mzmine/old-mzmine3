@@ -24,9 +24,6 @@ import java.awt.Font;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.print.PageFormat;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.io.File;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -35,9 +32,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
-import javax.swing.SwingUtilities;
 
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
@@ -92,10 +87,10 @@ import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.util.JavaFXUtil;
 import io.github.mzmine.util.MsScanUtils;
-import io.github.mzmine.util.jfreechart.JFreeChartUtils;
-import io.github.mzmine.util.jfreechart.JFreeChartUtils.ImgFileType;
 import io.github.mzmine.util.jfreechart.ChartNodeJFreeChart;
 import io.github.mzmine.util.jfreechart.IntelligentItemLabelGenerator;
+import io.github.mzmine.util.jfreechart.JFreeChartUtils;
+import io.github.mzmine.util.jfreechart.JFreeChartUtils.ImgFileType;
 import io.github.mzmine.util.jfreechart.ManualZoomDialog;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -199,7 +194,7 @@ public class MsSpectrumPlotWindowController {
         // legend.setItemFont(legendFont);
         legend.setFrame(BlockBorder.NONE);
 
-        // set the X axis (retention time) properties
+        // set the X axis (m/z) properties
         NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
         xAxis.setUpperMargin(0.03);
         xAxis.setLowerMargin(0.03);
