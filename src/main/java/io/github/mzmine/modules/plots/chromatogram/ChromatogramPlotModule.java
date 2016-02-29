@@ -22,12 +22,19 @@ package io.github.mzmine.modules.plots.chromatogram;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.Range;
 
+import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.chromatograms.ChromatogramType;
+import io.github.msdk.datamodel.datastore.DataPointStore;
+import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
+import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.rawdata.xic.MSDKXICMethod;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
@@ -46,6 +53,9 @@ public class ChromatogramPlotModule implements MZmineRunnableModule {
 
     private static final @Nonnull String MODULE_NAME = "TIC/XIC visualizer";
     private static final @Nonnull String MODULE_DESCRIPTION = "TIC/XIC visualizer."; // TODO
+
+    private static final ScheduledThreadPoolExecutor threadPool = new ScheduledThreadPoolExecutor(
+            4);
 
     @Override
     public @Nonnull String getName() {
@@ -68,6 +78,8 @@ public class ChromatogramPlotModule implements MZmineRunnableModule {
         final ScanSelection scanSelection = parameters
                 .getParameter(ChromatogramPlotParameters.scanSelection)
                 .getValue();
+        final ChromatogramPlotType plotType = parameters
+                .getParameter(ChromatogramPlotParameters.plotType).getValue();
         final Range<Double> mzRange = parameters
                 .getParameter(ChromatogramPlotParameters.mzRange).getValue();
 
@@ -78,16 +90,37 @@ public class ChromatogramPlotModule implements MZmineRunnableModule {
 
             Parent node = loader.load();
             MZmineGUI.addWindow(node, "Chromatogram", false);
-            ChromatogramPlotWindowController controller = loader.getController();
+            ChromatogramPlotWindowController controller = loader
+                    .getController();
 
             for (RawDataFile dataFile : dataFiles) {
-                // controller.addChromatogram(dataFile, scanSelection);
+
+                // Load the actual data in a separate thread to avoid blocking
+                // the GUI
+                threadPool.execute(() -> {
+                    try {
+                        DataPointStore store = DataPointStoreFactory
+                                .getMemoryDataStore();
+                        List<MsScan> scans = scanSelection
+                                .getMatchingScans(dataFile);
+                        ChromatogramType chromatogramType = ChromatogramType.TIC;
+                        if (plotType == ChromatogramPlotType.BASEPEAK)
+                            chromatogramType = ChromatogramType.BPC;
+                        MSDKXICMethod xicExtractor = new MSDKXICMethod(dataFile,
+                                scans, mzRange, chromatogramType, store);
+                        Chromatogram chromatogram = xicExtractor.execute();
+                        controller.addChromatogram(chromatogram);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                });
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
 
     @Override

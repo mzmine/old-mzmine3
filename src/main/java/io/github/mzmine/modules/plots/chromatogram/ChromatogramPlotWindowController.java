@@ -23,12 +23,10 @@ import java.awt.Font;
 import java.io.File;
 import java.text.DecimalFormat;
 
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.block.BlockBorder;
 import org.jfree.chart.plot.DatasetRenderingOrder;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.title.LegendTitle;
@@ -40,10 +38,10 @@ import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.util.JavaFXUtil;
-import io.github.mzmine.util.jfreechart.JFreeChartUtils;
-import io.github.mzmine.util.jfreechart.ManualZoomDialog;
-import io.github.mzmine.util.jfreechart.JFreeChartUtils.ImgFileType;
 import io.github.mzmine.util.jfreechart.ChartNodeJFreeChart;
+import io.github.mzmine.util.jfreechart.JFreeChartUtils;
+import io.github.mzmine.util.jfreechart.JFreeChartUtils.ImgFileType;
+import io.github.mzmine.util.jfreechart.ManualZoomDialog;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -205,7 +203,6 @@ public class ChromatogramPlotWindowController {
             newSeries.getData().add(newData);
         }
 
-        // lineChart.getData().addAll(newSeries);
 
     }
 
