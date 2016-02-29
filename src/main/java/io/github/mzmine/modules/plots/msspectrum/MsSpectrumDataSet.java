@@ -312,9 +312,9 @@ public class MsSpectrumDataSet extends AbstractXYDataset
             sb.append(mzFormat.format(displayMz));
             sb.append(" (shift ");
             sb.append(mzFormat.format(mzShift.doubleValue()));
-            sb.append(" m/z\n");
+            sb.append(" m/z)\n");
         }
-        sb.append("Actual m/z: ");
+        sb.append("Data point m/z: ");
         sb.append(mzFormat.format(actualMz));
         sb.append("\n");
 
@@ -324,7 +324,7 @@ public class MsSpectrumDataSet extends AbstractXYDataset
             sb.append("\n");
         }
 
-        sb.append("Actual intensity: ");
+        sb.append("Data point intensity: ");
         sb.append(intensityFormat.format(actualIntensity));
         return sb.toString();
 
