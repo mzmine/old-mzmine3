@@ -706,7 +706,7 @@ public class MsSpectrumPlotWindowController {
         dialog.show();
     }
 
-    public void handleExportImageToClipboard(Event event) {
+    public void handleCopyImage(Event event) {
         ChartExportToImage.exportToClipboard(chartNode);
     }
 
@@ -734,7 +734,7 @@ public class MsSpectrumPlotWindowController {
         ChartExportToImage.showSaveDialog(chartNode, ImgFileType.EPS);
     }
 
-    public void handleExportSpectraToClipboard(Event event) {
+    public void handleCopySpectra(Event event) {
         StringBuilder sb = new StringBuilder();
         for (MsSpectrumDataSet dataset : datasets) {
             MsSpectrum spectrum = dataset.getSpectrum();
@@ -757,7 +757,7 @@ public class MsSpectrumPlotWindowController {
         clipboard.setContent(content);
     }
 
-    public void handleExportSplashToClipboard(Event event) {
+    public void handleCopySplash(Event event) {
         StringBuilder sb = new StringBuilder();
         for (MsSpectrumDataSet dataset : datasets) {
             MsSpectrum spectrum = dataset.getSpectrum();

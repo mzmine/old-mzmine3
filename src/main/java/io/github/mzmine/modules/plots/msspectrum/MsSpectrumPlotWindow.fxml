@@ -67,9 +67,9 @@
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="COPY" />
 							</graphic>
-							<MenuItem text="Image" onAction="#handleExportImageToClipboard" />
-							<MenuItem text="Spectra" onAction="#handleExportSpectraToClipboard" />
-							<MenuItem text="SPLASH IDs" onAction="#handleExportSplashToClipboard" />
+							<MenuItem text="Image" onAction="#handleCopyImage" />
+							<MenuItem text="Spectra" onAction="#handleCopySpectra" />
+							<MenuItem text="SPLASH IDs" onAction="#handleCopySplash" />
 						</Menu>
 						<Menu text="Export image to...">
 							<graphic>
