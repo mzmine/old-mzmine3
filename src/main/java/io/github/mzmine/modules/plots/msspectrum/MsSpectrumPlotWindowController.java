@@ -83,6 +83,7 @@ import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotModule;
 import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotParameters;
 import io.github.mzmine.modules.plots.isotopepattern.IsotopePatternPlotModule;
 import io.github.mzmine.modules.plots.isotopepattern.IsotopePatternPlotParameters;
+import io.github.mzmine.modules.plots.msspectrum.datasets.MsSpectrumDataSet;
 import io.github.mzmine.modules.plots.spectrumparser.SpectrumParserPlotModule;
 import io.github.mzmine.modules.plots.spectrumparser.SpectrumParserPlotParameters;
 import io.github.mzmine.parameters.ParameterSet;

@@ -17,7 +17,7 @@
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.plots.msspectrum;
+package io.github.mzmine.modules.plots.msspectrum.datasets;
 
 import java.text.NumberFormat;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
