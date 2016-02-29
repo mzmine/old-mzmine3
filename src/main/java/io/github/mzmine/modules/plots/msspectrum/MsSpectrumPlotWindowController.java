@@ -169,8 +169,6 @@ public class MsSpectrumPlotWindowController {
     public void initialize() {
 
         final JFreeChart chart = chartNode.getChart();
-        // Waiting for JFreeChart 1.0.20 to do this properly
-        // chartNode.setChart(chart);
         final XYPlot plot = chart.getXYPlot();
 
         // Do not set colors and strokes dynamically. They are instead provided
@@ -196,6 +194,7 @@ public class MsSpectrumPlotWindowController {
 
         // set the X axis (m/z) properties
         NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
+        xAxis.setLabel("m/z");
         xAxis.setUpperMargin(0.03);
         xAxis.setLowerMargin(0.03);
         xAxis.setRangeType(RangeType.POSITIVE);
@@ -203,6 +202,7 @@ public class MsSpectrumPlotWindowController {
 
         // set the Y axis (intensity) properties
         NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
+        yAxis.setLabel("Intensity");
         yAxis.setRangeType(RangeType.POSITIVE);
         yAxis.setAutoRangeIncludesZero(true);
 
@@ -217,7 +217,6 @@ public class MsSpectrumPlotWindowController {
         chartTitle = chartNode.getChart().getTitle();
         chartTitle.setMargin(5, 0, 0, 0);
         chartTitle.setFont(titleFont);
-        chartTitle.setText("MS spectrum");
 
         chartNode.setCursor(Cursor.CROSSHAIR);
 
