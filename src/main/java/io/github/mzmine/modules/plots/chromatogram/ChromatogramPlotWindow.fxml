@@ -19,8 +19,8 @@
 			<contextMenu>
 				<ContextMenu>
 					<items>
-						<MenuItem fx:id="showXICMenuItem" text="Show spectrum..."
-							onAction="#handleShowXIC" />
+						<MenuItem fx:id="showSpectrumMenuItem" text="Show spectrum..."
+							onAction="#handleShowSpectrum" />
 						<Menu text="Intensity scale...">
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="ARROWS_V" />
@@ -30,14 +30,14 @@
 						</Menu>
 						<MenuItem text="Setup layers" onAction="#handleSetupLayers">
 							<graphic>
-								<Glyph fontFamily="FontAwesome" icon="REORDER" />
+								<Glyph fontFamily="FontAwesome" icon="TABLE" />
 							</graphic>
 						</MenuItem>
 						<Menu text="Add...">
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
 							</graphic>
-							<MenuItem text="Chromatogram from file" onAction="#handleAddChromatogram" />
+							<MenuItem text="Chromatogram from file" onAction="#handleAddChromatogramFromFile" />
 							<MenuItem text="Chromatogram from text" onAction="#handleAddChromatogramFromText" />
 						</Menu>
 						<Menu text="Remove..." fx:id="removeDatasetMenu">
@@ -49,8 +49,8 @@
 							<graphic>
 								<Glyph fontFamily="FontAwesome" icon="COPY" />
 							</graphic>
-							<MenuItem text="Image" onAction="#handleExportImageToClipboard" />
-							<MenuItem text="Chromatogram" onAction="#handleExportChromatogramToClipboard" />
+							<MenuItem text="Image" onAction="#handleCopyImage" />
+							<MenuItem text="Chromatogram" onAction="#handleCopyChromatogram" />
 						</Menu>
 						<Menu text="Export image to...">
 							<graphic>
@@ -91,7 +91,7 @@
 	<bottom>
 		<ToolBar orientation="HORIZONTAL">
 			<items>
-
+				<Region HBox.hgrow="ALWAYS" />
 				<Button onAction="#handleZoomOut">
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="ARROWS_ALT" />
@@ -112,13 +112,13 @@
 				</Button>
 				<Button onAction="#handleSetupLayers">
 					<graphic>
-						<Glyph fontFamily="FontAwesome" icon="REORDER" />
+						<Glyph fontFamily="FontAwesome" icon="TABLE" />
 					</graphic>
 					<tooltip>
 						<Tooltip text="Setup layers" />
 					</tooltip>
 				</Button>
-				<Button onAction="#handleToggleLabels">
+				<ToggleButton selected="true" onAction="#handleToggleLabels">
 					<graphic>
 						<ImageView>
 							<Image url="icons/annotationsicon.png" />
@@ -127,27 +127,28 @@
 					<tooltip>
 						<Tooltip text="Toggle the visibility of peak labels" />
 					</tooltip>
-				</Button>
-				<Button onAction="#handleToggleLegend">
+				</ToggleButton>
+				<ToggleButton selected="true" onAction="#handleToggleLegend">
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="KEY" />
 					</graphic>
 					<tooltip>
 						<Tooltip text="Toggle the visibility of the legend" />
 					</tooltip>
-				</Button>
+				</ToggleButton>
 				<MenuButton>
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
 					</graphic>
 					<items>
-						<MenuItem text="Chromatogram from file" onAction="#handleAddChromatogram" />
+						<MenuItem text="Chromatogram from file" onAction="#handleAddChromatogramFromFile" />
 						<MenuItem text="Chromatogram from text" onAction="#handleAddChromatogramFromText" />
 					</items>
 					<tooltip>
 						<Tooltip text="Add chromatogram" />
 					</tooltip>
 				</MenuButton>
+				<Region HBox.hgrow="ALWAYS" />
 			</items>
 		</ToolBar>
 	</bottom>
