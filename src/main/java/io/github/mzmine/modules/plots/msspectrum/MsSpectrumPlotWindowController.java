@@ -92,8 +92,8 @@ import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.util.JavaFXUtil;
 import io.github.mzmine.util.MsScanUtils;
-import io.github.mzmine.util.jfreechart.ChartExportToImage;
-import io.github.mzmine.util.jfreechart.ChartExportToImage.ImgFileType;
+import io.github.mzmine.util.jfreechart.JFreeChartUtils;
+import io.github.mzmine.util.jfreechart.JFreeChartUtils.ImgFileType;
 import io.github.mzmine.util.jfreechart.ChartNodeJFreeChart;
 import io.github.mzmine.util.jfreechart.IntelligentItemLabelGenerator;
 import io.github.mzmine.util.jfreechart.ManualZoomDialog;
@@ -657,28 +657,7 @@ public class MsSpectrumPlotWindowController {
     }
 
     public void handlePrint(Event event) {
-
-        // As of java 1.8.0_74, the JavaFX printing support seems to do poor
-        // job. It creates pixelated, low-resolution print outs. For that
-        // reason, we use the AWT PrinterJob class, until the JavaFX printing
-        // support is improved.
-        SwingUtilities.invokeLater(() -> {
-            PrinterJob job = PrinterJob.getPrinterJob();
-            PageFormat pf = job.defaultPage();
-            PageFormat pf2 = job.pageDialog(pf);
-            if (pf2 == pf)
-                return;
-            ChartPanel p = new ChartPanel(chartNode.getChart());
-            job.setPrintable(p, pf2);
-            if (!job.printDialog())
-                return;
-            try {
-                job.print();
-            } catch (PrinterException e) {
-                e.printStackTrace();
-                MZmineGUI.displayMessage("Error printing: " + e.getMessage());
-            }
-        });
+        JFreeChartUtils.printChart(chartNode);
     }
 
     public void handleNormalizeIntensityScale(Event event) {
@@ -707,31 +686,31 @@ public class MsSpectrumPlotWindowController {
     }
 
     public void handleCopyImage(Event event) {
-        ChartExportToImage.exportToClipboard(chartNode);
+        JFreeChartUtils.exportToClipboard(chartNode);
     }
 
     public void handleExportJPG(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.JPG);
+        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.JPG);
     }
 
     public void handleExportPNG(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.PNG);
+        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.PNG);
     }
 
     public void handleExportPDF(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.PDF);
+        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.PDF);
     }
 
     public void handleExportSVG(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.SVG);
+        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.SVG);
     }
 
     public void handleExportEMF(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.EMF);
+        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.EMF);
     }
 
     public void handleExportEPS(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.EPS);
+        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.EPS);
     }
 
     public void handleCopySpectra(Event event) {
