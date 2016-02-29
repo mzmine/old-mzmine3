@@ -148,7 +148,7 @@
 						<Tooltip text="Setup layers" />
 					</tooltip>
 				</Button>
-				<Button onAction="#handleToggleLabels">
+				<ToggleButton selected="true" onAction="#handleToggleLabels">
 					<graphic>
 						<ImageView>
 							<Image url="icons/annotationsicon.png" />
@@ -157,15 +157,15 @@
 					<tooltip>
 						<Tooltip text="Toggle the visibility of peak labels" />
 					</tooltip>
-				</Button>
-				<Button onAction="#handleToggleLegend">
+				</ToggleButton>
+				<ToggleButton selected="true" onAction="#handleToggleLegend">
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="KEY" />
 					</graphic>
 					<tooltip>
 						<Tooltip text="Toggle the visibility of the legend" />
 					</tooltip>
-				</Button>
+				</ToggleButton>
 				<MenuButton>
 					<graphic>
 						<Glyph fontFamily="FontAwesome" icon="PLUS_SQUARE_ALT" />
