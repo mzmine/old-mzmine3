@@ -66,19 +66,19 @@ public class FeatureFilterModule implements MZmineProcessingModule {
             @Nonnull Collection<Task<?>> tasks) {
 
         // Boolean values
-        final boolean filterByDuration = parameters
+        final Boolean filterByDuration = parameters
                 .getParameter(FeatureFilterParameters.duration).getValue();
-        final boolean filterByArea = parameters
+        final Boolean filterByArea = parameters
                 .getParameter(FeatureFilterParameters.area).getValue();
-        final boolean filterByHeight = parameters
+        final Boolean filterByHeight = parameters
                 .getParameter(FeatureFilterParameters.height).getValue();
-        final boolean filterByDataPoints = parameters
+        final Boolean filterByDataPoints = parameters
                 .getParameter(FeatureFilterParameters.dataPoints).getValue();
-        final boolean filterByFWHM = parameters
+        final Boolean filterByFWHM = parameters
                 .getParameter(FeatureFilterParameters.fwhm).getValue();
-        final boolean filterByTailingFactor = parameters
+        final Boolean filterByTailingFactor = parameters
                 .getParameter(FeatureFilterParameters.tailingFactor).getValue();
-        final boolean filterByAsymmetryFactor = parameters
+        final Boolean filterByAsymmetryFactor = parameters
                 .getParameter(FeatureFilterParameters.asymmetryFactor)
                 .getValue();
 
@@ -108,7 +108,7 @@ public class FeatureFilterModule implements MZmineProcessingModule {
         // Other values
         final FeatureTablesSelection featureTables = parameters
                 .getParameter(FeatureFilterParameters.featureTables).getValue();
-        final boolean removeOldTable = parameters
+        final Boolean removeOldTable = parameters
                 .getParameter(FeatureFilterParameters.removeOldTable)
                 .getValue();
         final String nameSuffix = parameters

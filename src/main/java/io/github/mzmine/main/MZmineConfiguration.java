@@ -110,6 +110,11 @@ public final class MZmineConfiguration {
         return preferences.getParameter(MZminePreferences.rtFormat).getValue();
     }
 
+    public Boolean getSendStatistics() {
+        return preferences.getParameter(MZminePreferences.sendStatistics)
+                .getValue();
+    }
+
     public void loadConfiguration(File file) throws IOException {
 
         try {

@@ -26,6 +26,9 @@ import org.slf4j.LoggerFactory;
 
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.util.InetUtils;
+import javafx.application.Platform;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 /**
  * Check for a new version of MZmine.
@@ -81,12 +84,19 @@ public class NewVersionCheck implements Runnable {
         } else {
             final String msg = "An updated version is available: MZmine "
                     + newestVersion;
-            final String msg2 = "Please download the newest version from: http://mzmine.github.io";
+            final String msg2 = "Please download the newest version from: ";
+            final String url = "http://mzmine.github.io";
             logger.info(msg);
             if (checkType.equals(CheckType.MENU)) {
                 MZmineGUI.displayMessage(msg + "\n" + msg2);
             } else if (checkType.equals(CheckType.DESKTOP)) {
-                MZmineGUI.setStatusBarMessage(msg + "\n" + msg2);
+                MZmineGUI.setStatusBarMessage(msg + "\n" + msg2 + url);
+                Platform.runLater(() -> {
+                    Text t = new Text("Welcome to MZmine 3\n\n" + msg + "\n"
+                            + msg2 + url);
+                    t.setTextAlignment(TextAlignment.CENTER);
+                    MZmineGUI.addWindow(t, "", false);
+                });
             }
         }
 
