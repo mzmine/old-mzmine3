@@ -37,6 +37,8 @@ import io.github.mzmine.gui.mainwindow.FeatureTableTreeItem;
 import io.github.mzmine.gui.mainwindow.MainWindowController;
 import io.github.mzmine.gui.mainwindow.RawDataTreeItem;
 import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.main.NewVersionCheck;
+import io.github.mzmine.main.NewVersionCheck.CheckType;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineGUIProject;
@@ -106,6 +108,11 @@ public final class MZmineGUI extends Application {
 
         stage.show();
 
+        // Check for new version of MZmine
+        NewVersionCheck NVC = new NewVersionCheck(CheckType.DESKTOP);
+        Thread nvcThread = new Thread(NVC);
+        nvcThread.setPriority(Thread.MIN_PRIORITY);
+        nvcThread.start();
     }
 
     public static void requestQuit() {
