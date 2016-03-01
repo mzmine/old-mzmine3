@@ -32,8 +32,8 @@ public class ChartNodeJFreeChart extends ChartViewer {
     public ChartNodeJFreeChart() {
 
         super(ChartFactory.createXYLineChart("", // title
-                "m/z", // x-axis label
-                "Intensity", // y-axis label
+                "", // x-axis label
+                "", // y-axis label
                 null, // data set
                 PlotOrientation.VERTICAL, // orientation
                 true, // create legend?

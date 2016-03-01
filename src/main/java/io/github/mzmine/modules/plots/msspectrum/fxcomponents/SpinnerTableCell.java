@@ -20,7 +20,7 @@
 package io.github.mzmine.modules.plots.msspectrum.fxcomponents;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.mzmine.modules.plots.msspectrum.MsSpectrumDataSet;
+import io.github.mzmine.modules.plots.msspectrum.datasets.MsSpectrumDataSet;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;

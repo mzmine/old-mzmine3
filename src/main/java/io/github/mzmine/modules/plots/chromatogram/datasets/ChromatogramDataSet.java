@@ -17,25 +17,19 @@
  * St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.plots.msspectrum;
+package io.github.mzmine.modules.plots.chromatogram.datasets;
 
 import java.text.NumberFormat;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-import org.jfree.chart.labels.XYItemLabelGenerator;
-import org.jfree.chart.labels.XYToolTipGenerator;
 import org.jfree.data.xy.AbstractXYDataset;
-import org.jfree.data.xy.IntervalXYDataset;
 import org.jfree.data.xy.XYDataset;
 
-import com.google.common.collect.Range;
-
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.msdk.datamodel.rawdata.MsScan;
-import io.github.msdk.spectra.splash.SplashCalculationAlgorithm;
-import io.github.msdk.util.MsSpectrumUtil;
+import io.github.msdk.util.ChromatogramUtil;
 import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotDataSet;
 import io.github.mzmine.util.MsScanUtils;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -51,37 +45,35 @@ import javafx.beans.property.StringProperty;
 import javafx.scene.paint.Color;
 
 /**
- * MS spectrum data set. Implements IntervalXYDataset for centroid spectra
- * support (rendered by XYBarRenderer).
+ * Chromatogram data set, based on MSDK Chromatogram.
  */
-public class MsSpectrumDataSet extends AbstractXYDataset
-        implements XYItemLabelGenerator, XYToolTipGenerator, IntervalXYDataset {
+public class ChromatogramDataSet extends AbstractXYDataset
+        implements ChromatogramPlotDataSet {
 
     private static final ScheduledThreadPoolExecutor threadPool = new ScheduledThreadPoolExecutor(
             1);
 
-    private MsSpectrum spectrum;
+    private Chromatogram chromatogram;
     private double mzValues[];
     private float intensityValues[];
     private float topIndensity = 0f;
     private int numOfDataPoints = 0;
 
     private final StringProperty name = new SimpleStringProperty(this, "name",
-            "MS spectrum");
+            "MS chromatogram");
     private final DoubleProperty intensityScale = new SimpleDoubleProperty(this,
             "intensityScale", 0.0);
     private final DoubleProperty mzShift = new SimpleDoubleProperty(this,
             "mzShift", 0.0);
     private final IntegerProperty lineThickness = new SimpleIntegerProperty(
             this, "lineThickness", 1);
-    private final ObjectProperty<MsSpectrumType> renderingType = new SimpleObjectProperty<>(
-            this, "renderingType", MsSpectrumType.CENTROIDED);
     private final ObjectProperty<Color> color = new SimpleObjectProperty<>(this,
             "color", Color.BLUE);
     private final BooleanProperty showDataPoints = new SimpleBooleanProperty(
             this, "showDataPoints", false);
 
-    public MsSpectrumDataSet(MsSpectrum spectrum, String datasetName) {
+    public ChromatogramDataSet(Chromatogram chromatogram,
+            String datasetName) {
 
         // Listen for property changes
         mzShift.addListener(e -> {
@@ -94,11 +86,11 @@ public class MsSpectrumDataSet extends AbstractXYDataset
             fireDatasetChanged();
         });
 
-        setSpectrum(spectrum, datasetName);
+        setChromatogram(chromatogram, datasetName);
 
     }
 
-    public void setSpectrum(MsSpectrum spectrum, String datasetName) {
+    public void setChromatogram(Chromatogram chromatogram, String datasetName) {
 
         // Load the actual data in a separate thread to avoid blocking the GUI
         threadPool.execute(() -> {
@@ -110,11 +102,11 @@ public class MsSpectrumDataSet extends AbstractXYDataset
             // Remember if the current intensity scale was modified
             boolean modifiedIntensityScale = (getIntensityScale() != this.topIndensity);
 
-            this.spectrum = spectrum;
-            this.mzValues = spectrum.getMzValues();
-            this.intensityValues = spectrum.getIntensityValues();
-            this.numOfDataPoints = spectrum.getNumberOfDataPoints();
-            this.topIndensity = MsSpectrumUtil.getMaxIntensity(intensityValues,
+            this.chromatogram = chromatogram;
+            this.mzValues = chromatogram.getMzValues();
+            this.intensityValues = chromatogram.getIntensityValues();
+            this.numOfDataPoints = chromatogram.getNumberOfDataPoints();
+            this.topIndensity = ChromatogramUtil.getMaxHeight(intensityValues,
                     numOfDataPoints);
 
             // If the intensity scale was not modified by the user, set the new
@@ -123,8 +115,6 @@ public class MsSpectrumDataSet extends AbstractXYDataset
                 setIntensityScale((double) topIndensity);
 
             setName(datasetName);
-            renderingType.get();
-            setRenderingType(spectrum.getSpectrumType());
 
             // Finally, update the GUI
             Platform.runLater(() -> {
@@ -137,8 +127,8 @@ public class MsSpectrumDataSet extends AbstractXYDataset
 
     public String getDescription() {
         StringBuilder sb = new StringBuilder();
-        if (spectrum instanceof MsScan) {
-            MsScan scan = (MsScan) spectrum;
+        if (chromatogram instanceof MsScan) {
+            MsScan scan = (MsScan) chromatogram;
             String scanDesc = MsScanUtils.createFullMsScanDescription(scan);
             sb.append(scanDesc);
         }
@@ -147,32 +137,27 @@ public class MsSpectrumDataSet extends AbstractXYDataset
                 .getIntensityFormat();
         NumberFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
 
-        sb.append("Spectrum type: ");
-        sb.append(spectrum.getSpectrumType());
+        sb.append("Chromatogram type: ");
+        sb.append(chromatogram.getChromatogramType());
         sb.append("\n");
         sb.append("Number of data points: ");
         sb.append(numOfDataPoints);
         sb.append("\n");
-        Range<Double> mzRange = spectrum.getMzRange();
-        if (mzRange != null) {
-            sb.append("m/z range: ");
-            sb.append(mzFormat.format(mzRange.lowerEndpoint()));
-            sb.append(" - ");
-            sb.append(mzFormat.format(mzRange.upperEndpoint()));
+        Double mz = chromatogram.getMz();
+        if (mz != null) {
+            sb.append("m/z: ");
+            sb.append(mzFormat.format(mz));
             sb.append(" m/z\n");
         }
         sb.append("Base peak intensity: ");
         sb.append(intensityFormat.format(topIndensity));
         sb.append("\n");
-        sb.append("SPLASH ID: ");
-        String splash = SplashCalculationAlgorithm.calculateSplash(spectrum);
-        sb.append(splash);
 
         return sb.toString();
     }
 
-    public MsSpectrum getSpectrum() {
-        return spectrum;
+    public Chromatogram getChromatogram() {
+        return chromatogram;
     }
 
     public String getName() {
@@ -239,18 +224,6 @@ public class MsSpectrumDataSet extends AbstractXYDataset
         return showDataPoints;
     }
 
-    public MsSpectrumType getRenderingType() {
-        return renderingType.get();
-    }
-
-    public void setRenderingType(MsSpectrumType newType) {
-        renderingType.set(newType);
-    }
-
-    public ObjectProperty<MsSpectrumType> renderingTypeProperty() {
-        return renderingType;
-    }
-
     public Color getColor() {
         return color.get();
     }
@@ -312,9 +285,9 @@ public class MsSpectrumDataSet extends AbstractXYDataset
             sb.append(mzFormat.format(displayMz));
             sb.append(" (shift ");
             sb.append(mzFormat.format(mzShift.doubleValue()));
-            sb.append(" m/z\n");
+            sb.append(" m/z)\n");
         }
-        sb.append("Actual m/z: ");
+        sb.append("Data point m/z: ");
         sb.append(mzFormat.format(actualMz));
         sb.append("\n");
 
@@ -324,50 +297,10 @@ public class MsSpectrumDataSet extends AbstractXYDataset
             sb.append("\n");
         }
 
-        sb.append("Actual intensity: ");
+        sb.append("Data point intensity: ");
         sb.append(intensityFormat.format(actualIntensity));
         return sb.toString();
 
-    }
-
-    @Override
-    public Number getStartX(int series, int item) {
-        return getX(series, item);
-    }
-
-    @Override
-    public double getStartXValue(int series, int item) {
-        return getXValue(series, item);
-    }
-
-    @Override
-    public Number getEndX(int series, int item) {
-        return getX(series, item);
-    }
-
-    @Override
-    public double getEndXValue(int series, int item) {
-        return getXValue(series, item);
-    }
-
-    @Override
-    public Number getStartY(int series, int item) {
-        return getY(series, item);
-    }
-
-    @Override
-    public double getStartYValue(int series, int item) {
-        return getYValue(series, item);
-    }
-
-    @Override
-    public Number getEndY(int series, int item) {
-        return getY(series, item);
-    }
-
-    @Override
-    public double getEndYValue(int series, int item) {
-        return getYValue(series, item);
     }
 
 }

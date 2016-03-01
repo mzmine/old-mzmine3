@@ -24,9 +24,6 @@ import java.awt.Font;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.print.PageFormat;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.io.File;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -35,9 +32,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
-import javax.swing.SwingUtilities;
 
-import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
@@ -83,6 +78,7 @@ import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotModule;
 import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotParameters;
 import io.github.mzmine.modules.plots.isotopepattern.IsotopePatternPlotModule;
 import io.github.mzmine.modules.plots.isotopepattern.IsotopePatternPlotParameters;
+import io.github.mzmine.modules.plots.msspectrum.datasets.MsSpectrumDataSet;
 import io.github.mzmine.modules.plots.spectrumparser.SpectrumParserPlotModule;
 import io.github.mzmine.modules.plots.spectrumparser.SpectrumParserPlotParameters;
 import io.github.mzmine.parameters.ParameterSet;
@@ -91,10 +87,10 @@ import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.util.JavaFXUtil;
 import io.github.mzmine.util.MsScanUtils;
-import io.github.mzmine.util.jfreechart.ChartExportToImage;
-import io.github.mzmine.util.jfreechart.ChartExportToImage.ImgFileType;
 import io.github.mzmine.util.jfreechart.ChartNodeJFreeChart;
 import io.github.mzmine.util.jfreechart.IntelligentItemLabelGenerator;
+import io.github.mzmine.util.jfreechart.JFreeChartUtils;
+import io.github.mzmine.util.jfreechart.JFreeChartUtils.ImgFileType;
 import io.github.mzmine.util.jfreechart.ManualZoomDialog;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -173,8 +169,6 @@ public class MsSpectrumPlotWindowController {
     public void initialize() {
 
         final JFreeChart chart = chartNode.getChart();
-        // Waiting for JFreeChart 1.0.20 to do this properly
-        // chartNode.setChart(chart);
         final XYPlot plot = chart.getXYPlot();
 
         // Do not set colors and strokes dynamically. They are instead provided
@@ -198,8 +192,9 @@ public class MsSpectrumPlotWindowController {
         // legend.setItemFont(legendFont);
         legend.setFrame(BlockBorder.NONE);
 
-        // set the X axis (retention time) properties
+        // set the X axis (m/z) properties
         NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
+        xAxis.setLabel("m/z");
         xAxis.setUpperMargin(0.03);
         xAxis.setLowerMargin(0.03);
         xAxis.setRangeType(RangeType.POSITIVE);
@@ -207,6 +202,7 @@ public class MsSpectrumPlotWindowController {
 
         // set the Y axis (intensity) properties
         NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
+        yAxis.setLabel("Intensity");
         yAxis.setRangeType(RangeType.POSITIVE);
         yAxis.setAutoRangeIncludesZero(true);
 
@@ -221,7 +217,6 @@ public class MsSpectrumPlotWindowController {
         chartTitle = chartNode.getChart().getTitle();
         chartTitle.setMargin(5, 0, 0, 0);
         chartTitle.setFont(titleFont);
-        chartTitle.setText("MS spectrum");
 
         chartNode.setCursor(Cursor.CROSSHAIR);
 
@@ -656,28 +651,7 @@ public class MsSpectrumPlotWindowController {
     }
 
     public void handlePrint(Event event) {
-
-        // As of java 1.8.0_74, the JavaFX printing support seems to do poor
-        // job. It creates pixelated, low-resolution print outs. For that
-        // reason, we use the AWT PrinterJob class, until the JavaFX printing
-        // support is improved.
-        SwingUtilities.invokeLater(() -> {
-            PrinterJob job = PrinterJob.getPrinterJob();
-            PageFormat pf = job.defaultPage();
-            PageFormat pf2 = job.pageDialog(pf);
-            if (pf2 == pf)
-                return;
-            ChartPanel p = new ChartPanel(chartNode.getChart());
-            job.setPrintable(p, pf2);
-            if (!job.printDialog())
-                return;
-            try {
-                job.print();
-            } catch (PrinterException e) {
-                e.printStackTrace();
-                MZmineGUI.displayMessage("Error printing: " + e.getMessage());
-            }
-        });
+        JFreeChartUtils.printChart(chartNode);
     }
 
     public void handleNormalizeIntensityScale(Event event) {
@@ -705,35 +679,35 @@ public class MsSpectrumPlotWindowController {
         dialog.show();
     }
 
-    public void handleExportImageToClipboard(Event event) {
-        ChartExportToImage.exportToClipboard(chartNode);
+    public void handleCopyImage(Event event) {
+        JFreeChartUtils.exportToClipboard(chartNode);
     }
 
     public void handleExportJPG(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.JPG);
+        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.JPG);
     }
 
     public void handleExportPNG(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.PNG);
+        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.PNG);
     }
 
     public void handleExportPDF(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.PDF);
+        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.PDF);
     }
 
     public void handleExportSVG(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.SVG);
+        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.SVG);
     }
 
     public void handleExportEMF(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.EMF);
+        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.EMF);
     }
 
     public void handleExportEPS(Event event) {
-        ChartExportToImage.showSaveDialog(chartNode, ImgFileType.EPS);
+        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.EPS);
     }
 
-    public void handleExportSpectraToClipboard(Event event) {
+    public void handleCopySpectra(Event event) {
         StringBuilder sb = new StringBuilder();
         for (MsSpectrumDataSet dataset : datasets) {
             MsSpectrum spectrum = dataset.getSpectrum();
@@ -756,7 +730,7 @@ public class MsSpectrumPlotWindowController {
         clipboard.setContent(content);
     }
 
-    public void handleExportSplashToClipboard(Event event) {
+    public void handleCopySplash(Event event) {
         StringBuilder sb = new StringBuilder();
         for (MsSpectrumDataSet dataset : datasets) {
             MsSpectrum spectrum = dataset.getSpectrum();

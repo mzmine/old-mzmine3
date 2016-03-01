@@ -21,13 +21,19 @@ package io.github.mzmine.util.jfreechart;
 
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.print.PageFormat;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import javax.swing.SwingUtilities;
+
 import org.apache.xmlgraphics.java2d.GraphicContext;
 import org.apache.xmlgraphics.java2d.ps.EPSDocumentGraphics2D;
 import org.freehep.graphicsio.emf.EMFGraphics2D;
+import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.fx.ChartViewer;
 import org.jfree.chart.plot.XYPlot;
@@ -43,13 +49,38 @@ import javafx.scene.input.ClipboardContent;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
-public class ChartExportToImage {
+public class JFreeChartUtils {
 
     private static File lastSaveDirectory;
 
     public enum ImgFileType {
         JPG, PNG, SVG, PDF, EMF, EPS
     };
+
+    public static void printChart(ChartViewer chartNode) {
+
+        // As of java 1.8.0_74, the JavaFX printing support seems to do poor
+        // job. It creates pixelated, low-resolution print outs. For that
+        // reason, we use the AWT PrinterJob class, until the JavaFX printing
+        // support is improved.
+        SwingUtilities.invokeLater(() -> {
+            PrinterJob job = PrinterJob.getPrinterJob();
+            PageFormat pf = job.defaultPage();
+            PageFormat pf2 = job.pageDialog(pf);
+            if (pf2 == pf)
+                return;
+            ChartPanel p = new ChartPanel(chartNode.getChart());
+            job.setPrintable(p, pf2);
+            if (!job.printDialog())
+                return;
+            try {
+                job.print();
+            } catch (PrinterException e) {
+                e.printStackTrace();
+                MZmineGUI.displayMessage("Error printing: " + e.getMessage());
+            }
+        });
+    }
 
     public static void showSaveDialog(ChartViewer chartNode,
             ImgFileType fileType) {

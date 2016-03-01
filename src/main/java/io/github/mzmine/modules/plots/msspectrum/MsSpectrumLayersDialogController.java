@@ -23,6 +23,7 @@ import java.util.List;
 
 import io.github.msdk.datamodel.msspectra.MsSpectrumType;
 import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.modules.plots.msspectrum.datasets.MsSpectrumDataSet;
 import io.github.mzmine.modules.plots.msspectrum.fxcomponents.ColorTableCell;
 import io.github.mzmine.modules.plots.msspectrum.fxcomponents.SpinnerTableCell;
 import javafx.collections.FXCollections;
