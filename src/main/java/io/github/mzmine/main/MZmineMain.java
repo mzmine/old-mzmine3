@@ -73,11 +73,19 @@ public final class MZmineMain {
         moduleStarterThread.start();
 
         /*
+         * Usage Tracker
+         */
+        GoogleAnalyticsTracker GAT = new GoogleAnalyticsTracker(
+                "MZmine Loaded (GUI mode)", "/JAVA/Main/GUI");
+        Thread gatThread = new Thread(GAT);
+        gatThread.setPriority(Thread.MIN_PRIORITY);
+        gatThread.start();
+
+        /*
          * Start the JavaFX GUI
          */
         logger.info("Starting MZmine GUI");
         Application.launch(MZmineGUI.class, args);
-
     }
 
 }
