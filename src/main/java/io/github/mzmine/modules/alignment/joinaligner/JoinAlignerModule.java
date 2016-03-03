@@ -46,7 +46,7 @@ public class JoinAlignerModule implements MZmineProcessingModule {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final String MODULE_NAME = "Match Aligner";
+    private static final String MODULE_NAME = "Join Aligner";
     private static final String MODULE_DESCRIPTION = "This module aligns features using a match score calculated based on the mass and retention time of each feature.";
 
     @Override
