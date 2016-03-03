@@ -18,6 +18,7 @@
 	<module>io.github.mzmine.modules.featuredetection.targeteddetection.TargetedDetectionModule</module>
 	<module>io.github.mzmine.modules.featuredetection.chromatogrambuilder.ChromatogramBuilderModule</module>
 	<module>io.github.mzmine.modules.featuredetection.msmsdetection.MsMsDetectionModule</module>
+	<module>io.github.mzmine.modules.featuredetection.srmdetection.SrmDetectionModule</module>
 	<module>io.github.mzmine.modules.filtering.featurefilter.FeatureFilterModule</module>
 	<module>io.github.mzmine.modules.filtering.rowfilter.RowFilterModule</module>
 	<module>io.github.mzmine.modules.alignment.joinaligner.JoinAlignerModule</module>
