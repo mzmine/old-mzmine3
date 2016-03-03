@@ -86,6 +86,7 @@ public final class MZmineMain {
          */
         logger.info("Starting MZmine GUI");
         Application.launch(MZmineGUI.class, args);
+
     }
 
 }

@@ -19,10 +19,6 @@
 
 package io.github.mzmine.main;
 
-import java.awt.Dimension;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.Toolkit;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
@@ -30,6 +26,8 @@ import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
+
+import javafx.stage.Screen;
 
 public class GoogleAnalyticsTracker implements Runnable {
 
@@ -39,7 +37,7 @@ public class GoogleAnalyticsTracker implements Runnable {
     String hostName = "localhost"; // Host name
     String userAgent = null; // User Agent name
     String os = "Unknown"; // Operating System
-    Dimension screenSize; // Screen Size
+    int screenWidth = 0, screenHeight = 0; // Screen Size
     String systemLocale; // Language
     String pageTitle, pageUrl;
     Random random = new Random();
@@ -51,9 +49,6 @@ public class GoogleAnalyticsTracker implements Runnable {
 
         // Parameters
         this.sendGUIinfo = MZmineCore.getConfiguration().getSendStatistics();
-        if (this.sendGUIinfo) {
-            screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        }
         systemLocale = Locale.getDefault().toString().replace("_", "-");
         random = new Random();
     }
@@ -72,16 +67,10 @@ public class GoogleAnalyticsTracker implements Runnable {
         if (sendStatistics) {
             // Find screen size for multiple screen setup
             if (this.sendGUIinfo) {
-                GraphicsEnvironment g = GraphicsEnvironment
-                        .getLocalGraphicsEnvironment();
-                GraphicsDevice[] devices = g.getScreenDevices();
-                if (devices.length > 1) {
-                    int totalWidth = 0;
-                    for (int i = 0; i < devices.length; i++) {
-                        totalWidth += devices[i].getDisplayMode().getWidth();
-                    }
-                    screenSize = new Dimension(totalWidth,
-                            (int) screenSize.getHeight());
+                for (Screen s : Screen.getScreens()) {
+                    screenWidth += s.getVisualBounds().getWidth();
+                    screenHeight = Math.max(screenHeight,
+                            (int) s.getVisualBounds().getHeight());
                 }
             }
 
@@ -89,6 +78,7 @@ public class GoogleAnalyticsTracker implements Runnable {
                 try {
                     hostName = InetAddress.getLocalHost().getHostName();
                 } catch (UnknownHostException e) {
+                    e.printStackTrace();
                     // Ignore
                 }
             }
@@ -136,8 +126,8 @@ public class GoogleAnalyticsTracker implements Runnable {
             url.append("&utmn=" + random.nextInt()); // Random int
             url.append("&utmcs=UTF-8"); // Encoding
             if (this.sendGUIinfo) {
-                url.append("&utmsr=" + (int) screenSize.getWidth() + "x"
-                        + (int) screenSize.getHeight()); // Screen size
+                url.append("&utmsr=" + screenWidth + "x" + screenHeight); // Screen
+                                                                          // size
             }
             url.append("&utmul=" + systemLocale); // User language
             url.append("&utmje=1"); // Java Enabled
@@ -171,6 +161,7 @@ public class GoogleAnalyticsTracker implements Runnable {
                 }
 
             } catch (Exception e) {
+                e.printStackTrace();
                 // Ignore
             }
 
