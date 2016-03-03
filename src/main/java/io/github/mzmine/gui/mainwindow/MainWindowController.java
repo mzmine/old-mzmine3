@@ -19,9 +19,7 @@
 
 package io.github.mzmine.gui.mainwindow;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import org.controlsfx.control.HiddenSidesPane;
 import org.controlsfx.control.StatusBar;
@@ -42,7 +40,6 @@ import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesParamet
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesSelectionType;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelectionType;
-import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.taskcontrol.MZmineTask;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -149,14 +146,8 @@ public class MainWindowController {
                                     FeatureTableModuleParameters.featureTables);
                     inputTablesParam.switchType(
                             FeatureTablesSelectionType.GUI_SELECTED_FEATURE_TABLES);
-                    FeatureTableModule moduleInstance = MZmineCore
-                            .getModuleInstance(FeatureTableModule.class);
-                    MZmineProject currentProject = MZmineCore
-                            .getCurrentProject();
-                    List<Task<?>> newTasks = new ArrayList<>();
-                    moduleInstance.runModule(currentProject, moduleParameters,
-                            newTasks);
-                    MZmineCore.submitTasks(newTasks);
+                    MZmineCore.runModule(FeatureTableModule.class,
+                            moduleParameters);
                 }
             }
         });

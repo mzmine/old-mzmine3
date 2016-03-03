@@ -44,7 +44,6 @@ import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineGUIProject;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -70,7 +69,7 @@ public final class MZmineGUI extends Application {
     private static final String mzMineFXML = "file:conf/MainWindow.fxml";
 
     private static MainWindowController mainWindowController;
-    
+
     private static Scene rootScene;
 
     public void start(Stage stage) {
@@ -178,7 +177,7 @@ public final class MZmineGUI extends Application {
     public static void addWindow(Node node, String title,
             boolean openNewWindow) {
         if (openNewWindow) {
-        
+
             BorderPane parent = new BorderPane();
             parent.setCenter(node);
             Scene newScene = new Scene(parent);
@@ -241,18 +240,13 @@ public final class MZmineGUI extends Application {
     }
 
     public static <ModuleType extends MZmineRunnableModule> void setupAndRunModule(
-            Class<ModuleType> moduleClass) {
+            @Nonnull Class<ModuleType> moduleClass) {
 
-        final ModuleType moduleInstance = MZmineCore
-                .getModuleInstance(moduleClass);
         final ParameterSet moduleParameters = MZmineCore.getConfiguration()
                 .getModuleParameters(moduleClass);
         ButtonType result = moduleParameters.showSetupDialog(null);
         if (result == ButtonType.OK) {
-            List<Task<?>> newTasks = new ArrayList<>();
-            moduleInstance.runModule(MZmineCore.getCurrentProject(),
-                    moduleParameters, newTasks);
-            MZmineCore.submitTasks(newTasks);
+            MZmineCore.runModule(moduleClass, moduleParameters);
         }
 
     }

@@ -20,7 +20,9 @@
 package io.github.mzmine.main;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
@@ -29,7 +31,10 @@ import javax.annotation.Nonnull;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.gui.mainwindow.MainWindowController;
 import io.github.mzmine.modules.MZmineModule;
+import io.github.mzmine.modules.MZmineRunnableModule;
+import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.project.MZmineProject;
+import io.github.mzmine.project.auditlog.AuditLogEntry;
 import javafx.concurrent.Task;
 
 /**
@@ -94,6 +99,32 @@ public final class MZmineCore {
     public static <ModuleType extends MZmineModule> ModuleType getModuleInstance(
             Class<ModuleType> moduleClass) {
         return MZmineStarter.getModuleInstance(moduleClass);
+    }
+
+    public static void runModule(
+            @Nonnull Class<? extends MZmineRunnableModule> moduleClass,
+            @Nonnull ParameterSet parameters) {
+
+        MZmineRunnableModule module = (MZmineRunnableModule) getModuleInstance(
+                moduleClass);
+
+        // Usage Tracker
+        GoogleAnalyticsTracker GAT = new GoogleAnalyticsTracker(
+                module.getName(), "/JAVA/" + module.getName());
+        Thread gatThread = new Thread(GAT);
+        gatThread.setPriority(Thread.MIN_PRIORITY);
+        gatThread.start();
+
+        // Run the module
+        final List<Task<?>> newTasks = new ArrayList<>();
+        module.runModule(currentProject, parameters, newTasks);
+        submitTasks(newTasks);
+
+        // Log module run in audit log
+        AuditLogEntry auditLogEntry = new AuditLogEntry(module, parameters,
+                newTasks);
+        currentProject.logProcessingStep(auditLogEntry);
+
     }
 
 }

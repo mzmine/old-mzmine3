@@ -48,9 +48,9 @@ public final class ModuleMenuItem extends MenuItem {
     public ModuleMenuItem() {
         setOnAction(event -> {
             logger.info("Menu item activated: " + event);
-            Class<? extends MZmineModule> moduleJavaClass;
+            Class<? extends MZmineRunnableModule> moduleJavaClass;
             try {
-                moduleJavaClass = (Class<? extends MZmineModule>) Class
+                moduleJavaClass = (Class<? extends MZmineRunnableModule>) Class
                         .forName(moduleClass.get());
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
@@ -67,35 +67,20 @@ public final class ModuleMenuItem extends MenuItem {
                 return;
             }
 
-            if (!(module instanceof MZmineRunnableModule)) {
-                MZmineGUI.displayMessage("Cannot run module " + module.getName()
-                        + ", because it does not implement the MZmineRunnableModule interface");
-                return;
-            }
-
-            MZmineRunnableModule runnableModule = (MZmineRunnableModule) module;
             ParameterSet moduleParameters = MZmineCore.getConfiguration()
                     .getModuleParameters(moduleJavaClass);
 
             logger.info("Setting parameters for module " + module.getName());
             String title = "Set parameters for " + module.getName();
             ButtonType exitCode = moduleParameters.showSetupDialog(title);
-            if (exitCode == ButtonType.OK) {
-                ParameterSet parametersCopy = moduleParameters.clone();
-                logger.debug("Starting module " + module.getName()
-                        + " with parameters " + parametersCopy);
-                List<Task<?>> tasks = new ArrayList<>();
-                MZmineProject project = MZmineCore.getCurrentProject();
-                logger.info("Starting module " + module.getName());
-                runnableModule.runModule(project, parametersCopy, tasks);
+            if (exitCode != ButtonType.OK)
+                return;
 
-                // Log module run in audit log
-                AuditLogEntry auditLogEntry = new AuditLogEntry(module,
-                        parametersCopy, tasks);
-                project.logProcessingStep(auditLogEntry);
+            ParameterSet parametersCopy = moduleParameters.clone();
+            logger.debug("Starting module " + module.getName()
+                    + " with parameters " + parametersCopy);
+            MZmineCore.runModule(moduleJavaClass, parametersCopy);
 
-                MZmineCore.submitTasks(tasks);
-            }
         });
     }
 
