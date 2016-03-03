@@ -17,7 +17,7 @@
  * Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package io.github.mzmine.modules.featuredetection.msmsdetection;
+package io.github.mzmine.modules.featuredetection.srmdetection;
 
 import java.util.Collection;
 
@@ -30,24 +30,23 @@ import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.util.MZTolerance;
-import io.github.msdk.util.RTTolerance;
+import io.github.msdk.featdet.srmdetection.SrmDetectionMethod;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;
-import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.project.MZmineProject;
+import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.concurrent.Task;
 
 /**
  * Targeted detection module
  */
-public class MsMsDetectionModule implements MZmineProcessingModule {
+public class SrmDetectionModule implements MZmineProcessingModule {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final String MODULE_NAME = "MS/MS feature detection";
-    private static final String MODULE_DESCRIPTION = "This module searches for features from MS/MS scans in the raw data files.";
+    private static final String MODULE_NAME = "SRM feature detection";
+    private static final String MODULE_DESCRIPTION = "This module searches for features from SRM chromatograms in the raw data files.";
 
     @Override
     public @Nonnull String getName() {
@@ -65,35 +64,15 @@ public class MsMsDetectionModule implements MZmineProcessingModule {
             @Nonnull Collection<Task<?>> tasks) {
 
         final RawDataFilesSelection rawDataFiles = parameters
-                .getParameter(MsMsDetectionParameters.rawDataFiles).getValue();
-
-        final ScanSelection scanSelection = parameters
-                .getParameter(MsMsDetectionParameters.scanSelection).getValue();
-
-        final MZTolerance mzTolerance = parameters
-                .getParameter(MsMsDetectionParameters.mzTolerance).getValue();
-
-        final RTTolerance rtTolerance = parameters
-                .getParameter(MsMsDetectionParameters.rtTolerance).getValue();
-
-        final Double intensityTolerance = parameters
-                .getParameter(MsMsDetectionParameters.intensityTolerance)
-                .getValue();
+                .getParameter(SrmDetectionParameters.rawDataFiles).getValue();
 
         final String nameSuffix = parameters
-                .getParameter(MsMsDetectionParameters.nameSuffix).getValue();
+                .getParameter(SrmDetectionParameters.nameSuffix).getValue();
 
         if (rawDataFiles == null
                 || rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
             logger.warn(
-                    "MS/MS detection module started with no raw data files selected");
-            return;
-        }
-
-        if (scanSelection == null || scanSelection.getMsLevel() == null
-                || !scanSelection.getMsLevel().equals(2)) {
-            logger.warn(
-                    "Only MS level 2 can be processed using this module. Please set it under the scan filter parameter");
+                    "SRM feature detection module started with no raw data files selected");
             return;
         }
 
@@ -103,18 +82,16 @@ public class MsMsDetectionModule implements MZmineProcessingModule {
             DataPointStore dataStore = DataPointStoreFactory
                     .getMemoryDataStore();
 
-            // New MS/MS detection task which runs the following three methods:
-            // 1. MsMsDetectionMethod
-            // 2. TargetedDetectionMethod
-            // 3. ChromatogramToFeatureTableMethod
-            MsMsDetectionTask newTask = new MsMsDetectionTask(
-                    "MS/MS feature detection", rawDataFile.getName(),
-                    rawDataFile, scanSelection, dataStore, mzTolerance,
-                    rtTolerance, intensityTolerance, nameSuffix);
+            // New feature filter task
+            SrmDetectionMethod method = new SrmDetectionMethod(rawDataFile,
+                    dataStore, nameSuffix);
+
+            MSDKTask newTask = new MSDKTask("SRM feature detection",
+                    rawDataFile.getName(), method);
 
             // Add the feature table to the project
             newTask.setOnSucceeded(e -> {
-                FeatureTable featureTable = newTask.getResult();
+                FeatureTable featureTable = method.getResult();
                 project.addFeatureTable(featureTable);
             });
 
@@ -126,7 +103,7 @@ public class MsMsDetectionModule implements MZmineProcessingModule {
 
     @Override
     public @Nonnull Class<? extends ParameterSet> getParameterSetClass() {
-        return MsMsDetectionParameters.class;
+        return SrmDetectionParameters.class;
     }
 
 }

@@ -124,7 +124,8 @@
 						</Menu>
 						<Menu text="SRM">
 							<items>
-								<MenuItem text="SRM Feature List Builder" />
+								<ModuleMenuItem text="SRM Feature List Builder"
+									moduleClass="io.github.mzmine.modules.featuredetection.srmdetection.SrmDetectionModule" />
 							</items>
 						</Menu>
 					</items>
