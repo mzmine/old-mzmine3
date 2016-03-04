@@ -19,13 +19,30 @@
 
 package io.github.mzmine.modules.featuredetection.srmdetection;
 
+import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.parameters.ParameterSet;
+import io.github.mzmine.parameters.ParameterValidator;
+import io.github.mzmine.parameters.parametertypes.DoubleParameter;
+import io.github.mzmine.parameters.parametertypes.PercentParameter;
 import io.github.mzmine.parameters.parametertypes.StringParameter;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesParameter;
 
 public class SrmDetectionParameters extends ParameterSet {
 
     public static final RawDataFilesParameter rawDataFiles = new RawDataFilesParameter();
+
+    public static final DoubleParameter minHeight = new DoubleParameter(
+            "Min peak height",
+            "Peaks with intensities less than this value are interpreted as noise",
+            "Algorithm Parameters",
+            MZmineCore.getConfiguration().getIntensityFormat(),
+            ParameterValidator.createNonEmptyValidator(), 200d);
+
+    public static final PercentParameter intensityTolerance = new PercentParameter(
+            "Intensity tolerance",
+            "Maximum allowed deviation of the peak chromatogram from the expected /\\ shape.",
+            "Algorithm Parameters",
+            ParameterValidator.createNonEmptyValidator(), 0.15);
 
     public static final StringParameter nameSuffix = new StringParameter(
             "Name suffix",
@@ -36,7 +53,7 @@ public class SrmDetectionParameters extends ParameterSet {
      * Create the parameter set.
      */
     public SrmDetectionParameters() {
-        super(rawDataFiles, nameSuffix);
+        super(rawDataFiles, minHeight, intensityTolerance, nameSuffix);
     }
 
 }
