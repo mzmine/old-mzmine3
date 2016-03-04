@@ -32,6 +32,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.srmdetection.SrmDetectionMethod;
 import io.github.mzmine.modules.MZmineProcessingModule;
+import io.github.mzmine.modules.featuredetection.targeteddetection.TargetedDetectionParameters;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;
 import io.github.mzmine.project.MZmineProject;
@@ -66,6 +67,13 @@ public class SrmDetectionModule implements MZmineProcessingModule {
         final RawDataFilesSelection rawDataFiles = parameters
                 .getParameter(SrmDetectionParameters.rawDataFiles).getValue();
 
+        final Double minHeight = parameters
+                .getParameter(SrmDetectionParameters.minHeight).getValue();
+
+        final Double intensityTolerance = parameters
+                .getParameter(SrmDetectionParameters.intensityTolerance)
+                .getValue();
+
         final String nameSuffix = parameters
                 .getParameter(SrmDetectionParameters.nameSuffix).getValue();
 
@@ -84,7 +92,7 @@ public class SrmDetectionModule implements MZmineProcessingModule {
 
             // New feature filter task
             SrmDetectionMethod method = new SrmDetectionMethod(rawDataFile,
-                    dataStore, nameSuffix);
+                    dataStore, minHeight, intensityTolerance, nameSuffix);
 
             MSDKTask newTask = new MSDKTask("SRM feature detection",
                     rawDataFile.getName(), method);
