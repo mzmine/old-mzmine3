@@ -36,7 +36,7 @@ public class SrmDetectionParameters extends ParameterSet {
             "Peaks with intensities less than this value are interpreted as noise",
             "Algorithm Parameters",
             MZmineCore.getConfiguration().getIntensityFormat(),
-            ParameterValidator.createNonEmptyValidator(), 5000d);
+            ParameterValidator.createNonEmptyValidator(), 200d);
 
     public static final PercentParameter intensityTolerance = new PercentParameter(
             "Intensity tolerance",
