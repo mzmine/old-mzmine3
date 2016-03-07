@@ -124,6 +124,9 @@ public class FeatureTableModule implements MZmineRunnableModule {
             else {
                 Integer groupID = (int) row.getData(groupColoumn);
                 TreeItem<FeatureTableRow> parentTreeItem = rowMap.get(groupID);
+                if (parentTreeItem == null) {
+                    parentTreeItem = root;
+                }
                 treeItem = new TreeItem<>(row);
                 parentTreeItem.getChildren().add(treeItem);
                 rowMap.put((int) row.getData(idColoumn), treeItem);
