@@ -26,6 +26,7 @@ import org.jfree.data.xy.AbstractXYDataset;
 import org.jfree.data.xy.XYDataset;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.ChromatogramUtil;
 import io.github.mzmine.main.MZmineCore;
@@ -55,6 +56,7 @@ public class ChromatogramDataSet extends AbstractXYDataset
 
     private Chromatogram chromatogram;
     private double mzValues[];
+    private ChromatographyInfo rtValues[];
     private float intensityValues[];
     private float topIndensity = 0f;
     private int numOfDataPoints = 0;
@@ -63,8 +65,6 @@ public class ChromatogramDataSet extends AbstractXYDataset
             "MS chromatogram");
     private final DoubleProperty intensityScale = new SimpleDoubleProperty(this,
             "intensityScale", 0.0);
-    private final DoubleProperty mzShift = new SimpleDoubleProperty(this,
-            "mzShift", 0.0);
     private final IntegerProperty lineThickness = new SimpleIntegerProperty(
             this, "lineThickness", 1);
     private final ObjectProperty<Color> color = new SimpleObjectProperty<>(this,
@@ -72,13 +72,9 @@ public class ChromatogramDataSet extends AbstractXYDataset
     private final BooleanProperty showDataPoints = new SimpleBooleanProperty(
             this, "showDataPoints", false);
 
-    public ChromatogramDataSet(Chromatogram chromatogram,
-            String datasetName) {
+    public ChromatogramDataSet(Chromatogram chromatogram, String datasetName) {
 
         // Listen for property changes
-        mzShift.addListener(e -> {
-            fireDatasetChanged();
-        });
         intensityScale.addListener(e -> {
             fireDatasetChanged();
         });
@@ -104,6 +100,7 @@ public class ChromatogramDataSet extends AbstractXYDataset
 
             this.chromatogram = chromatogram;
             this.mzValues = chromatogram.getMzValues();
+            this.rtValues = chromatogram.getRetentionTimes();
             this.intensityValues = chromatogram.getIntensityValues();
             this.numOfDataPoints = chromatogram.getNumberOfDataPoints();
             this.topIndensity = ChromatogramUtil.getMaxHeight(intensityValues,
@@ -126,6 +123,9 @@ public class ChromatogramDataSet extends AbstractXYDataset
     }
 
     public String getDescription() {
+        
+        if (chromatogram == null) return null;
+        
         StringBuilder sb = new StringBuilder();
         if (chromatogram instanceof MsScan) {
             MsScan scan = (MsScan) chromatogram;
@@ -188,18 +188,6 @@ public class ChromatogramDataSet extends AbstractXYDataset
         setIntensityScale((double) topIndensity);
     }
 
-    public Double getMzShift() {
-        return mzShift.get();
-    }
-
-    public void setMzShift(Double newMzShift) {
-        mzShift.set(newMzShift);
-    }
-
-    public DoubleProperty mzShiftProperty() {
-        return mzShift;
-    }
-
     public Integer getLineThickness() {
         return lineThickness.get();
     }
@@ -243,7 +231,10 @@ public class ChromatogramDataSet extends AbstractXYDataset
 
     @Override
     public Number getX(int series, int index) {
-        return mzValues[index];
+        ChromatographyInfo rt = rtValues[index];
+        if (rt == null)
+            return null;
+        return rt.getRetentionTime() / 60f;
     }
 
     @Override
@@ -263,7 +254,7 @@ public class ChromatogramDataSet extends AbstractXYDataset
 
     @Override
     public String generateLabel(XYDataset ds, int series, int index) {
-        final double mz = mzValues[index] - mzShift.doubleValue();
+        final double mz = mzValues[index];
         NumberFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
         String label = mzFormat.format(mz);
         return label;
@@ -272,21 +263,19 @@ public class ChromatogramDataSet extends AbstractXYDataset
     @Override
     public String generateToolTip(XYDataset ds, int series, int index) {
         final double actualMz = mzValues[index];
+        final Float actualRt = rtValues[index].getRetentionTime();
         final float scaledIntensity = getY(series, index).floatValue();
         final float actualIntensity = intensityValues[index];
+        NumberFormat rtFormat = MZmineCore.getConfiguration().getRTFormat();
         NumberFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
         NumberFormat intensityFormat = MZmineCore.getConfiguration()
                 .getIntensityFormat();
         StringBuilder sb = new StringBuilder();
 
-        if (mzShift.doubleValue() != 0.0) {
-            final double displayMz = mzValues[index] - mzShift.doubleValue();
-            sb.append("Display m/z: ");
-            sb.append(mzFormat.format(displayMz));
-            sb.append(" (shift ");
-            sb.append(mzFormat.format(mzShift.doubleValue()));
-            sb.append(" m/z)\n");
-        }
+        sb.append("Data point RT: ");
+        sb.append(rtFormat.format(actualRt));
+        sb.append("\n");
+
         sb.append("Data point m/z: ");
         sb.append(mzFormat.format(actualMz));
         sb.append("\n");

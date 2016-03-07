@@ -179,8 +179,6 @@ public class MsSpectrumPlotWindowController {
         plot.setBackgroundPaint(JavaFXUtil.convertColorToAWT(backgroundColor));
         plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
         plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
-        plot.setDomainGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
-        plot.setRangeGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
         plot.setDomainCrosshairVisible(false);
         plot.setRangeCrosshairVisible(false);
 

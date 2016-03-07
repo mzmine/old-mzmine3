@@ -19,29 +19,36 @@
 
 package io.github.mzmine.modules.plots.chromatogram;
 
+import java.awt.BasicStroke;
 import java.awt.Font;
+import java.awt.Stroke;
+import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.text.DecimalFormat;
 
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.block.BlockBorder;
+import org.jfree.chart.labels.XYItemLabelGenerator;
 import org.jfree.chart.plot.DatasetRenderingOrder;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.data.RangeType;
 import org.jfree.ui.RectangleInsets;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
 import io.github.mzmine.main.MZmineCore;
+import io.github.mzmine.modules.plots.chromatogram.datasets.ChromatogramDataSet;
 import io.github.mzmine.util.JavaFXUtil;
 import io.github.mzmine.util.jfreechart.ChartNodeJFreeChart;
+import io.github.mzmine.util.jfreechart.IntelligentItemLabelGenerator;
 import io.github.mzmine.util.jfreechart.JFreeChartUtils;
 import io.github.mzmine.util.jfreechart.JFreeChartUtils.ImgFileType;
 import io.github.mzmine.util.jfreechart.ManualZoomDialog;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -50,10 +57,8 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Window;
@@ -69,6 +74,8 @@ public class ChromatogramPlotWindowController {
 
     // Colors
     private static final Color gridColor = Color.rgb(220, 220, 220, 0.5);
+    private static final Color crossHairColor = Color.GRAY;
+
     private static final Color labelsColor = Color.BLACK;
     private static final Color backgroundColor = Color.WHITE;
     private static final Color[] plotColors = { Color.rgb(0, 0, 192), // blue
@@ -115,9 +122,8 @@ public class ChromatogramPlotWindowController {
         plot.setBackgroundPaint(JavaFXUtil.convertColorToAWT(backgroundColor));
         plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
         plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
-        plot.setDomainGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
-        plot.setRangeGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
-        plot.setDomainCrosshairVisible(false);
+        plot.setDomainCrosshairPaint(JavaFXUtil.convertColorToAWT(crossHairColor));
+        plot.setDomainCrosshairVisible(true);
         plot.setRangeCrosshairVisible(false);
 
         // chart properties
@@ -130,7 +136,7 @@ public class ChromatogramPlotWindowController {
 
         // set the X axis (retention time) properties
         NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
-        xAxis.setLabel("Retention time (min.)");
+        xAxis.setLabel("Retention time (min)");
         xAxis.setUpperMargin(0.03);
         xAxis.setLowerMargin(0.03);
         xAxis.setRangeType(RangeType.POSITIVE);
@@ -184,25 +190,81 @@ public class ChromatogramPlotWindowController {
 
     void addChromatogram(Chromatogram chromatogram) {
 
-        XYChart.Series newSeries = new XYChart.Series();
-        newSeries.setName(
-                "Chromatogram " + chromatogram.getChromatogramNumber());
+        final int datasetIndex = numberOfDataSets;
+        numberOfDataSets++;
 
-        ChromatographyInfo rtValues[] = chromatogram.getRetentionTimes();
-        double mzValues[] = chromatogram.getMzValues();
-        float intensityValues[] = chromatogram.getIntensityValues();
+        String chromatName = "Chromatogram "
+                + chromatogram.getChromatogramNumber();
+        ChromatogramDataSet newDataSet = new ChromatogramDataSet(chromatogram,
+                chromatName);
 
-        for (int i = 0; i < chromatogram.getNumberOfDataPoints(); i++) {
-            final float rt = rtValues[i].getRetentionTime() / 60f;
-            final float intensity = intensityValues[i];
-            final double mz = mzValues[i];
-            String tooltipText = MZmineCore.getConfiguration().getMZFormat()
-                    .format(mz);
-            XYChart.Data newData = new XYChart.Data(rt, intensity);
-            Tooltip.install(newData.getNode(), new Tooltip(tooltipText));
-            newSeries.getData().add(newData);
-        }
+        datasets.add(newDataSet);
 
+        final XYPlot plot = chartNode.getChart().getXYPlot();
+
+        final Color newColor = plotColors[datasetIndex % plotColors.length];
+        newDataSet.setColor(newColor);
+
+        configureRenderer(newDataSet, datasetIndex);
+
+        newDataSet.colorProperty().addListener(e -> {
+            Platform.runLater(
+                    () -> configureRenderer(newDataSet, datasetIndex));
+        });
+        newDataSet.lineThicknessProperty().addListener(e -> {
+            Platform.runLater(
+                    () -> configureRenderer(newDataSet, datasetIndex));
+        });
+        newDataSet.showDataPointsProperty().addListener(e -> {
+            Platform.runLater(
+                    () -> configureRenderer(newDataSet, datasetIndex));
+        });
+        // Once everything is configured, add the dataset to the plot
+        Platform.runLater(() -> plot.setDataset(datasetIndex, newDataSet));
+
+    }
+
+    private void configureRenderer(ChromatogramPlotDataSet dataset,
+            int datasetIndex) {
+
+        final XYPlot plot = chartNode.getChart().getXYPlot();
+
+        XYLineAndShapeRenderer newRenderer = new XYLineAndShapeRenderer();
+        final int lineThickness = dataset.getLineThickness();
+        newRenderer.setBaseShape(
+                new Ellipse2D.Double(-2 * lineThickness, -2 * lineThickness,
+                        4 * lineThickness + 1, 4 * lineThickness + 1));
+        newRenderer.setBaseShapesFilled(true);
+        newRenderer.setBaseShapesVisible(dataset.getShowDataPoints());
+        newRenderer.setDrawOutlines(false);
+
+        Stroke baseStroke = new BasicStroke(lineThickness);
+        newRenderer.setBaseStroke(baseStroke);
+
+        // Set tooltips for legend
+        newRenderer.setLegendItemToolTipGenerator((ds, series) -> {
+            if (ds instanceof ChromatogramPlotDataSet) {
+                return ((ChromatogramPlotDataSet) ds).getDescription();
+            } else
+                return null;
+        });
+
+        // Set color
+        Color baseColor = dataset.getColor();
+        newRenderer.setBasePaint(JavaFXUtil.convertColorToAWT(baseColor));
+
+        // Set label generator
+        XYItemLabelGenerator intelligentLabelGenerator = new IntelligentItemLabelGenerator(
+                chartNode, 100, dataset);
+        newRenderer.setBaseItemLabelGenerator(intelligentLabelGenerator);
+        newRenderer.setBaseItemLabelPaint(
+                JavaFXUtil.convertColorToAWT(labelsColor));
+        newRenderer.setBaseItemLabelsVisible(itemLabelsVisible.get());
+
+        // Set tooltip generator
+        newRenderer.setBaseToolTipGenerator(dataset);
+
+        plot.setRenderer(datasetIndex, newRenderer);
 
     }
 
