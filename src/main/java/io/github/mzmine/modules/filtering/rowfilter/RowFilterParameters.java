@@ -24,6 +24,7 @@ import com.google.common.collect.Range;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.BooleanParameter;
+import io.github.mzmine.parameters.parametertypes.DoubleParameter;
 import io.github.mzmine.parameters.parametertypes.IntegerParameter;
 import io.github.mzmine.parameters.parametertypes.OptionalModuleParameter;
 import io.github.mzmine.parameters.parametertypes.OptionalParameter;
@@ -53,9 +54,9 @@ public class RowFilterParameters extends ParameterSet {
                     ParameterValidator.createNonEmptyValidator(),
                     Range.closed(0.0, 60.0)));
 
-    public static final OptionalParameter<IntegerParameter> minCount = new OptionalParameter<IntegerParameter>(
-            new IntegerParameter("Minimum features in a row",
-                    "Minimum number of feature detections required per row.",
+    public static final OptionalParameter<DoubleParameter> minCount = new OptionalParameter<DoubleParameter>(
+            new DoubleParameter("Minimum features in a row",
+                    "Minimum number of feature detections required per row.\nValues <1 will be interpreted as a %-value of the total # samples in the feature table. The value will be rounded down to the nearest whole number.",
                     "Filters", ParameterValidator.createNonEmptyValidator()));
 
     public static final OptionalParameter<IntegerParameter> minIsotopes = new OptionalParameter<IntegerParameter>(
