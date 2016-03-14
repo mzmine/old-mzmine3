@@ -343,4 +343,25 @@ public class MainWindowController {
         }
     }
 
+    public void updateTabName(String tabName) {
+        String title = "";
+        switch (tabName) {
+        case "RawData":
+            title = "Raw Data";
+            int rawDataFiles = MZmineCore.getCurrentProject().getRawDataFiles()
+                    .size();
+            if (rawDataFiles > 0)
+                title += " (n=" + rawDataFiles + ")";
+            mainTabPane.getTabs().get(0).setText(title);
+            break;
+        case "FeatureTable":
+            title = "Feature Tables";
+            int featureTables = MZmineCore.getCurrentProject()
+                    .getFeatureTables().size();
+            if (featureTables > 0)
+                title += " (n=" + featureTables + ")";
+            mainTabPane.getTabs().get(1).setText(title);
+            break;
+        }
+    }
 }

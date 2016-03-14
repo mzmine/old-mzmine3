@@ -23,6 +23,7 @@ import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.gui.mainwindow.FeatureTableTreeItem;
+import io.github.mzmine.gui.mainwindow.MainWindowController;
 import io.github.mzmine.gui.mainwindow.RawDataTreeItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
@@ -62,6 +63,10 @@ public class MZmineGUIProject extends MZmineProject {
         df1.setGraphic(new ImageView(fileIcon));
         rawDataRootItem.getChildren().add(df1);
         MZmineGUI.setSelectedTab("RawData");
+
+        // Update number of raw files in tab name
+        MainWindowController mwc = MZmineGUI.getMainWindowController();
+        mwc.updateTabName("RawData");
     }
 
     public void removeFile(final RawDataFile rawDataFile) {
@@ -72,6 +77,10 @@ public class MZmineGUIProject extends MZmineProject {
                 break;
             }
         }
+
+        // Update number of raw files in tab name
+        MainWindowController mwc = MZmineGUI.getMainWindowController();
+        mwc.updateTabName("RawData");
     }
 
     public void addFeatureTable(final FeatureTable featureTable) {
@@ -81,6 +90,10 @@ public class MZmineGUIProject extends MZmineProject {
         df1.setGraphic(new ImageView(peakListIcon));
         featureTableRootItem.getChildren().add(df1);
         MZmineGUI.setSelectedTab("FeatureTable");
+
+        // Update number of tables in tab name
+        MainWindowController mwc = MZmineGUI.getMainWindowController();
+        mwc.updateTabName("FeatureTable");
     }
 
     public void removeFeatureTable(final FeatureTable featureTable) {
@@ -91,6 +104,10 @@ public class MZmineGUIProject extends MZmineProject {
                 break;
             }
         }
+
+        // Update number of tables in tab name
+        MainWindowController mwc = MZmineGUI.getMainWindowController();
+        mwc.updateTabName("FeatureTable");
     }
 
     public TreeItem<RawDataTreeItem> getRawDataRootItem() {
