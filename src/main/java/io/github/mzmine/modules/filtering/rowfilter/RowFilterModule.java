@@ -92,7 +92,7 @@ public class RowFilterModule implements MZmineProcessingModule {
         final Range<Double> durationRange = parameters
                 .getParameter(RowFilterParameters.durationRange)
                 .getEmbeddedParameter().getValue();
-        final Integer minCount = parameters
+        Double minCount = parameters
                 .getParameter(RowFilterParameters.minCount)
                 .getEmbeddedParameter().getValue();
         final Integer minIsotopes = parameters
@@ -141,12 +141,18 @@ public class RowFilterModule implements MZmineProcessingModule {
             DataPointStore dataStore = DataPointStoreFactory
                     .getMemoryDataStore();
 
+            // Handle < 1 values for minCount
+            if (minCount < 1)
+                minCount = featureTable.getSamples().size() * minCount;
+            // Round value down to nearest hole number
+            int intMinCount = (int) (long) (double) minCount;
+
             // New row filter method
             RowFilterMethod method = new RowFilterMethod(featureTable,
                     dataStore, nameSuffix, filterByMz, filterByRt,
                     filterByDuration, filterByCount, filterByIsotopes,
                     filterByIonAnnotation, requireAnnotation, mzRange, rtRange,
-                    durationRange, minCount, minIsotopes, ionAnnotation,
+                    durationRange, intMinCount, minIsotopes, ionAnnotation,
                     removeDuplicates, duplicateMzTolerance,
                     duplicateRtTolerance, duplicateRequireSameID);
 

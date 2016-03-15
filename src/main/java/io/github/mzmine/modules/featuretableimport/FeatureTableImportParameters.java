@@ -25,6 +25,8 @@ import java.util.List;
 
 import org.controlsfx.control.PropertySheet;
 
+import com.google.common.base.Strings;
+
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.StringEditor;
@@ -100,6 +102,9 @@ public class FeatureTableImportParameters extends ParameterSet {
                             continue;
                         String commonSuffix = FileNameUtil
                                 .findCommonSuffix(fileNames);
+                        // If no common suffix then remove file extension
+                        if (Strings.isNullOrEmpty(commonSuffix))
+                            commonSuffix = ".*";
                         editor.setValue(commonSuffix);
                     }
                 }

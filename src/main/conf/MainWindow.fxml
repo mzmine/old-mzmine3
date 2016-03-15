@@ -28,7 +28,7 @@
 						<items>
 							<TabPane fx:id="mainTabPane" minWidth="200" prefWidth="250">
 								<tabs>
-									<Tab text="Raw Data" closable="false">
+									<Tab fx:id="rawDataFilesTab" text="Raw Data" closable="false">
 										<content>
 											<TreeView fx:id="rawDataTree" prefHeight="120">
 												<contextMenu>
@@ -45,7 +45,7 @@
 											</TreeView>
 										</content>
 									</Tab>
-									<Tab text="Feature Tables" closable="false">
+									<Tab fx:id="featureTablesTab" text="Feature Tables" closable="false">
 										<content>
 											<TreeView fx:id="featureTree" prefHeight="120">
 												<contextMenu>
