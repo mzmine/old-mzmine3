@@ -25,6 +25,8 @@ import java.util.List;
 
 import org.controlsfx.property.editor.PropertyEditor;
 
+import com.google.common.base.Strings;
+
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterSheetView;
 import io.github.mzmine.parameters.ParameterValidator;
@@ -108,6 +110,9 @@ public class RawDataImportParameters extends ParameterSet {
                 suffixEditor.setValue("");
             } else {
                 String commonSuffix = FileNameUtil.findCommonSuffix(fileNames);
+                // If no common suffix then remove file extension
+                if (Strings.isNullOrEmpty(commonSuffix))
+                    commonSuffix = ".*";
                 suffixEditor.setValue(commonSuffix);
             }
 

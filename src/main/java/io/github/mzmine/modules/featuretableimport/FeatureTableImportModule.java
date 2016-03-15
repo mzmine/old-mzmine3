@@ -99,9 +99,9 @@ public class FeatureTableImportModule implements MZmineProcessingModule {
 
             // Find file extension and initiate corresponding import method
             String fileExtension = FilenameUtils
-                    .getExtension(fileName.getAbsolutePath()).toUpperCase();
+                    .getExtension(fileName.getAbsolutePath());
             MSDKMethod<?> method = null;
-            switch (fileExtension) {
+            switch (fileExtension.toUpperCase()) {
             case "CSV":
                 method = new CsvFileImportMethod(fileName, dataStore);
                 break;
@@ -129,10 +129,13 @@ public class FeatureTableImportModule implements MZmineProcessingModule {
 
                 // Remove common suffix
                 if (!Strings.isNullOrEmpty(removeSuffix)) {
+                    String suffix = removeSuffix;
+                    if (suffix.equals(".*"))
+                        suffix = "." + fileExtension;
                     String name = featureTable.getName();
-                    if (name.endsWith(removeSuffix))
+                    if (name.endsWith(suffix))
                         name = name.substring(0,
-                                name.length() - removeSuffix.length());
+                                name.length() - suffix.length());
                     featureTable.setName(name);
                 }
 

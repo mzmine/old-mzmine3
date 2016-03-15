@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,10 +111,15 @@ public class RawDataImportModule implements MZmineProcessingModule {
 
                 // Remove common suffix
                 if (!Strings.isNullOrEmpty(removeSuffix)) {
+                    String fileExtension = FilenameUtils
+                            .getExtension(fileName.getAbsolutePath());
+                    String suffix = removeSuffix;
+                    if (suffix.equals(".*"))
+                        suffix = "." + fileExtension;
                     String name = rawDataFile.getName();
-                    if (name.endsWith(removeSuffix))
+                    if (name.endsWith(suffix))
                         name = name.substring(0,
-                                name.length() - removeSuffix.length());
+                                name.length() - suffix.length());
                     rawDataFile.setName(name);
                 }
 
