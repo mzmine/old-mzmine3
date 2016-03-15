@@ -362,7 +362,7 @@ public class MainWindowController {
             int rawDataFiles = MZmineCore.getCurrentProject().getRawDataFiles()
                     .size();
             if (rawDataFiles > 0)
-                title += " (n=" + rawDataFiles + ")";
+                title += " (" + rawDataFiles + ")";
             rawDataFilesTab.setText(title);
             return;
         }
@@ -371,7 +371,7 @@ public class MainWindowController {
             int featureTables = MZmineCore.getCurrentProject()
                     .getFeatureTables().size();
             if (featureTables > 0)
-                title += " (n=" + featureTables + ")";
+                title += " (" + featureTables + ")";
             featureTablesTab.setText(title);
             return;
         }
