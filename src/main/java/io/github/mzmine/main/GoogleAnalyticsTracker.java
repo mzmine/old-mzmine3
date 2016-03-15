@@ -115,8 +115,8 @@ public class GoogleAnalyticsTracker implements Runnable {
                 }
             }
 
-            String documentTitle = "Java: MZmine "
-                    + MZmineCore.getMZmineVersion() + " - " + pageTitle;
+            String documentTitle = pageTitle + " ("
+                    + MZmineCore.getMZmineVersion() + ")";
             int cookie = random.nextInt();
             int randomValue = random.nextInt(2147483647) - 1;
             long now = new Date().getTime();
