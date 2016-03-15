@@ -66,7 +66,7 @@ public class MZmineGUIProject extends MZmineProject {
 
         // Update number of raw files in tab name
         MainWindowController mwc = MZmineGUI.getMainWindowController();
-        mwc.updateTabName("RawData");
+        mwc.updateTabName(mwc.getRawDataFilesTab());
     }
 
     public void removeFile(final RawDataFile rawDataFile) {
@@ -80,7 +80,7 @@ public class MZmineGUIProject extends MZmineProject {
 
         // Update number of raw files in tab name
         MainWindowController mwc = MZmineGUI.getMainWindowController();
-        mwc.updateTabName("RawData");
+        mwc.updateTabName(mwc.getRawDataFilesTab());
     }
 
     public void addFeatureTable(final FeatureTable featureTable) {
@@ -93,7 +93,7 @@ public class MZmineGUIProject extends MZmineProject {
 
         // Update number of tables in tab name
         MainWindowController mwc = MZmineGUI.getMainWindowController();
-        mwc.updateTabName("FeatureTable");
+        mwc.updateTabName(mwc.getFeatureTablesTab());
     }
 
     public void removeFeatureTable(final FeatureTable featureTable) {
@@ -107,7 +107,7 @@ public class MZmineGUIProject extends MZmineProject {
 
         // Update number of tables in tab name
         MainWindowController mwc = MZmineGUI.getMainWindowController();
-        mwc.updateTabName("FeatureTable");
+        mwc.updateTabName(mwc.getFeatureTablesTab());
     }
 
     public TreeItem<RawDataTreeItem> getRawDataRootItem() {

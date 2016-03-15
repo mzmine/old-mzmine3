@@ -55,6 +55,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -87,6 +88,9 @@ public class MainWindowController {
 
     @FXML
     private TabPane mainTabPane;
+
+    @FXML
+    private Tab rawDataFilesTab, featureTablesTab;
 
     @FXML
     private TreeView<RawDataTreeItem> rawDataTree;
@@ -343,25 +347,33 @@ public class MainWindowController {
         }
     }
 
-    public void updateTabName(String tabName) {
+    public Tab getRawDataFilesTab() {
+        return rawDataFilesTab;
+    }
+
+    public Tab getFeatureTablesTab() {
+        return featureTablesTab;
+    }
+
+    public void updateTabName(Tab tab) {
         String title = "";
-        switch (tabName) {
-        case "RawData":
+        if (tab.equals(rawDataFilesTab)) {
             title = "Raw Data";
             int rawDataFiles = MZmineCore.getCurrentProject().getRawDataFiles()
                     .size();
             if (rawDataFiles > 0)
                 title += " (n=" + rawDataFiles + ")";
-            mainTabPane.getTabs().get(0).setText(title);
-            break;
-        case "FeatureTable":
+            rawDataFilesTab.setText(title);
+            return;
+        }
+        if (tab.equals(featureTablesTab)) {
             title = "Feature Tables";
             int featureTables = MZmineCore.getCurrentProject()
                     .getFeatureTables().size();
             if (featureTables > 0)
                 title += " (n=" + featureTables + ")";
-            mainTabPane.getTabs().get(1).setText(title);
-            break;
+            featureTablesTab.setText(title);
+            return;
         }
     }
 }
