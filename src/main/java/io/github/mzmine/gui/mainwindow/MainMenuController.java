@@ -23,6 +23,7 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,9 +32,12 @@ import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.main.NewVersionCheck;
 import io.github.mzmine.main.NewVersionCheck.CheckType;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.Pane;
 
 /**
  * The controller class for conf/mainmenu.fxml
@@ -106,6 +110,25 @@ public class MainMenuController {
         // Show the Preferences dialog
         logger.info("Showing the Preferences dialog");
         MZmineCore.getConfiguration().getPreferences().showSetupDialog(null);
+    }
+
+    @FXML
+    protected void showAbout(ActionEvent event) {
+        // Show the about window
+        Platform.runLater(() -> {
+            try {
+                final String aboutWindowFXML = "file:conf/AboutWindow.fxml";
+                URL fxmlFile = new URL(aboutWindowFXML);
+                FXMLLoader fxmlLoader = new FXMLLoader(fxmlFile);
+                Pane pane = fxmlLoader.load();
+
+                // Open the window
+                MZmineGUI.addWindow(pane, "About MZmine", true);
+            } catch (Exception e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        });
     }
 
 }

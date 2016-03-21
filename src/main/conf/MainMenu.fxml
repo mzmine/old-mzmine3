@@ -200,6 +200,6 @@
 		<SeparatorMenuItem />
 		<MenuItem text="Check for Updates" onAction="#versionCheck" />
 		<SeparatorMenuItem />
-		<MenuItem text="About" />
+		<MenuItem text="About" onAction="#showAbout" />
 	</Menu>
 </MenuBar>

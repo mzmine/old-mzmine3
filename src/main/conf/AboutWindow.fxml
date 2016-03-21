@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Label?>
+<?import java.net.URL?>
+
+<Pane maxHeight="375" maxWidth="625" minHeight="375" minWidth="625"
+	prefHeight="375" prefWidth="625" xmlns="http://javafx.com/javafx/8.0.65"
+	xmlns:fx="http://javafx.com/fxml/1">
+	<stylesheets>
+		<URL value="@MZmine.css" />
+	</stylesheets>
+	<children>
+		<ImageView layoutX="10.0" layoutY="10.0">
+			<image>
+				<Image url="@../icon/mzmine-icon.png" />
+			</image>
+		</ImageView>
+		<Text fill="#0088cc" layoutX="146.0" layoutY="128.0" smooth="false"
+			text="MZmine 3">
+			<font>
+				<Font name="System Bold" size="96.0" />
+			</font>
+		</Text>
+		<Text layoutX="14.0" layoutY="187.0" smooth="false" text="License">
+			<font>
+				<Font name="System Bold" size="11.0" />
+			</font>
+		</Text>
+		<Label layoutX="14.0" layoutY="185.0" prefHeight="71.0"
+			prefWidth="594.0"
+			text="MZmine 3 is a free software; you can redistribute it and/or modify it under the terms of the GNU GeneralPublic License as published by the Free Software Foundation; either version 2 of the License, or (at youroption) any later version."
+			wrapText="true" />
+		<Label layoutX="14.0" layoutY="248.0" prefHeight="71.0"
+			prefWidth="594.0"
+			text="MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even theimplied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU GeneralPublic License for more details."
+			wrapText="true" />
+		<Text layoutX="14.0" layoutY="356.0" smooth="false"
+			text="Copyright © 2006-2016 The MZmine 3 Development Team">
+			<font>
+				<Font name="System Bold" size="11.0" />
+			</font>
+		</Text>
+	</children>
+</Pane>
