@@ -53,7 +53,6 @@ public class MZmineProject {
         this.projectFile = projectFile;
     }
 
-    @SuppressWarnings("null")
     @Nonnull
     public List<Sample> getSamples() {
         final ArrayList<Sample> allSamples = new ArrayList<>();
@@ -80,7 +79,6 @@ public class MZmineProject {
         }
     }
 
-    @SuppressWarnings("null")
     public @Nonnull List<RawDataFile> getRawDataFiles() {
         synchronized (rawDataFiles) {
             return ImmutableList.copyOf(rawDataFiles);
@@ -99,7 +97,6 @@ public class MZmineProject {
         }
     }
 
-    @SuppressWarnings("null")
     public @Nonnull List<FeatureTable> getFeatureTables() {
         synchronized (featureTables) {
             return ImmutableList.copyOf(featureTables);

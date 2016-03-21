@@ -30,7 +30,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 
 import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.AbstractParameter;

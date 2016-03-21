@@ -79,6 +79,7 @@ public class DoubleParameter extends AbstractParameter<Double> {
         setValue(content);
     }
 
+    @SuppressWarnings("null")
     @Override
     public void saveValueToXML(@Nonnull Element xmlElement) {
         if (getValue() == null)

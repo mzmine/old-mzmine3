@@ -70,6 +70,7 @@ public class RTToleranceParameter extends AbstractParameter<RTTolerance> {
         setValue(new RTTolerance(content, isAbsolute));
     }
 
+    @SuppressWarnings("null")
     @Override
     public void saveValueToXML(@Nonnull Element xmlElement) {
         if (getValue() == null)

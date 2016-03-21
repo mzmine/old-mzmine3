@@ -38,7 +38,7 @@ public class MZmineGUIProject extends MZmineProject {
             "icons/xicicon.png");
     private static final Image featureTablesIcon = new Image(
             "icons/peaklistsicon.png");
-    private static final Image groupIcon = new Image("icons/groupicon.png");
+    //private static final Image groupIcon = new Image("icons/groupicon.png");
     private static final Image fileIcon = new Image("icons/fileicon.png");
     private static final Image peakListIcon = new Image(
             "icons/peaklisticon_single.png");

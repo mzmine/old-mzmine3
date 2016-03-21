@@ -46,7 +46,6 @@ public class TextAreaParameter extends AbstractParameter<String> {
     private final @Nonnull List<FileChooser.ExtensionFilter> extensions;
     private File lastOpenPath;
 
-    @SuppressWarnings("null")
     public TextAreaParameter(@Nonnull String name, @Nonnull String description,
             @Nonnull String category,
             @Nullable ParameterValidator<String> validator,

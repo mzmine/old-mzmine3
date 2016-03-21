@@ -19,7 +19,7 @@
 
 package io.github.mzmine.modules.auditlogexport;
 
-import java.io.File;
+//import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -66,8 +66,8 @@ public class AuditLogExportModule implements MZmineProcessingModule {
             @Nonnull ParameterSet parameters,
             @Nonnull Collection<Task<?>> tasks) {
 
-        final File outputFile = parameters
-                .getParameter(AuditLogExportParameters.outputFile).getValue();
+        //final File outputFile = parameters
+        //        .getParameter(AuditLogExportParameters.outputFile).getValue();
 
         // List of modules which won't be shown in the audit log
         final List<MZmineModule> removeModules = new ArrayList<>();
@@ -82,7 +82,7 @@ public class AuditLogExportModule implements MZmineProcessingModule {
 
             // Don't show modules from the remove list
             if (!removeModules.contains(logEntry.getModule())) {
-                String moduleName = logEntry.getModule().getName();
+                //String moduleName = logEntry.getModule().getName();
 
                 /*
                  * TODO

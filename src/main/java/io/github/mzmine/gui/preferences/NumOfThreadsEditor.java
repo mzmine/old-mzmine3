@@ -71,7 +71,6 @@ public class NumOfThreadsEditor extends HBox
         return this;
     }
 
-    @SuppressWarnings("null")
     @Override
     public NumOfThreadsValue getValue() {
         Boolean automatic = (optionCombo.getSelectionModel()

@@ -48,7 +48,6 @@ public class FileNamesParameter extends AbstractParameter<List<File>> {
     private final @Nonnull List<FileChooser.ExtensionFilter> extensions;
     private File lastOpenPath;
 
-    @SuppressWarnings("null")
     public FileNamesParameter(@Nonnull String name, @Nonnull String description,
             @Nonnull String category,
             @Nullable ParameterValidator<List<File>> validator,

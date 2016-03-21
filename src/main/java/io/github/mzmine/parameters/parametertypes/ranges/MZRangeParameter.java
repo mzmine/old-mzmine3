@@ -84,6 +84,7 @@ public class MZRangeParameter extends AbstractParameter<Range<Double>> {
 
     }
 
+    @SuppressWarnings("null")
     @Override
     public void saveValueToXML(@Nonnull Element xmlElement) {
         if (getValue() == null)

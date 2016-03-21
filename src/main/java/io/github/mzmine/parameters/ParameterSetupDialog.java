@@ -31,7 +31,6 @@ import org.controlsfx.validation.ValidationSupport;
 
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.gui.helpwindow.HelpWindow;
-import io.github.mzmine.modules.MZmineModule;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -51,8 +50,7 @@ public class ParameterSetupDialog extends Alert {
      */
     private HelpWindow helpWindow = null;
 
-    ParameterSetupDialog(ParameterSet parameters,
-            @Nullable String title) {
+    ParameterSetupDialog(ParameterSet parameters, @Nullable String title) {
 
         super(AlertType.CONFIRMATION);
 
