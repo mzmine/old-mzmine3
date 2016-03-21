@@ -70,6 +70,7 @@ public class IntegerParameter extends AbstractParameter<Integer> {
         setValue(content);
     }
 
+    @SuppressWarnings("null")
     @Override
     public void saveValueToXML(@Nonnull Element xmlElement) {
         if (getValue() == null)

@@ -86,6 +86,7 @@ public class DoubleRangeEditor extends HBox
         }
     }
 
+    @SuppressWarnings("null")
     @Override
     public void setValue(Range<Double> value) {
         if (value == null)

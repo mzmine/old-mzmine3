@@ -19,9 +19,6 @@
 
 package io.github.mzmine.gui.mainwindow;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,11 +27,8 @@ import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.modules.MZmineModule;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
-import io.github.mzmine.project.MZmineProject;
-import io.github.mzmine.project.auditlog.AuditLogEntry;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.concurrent.Task;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 
@@ -44,7 +38,7 @@ public final class ModuleMenuItem extends MenuItem {
 
     private final StringProperty moduleClass = new SimpleStringProperty();
 
-    @SuppressWarnings({ "unchecked", "null" })
+    @SuppressWarnings({ "unchecked" })
     public ModuleMenuItem() {
         setOnAction(event -> {
             logger.info("Menu item activated: " + event);

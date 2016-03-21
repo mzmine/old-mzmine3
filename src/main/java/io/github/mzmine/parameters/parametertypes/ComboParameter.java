@@ -45,7 +45,7 @@ public class ComboParameter<ValueType> extends AbstractParameter<ValueType> {
         this(name, description, category, null, options, defaultValue);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes", "null" })
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public ComboParameter(@Nonnull String name, @Nonnull String description,
             @Nonnull String category,
             @Nullable ParameterValidator<ValueType> validator,

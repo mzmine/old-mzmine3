@@ -81,6 +81,7 @@ public class IntegerRangeParameter extends AbstractParameter<Range<Integer>> {
 
     }
 
+    @SuppressWarnings("null")
     @Override
     public void saveValueToXML(@Nonnull Element xmlElement) {
         if (getValue() == null)

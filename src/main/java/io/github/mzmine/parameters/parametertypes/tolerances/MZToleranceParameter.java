@@ -82,6 +82,7 @@ public class MZToleranceParameter extends AbstractParameter<MZTolerance> {
         setValue(new MZTolerance(mzTolerance, ppmTolerance));
     }
 
+    @SuppressWarnings("null")
     @Override
     public void saveValueToXML(@Nonnull Element xmlElement) {
         if (getValue() == null)

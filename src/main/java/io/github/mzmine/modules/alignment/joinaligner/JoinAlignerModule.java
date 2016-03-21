@@ -73,17 +73,17 @@ public class JoinAlignerModule implements MZmineProcessingModule {
         final RTTolerance rtTolerance = parameters
                 .getParameter(JoinAlignerParameters.rtTolerance).getValue();
 
-        final int mzWeight = parameters
+        final Integer mzWeight = parameters
                 .getParameter(JoinAlignerParameters.mzWeight).getValue();
 
-        final int rtWeight = parameters
+        final Integer rtWeight = parameters
                 .getParameter(JoinAlignerParameters.rtWeight).getValue();
 
-        final boolean requireSameAnnotation = parameters
+        final Boolean requireSameAnnotation = parameters
                 .getParameter(JoinAlignerParameters.requireSameAnnotation)
                 .getValue();
 
-        final boolean requireSameCharge = parameters
+        final Boolean requireSameCharge = parameters
                 .getParameter(JoinAlignerParameters.requireSameCharge)
                 .getValue();
 
@@ -91,7 +91,7 @@ public class JoinAlignerModule implements MZmineProcessingModule {
                 .getParameter(JoinAlignerParameters.featureTableName)
                 .getValue();
 
-        final boolean removeOldTable = parameters
+        final Boolean removeOldTable = parameters
                 .getParameter(JoinAlignerParameters.removeOldTable).getValue();
 
         if (featureTables == null || featureTables.getMatchingFeatureTables().isEmpty()) {
@@ -123,7 +123,7 @@ public class JoinAlignerModule implements MZmineProcessingModule {
             project.addFeatureTable(newFeatureTable);
 
             // If selected, remove old feature table
-            if (removeOldTable) {
+            if (removeOldTable != null && removeOldTable) {
                 for (FeatureTable featureTable : featureTables
                         .getMatchingFeatureTables()) {
                     project.removeFeatureTable(featureTable);

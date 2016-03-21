@@ -159,7 +159,7 @@ public class FeatureFilterModule implements MZmineProcessingModule {
                 project.addFeatureTable(newFeatureTable);
 
                 // If selected, remove old feature table
-                if (removeOldTable) {
+                if (removeOldTable != null && removeOldTable) {
                     project.removeFeatureTable(featureTable);
                 }
             });

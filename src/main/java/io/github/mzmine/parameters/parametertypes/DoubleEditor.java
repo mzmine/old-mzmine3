@@ -65,6 +65,7 @@ public class DoubleEditor extends HBox implements ParameterEditor<Double> {
         }
     }
 
+    @SuppressWarnings("null")
     @Override
     public void setValue(Double value) {
         if (value == null)

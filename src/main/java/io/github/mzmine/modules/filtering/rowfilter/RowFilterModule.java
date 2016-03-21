@@ -67,19 +67,19 @@ public class RowFilterModule implements MZmineProcessingModule {
             @Nonnull Collection<Task<?>> tasks) {
 
         // Boolean values
-        final boolean filterByMz = parameters
+        final Boolean filterByMz = parameters
                 .getParameter(RowFilterParameters.mzRange).getValue();
-        final boolean filterByRt = parameters
+        final Boolean filterByRt = parameters
                 .getParameter(RowFilterParameters.rtRange).getValue();
-        final boolean filterByDuration = parameters
+        final Boolean filterByDuration = parameters
                 .getParameter(RowFilterParameters.durationRange).getValue();
-        final boolean filterByCount = parameters
+        final Boolean filterByCount = parameters
                 .getParameter(RowFilterParameters.minCount).getValue();
-        final boolean filterByIsotopes = parameters
+        final Boolean filterByIsotopes = parameters
                 .getParameter(RowFilterParameters.minIsotopes).getValue();
-        final boolean filterByIonAnnotation = parameters
+        final Boolean filterByIonAnnotation = parameters
                 .getParameter(RowFilterParameters.ionAnnotation).getValue();
-        final boolean requireAnnotation = parameters
+        final Boolean requireAnnotation = parameters
                 .getParameter(RowFilterParameters.requireAnnotation).getValue();
 
         // Embedded values
@@ -103,7 +103,7 @@ public class RowFilterModule implements MZmineProcessingModule {
                 .getEmbeddedParameter().getValue();
 
         // Remove duplicate parameters
-        final boolean removeDuplicates = parameters
+        final Boolean removeDuplicates = parameters
                 .getParameter(RowFilterParameters.removeDuplicates).getValue();
         final MZTolerance duplicateMzTolerance = parameters
                 .getParameter(RowFilterParameters.removeDuplicates)
@@ -113,7 +113,7 @@ public class RowFilterModule implements MZmineProcessingModule {
                 .getParameter(RowFilterParameters.removeDuplicates)
                 .getEmbeddedParameters()
                 .getParameter(DuplicateFilterParameters.rtTolerance).getValue();
-        final boolean duplicateRequireSameID = parameters
+        final Boolean duplicateRequireSameID = parameters
                 .getParameter(RowFilterParameters.removeDuplicates)
                 .getEmbeddedParameters()
                 .getParameter(DuplicateFilterParameters.requireSameID)
@@ -122,7 +122,7 @@ public class RowFilterModule implements MZmineProcessingModule {
         // Other values
         final FeatureTablesSelection featureTables = parameters
                 .getParameter(RowFilterParameters.featureTables).getValue();
-        final boolean removeOldTable = parameters
+        final Boolean removeOldTable = parameters
                 .getParameter(RowFilterParameters.removeOldTable).getValue();
         final String nameSuffix = parameters
                 .getParameter(RowFilterParameters.nameSuffix).getValue();
@@ -165,7 +165,7 @@ public class RowFilterModule implements MZmineProcessingModule {
                 project.addFeatureTable(newFeatureTable);
 
                 // If selected, remove old feature table
-                if (removeOldTable) {
+                if (removeOldTable != null && removeOldTable) {
                     project.removeFeatureTable(featureTable);
                 }
             });
