@@ -38,7 +38,7 @@ public class SpinnerTableCell<T> extends TableCell<T, Integer> {
         spinner.disableProperty().bind(column.editableProperty().not());
         
         tableRowProperty().addListener(e -> {
-            TableRow row = getTableRow();
+            TableRow<?> row = getTableRow();
             if (row == null)
                 return;
             MsSpectrumDataSet dataSet = (MsSpectrumDataSet) row

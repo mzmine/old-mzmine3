@@ -71,7 +71,7 @@ public class PeakFinderModule implements MZmineProcessingModule {
                 .getParameter(PeakFinderParameters.mzTolerance).getValue();
         final RTTolerance rtTolerance = parameters
                 .getParameter(PeakFinderParameters.rtTolerance).getValue();
-        final boolean isIntensityTolSet = parameters
+        final Boolean isIntensityTolSet = parameters
                 .getParameter(PeakFinderParameters.intensityTolerance)
                 .getValue();
         Double intensityTolerance = parameters
@@ -104,7 +104,7 @@ public class PeakFinderModule implements MZmineProcessingModule {
             // If intensity tolerance is not active then set the
             // intensityTolerance value to a very high value to avoid any
             // filtering the peak shape
-            if (!isIntensityTolSet)
+            if (isIntensityTolSet == null || !isIntensityTolSet)
                 intensityTolerance = Double.MAX_VALUE;
 
             // New feature filter task
@@ -121,7 +121,7 @@ public class PeakFinderModule implements MZmineProcessingModule {
                 project.addFeatureTable(newFeatureTable);
 
                 // If selected, remove old feature table
-                if (removeOldTable) {
+                if (removeOldTable != null && removeOldTable) {
                     project.removeFeatureTable(featureTable);
                 }
             });

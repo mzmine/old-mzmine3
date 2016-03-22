@@ -52,8 +52,8 @@ public class SrmDetectionTask extends Task<Object> implements MZmineTask {
     private String title, message;
     private FeatureTable featureTable;
 
-    private MSDKMethod<?> srmDetectionMethod;
-    private MSDKMethod<?> chromatogramToFeatureTableMethod;
+    private MSDKMethod<List<Chromatogram>> srmDetectionMethod;
+    private MSDKMethod<FeatureTable> chromatogramToFeatureTableMethod;
 
     public SrmDetectionTask(String title, @Nullable String message,
             @Nonnull RawDataFile rawDataFile, @Nonnull DataPointStore dataStore,

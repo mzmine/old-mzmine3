@@ -71,7 +71,8 @@ public class BinningCentroidingModule implements MZmineProcessingModule {
         final String suffix = parameters
                 .getParameter(BinningCentroidingParameters.suffix).getValue();
 
-        if (rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
+        if (rawDataFiles == null
+                || rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
             logger.warn(
                     "Centroiding module started with no raw data files selected");
             return;

@@ -78,9 +78,9 @@ public class IsotopeGrouperModule implements MZmineProcessingModule {
                 .getParameter(IsotopeGrouperParameters.maximumCharge)
                 .getValue();
 
-        final RepresentativeIsotope representativeIsotope = parameters
-                .getParameter(IsotopeGrouperParameters.representativeIsotope)
-                .getValue();
+        //final RepresentativeIsotope representativeIsotope = parameters
+        //        .getParameter(IsotopeGrouperParameters.representativeIsotope)
+        //        .getValue();
 
         final Boolean monotonicShape = parameters
                 .getParameter(IsotopeGrouperParameters.monotonicShape)

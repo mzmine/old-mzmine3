@@ -66,14 +66,16 @@ public class FeatureTableImportParameters extends ParameterSet {
                     src = src.getParent();
 
                 }
-                for (PropertySheet.Item item : sheet.getItems()) {
-                    if (item instanceof FileNamesParameter) {
-                        List<File> fileNames = (List<File>) item.getValue();
-                        if (fileNames == null)
-                            return;
-                        String commonPrefix = FileNameUtil
-                                .findCommonPrefix(fileNames);
-                        editor.setValue(commonPrefix);
+                if (sheet != null && editor != null) {
+                    for (PropertySheet.Item item : sheet.getItems()) {
+                        if (item instanceof FileNamesParameter) {
+                            List<File> fileNames = (List<File>) item.getValue();
+                            if (fileNames == null)
+                                return;
+                            String commonPrefix = FileNameUtil
+                                    .findCommonPrefix(fileNames);
+                            editor.setValue(commonPrefix);
+                        }
                     }
                 }
             });
@@ -95,17 +97,19 @@ public class FeatureTableImportParameters extends ParameterSet {
                     src = src.getParent();
 
                 }
-                for (PropertySheet.Item item : sheet.getItems()) {
-                    if (item instanceof FileNamesParameter) {
-                        List<File> fileNames = (List<File>) item.getValue();
-                        if (fileNames == null)
-                            continue;
-                        String commonSuffix = FileNameUtil
-                                .findCommonSuffix(fileNames);
-                        // If no common suffix then remove file extension
-                        if (Strings.isNullOrEmpty(commonSuffix))
-                            commonSuffix = ".*";
-                        editor.setValue(commonSuffix);
+                if (sheet != null && editor != null) {
+                    for (PropertySheet.Item item : sheet.getItems()) {
+                        if (item instanceof FileNamesParameter) {
+                            List<File> fileNames = (List<File>) item.getValue();
+                            if (fileNames == null)
+                                continue;
+                            String commonSuffix = FileNameUtil
+                                    .findCommonSuffix(fileNames);
+                            // If no common suffix then remove file extension
+                            if (Strings.isNullOrEmpty(commonSuffix))
+                                commonSuffix = ".*";
+                            editor.setValue(commonSuffix);
+                        }
                     }
                 }
             });

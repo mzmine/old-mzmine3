@@ -69,7 +69,8 @@ public class ExactMassCentroidingModule implements MZmineProcessingModule {
         final String suffix = parameters
                 .getParameter(ExactMassCentroidingParameters.suffix).getValue();
 
-        if (rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
+        if (rawDataFiles == null
+                || rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
             logger.warn(
                     "Centroiding module started with no raw data files selected");
             return;

@@ -66,21 +66,37 @@ public class FeatureFilterModule implements MZmineProcessingModule {
             @Nonnull Collection<Task<?>> tasks) {
 
         // Boolean values
-        final Boolean filterByDuration = parameters
+        Boolean filterByDuration = parameters
                 .getParameter(FeatureFilterParameters.duration).getValue();
-        final Boolean filterByArea = parameters
+        Boolean filterByArea = parameters
                 .getParameter(FeatureFilterParameters.area).getValue();
-        final Boolean filterByHeight = parameters
+        Boolean filterByHeight = parameters
                 .getParameter(FeatureFilterParameters.height).getValue();
-        final Boolean filterByDataPoints = parameters
+        Boolean filterByDataPoints = parameters
                 .getParameter(FeatureFilterParameters.dataPoints).getValue();
-        final Boolean filterByFWHM = parameters
+        Boolean filterByFWHM = parameters
                 .getParameter(FeatureFilterParameters.fwhm).getValue();
-        final Boolean filterByTailingFactor = parameters
+        Boolean filterByTailingFactor = parameters
                 .getParameter(FeatureFilterParameters.tailingFactor).getValue();
-        final Boolean filterByAsymmetryFactor = parameters
+        Boolean filterByAsymmetryFactor = parameters
                 .getParameter(FeatureFilterParameters.asymmetryFactor)
                 .getValue();
+
+        // Default values
+        if (filterByDuration == null)
+            filterByDuration = false;
+        if (filterByArea == null)
+            filterByArea = false;
+        if (filterByHeight == null)
+            filterByHeight = false;
+        if (filterByDataPoints == null)
+            filterByDataPoints = false;
+        if (filterByFWHM == null)
+            filterByFWHM = false;
+        if (filterByTailingFactor == null)
+            filterByTailingFactor = false;
+        if (filterByAsymmetryFactor == null)
+            filterByAsymmetryFactor = false;
 
         // Embedded values
         final Range<Double> durationRange = parameters

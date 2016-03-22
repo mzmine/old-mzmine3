@@ -102,6 +102,7 @@ public class FeatureTableImportModule implements MZmineProcessingModule {
                     .getExtension(fileName.getAbsolutePath());
             MSDKMethod<?> method = null;
             switch (fileExtension.toUpperCase()) {
+            default:
             case "CSV":
                 method = new CsvFileImportMethod(fileName, dataStore);
                 break;
@@ -122,7 +123,7 @@ public class FeatureTableImportModule implements MZmineProcessingModule {
                 // Remove common prefix
                 if (!Strings.isNullOrEmpty(removePrefix)) {
                     String name = featureTable.getName();
-                    if (name.startsWith(removePrefix))
+                    if (removePrefix != null && name.startsWith(removePrefix))
                         name = name.substring(removePrefix.length());
                     featureTable.setName(name);
                 }

@@ -52,13 +52,11 @@ public class RawDataImportModule implements MZmineProcessingModule {
     private static final String MODULE_NAME = "Raw data import";
     private static final String MODULE_DESCRIPTION = "This module imports raw data into the project.";
 
-    @SuppressWarnings("null")
     @Override
     public @Nonnull String getName() {
         return MODULE_NAME;
     }
 
-    @SuppressWarnings("null")
     @Override
     public @Nonnull String getDescription() {
         return MODULE_DESCRIPTION;

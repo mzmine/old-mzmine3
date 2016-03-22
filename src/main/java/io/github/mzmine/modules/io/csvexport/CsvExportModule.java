@@ -101,6 +101,14 @@ public class CsvExportModule implements MZmineProcessingModule {
             return;
         }
 
+        if (tableColumns == null) {
+            MZmineGUI.displayMessage(
+                    "Feature table export module started with no columns selected.");
+            logger.warn(
+                    "Feature table export module started with no columns selected.");
+            return;
+        }
+
         List<FeatureTableColumn<?>> columns;
 
         // Add a task for each feature table

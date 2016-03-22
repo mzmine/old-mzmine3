@@ -40,7 +40,7 @@ public class AuditLogTaskRecord {
         this.taskTitle = task.getTitle();
 
         task.stateProperty().addListener(new ChangeListener<State>() {
-            public void changed(ObservableValue ov, State oldState,
+            public void changed(ObservableValue<? extends State> ov, State oldState,
                     State newState) {
                 taskStatus = newState;
             }

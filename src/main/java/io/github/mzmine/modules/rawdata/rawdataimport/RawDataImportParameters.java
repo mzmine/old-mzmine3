@@ -53,13 +53,11 @@ public class RawDataImportParameters extends ParameterSet {
             new ExtensionFilter("XML files", "*.xml"),
             new ExtensionFilter("All files", "*.*") };
 
-    @SuppressWarnings("null")
     public static final FileNamesParameter fileNames = new FileNamesParameter(
             "File names", "Add raw data files", "Input files",
             ParameterValidator.createNonEmptyValidator(),
             Arrays.asList(filters));
 
-    @SuppressWarnings("null")
     public static final ComboParameter<RawDataImportMode> importMode = new ComboParameter<>(
             "Import mode", "Select how the raw data points will be handled",
             "Mode", Arrays.asList(RawDataImportMode.values()),

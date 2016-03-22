@@ -91,7 +91,7 @@ public class MsSpectrumLayersDialogController {
                 column -> new CheckBoxTableCell<MsSpectrumDataSet, Boolean>() {
                     {
                         tableRowProperty().addListener(e -> {
-                            TableRow row = getTableRow();
+                            TableRow<?> row = getTableRow();
                             if (row == null)
                                 return;
                             MsSpectrumDataSet dataSet = (MsSpectrumDataSet) row

@@ -46,13 +46,11 @@ public class MzMLExportModule implements MZmineProcessingModule {
     private static final String MODULE_NAME = "mzML export";
     private static final String MODULE_DESCRIPTION = "This module exports raw data into mzML";
 
-    @SuppressWarnings("null")
     @Override
     public @Nonnull String getName() {
         return MODULE_NAME;
     }
 
-    @SuppressWarnings("null")
     @Override
     public @Nonnull String getDescription() {
         return MODULE_DESCRIPTION;

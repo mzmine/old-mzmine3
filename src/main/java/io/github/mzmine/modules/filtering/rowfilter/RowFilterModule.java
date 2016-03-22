@@ -67,20 +67,36 @@ public class RowFilterModule implements MZmineProcessingModule {
             @Nonnull Collection<Task<?>> tasks) {
 
         // Boolean values
-        final Boolean filterByMz = parameters
+        Boolean filterByMz = parameters
                 .getParameter(RowFilterParameters.mzRange).getValue();
-        final Boolean filterByRt = parameters
+        Boolean filterByRt = parameters
                 .getParameter(RowFilterParameters.rtRange).getValue();
-        final Boolean filterByDuration = parameters
+        Boolean filterByDuration = parameters
                 .getParameter(RowFilterParameters.durationRange).getValue();
-        final Boolean filterByCount = parameters
+        Boolean filterByCount = parameters
                 .getParameter(RowFilterParameters.minCount).getValue();
-        final Boolean filterByIsotopes = parameters
+        Boolean filterByIsotopes = parameters
                 .getParameter(RowFilterParameters.minIsotopes).getValue();
-        final Boolean filterByIonAnnotation = parameters
+        Boolean filterByIonAnnotation = parameters
                 .getParameter(RowFilterParameters.ionAnnotation).getValue();
-        final Boolean requireAnnotation = parameters
+        Boolean requireAnnotation = parameters
                 .getParameter(RowFilterParameters.requireAnnotation).getValue();
+
+        // Default values
+        if (filterByMz == null)
+            filterByMz = false;
+        if (filterByRt == null)
+            filterByRt = false;
+        if (filterByDuration == null)
+            filterByDuration = false;
+        if (filterByCount == null)
+            filterByCount = false;
+        if (filterByIsotopes == null)
+            filterByIsotopes = false;
+        if (filterByIonAnnotation == null)
+            filterByIonAnnotation = false;
+        if (requireAnnotation == null)
+            requireAnnotation = false;
 
         // Embedded values
         final Range<Double> mzRange = parameters
@@ -92,8 +108,7 @@ public class RowFilterModule implements MZmineProcessingModule {
         final Range<Double> durationRange = parameters
                 .getParameter(RowFilterParameters.durationRange)
                 .getEmbeddedParameter().getValue();
-        Double minCount = parameters
-                .getParameter(RowFilterParameters.minCount)
+        Double minCount = parameters.getParameter(RowFilterParameters.minCount)
                 .getEmbeddedParameter().getValue();
         final Integer minIsotopes = parameters
                 .getParameter(RowFilterParameters.minIsotopes)
@@ -103,7 +118,7 @@ public class RowFilterModule implements MZmineProcessingModule {
                 .getEmbeddedParameter().getValue();
 
         // Remove duplicate parameters
-        final Boolean removeDuplicates = parameters
+        Boolean removeDuplicates = parameters
                 .getParameter(RowFilterParameters.removeDuplicates).getValue();
         final MZTolerance duplicateMzTolerance = parameters
                 .getParameter(RowFilterParameters.removeDuplicates)
@@ -113,11 +128,17 @@ public class RowFilterModule implements MZmineProcessingModule {
                 .getParameter(RowFilterParameters.removeDuplicates)
                 .getEmbeddedParameters()
                 .getParameter(DuplicateFilterParameters.rtTolerance).getValue();
-        final Boolean duplicateRequireSameID = parameters
+        Boolean duplicateRequireSameID = parameters
                 .getParameter(RowFilterParameters.removeDuplicates)
                 .getEmbeddedParameters()
                 .getParameter(DuplicateFilterParameters.requireSameID)
                 .getValue();
+
+        // Default values
+        if (removeDuplicates == null)
+            removeDuplicates = false;
+        if (duplicateRequireSameID == null)
+            duplicateRequireSameID = false;
 
         // Other values
         final FeatureTablesSelection featureTables = parameters
@@ -127,7 +148,8 @@ public class RowFilterModule implements MZmineProcessingModule {
         final String nameSuffix = parameters
                 .getParameter(RowFilterParameters.nameSuffix).getValue();
 
-        if (featureTables == null || featureTables.getMatchingFeatureTables().isEmpty()) {
+        if (featureTables == null
+                || featureTables.getMatchingFeatureTables().isEmpty()) {
             logger.warn(
                     "Row filter module started with no feature table selected");
             return;
@@ -142,6 +164,8 @@ public class RowFilterModule implements MZmineProcessingModule {
                     .getMemoryDataStore();
 
             // Handle < 1 values for minCount
+            if (minCount == null)
+                minCount = 0d;
             if (minCount < 1)
                 minCount = featureTable.getSamples().size() * minCount;
             // Round value down to nearest hole number

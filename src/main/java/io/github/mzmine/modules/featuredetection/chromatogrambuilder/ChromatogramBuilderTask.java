@@ -54,12 +54,12 @@ public class ChromatogramBuilderTask extends Task<Object>
     private String title, message;
     private FeatureTable featureTable;
 
-    private MSDKMethod<?> chromatogramBuilderMethod;
-    private MSDKMethod<?> chromatogramToFeatureTableMethod;
+    private MSDKMethod<List<Chromatogram>> chromatogramBuilderMethod;
+    private MSDKMethod<FeatureTable> chromatogramToFeatureTableMethod;
 
     public ChromatogramBuilderTask(String title, @Nullable String message,
             @Nonnull RawDataFile rawDataFile, @Nonnull DataPointStore dataStore,
-            @Nonnull MZTolerance mzTolerance, @Nonnull Float noiseLevel,
+            @Nonnull MZTolerance mzTolerance, @Nonnull Double noiseLevel,
             @Nonnull Double minDuration, @Nonnull Double minHeight,
             @Nullable String nameSuffix) {
         this.rawDataFile = rawDataFile;
