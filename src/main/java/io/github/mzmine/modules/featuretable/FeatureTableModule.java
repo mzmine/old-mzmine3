@@ -103,9 +103,9 @@ public class FeatureTableModule implements MZmineRunnableModule {
         TreeItem<FeatureTableRow> treeItem;
 
         // Group rows
-        FeatureTableColumn groupColoumn = featureTable
+        FeatureTableColumn<Integer> groupColoumn = featureTable
                 .getColumn(ColumnName.GROUPID, null);
-        FeatureTableColumn idColoumn = featureTable.getColumn(ColumnName.ID,
+        FeatureTableColumn<Integer> idColoumn = featureTable.getColumn(ColumnName.ID,
                 null);
         for (FeatureTableRow row : rows) {
             // No group column
@@ -118,18 +118,18 @@ public class FeatureTableModule implements MZmineRunnableModule {
                 treeItem = new TreeItem<>(row);
                 treeItem.setExpanded(true);
                 root.getChildren().add(treeItem);
-                rowMap.put((int) row.getData(idColoumn), treeItem);
+                rowMap.put(row.getData(idColoumn), treeItem);
             }
             // The row has a group id
             else {
-                Integer groupID = (int) row.getData(groupColoumn);
+                Integer groupID = row.getData(groupColoumn);
                 TreeItem<FeatureTableRow> parentTreeItem = rowMap.get(groupID);
                 if (parentTreeItem == null) {
                     parentTreeItem = root;
                 }
                 treeItem = new TreeItem<>(row);
                 parentTreeItem.getChildren().add(treeItem);
-                rowMap.put((int) row.getData(idColoumn), treeItem);
+                rowMap.put(row.getData(idColoumn), treeItem);
             }
         }
 
@@ -172,7 +172,7 @@ public class FeatureTableModule implements MZmineRunnableModule {
                         });
 
                 // Set column renderer
-                Class renderClass = ColumnRenderers
+                Class<?> renderClass = ColumnRenderers
                         .getRenderClass(column.getName());
                 Callback<TreeTableColumn<FeatureTableRow, Object>, TreeTableCell<FeatureTableRow, Object>> rendeder = null;
                 try {
@@ -228,7 +228,7 @@ public class FeatureTableModule implements MZmineRunnableModule {
                         });
 
                 // Set column renderer
-                Class renderClass = ColumnRenderers
+                Class<?> renderClass = ColumnRenderers
                         .getRenderClass(column.getName());
                 Callback<TreeTableColumn<FeatureTableRow, Object>, TreeTableCell<FeatureTableRow, Object>> rendeder = null;
                 try {
@@ -267,11 +267,11 @@ public class FeatureTableModule implements MZmineRunnableModule {
                 if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                     // Find feature table row
                     Node node = ((Node) event.getTarget()).getParent();
-                    TreeTableRow row;
+                    TreeTableRow<?> row;
                     while (!(node instanceof TreeTableRow)) {
                         node = node.getParent();
                     }
-                    row = (TreeTableRow) node;
+                    row = (TreeTableRow<?>) node;
                     FeatureTableRow featureTableRow = (FeatureTableRow) row
                             .getItem();
 
@@ -281,7 +281,7 @@ public class FeatureTableModule implements MZmineRunnableModule {
                             .getSelectionModel().getSelectedCells();
                     for (TreeTablePosition<FeatureTableRow, ?> cell : cells) {
                         if (cell.getTableColumn().getParentColumn() != null) {
-                            TreeTableColumn parentColumn = (TreeTableColumn) cell
+                            TreeTableColumn<?,?> parentColumn = (TreeTableColumn) cell
                                     .getTableColumn().getParentColumn();
                             List<Sample> samples = featureTable.getSamples();
                             for (Sample s : samples) {

@@ -68,9 +68,9 @@ public class ChromatogramBuilderModule implements MZmineProcessingModule {
         final MZTolerance mzTolerance = parameters
                 .getParameter(ChromatogramBuilderParameters.mzTolerance)
                 .getValue();
-        final Float noiseLevel = parameters
+        final Double noiseLevel = parameters
                 .getParameter(ChromatogramBuilderParameters.noiseLevel)
-                .getValue().floatValue();
+                .getValue();
         final Double minDuration = parameters
                 .getParameter(ChromatogramBuilderParameters.minDuration)
                 .getValue();
@@ -81,7 +81,8 @@ public class ChromatogramBuilderModule implements MZmineProcessingModule {
                 .getParameter(ChromatogramBuilderParameters.nameSuffix)
                 .getValue();
 
-        if (rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
+        if (rawDataFiles == null
+                || rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
             logger.warn(
                     "Chromatogram builder module started with no raw data files selected");
             return;
@@ -99,8 +100,8 @@ public class ChromatogramBuilderModule implements MZmineProcessingModule {
             // 2. ChromatogramToFeatureTableMethod
             ChromatogramBuilderTask newTask = new ChromatogramBuilderTask(
                     "Chromatogram builder", rawDataFile.getName(), rawDataFile,
-                    dataStore, mzTolerance, noiseLevel, minDuration, minHeight,
-                    nameSuffix);
+                    dataStore, mzTolerance, noiseLevel,
+                    minDuration, minHeight, nameSuffix);
 
             // Add the feature table to the project
             newTask.setOnSucceeded(e -> {

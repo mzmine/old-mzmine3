@@ -30,13 +30,10 @@ import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.featdet.srmdetection.SrmDetectionMethod;
 import io.github.mzmine.modules.MZmineProcessingModule;
-import io.github.mzmine.modules.featuredetection.chromatogrambuilder.ChromatogramBuilderTask;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;
 import io.github.mzmine.project.MZmineProject;
-import io.github.mzmine.taskcontrol.MSDKTask;
 import javafx.concurrent.Task;
 
 /**
@@ -88,8 +85,8 @@ public class SrmDetectionModule implements MZmineProcessingModule {
             // 1. SrmDetectionMethod
             // 2. ChromatogramToFeatureTableMethod
             SrmDetectionTask newTask = new SrmDetectionTask(
-                    "SRM feature detection", rawDataFile.getName(), rawDataFile, dataStore,
-                    nameSuffix);
+                    "SRM feature detection", rawDataFile.getName(), rawDataFile,
+                    dataStore, nameSuffix);
 
             // Add the feature table to the project
             newTask.setOnSucceeded(e -> {

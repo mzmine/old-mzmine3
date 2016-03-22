@@ -175,7 +175,7 @@ public class FeatureTableMenu {
                 cm.getItems().add(new SeparatorMenuItem());
 
                 // Sample specific columns
-                for (TreeTableColumn col : tableColumn.getColumns()) {
+                for (TreeTableColumn<?, ?> col : tableColumn.getColumns()) {
                     cb = new CheckBox("Sample: " + col.getText());
 
                     // Bind to all equal sample specific columns
@@ -184,7 +184,7 @@ public class FeatureTableMenu {
                         int childrenColumns2 = tableColumn2.getColumns().size();
                         if (childrenColumns2 != 0) {
 
-                            for (TreeTableColumn col2 : tableColumn2
+                            for (TreeTableColumn<?, ?> col2 : tableColumn2
                                     .getColumns()) {
                                 if (col.getText().equals(col2.getText())) {
                                     cb.selectedProperty().bindBidirectional(

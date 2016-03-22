@@ -73,7 +73,8 @@ public class RecursiveCentroidingModule implements MZmineProcessingModule {
         final String suffix = parameters
                 .getParameter(RecursiveCentroidingParameters.suffix).getValue();
 
-        if (rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
+        if (rawDataFiles == null
+                || rawDataFiles.getMatchingRawDataFiles().isEmpty()) {
             logger.warn(
                     "Centroiding module started with no raw data files selected");
             return;

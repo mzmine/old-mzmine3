@@ -55,6 +55,8 @@ import javafx.scene.paint.Color;
 public class MsSpectrumDataSet extends AbstractXYDataset
         implements MsSpectrumPlotDataSet {
 
+    private static final long serialVersionUID = -3188441074323131747L;
+
     private static final ScheduledThreadPoolExecutor threadPool = new ScheduledThreadPoolExecutor(
             1);
 
@@ -282,7 +284,7 @@ public class MsSpectrumDataSet extends AbstractXYDataset
     }
 
     @Override
-    public Comparable getSeriesKey(int series) {
+    public Comparable<?> getSeriesKey(int series) {
         return getName();
     }
 

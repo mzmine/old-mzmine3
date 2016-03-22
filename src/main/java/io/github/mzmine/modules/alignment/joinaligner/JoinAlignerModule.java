@@ -64,33 +64,37 @@ public class JoinAlignerModule implements MZmineProcessingModule {
             @Nonnull ParameterSet parameters,
             @Nonnull Collection<Task<?>> tasks) {
 
+        // Parameter values
         final FeatureTablesSelection featureTables = parameters
                 .getParameter(JoinAlignerParameters.featureTables).getValue();
-
         final MZTolerance mzTolerance = parameters
                 .getParameter(JoinAlignerParameters.mzTolerance).getValue();
-
         final RTTolerance rtTolerance = parameters
                 .getParameter(JoinAlignerParameters.rtTolerance).getValue();
-
-        final Integer mzWeight = parameters
+        Integer mzWeight = parameters
                 .getParameter(JoinAlignerParameters.mzWeight).getValue();
-
-        final Integer rtWeight = parameters
+        Integer rtWeight = parameters
                 .getParameter(JoinAlignerParameters.rtWeight).getValue();
-
-        final Boolean requireSameAnnotation = parameters
+        Boolean requireSameAnnotation = parameters
                 .getParameter(JoinAlignerParameters.requireSameAnnotation)
                 .getValue();
-
-        final Boolean requireSameCharge = parameters
+        Boolean requireSameCharge = parameters
                 .getParameter(JoinAlignerParameters.requireSameCharge)
                 .getValue();
-
         final String featureTableName = parameters
                 .getParameter(JoinAlignerParameters.featureTableName)
                 .getValue();
 
+        // Default values
+        if (mzWeight == null)
+            mzWeight = 1;
+        if (rtWeight == null)
+            rtWeight = 1;
+        if (requireSameAnnotation == null)
+            requireSameAnnotation = false;
+        if (requireSameCharge == null)
+            requireSameCharge = false;
+        
         final Boolean removeOldTable = parameters
                 .getParameter(JoinAlignerParameters.removeOldTable).getValue();
 

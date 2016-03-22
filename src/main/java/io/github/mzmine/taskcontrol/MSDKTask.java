@@ -27,8 +27,6 @@ import org.slf4j.LoggerFactory;
 import io.github.msdk.MSDKMethod;
 import io.github.mzmine.gui.MZmineGUI;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 
 public class MSDKTask extends Task<Object> implements MZmineTask {
 

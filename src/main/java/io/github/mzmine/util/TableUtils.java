@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
-import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTableRow;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
@@ -88,15 +87,13 @@ public class TableUtils {
         public void copySelectionToClipboard(TreeTableView table) {
             StringBuilder clipboardString = new StringBuilder();
 
-            // ObservableList<TreeTablePosition> positionList =
-            // table.getSelectionModel().getSelectedCells();
             ObservableList<TreeTablePosition<?, ?>> positionList = table
                     .getSelectionModel().getSelectedCells();
             int prevRow = -1;
 
             // Add sample headers
             int hiddenColumns = 0;
-            for (TreeTablePosition position : positionList) {
+            for (TreeTablePosition<?,?> position : positionList) {
                 int rowNr = position.getRow();
                 int columnNr = position.getColumn() + hiddenColumns;
 
@@ -108,7 +105,7 @@ public class TableUtils {
 
                 // Get the column from the map to avoid trouble with sample
                 // headers
-                TreeTableColumn column = columnMap.get(columnNr);
+                TreeTableColumn<?,?> column = columnMap.get(columnNr);
                 Object object = (Object) column.getCellData(rowNr);
 
                 // Skip chromatogram column
@@ -135,7 +132,7 @@ public class TableUtils {
 
             // Add column headers
             hiddenColumns = 0;
-            for (TreeTablePosition position : positionList) {
+            for (TreeTablePosition<?,?> position : positionList) {
                 int rowNr = position.getRow();
                 int columnNr = position.getColumn() + hiddenColumns;
 
@@ -147,7 +144,7 @@ public class TableUtils {
 
                 // Get the column from the map to avoid trouble with sample
                 // headers
-                TreeTableColumn column = columnMap.get(columnNr);
+                TreeTableColumn<?,?> column = columnMap.get(columnNr);
                 Object object = (Object) column.getCellData(rowNr);
 
                 // Skip chromatogram column
@@ -169,7 +166,7 @@ public class TableUtils {
 
             // Add data
             hiddenColumns = 0;
-            for (TreeTablePosition position : positionList) {
+            for (TreeTablePosition<?,?> position : positionList) {
 
                 int rowNr = position.getRow();
                 if (prevRow != rowNr) {
@@ -185,7 +182,7 @@ public class TableUtils {
 
                 // Get the column from the map to avoid trouble with sample
                 // headers
-                TreeTableColumn column = columnMap.get(columnNr);
+                TreeTableColumn<?,?> column = columnMap.get(columnNr);
 
                 String text = null;
                 Object object = (Object) column.getCellData(rowNr);
