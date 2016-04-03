@@ -216,7 +216,12 @@ public final class MZmineGUI extends Application {
                 .getRawDataTree();
         for (TreeItem<RawDataTreeItem> item : rawDataTree.getSelectionModel()
                 .getSelectedItems()) {
-            RawDataFile file = item.getValue().getRawDataFile();
+            if (item == null)
+                continue;
+            RawDataTreeItem ritem = item.getValue();
+            if (ritem == null)
+                continue;
+            RawDataFile file = ritem.getRawDataFile();
             list.add(file);
         }
 

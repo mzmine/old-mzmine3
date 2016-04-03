@@ -38,6 +38,7 @@ import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelectio
 import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.project.MZmineProject;
 import io.github.mzmine.util.MsScanUtils;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -105,13 +106,16 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
             MZmineGUI.addWindow(node, "MS spectrum", false);
             MsSpectrumPlotWindowController controller = loader.getController();
 
-            for (RawDataFile dataFile : dataFiles) {
-                for (MsScan scan : scanSelection.getMatchingScans(dataFile)) {
-                    String title = MsScanUtils
-                            .createSingleLineMsScanDescription(scan);
-                    controller.addSpectrum(scan, title);
+            Platform.runLater(() -> {
+                for (RawDataFile dataFile : dataFiles) {
+                    for (MsScan scan : scanSelection
+                            .getMatchingScans(dataFile)) {
+                        String title = MsScanUtils
+                                .createSingleLineMsScanDescription(scan);
+                        controller.addSpectrum(scan, title);
+                    }
                 }
-            }
+            });
 
         } catch (Exception e) {
             e.printStackTrace();

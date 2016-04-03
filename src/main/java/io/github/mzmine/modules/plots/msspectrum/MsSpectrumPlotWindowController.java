@@ -249,10 +249,16 @@ public class MsSpectrumPlotWindowController {
      * 
      * @param spectrum
      */
-    public synchronized void addSpectrum(@Nonnull MsSpectrum spectrum,
+    public void addSpectrum(@Nonnull MsSpectrum spectrum,
             @Nonnull String name) {
 
         Preconditions.checkNotNull(spectrum);
+
+        if (!Platform.isFxApplicationThread()) {
+            throw new IllegalStateException(
+                    "Not on FX application thread; currentThread = "
+                            + Thread.currentThread().getName());
+        }
 
         MsSpectrumDataSet newDataSet = new MsSpectrumDataSet(spectrum, name);
         newDataSet.mzShiftProperty().bind(mzShift);
@@ -286,7 +292,7 @@ public class MsSpectrumPlotWindowController {
         });
 
         // Once everything is configured, add the dataset to the plot
-        Platform.runLater(() -> plot.setDataset(datasetIndex, newDataSet));
+        plot.setDataset(datasetIndex, newDataSet);
 
     }
 

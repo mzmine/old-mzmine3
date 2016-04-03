@@ -40,6 +40,7 @@ import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.project.MZmineProject;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -109,7 +110,11 @@ public class ChromatogramPlotModule implements MZmineRunnableModule {
                         MSDKXICMethod xicExtractor = new MSDKXICMethod(dataFile,
                                 scans, mzRange, chromatogramType, store);
                         Chromatogram chromatogram = xicExtractor.execute();
-                        controller.addChromatogram(chromatogram);
+                        String title = dataFile.getName() + " " + chromatogramType + " ["
+                                + mzRange.lowerEndpoint() + "-"
+                                + mzRange.upperEndpoint() + " m/z]";
+                        Platform.runLater(() -> controller
+                                .addChromatogram(chromatogram, title));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

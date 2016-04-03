@@ -24,6 +24,7 @@ import java.awt.Font;
 import java.awt.Stroke;
 import java.awt.geom.Ellipse2D;
 import java.io.File;
+import java.net.URL;
 import java.text.DecimalFormat;
 
 import org.jfree.chart.JFreeChart;
@@ -38,6 +39,8 @@ import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.data.RangeType;
 import org.jfree.ui.RectangleInsets;
+
+import com.sun.javafx.tk.Toolkit;
 
 import io.github.msdk.datamodel.chromatograms.Chromatogram;
 import io.github.mzmine.main.MZmineCore;
@@ -56,11 +59,14 @@ import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 
 /**
@@ -122,9 +128,12 @@ public class ChromatogramPlotWindowController {
         plot.setBackgroundPaint(JavaFXUtil.convertColorToAWT(backgroundColor));
         plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
         plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
-        plot.setDomainCrosshairPaint(JavaFXUtil.convertColorToAWT(crossHairColor));
+        plot.setDomainCrosshairPaint(
+                JavaFXUtil.convertColorToAWT(crossHairColor));
+        plot.setRangeCrosshairPaint(
+                JavaFXUtil.convertColorToAWT(crossHairColor));
         plot.setDomainCrosshairVisible(true);
-        plot.setRangeCrosshairVisible(false);
+        plot.setRangeCrosshairVisible(true);
 
         // chart properties
         chart.setBackgroundPaint(JavaFXUtil.convertColorToAWT(backgroundColor));
@@ -188,15 +197,19 @@ public class ChromatogramPlotWindowController {
         });
     }
 
-    void addChromatogram(Chromatogram chromatogram) {
+    void addChromatogram(Chromatogram chromatogram, String title) {
+
+        if (!Platform.isFxApplicationThread()) {
+            throw new IllegalStateException(
+                    "Not on FX application thread; currentThread = "
+                            + Thread.currentThread().getName());
+        }
 
         final int datasetIndex = numberOfDataSets;
         numberOfDataSets++;
 
-        String chromatName = "Chromatogram "
-                + chromatogram.getChromatogramNumber();
         ChromatogramDataSet newDataSet = new ChromatogramDataSet(chromatogram,
-                chromatName);
+                title);
 
         datasets.add(newDataSet);
 
@@ -211,6 +224,7 @@ public class ChromatogramPlotWindowController {
             Platform.runLater(
                     () -> configureRenderer(newDataSet, datasetIndex));
         });
+
         newDataSet.lineThicknessProperty().addListener(e -> {
             Platform.runLater(
                     () -> configureRenderer(newDataSet, datasetIndex));
@@ -219,9 +233,9 @@ public class ChromatogramPlotWindowController {
             Platform.runLater(
                     () -> configureRenderer(newDataSet, datasetIndex));
         });
-        // Once everything is configured, add the dataset to the plot
-        Platform.runLater(() -> plot.setDataset(datasetIndex, newDataSet));
 
+        // Once everything is configured, add the dataset to the plot
+        plot.setDataset(datasetIndex, newDataSet);
     }
 
     private void configureRenderer(ChromatogramPlotDataSet dataset,
@@ -260,6 +274,7 @@ public class ChromatogramPlotWindowController {
         newRenderer.setBaseItemLabelPaint(
                 JavaFXUtil.convertColorToAWT(labelsColor));
         newRenderer.setBaseItemLabelsVisible(itemLabelsVisible.get());
+        newRenderer.setBaseItemLabelsVisible(true);
 
         // Set tooltip generator
         newRenderer.setBaseToolTipGenerator(dataset);
@@ -281,7 +296,18 @@ public class ChromatogramPlotWindowController {
     }
 
     public void handleSetupLayers(Event e) {
-
+        try {
+            URL layersDialogFXML = getClass().getResource(LAYERS_DIALOG_FXML);
+            FXMLLoader loader = new FXMLLoader(layersDialogFXML);
+            Stage layersDialog = loader.load();
+            ChromatogramLayersDialogController controller = loader
+                    .getController();
+            controller.configure(datasets, this);
+            layersDialog.initModality(Modality.APPLICATION_MODAL);
+            layersDialog.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void handleContextMenuShowing(Event e) {

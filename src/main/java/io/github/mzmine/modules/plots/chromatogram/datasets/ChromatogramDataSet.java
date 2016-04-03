@@ -20,7 +20,6 @@
 package io.github.mzmine.modules.plots.chromatogram.datasets;
 
 import java.text.NumberFormat;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import org.jfree.data.xy.AbstractXYDataset;
 import org.jfree.data.xy.XYDataset;
@@ -32,7 +31,6 @@ import io.github.msdk.util.ChromatogramUtil;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotDataSet;
 import io.github.mzmine.util.MsScanUtils;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
@@ -50,9 +48,6 @@ import javafx.scene.paint.Color;
  */
 public class ChromatogramDataSet extends AbstractXYDataset
         implements ChromatogramPlotDataSet {
-
-    private static final ScheduledThreadPoolExecutor threadPool = new ScheduledThreadPoolExecutor(
-            1);
 
     private Chromatogram chromatogram;
     private double mzValues[];
@@ -74,6 +69,10 @@ public class ChromatogramDataSet extends AbstractXYDataset
 
     public ChromatogramDataSet(Chromatogram chromatogram, String datasetName) {
 
+        // Turn notify to off, to avoid redrawing the plot after each
+        // property change
+        setNotify(false);
+
         // Listen for property changes
         intensityScale.addListener(e -> {
             fireDatasetChanged();
@@ -82,50 +81,34 @@ public class ChromatogramDataSet extends AbstractXYDataset
             fireDatasetChanged();
         });
 
-        setChromatogram(chromatogram, datasetName);
+        // Remember if the current intensity scale was modified
+        boolean modifiedIntensityScale = (getIntensityScale() != this.topIndensity);
 
-    }
+        this.chromatogram = chromatogram;
+        this.mzValues = chromatogram.getMzValues();
+        this.rtValues = chromatogram.getRetentionTimes();
+        this.intensityValues = chromatogram.getIntensityValues();
+        this.numOfDataPoints = chromatogram.getNumberOfDataPoints();
+        this.topIndensity = ChromatogramUtil.getMaxHeight(intensityValues,
+                numOfDataPoints);
 
-    public void setChromatogram(Chromatogram chromatogram, String datasetName) {
+        // If the intensity scale was not modified by the user, set the new
+        // scale to max intensity
+        if (!modifiedIntensityScale)
+            setIntensityScale((double) topIndensity);
 
-        // Load the actual data in a separate thread to avoid blocking the GUI
-        threadPool.execute(() -> {
+        setName(datasetName);
 
-            // Turn notify to off, to avoid redrawing the plot after each
-            // property change
-            setNotify(false);
-
-            // Remember if the current intensity scale was modified
-            boolean modifiedIntensityScale = (getIntensityScale() != this.topIndensity);
-
-            this.chromatogram = chromatogram;
-            this.mzValues = chromatogram.getMzValues();
-            this.rtValues = chromatogram.getRetentionTimes();
-            this.intensityValues = chromatogram.getIntensityValues();
-            this.numOfDataPoints = chromatogram.getNumberOfDataPoints();
-            this.topIndensity = ChromatogramUtil.getMaxHeight(intensityValues,
-                    numOfDataPoints);
-
-            // If the intensity scale was not modified by the user, set the new
-            // scale to max intensity
-            if (!modifiedIntensityScale)
-                setIntensityScale((double) topIndensity);
-
-            setName(datasetName);
-
-            // Finally, update the GUI
-            Platform.runLater(() -> {
-                setNotify(true);
-            });
-
-        });
+        // Finally, update the GUI
+        setNotify(true);
 
     }
 
     public String getDescription() {
-        
-        if (chromatogram == null) return null;
-        
+
+        if (chromatogram == null)
+            return null;
+
         StringBuilder sb = new StringBuilder();
         if (chromatogram instanceof MsScan) {
             MsScan scan = (MsScan) chromatogram;
