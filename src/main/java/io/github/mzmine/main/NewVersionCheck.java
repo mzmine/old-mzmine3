@@ -95,7 +95,7 @@ public class NewVersionCheck implements Runnable {
                     Text t = new Text("Welcome to MZmine 3\n\n" + msg + "\n"
                             + msg2 + url);
                     t.setTextAlignment(TextAlignment.CENTER);
-                    MZmineGUI.addWindow(t, "", false);
+                    MZmineGUI.addWindow(t, "");
                 });
             }
         }

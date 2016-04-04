@@ -90,7 +90,7 @@ public class ChromatogramPlotModule implements MZmineRunnableModule {
             FXMLLoader loader = new FXMLLoader(mainFXML);
 
             Parent node = loader.load();
-            MZmineGUI.addWindow(node, "Chromatogram", false);
+            MZmineGUI.addWindow(node, "Chromatogram");
             ChromatogramPlotWindowController controller = loader
                     .getController();
 
@@ -110,7 +110,8 @@ public class ChromatogramPlotModule implements MZmineRunnableModule {
                         MSDKXICMethod xicExtractor = new MSDKXICMethod(dataFile,
                                 scans, mzRange, chromatogramType, store);
                         Chromatogram chromatogram = xicExtractor.execute();
-                        String title = dataFile.getName() + " " + chromatogramType + " ["
+                        String title = dataFile.getName() + " "
+                                + chromatogramType + " ["
                                 + mzRange.lowerEndpoint() + "-"
                                 + mzRange.upperEndpoint() + " m/z]";
                         Platform.runLater(() -> controller

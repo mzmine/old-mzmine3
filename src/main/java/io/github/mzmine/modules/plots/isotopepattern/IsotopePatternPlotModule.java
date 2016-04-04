@@ -77,7 +77,7 @@ public class IsotopePatternPlotModule implements MZmineRunnableModule {
                 .generateIsotopes(formula, minAbundance,
                         normalizedIntensity.floatValue(), mzTolerance);
 
-        MsSpectrumPlotModule.showNewSpectrumWindow(pattern, formula, false);
+        MsSpectrumPlotModule.showNewSpectrumWindow(pattern, formula);
 
     }
 

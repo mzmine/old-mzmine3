@@ -103,7 +103,7 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
             FXMLLoader loader = new FXMLLoader(mainFXML);
 
             Parent node = loader.load();
-            MZmineGUI.addWindow(node, "MS spectrum", false);
+            MZmineGUI.addWindow(node, "MS spectrum");
             MsSpectrumPlotWindowController controller = loader.getController();
 
             Platform.runLater(() -> {
@@ -128,14 +128,13 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
         return MsSpectrumPlotParameters.class;
     }
 
-    public static void showNewSpectrumWindow(@Nonnull MsScan scan,
-            @Nonnull Boolean openNewWindow) {
+    public static void showNewSpectrumWindow(@Nonnull MsScan scan) {
         try {
             URL mainFXML = MsSpectrumPlotModule.class.getResource(PLOT_FXML);
             FXMLLoader loader = new FXMLLoader(mainFXML);
             Parent node = loader.load();
             String title = MsScanUtils.createSingleLineMsScanDescription(scan);
-            MZmineGUI.addWindow(node, title, openNewWindow);
+            MZmineGUI.addWindow(node, title);
             MsSpectrumPlotWindowController controller = loader.getController();
             controller.addSpectrum(scan, title);
 
@@ -146,13 +145,13 @@ public class MsSpectrumPlotModule implements MZmineRunnableModule {
     }
 
     public static void showNewSpectrumWindow(@Nonnull MsSpectrum spectrum,
-            @Nonnull String name, @Nonnull Boolean openNewWindow) {
+            @Nonnull String name) {
         try {
             URL mainFXML = MsSpectrumPlotModule.class.getResource(PLOT_FXML);
             FXMLLoader loader = new FXMLLoader(mainFXML);
 
             Parent node = loader.load();
-            MZmineGUI.addWindow(node, name, openNewWindow);
+            MZmineGUI.addWindow(node, name);
             MsSpectrumPlotWindowController controller = loader.getController();
             controller.addSpectrum(spectrum, name);
 

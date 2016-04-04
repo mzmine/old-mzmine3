@@ -569,7 +569,7 @@ public class MsSpectrumPlotWindowController {
                             .createSingleLineMsScanDescription(scan, isolation);
                     MenuItem msmsItem = new MenuItem(menuLabel);
                     msmsItem.setOnAction(e -> MsSpectrumPlotModule
-                            .showNewSpectrumWindow(scan, true));
+                            .showNewSpectrumWindow(scan));
                     msmsItems.add(msmsItem);
                     continue scans;
                 }

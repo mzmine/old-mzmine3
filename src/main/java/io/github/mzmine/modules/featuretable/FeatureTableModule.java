@@ -105,8 +105,8 @@ public class FeatureTableModule implements MZmineRunnableModule {
         // Group rows
         FeatureTableColumn<Integer> groupColoumn = featureTable
                 .getColumn(ColumnName.GROUPID, null);
-        FeatureTableColumn<Integer> idColoumn = featureTable.getColumn(ColumnName.ID,
-                null);
+        FeatureTableColumn<Integer> idColoumn = featureTable
+                .getColumn(ColumnName.ID, null);
         for (FeatureTableRow row : rows) {
             // No group column
             if (groupColoumn == null) {
@@ -281,7 +281,7 @@ public class FeatureTableModule implements MZmineRunnableModule {
                             .getSelectionModel().getSelectedCells();
                     for (TreeTablePosition<FeatureTableRow, ?> cell : cells) {
                         if (cell.getTableColumn().getParentColumn() != null) {
-                            TreeTableColumn<?,?> parentColumn = (TreeTableColumn) cell
+                            TreeTableColumn<?, ?> parentColumn = (TreeTableColumn) cell
                                     .getTableColumn().getParentColumn();
                             List<Sample> samples = featureTable.getSamples();
                             for (Sample s : samples) {
@@ -311,7 +311,7 @@ public class FeatureTableModule implements MZmineRunnableModule {
         TableUtils.addCopyHandler(treeTable, columnMap);
 
         // Add new window with table
-        MZmineGUI.addWindow(treeTable, featureTable.getName(), false);
+        MZmineGUI.addWindow(treeTable, featureTable.getName());
 
         // Add custom table menu
         FeatureTableMenu.addCustomTableMenu(treeTable);

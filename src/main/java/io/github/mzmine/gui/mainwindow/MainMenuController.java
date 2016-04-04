@@ -32,9 +32,7 @@ import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.main.NewVersionCheck;
 import io.github.mzmine.main.NewVersionCheck.CheckType;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
@@ -47,18 +45,15 @@ public class MainMenuController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @FXML
-    protected void closeProject(ActionEvent event) {
+    public void closeProject(ActionEvent event) {
         MZmineGUI.closeProject();
     }
 
-    @FXML
-    protected void exitApplication(ActionEvent event) {
+    public void exitApplication(ActionEvent event) {
         MZmineGUI.requestQuit();
     }
 
-    @FXML
-    protected void openLink(ActionEvent event) {
+    public void openLink(ActionEvent event) {
         String url = "";
 
         // Link for menu item
@@ -89,14 +84,12 @@ public class MainMenuController {
             try {
                 runtime.exec("xdg-open " + url);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
     }
 
-    @FXML
-    protected void versionCheck(ActionEvent event) {
+    public void versionCheck(ActionEvent event) {
         // Check for new version of MZmine
         logger.info("Checking for new MZmine version");
         NewVersionCheck NVC = new NewVersionCheck(CheckType.MENU);
@@ -105,30 +98,25 @@ public class MainMenuController {
         nvcThread.start();
     }
 
-    @FXML
-    protected void setPreferences(ActionEvent event) {
+    public void setPreferences(ActionEvent event) {
         // Show the Preferences dialog
         logger.info("Showing the Preferences dialog");
         MZmineCore.getConfiguration().getPreferences().showSetupDialog(null);
     }
 
-    @FXML
-    protected void showAbout(ActionEvent event) {
+    public void showAbout(ActionEvent event) {
         // Show the about window
-        Platform.runLater(() -> {
-            try {
-                final String aboutWindowFXML = "file:conf/AboutWindow.fxml";
-                URL fxmlFile = new URL(aboutWindowFXML);
-                FXMLLoader fxmlLoader = new FXMLLoader(fxmlFile);
-                Pane pane = fxmlLoader.load();
+        try {
+            final String aboutWindowFXML = "file:conf/AboutWindow.fxml";
+            URL fxmlFile = new URL(aboutWindowFXML);
+            FXMLLoader fxmlLoader = new FXMLLoader(fxmlFile);
+            Pane pane = fxmlLoader.load();
 
-                // Open the window
-                MZmineGUI.addWindow(pane, "About MZmine", true);
-            } catch (Exception e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
-        });
+            // Open the window
+            MZmineGUI.addWindow(pane, "About MZmine");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
     }
 
 }

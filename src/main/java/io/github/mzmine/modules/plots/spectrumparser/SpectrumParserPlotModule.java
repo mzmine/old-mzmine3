@@ -73,8 +73,7 @@ public class SpectrumParserPlotModule implements MZmineRunnableModule {
 
         String spectrumName = "Manual spectrum";
 
-        MsSpectrumPlotModule.showNewSpectrumWindow(spectrum, spectrumName,
-                false);
+        MsSpectrumPlotModule.showNewSpectrumWindow(spectrum, spectrumName);
 
     }
 

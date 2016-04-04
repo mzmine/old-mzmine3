@@ -21,10 +21,6 @@ package io.github.mzmine.project;
 
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.mzmine.gui.MZmineGUI;
-import io.github.mzmine.gui.mainwindow.FeatureTableTreeItem;
-import io.github.mzmine.gui.mainwindow.MainWindowController;
-import io.github.mzmine.gui.mainwindow.RawDataTreeItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -38,35 +34,29 @@ public class MZmineGUIProject extends MZmineProject {
             "icons/xicicon.png");
     private static final Image featureTablesIcon = new Image(
             "icons/peaklistsicon.png");
-    //private static final Image groupIcon = new Image("icons/groupicon.png");
+    // private static final Image groupIcon = new Image("icons/groupicon.png");
     private static final Image fileIcon = new Image("icons/fileicon.png");
     private static final Image peakListIcon = new Image(
             "icons/peaklisticon_single.png");
 
-    private final TreeItem<RawDataTreeItem> rawDataRootItem;
-    private final TreeItem<FeatureTableTreeItem> featureTableRootItem;
+    private final TreeItem<Object> rawDataRootItem;
+    private final TreeItem<Object> featureTableRootItem;
 
     public MZmineGUIProject() {
-        rawDataRootItem = new TreeItem<>(new RawDataTreeItem());
+        rawDataRootItem = new TreeItem<>("Raw data files");
         rawDataRootItem.setGraphic(new ImageView(rawDataFilesIcon));
         rawDataRootItem.setExpanded(true);
 
-        featureTableRootItem = new TreeItem<>(new FeatureTableTreeItem());
+        featureTableRootItem = new TreeItem<>("Feature tables");
         featureTableRootItem.setGraphic(new ImageView(featureTablesIcon));
         featureTableRootItem.setExpanded(true);
     }
 
     public void addFile(final RawDataFile rawDataFile) {
         super.addFile(rawDataFile);
-        RawDataTreeItem wrap = new RawDataTreeItem(rawDataFile);
-        TreeItem<RawDataTreeItem> df1 = new TreeItem<>(wrap);
+        TreeItem<Object> df1 = new TreeItem<>(rawDataFile);
         df1.setGraphic(new ImageView(fileIcon));
         rawDataRootItem.getChildren().add(df1);
-        MZmineGUI.setSelectedTab("RawData");
-
-        // Update number of raw files in tab name
-        MainWindowController mwc = MZmineGUI.getMainWindowController();
-        mwc.updateTabName(mwc.getRawDataFilesTab());
     }
 
     public void removeFile(final RawDataFile rawDataFile) {
@@ -77,23 +67,13 @@ public class MZmineGUIProject extends MZmineProject {
                 break;
             }
         }
-
-        // Update number of raw files in tab name
-        MainWindowController mwc = MZmineGUI.getMainWindowController();
-        mwc.updateTabName(mwc.getRawDataFilesTab());
     }
 
     public void addFeatureTable(final FeatureTable featureTable) {
         super.addFeatureTable(featureTable);
-        FeatureTableTreeItem wrap = new FeatureTableTreeItem(featureTable);
-        TreeItem<FeatureTableTreeItem> df1 = new TreeItem<>(wrap);
+        TreeItem<Object> df1 = new TreeItem<>(featureTable);
         df1.setGraphic(new ImageView(peakListIcon));
         featureTableRootItem.getChildren().add(df1);
-        MZmineGUI.setSelectedTab("FeatureTable");
-
-        // Update number of tables in tab name
-        MainWindowController mwc = MZmineGUI.getMainWindowController();
-        mwc.updateTabName(mwc.getFeatureTablesTab());
     }
 
     public void removeFeatureTable(final FeatureTable featureTable) {
@@ -104,17 +84,13 @@ public class MZmineGUIProject extends MZmineProject {
                 break;
             }
         }
-
-        // Update number of tables in tab name
-        MainWindowController mwc = MZmineGUI.getMainWindowController();
-        mwc.updateTabName(mwc.getFeatureTablesTab());
     }
 
-    public TreeItem<RawDataTreeItem> getRawDataRootItem() {
+    public TreeItem<Object> getRawDataRootItem() {
         return rawDataRootItem;
     }
 
-    public TreeItem<FeatureTableTreeItem> getFeatureTableRootItem() {
+    public TreeItem<Object> getFeatureTableRootItem() {
         return featureTableRootItem;
     }
 

@@ -121,6 +121,7 @@ public class RawDataFilesEditor extends HBox
         RawDataFilesSelection currentValue = getValue();
         List<RawDataFile> files = currentValue.getMatchingRawDataFiles();
         if (files.size() == 1) {
+            if (files.get(0) == null) return;
             String fileName = files.get(0).getName();
             if (fileName.length() > 22)
                 fileName = fileName.substring(0, 20) + "...";

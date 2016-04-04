@@ -33,9 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.mzmine.gui.mainwindow.FeatureTableTreeItem;
 import io.github.mzmine.gui.mainwindow.MainWindowController;
-import io.github.mzmine.gui.mainwindow.RawDataTreeItem;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.main.NewVersionCheck;
 import io.github.mzmine.main.NewVersionCheck.CheckType;
@@ -170,40 +168,31 @@ public final class MZmineGUI extends Application {
         return mainWindowController;
     }
 
-    public static void setSelectedTab(String tabName) {
-        mainWindowController.setSelectedTab(tabName);
-    }
+    public static void addWindow(Node node, String title) {
 
-    public static void addWindow(Node node, String title,
-            boolean openNewWindow) {
-        if (openNewWindow) {
+        BorderPane parent = new BorderPane();
+        parent.setCenter(node);
+        Scene newScene = new Scene(parent);
 
-            BorderPane parent = new BorderPane();
-            parent.setCenter(node);
-            Scene newScene = new Scene(parent);
+        // Copy CSS styles
+        newScene.getStylesheets().addAll(rootScene.getStylesheets());
 
-            // Copy CSS styles
-            newScene.getStylesheets().addAll(rootScene.getStylesheets());
+        Stage newStage = new Stage();
+        newStage.setTitle(title);
+        newStage.getIcons().add(mzMineIcon);
+        newStage.setScene(newScene);
+        newStage.show();
 
-            Stage newStage = new Stage();
-            newStage.setTitle(title);
-            newStage.getIcons().add(mzMineIcon);
-            newStage.setScene(newScene);
-            newStage.show();
-
-        } else {
-            mainWindowController.addWindow(node, title);
-        }
     }
 
     public static void activateProject(MZmineGUIProject project) {
         MZmineCore.setCurrentProject(project);
 
-        TreeView<RawDataTreeItem> rawDataTree = mainWindowController
+        TreeView<Object> rawDataTree = mainWindowController
                 .getRawDataTree();
         rawDataTree.setRoot(project.getRawDataRootItem());
 
-        TreeView<FeatureTableTreeItem> featureTree = mainWindowController
+        TreeView<Object> featureTree = mainWindowController
                 .getFeatureTree();
         featureTree.setRoot(project.getFeatureTableRootItem());
 
@@ -212,16 +201,12 @@ public final class MZmineGUI extends Application {
     public static @Nonnull List<RawDataFile> getSelectedRawDataFiles() {
 
         final ArrayList<RawDataFile> list = new ArrayList<>();
-        final TreeView<RawDataTreeItem> rawDataTree = mainWindowController
+        final TreeView<Object> rawDataTree = mainWindowController
                 .getRawDataTree();
-        for (TreeItem<RawDataTreeItem> item : rawDataTree.getSelectionModel()
+        for (TreeItem<Object> item : rawDataTree.getSelectionModel()
                 .getSelectedItems()) {
-            if (item == null)
-                continue;
-            RawDataTreeItem ritem = item.getValue();
-            if (ritem == null)
-                continue;
-            RawDataFile file = ritem.getRawDataFile();
+            if (! (item.getValue() instanceof RawDataFile)) continue;
+            RawDataFile file = (RawDataFile) item.getValue();
             list.add(file);
         }
 
@@ -232,11 +217,12 @@ public final class MZmineGUI extends Application {
     public static @Nonnull List<FeatureTable> getSelectedFeatureTables() {
 
         final ArrayList<FeatureTable> list = new ArrayList<>();
-        final TreeView<FeatureTableTreeItem> featureTableTree = mainWindowController
+        final TreeView<Object> featureTableTree = mainWindowController
                 .getFeatureTree();
-        for (TreeItem<FeatureTableTreeItem> item : featureTableTree
+        for (TreeItem<Object> item : featureTableTree
                 .getSelectionModel().getSelectedItems()) {
-            FeatureTable ft = item.getValue().getFeatureTable();
+            if (! (item.getValue() instanceof FeatureTable)) continue;
+            FeatureTable ft = (FeatureTable) item.getValue();
             list.add(ft);
         }
 

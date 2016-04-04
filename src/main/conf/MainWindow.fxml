@@ -5,9 +5,9 @@
 <?import javafx.scene.Scene ?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
 <?import java.net.URL?>
 <?import javafx.scene.text.Text ?>
-<?import javafx.scene.control.TabPane ?>
 
 <Scene fx:id="mainScene" xmlns="http://javafx.com/javafx/8"
 	xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.mzmine.gui.mainwindow.MainWindowController">
@@ -23,60 +23,31 @@
 			<SplitPane dividerPositions="0.8" minHeight="100"
 				orientation="VERTICAL">
 				<items>
-					<SplitPane dividerPositions="0.3" minHeight="100"
+					<SplitPane dividerPositions="0.5" minHeight="100"
 						orientation="HORIZONTAL">
 						<items>
-							<TabPane fx:id="mainTabPane" minWidth="200" prefWidth="250">
-								<tabs>
-									<Tab fx:id="rawDataFilesTab" text="Raw Data" closable="false">
-										<content>
-											<TreeView fx:id="rawDataTree" prefHeight="120">
-												<contextMenu>
-													<ContextMenu>
-														<items>
-															<MenuItem text="Show TIC" onAction="#handleShowTIC" />
-															<MenuItem text="Show MS spectrum" onAction="#handleShowMsSpectrum" />
-															<MenuItem text="Export" />
-															<MenuItem text="Report" />
-															<MenuItem text="Remove" onAction="#removeRawData" />
-														</items>
-													</ContextMenu>
-												</contextMenu>
-											</TreeView>
-										</content>
-									</Tab>
-									<Tab fx:id="featureTablesTab" text="Feature Tables" closable="false">
-										<content>
-											<TreeView fx:id="featureTree" prefHeight="120">
-												<contextMenu>
-													<ContextMenu>
-														<items>
-															<MenuItem text="Remove" onAction="#removeFeatureTable" />
-														</items>
-													</ContextMenu>
-												</contextMenu>
-											</TreeView>
-										</content>
-									</Tab>
-								</tabs>
-							</TabPane>
-							<HiddenSidesPane fx:id="mainContentPane"
-								triggerDistance="10">
-								<content>
-									<Text text="Welcome to MZmine 3" />
-								</content>
-								<right>
-									<Button fx:id="detachButton" disable="true"
-										onAction="#detachCurrentNode">
-										<graphic>
-											<Glyph fontFamily="FontAwesome" icon="SIGN_OUT" />
-										</graphic>
-										<tooltip>
-											<Tooltip text="Detach current component into a separate window" />
-										</tooltip>
-									</Button>
-								</right>
-							</HiddenSidesPane>
+							<TreeView fx:id="rawDataTree" prefHeight="120">
+								<contextMenu>
+									<ContextMenu>
+										<items>
+											<MenuItem text="Show TIC" onAction="#handleShowTIC" />
+											<MenuItem text="Show MS spectrum" onAction="#handleShowMsSpectrum" />
+											<MenuItem text="Export" />
+											<MenuItem text="Report" />
+											<MenuItem text="Remove" onAction="#removeRawData" />
+										</items>
+									</ContextMenu>
+								</contextMenu>
+							</TreeView>
+							<TreeView fx:id="featureTree" prefHeight="120">
+								<contextMenu>
+									<ContextMenu>
+										<items>
+											<MenuItem text="Remove" onAction="#removeFeatureTable" />
+										</items>
+									</ContextMenu>
+								</contextMenu>
+							</TreeView>
 						</items>
 					</SplitPane>
 					<TaskProgressView fx:id="tasksView" minHeight="50"

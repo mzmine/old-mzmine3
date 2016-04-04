@@ -21,12 +21,13 @@ package io.github.mzmine.gui.mainwindow;
 
 import java.util.Collection;
 
-import org.controlsfx.control.HiddenSidesPane;
 import org.controlsfx.control.StatusBar;
 import org.controlsfx.control.TaskProgressView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.github.msdk.datamodel.featuretables.FeatureTable;
+import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.modules.featuretable.FeatureTableModule;
@@ -47,23 +48,16 @@ import javafx.animation.Timeline;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
@@ -74,9 +68,6 @@ public class MainWindowController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final Image mzMineIcon = new Image(
-            "file:icon/mzmine-icon.png");
-
     @FXML
     private Scene mainScene;
 
@@ -84,19 +75,10 @@ public class MainWindowController {
     private BorderPane mainWindowPane;
 
     @FXML
-    private HiddenSidesPane mainContentPane;
+    private TreeView<Object> rawDataTree;
 
     @FXML
-    private TabPane mainTabPane;
-
-    @FXML
-    private Tab rawDataFilesTab, featureTablesTab;
-
-    @FXML
-    private TreeView<RawDataTreeItem> rawDataTree;
-
-    @FXML
-    private TreeView<FeatureTableTreeItem> featureTree;
+    private TreeView<Object> featureTree;
 
     @FXML
     private TaskProgressView<Task<?>> tasksView;
@@ -111,48 +93,36 @@ public class MainWindowController {
     private Label memoryBarLabel;
 
     @FXML
-    private Button detachButton;
-
-    private String currentNodeTitle;
-
-    @FXML
     public void initialize() {
 
         rawDataTree.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
-        rawDataTree.setShowRoot(false);
+        rawDataTree.setShowRoot(true);
 
         // Add mouse clicked event handler
-        rawDataTree.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getClickCount() == 2) {
-                    handleShowTIC(null);
-                }
+        rawDataTree.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                handleShowTIC(null);
             }
         });
 
         featureTree.getSelectionModel()
                 .setSelectionMode(SelectionMode.MULTIPLE);
-        featureTree.setShowRoot(false);
+        featureTree.setShowRoot(true);
 
         // Add mouse clicked event handler
-        featureTree.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getClickCount() == 2) {
-                    // Show feature table for selected row
-                    ParameterSet moduleParameters = MZmineCore
-                            .getConfiguration()
-                            .getModuleParameters(FeatureTableModule.class);
-                    FeatureTablesParameter inputTablesParam = moduleParameters
-                            .getParameter(
-                                    FeatureTableModuleParameters.featureTables);
-                    inputTablesParam.switchType(
-                            FeatureTablesSelectionType.GUI_SELECTED_FEATURE_TABLES);
-                    MZmineCore.runModule(FeatureTableModule.class,
-                            moduleParameters);
-                }
+        featureTree.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                // Show feature table for selected row
+                ParameterSet moduleParameters = MZmineCore.getConfiguration()
+                        .getModuleParameters(FeatureTableModule.class);
+                FeatureTablesParameter inputTablesParam = moduleParameters
+                        .getParameter(
+                                FeatureTableModuleParameters.featureTables);
+                inputTablesParam.switchType(
+                        FeatureTablesSelectionType.GUI_SELECTED_FEATURE_TABLES);
+                MZmineCore.runModule(FeatureTableModule.class,
+                        moduleParameters);
             }
         });
 
@@ -183,7 +153,7 @@ public class MainWindowController {
                 }));
         memoryUpdater.play();
 
-        // Setup the Timeline to update the MSDK tasks periodically
+        // Setup the Timeline to update the MZmine tasks periodically
         final Timeline msdkTaskUpdater = new Timeline();
         UPDATE_FREQUENCY = 50; // ms
         msdkTaskUpdater.setCycleCount(Animation.INDEFINITE);
@@ -211,11 +181,11 @@ public class MainWindowController {
 
     }
 
-    public TreeView<RawDataTreeItem> getRawDataTree() {
+    public TreeView<Object> getRawDataTree() {
         return rawDataTree;
     }
 
-    public TreeView<FeatureTableTreeItem> getFeatureTree() {
+    public TreeView<Object> getFeatureTree() {
         return featureTree;
     }
 
@@ -227,8 +197,7 @@ public class MainWindowController {
         return statusBar;
     }
 
-    @FXML
-    protected void handleShowTIC(ActionEvent event) {
+    public void handleShowTIC(ActionEvent event) {
         logger.debug("Activated Show chromatogram menu item");
         ParameterSet chromPlotParams = MZmineCore.getConfiguration()
                 .getModuleParameters(ChromatogramPlotModule.class);
@@ -239,8 +208,7 @@ public class MainWindowController {
         MZmineGUI.setupAndRunModule(ChromatogramPlotModule.class);
     }
 
-    @FXML
-    protected void handleShowMsSpectrum(ActionEvent event) {
+    public void handleShowMsSpectrum(ActionEvent event) {
         logger.debug("Activated Show MS spectrum menu item");
         ParameterSet specPlotParams = MZmineCore.getConfiguration()
                 .getModuleParameters(MsSpectrumPlotModule.class);
@@ -251,10 +219,9 @@ public class MainWindowController {
         MZmineGUI.setupAndRunModule(MsSpectrumPlotModule.class);
     }
 
-    @FXML
-    protected void removeRawData(ActionEvent event) {
+    public void removeRawData(ActionEvent event) {
         // Get selected tree items
-        ObservableList<TreeItem<RawDataTreeItem>> rows = null;
+        ObservableList<TreeItem<Object>> rows = null;
         if (rawDataTree.getSelectionModel() != null) {
             rows = rawDataTree.getSelectionModel().getSelectedItems();
         }
@@ -262,25 +229,28 @@ public class MainWindowController {
         // Loop through all selected tree items
         if (rows != null) {
             for (int i = rows.size() - 1; i >= 0; i--) {
-                TreeItem<RawDataTreeItem> row = rows.get(i);
+                TreeItem<Object> row = rows.get(i);
+
+                if (!(row.getValue() instanceof RawDataFile))
+                    continue;
 
                 // Remove feature table from current project
-                RawDataTreeItem rawDataTreeItem = row.getValue();
-                MZmineCore.getCurrentProject()
-                        .removeFile(rawDataTreeItem.getRawDataFile());
+                RawDataFile rawDataFile = (RawDataFile) row.getValue();
+                MZmineCore.getCurrentProject().removeFile(rawDataFile);
 
                 // Remove raw data file from tree table view
                 TreeItem<?> parent = row.getParent();
+                if (parent == null)
+                    continue;
                 parent.getChildren().remove(row);
             }
             rawDataTree.getSelectionModel().clearSelection();
         }
     }
 
-    @FXML
-    protected void removeFeatureTable(ActionEvent event) {
+    public void removeFeatureTable(ActionEvent event) {
         // Get selected tree items
-        ObservableList<TreeItem<FeatureTableTreeItem>> rows = null;
+        ObservableList<TreeItem<Object>> rows = null;
         if (featureTree.getSelectionModel() != null) {
             rows = featureTree.getSelectionModel().getSelectedItems();
         }
@@ -288,92 +258,36 @@ public class MainWindowController {
         // Loop through all selected tree items
         if (rows != null) {
             for (int i = rows.size() - 1; i >= 0; i--) {
-                TreeItem<FeatureTableTreeItem> row = rows.get(i);
+                TreeItem<Object> row = rows.get(i);
+
+                if (!(row.getValue() instanceof FeatureTable))
+                    continue;
 
                 // Remove feature table from current project
-                FeatureTableTreeItem featureTableTreeItem = row.getValue();
-                MZmineCore.getCurrentProject().removeFeatureTable(
-                        featureTableTreeItem.getFeatureTable());
+                FeatureTable featureTable = (FeatureTable) row.getValue();
+                MZmineCore.getCurrentProject().removeFeatureTable(featureTable);
 
                 // Remove feature table from tree table view
                 TreeItem<?> parent = row.getParent();
+                if (parent == null)
+                    continue;
                 parent.getChildren().remove(row);
             }
             featureTree.getSelectionModel().clearSelection();
         }
     }
 
-    @FXML
-    protected void detachCurrentNode(ActionEvent event) {
-
-        Node currentNode = mainContentPane.getContent();
-        if (currentNode == null)
-            return;
-
-        mainContentPane.setContent(new Pane());
-
-        BorderPane parent = new BorderPane();
-        parent.setCenter(currentNode);
-        Scene newScene = new Scene(parent);
-
-        // Copy CSS styles
-        newScene.getStylesheets().addAll(mainScene.getStylesheets());
-
-        Stage newStage = new Stage();
-        newStage.setTitle(currentNodeTitle);
-        newStage.getIcons().add(mzMineIcon);
-        newStage.setScene(newScene);
-        newStage.show();
-
-        detachButton.setDisable(true);
-
-    }
-
-    public void addWindow(Node node, String title) {
-        mainContentPane.setContent(node);
-        this.currentNodeTitle = title;
-        detachButton.setDisable(false);
-    }
-
-    public void setSelectedTab(String tabName) {
-        switch (tabName) {
-        default:
-        case "RawData":
-            mainTabPane.getSelectionModel().select(0);
-            break;
-        case "FeatureTable":
-            mainTabPane.getSelectionModel().select(1);
-            break;
-        }
-    }
-
-    public Tab getRawDataFilesTab() {
-        return rawDataFilesTab;
-    }
-
-    public Tab getFeatureTablesTab() {
-        return featureTablesTab;
-    }
-
     public void updateTabName(Tab tab) {
-        String title = "";
-        if (tab.equals(rawDataFilesTab)) {
-            title = "Raw Data";
-            int rawDataFiles = MZmineCore.getCurrentProject().getRawDataFiles()
-                    .size();
-            if (rawDataFiles > 0)
-                title += " (" + rawDataFiles + ")";
-            rawDataFilesTab.setText(title);
-            return;
-        }
-        if (tab.equals(featureTablesTab)) {
-            title = "Feature Tables";
-            int featureTables = MZmineCore.getCurrentProject()
-                    .getFeatureTables().size();
-            if (featureTables > 0)
-                title += " (" + featureTables + ")";
-            featureTablesTab.setText(title);
-            return;
-        }
+        /*
+         * String title = ""; if (tab.equals(rawDataFilesTab)) { title =
+         * "Raw Data"; int rawDataFiles =
+         * MZmineCore.getCurrentProject().getRawDataFiles() .size(); if
+         * (rawDataFiles > 0) title += " (" + rawDataFiles + ")";
+         * rawDataFilesTab.setText(title); return; } if
+         * (tab.equals(featureTablesTab)) { title = "Feature Tables"; int
+         * featureTables = MZmineCore.getCurrentProject()
+         * .getFeatureTables().size(); if (featureTables > 0) title += " (" +
+         * featureTables + ")"; featureTablesTab.setText(title); return; }
+         */
     }
 }
