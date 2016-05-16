@@ -16,6 +16,11 @@ TMP_FILE_DIRECTORY=/tmp
 # It is usually not necessary to modify the JAVA_COMMAND parameter, but if you like to run
 # a specific Java Virtual Machine, you may set the path to the java command of that JVM
 JAVA_COMMAND=`/usr/libexec/java_home -v 1.8+`/bin/java
+if [ $? -ne 0 ]; then
+  echo "No JDK version 1.8+ found. Trying to use the current JRE."
+  JAVA_PLUGIN_DIR="/Library/Internet Plug-Ins/JavaAppletPlugin.plugin"
+  JAVA_COMMAND=${JAVA_PLUGIN_DIR}/Contents/Home/bin/java
+fi
 
 # ********************************************
 # You don't need to modify anything below here
@@ -56,4 +61,4 @@ SCRIPTDIR=`dirname "$0"`
 cd "$SCRIPTDIR"
 
 # This command starts the Java Virtual Machine
-echo "$JAVA_PARAMETERS" $MAIN_CLASS "$@" | xargs $JAVA_COMMAND
+echo "$JAVA_PARAMETERS" $MAIN_CLASS "$@" | xargs "$JAVA_COMMAND"
