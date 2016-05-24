@@ -13,10 +13,10 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<cdk.version>1.5.12</cdk.version>
+		<cdk.version>1.5.13</cdk.version>
 		<guava.version>19.0</guava.version>
 		<controlsfx.version>8.40.10</controlsfx.version>
-		<slf4j.version>1.7.14</slf4j.version>
+		<slf4j.version>1.7.21</slf4j.version>
 		<jfreechart.version>1.0.19-fx</jfreechart.version>
 	</properties>
 
@@ -180,7 +180,7 @@
 		<dependency>
 			<groupId>io.github.msdk</groupId>
 			<artifactId>msdk-all</artifactId>
-			<version>0.0.6-SNAPSHOT</version>
+			<version>0.0.7-SNAPSHOT</version>
 		</dependency>
 
 	</dependencies>
