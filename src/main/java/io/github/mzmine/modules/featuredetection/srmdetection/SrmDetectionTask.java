@@ -115,7 +115,7 @@ public class SrmDetectionTask extends Task<Object> implements MZmineTask {
 
             // Create a new sample
             Sample sample = MSDKObjectBuilder
-                    .getSimpleSample(rawDataFile.getName());
+                    .getSample(rawDataFile.getName());
 
             // Add the chromatograms to the feature table
             this.chromatogramToFeatureTableMethod = new ChromatogramToFeatureTableMethod(

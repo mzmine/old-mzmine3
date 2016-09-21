@@ -77,10 +77,6 @@ public class PeakFinderModule implements MZmineProcessingModule {
         Double intensityTolerance = parameters
                 .getParameter(PeakFinderParameters.intensityTolerance)
                 .getEmbeddedParameter().getValue();
-        final Boolean sameRT = parameters
-                .getParameter(PeakFinderParameters.sameRT).getValue();
-        final Boolean sameMZ = parameters
-                .getParameter(PeakFinderParameters.sameMZ).getValue();
         final String nameSuffix = parameters
                 .getParameter(PeakFinderParameters.nameSuffix).getValue();
         final Boolean removeOldTable = parameters
@@ -110,7 +106,7 @@ public class PeakFinderModule implements MZmineProcessingModule {
             // New feature filter task
             GapFillingMethod method = new GapFillingMethod(featureTable,
                     dataStore, mzTolerance, rtTolerance, intensityTolerance,
-                    sameRT, sameMZ, nameSuffix);
+                    nameSuffix);
 
             MSDKTask newTask = new MSDKTask("Gap filling feature table",
                     featureTable.getName(), method);

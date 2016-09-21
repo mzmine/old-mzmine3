@@ -149,7 +149,7 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
                     }
 
                     IonAnnotation ion = MSDKObjectBuilder
-                            .getSimpleIonAnnotation();
+                            .getIonAnnotation();
                     ion.setAnnotationId(annotationId);
                     ion.setExpectedMz(mz);
                     ion.setDescription(name);

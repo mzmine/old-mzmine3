@@ -134,7 +134,7 @@ public class TargetedDetectionTask extends Task<Object> implements MZmineTask {
 
             // Create a new sample
             Sample sample = MSDKObjectBuilder
-                    .getSimpleSample(rawDataFile.getName());
+                    .getSample(rawDataFile.getName());
             sample.setRawDataFile(rawDataFile);
 
             // Add the chromatograms to the feature table

@@ -57,16 +57,6 @@ public class PeakFinderParameters extends ParameterSet {
                     "Algorithm Parameters",
                     ParameterValidator.createNonEmptyValidator(), 0.15));
 
-    public static final BooleanParameter sameRT = new BooleanParameter(
-            "Use rows RT range?",
-            "If checked, the retention time range where the new peaks will be sought are obtained\nusing the ranges of the rest of the peaks in the same row.",
-            "Algorithm Parameters", true);
-
-    public static final BooleanParameter sameMZ = new BooleanParameter(
-            "Use rows m/z range?",
-            "If checked, the m/z range where the new peaks will be sought are obtained using the\nranges of the rest of the peaks in the same row.",
-            "Algorithm Parameters", true);
-
     public static final StringParameter nameSuffix = new StringParameter(
             "Name suffix", "Suffix to be added to the feature table name.",
             "Output", " gapFilled");
@@ -81,7 +71,7 @@ public class PeakFinderParameters extends ParameterSet {
      */
     public PeakFinderParameters() {
         super(featureTables, mzTolerance, rtTolerance, intensityTolerance,
-                sameRT, sameMZ, nameSuffix, removeOldTable);
+                nameSuffix, removeOldTable);
     }
 
 }
