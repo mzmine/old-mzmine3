@@ -19,8 +19,8 @@
 
 package io.github.mzmine.modules.gapfilling.peakfinder;
 
-import io.github.msdk.util.MZTolerance;
-import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.tolerances.MaximumMzTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.BooleanParameter;
@@ -42,7 +42,7 @@ public class PeakFinderParameters extends ParameterSet {
                     + "The tolerance range is calculated using maximum of the absolute and relative tolerances.",
             "Algorithm Parameters",
             ParameterValidator.createNonEmptyValidator(),
-            new MZTolerance(0.001, 5.0));
+            new MaximumMzTolerance(0.001, 5.0));
 
     public static final RTToleranceParameter rtTolerance = new RTToleranceParameter(
             "RT tolerance",

@@ -19,7 +19,7 @@
 
 package io.github.mzmine.modules.featuredetection.chromatogrambuilder;
 
-import io.github.msdk.util.MZTolerance;
+import io.github.msdk.util.tolerances.MaximumMzTolerance;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterValidator;
@@ -39,7 +39,7 @@ public class ChromatogramBuilderParameters extends ParameterSet {
                     + "The tolerance range is calculated using maximum of the absolute and relative tolerances.",
             "Algorithm Parameters",
             ParameterValidator.createNonEmptyValidator(),
-            new MZTolerance(0.001, 5.0));
+            new MaximumMzTolerance(0.001, 5.0));
 
     public static final DoubleParameter noiseLevel = new DoubleParameter(
             "Noise level", "Data points below this intensity will be ignored",

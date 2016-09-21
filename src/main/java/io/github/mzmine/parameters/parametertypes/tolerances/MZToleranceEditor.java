@@ -21,7 +21,7 @@ package io.github.mzmine.parameters.parametertypes.tolerances;
 
 import org.controlsfx.control.PropertySheet;
 
-import io.github.msdk.util.MZTolerance;
+import io.github.msdk.util.tolerances.MaximumMzTolerance;
 import io.github.mzmine.parameters.ParameterEditor;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
@@ -33,7 +33,7 @@ import javafx.scene.layout.FlowPane;
  * Parameter editor for RT tolerances
  */
 public class MZToleranceEditor extends FlowPane
-        implements ParameterEditor<MZTolerance> {
+        implements ParameterEditor<MaximumMzTolerance> {
 
     private final TextField fieldMZ;
     private final TextField fieldPPM;
@@ -70,20 +70,20 @@ public class MZToleranceEditor extends FlowPane
     }
 
     @Override
-    public MZTolerance getValue() {
+    public MaximumMzTolerance getValue() {
         String stringMZ = fieldMZ.getText();
         String stringPPM = fieldPPM.getText();
         try {
             double doubleMZ = Double.parseDouble(stringMZ);
             double doublePPM = Double.parseDouble(stringPPM);
-            return new MZTolerance(doubleMZ, doublePPM);
+            return new MaximumMzTolerance(doubleMZ, doublePPM);
         } catch (NumberFormatException e) {
             return null;
         }
     }
 
     @Override
-    public void setValue(MZTolerance value) {
+    public void setValue(MaximumMzTolerance value) {
         String stringMZ = String.valueOf(value.getMzTolerance());
         String stringPPM = String.valueOf(value.getPpmTolerance());
         fieldMZ.setText(stringMZ);

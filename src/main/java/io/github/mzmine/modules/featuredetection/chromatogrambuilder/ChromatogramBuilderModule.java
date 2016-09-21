@@ -30,7 +30,7 @@ import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.util.MZTolerance;
+import io.github.msdk.util.tolerances.MaximumMzTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;
@@ -65,7 +65,7 @@ public class ChromatogramBuilderModule implements MZmineProcessingModule {
         final RawDataFilesSelection rawDataFiles = parameters
                 .getParameter(ChromatogramBuilderParameters.rawDataFiles)
                 .getValue();
-        final MZTolerance mzTolerance = parameters
+        final MaximumMzTolerance mzTolerance = parameters
                 .getParameter(ChromatogramBuilderParameters.mzTolerance)
                 .getValue();
         final Double noiseLevel = parameters

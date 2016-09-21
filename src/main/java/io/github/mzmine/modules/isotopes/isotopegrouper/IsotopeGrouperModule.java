@@ -30,8 +30,8 @@ import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.features.isotopegrouper.IsotopeGrouperMethod;
-import io.github.msdk.util.MZTolerance;
-import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.tolerances.MaximumMzTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.modules.filtering.featurefilter.FeatureFilterParameters;
 import io.github.mzmine.parameters.ParameterSet;
@@ -68,7 +68,7 @@ public class IsotopeGrouperModule implements MZmineProcessingModule {
         final FeatureTablesSelection featureTables = parameters
                 .getParameter(FeatureFilterParameters.featureTables).getValue();
 
-        final MZTolerance mzTolerance = parameters
+        final MaximumMzTolerance mzTolerance = parameters
                 .getParameter(IsotopeGrouperParameters.mzTolerance).getValue();
 
         final RTTolerance rtTolerance = parameters

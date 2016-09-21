@@ -21,7 +21,7 @@ package io.github.mzmine.parameters.parametertypes.tolerances;
 
 import org.controlsfx.control.PropertySheet;
 
-import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 import io.github.mzmine.parameters.ParameterEditor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

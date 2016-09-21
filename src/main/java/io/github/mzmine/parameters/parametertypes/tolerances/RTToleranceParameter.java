@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 
 import org.w3c.dom.Element;
 
-import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.AbstractParameter;
 

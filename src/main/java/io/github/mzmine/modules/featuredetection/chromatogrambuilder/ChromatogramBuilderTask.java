@@ -36,7 +36,7 @@ import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.chromatogrambuilder.ChromatogramBuilderMethod;
 import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
-import io.github.msdk.util.MZTolerance;
+import io.github.msdk.util.tolerances.MaximumMzTolerance;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.taskcontrol.MZmineTask;
 import javafx.concurrent.Task;
@@ -59,7 +59,7 @@ public class ChromatogramBuilderTask extends Task<Object>
 
     public ChromatogramBuilderTask(String title, @Nullable String message,
             @Nonnull RawDataFile rawDataFile, @Nonnull DataPointStore dataStore,
-            @Nonnull MZTolerance mzTolerance, @Nonnull Double noiseLevel,
+            @Nonnull MaximumMzTolerance mzTolerance, @Nonnull Double noiseLevel,
             @Nonnull Double minDuration, @Nonnull Double minHeight,
             @Nullable String nameSuffix) {
         this.rawDataFile = rawDataFile;

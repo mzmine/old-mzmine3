@@ -39,8 +39,8 @@ import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
 import io.github.msdk.featdet.msmsdetection.MsMsDetectionMethod;
 import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
-import io.github.msdk.util.MZTolerance;
-import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.tolerances.MaximumMzTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.parameters.parametertypes.selectors.ScanSelection;
 import io.github.mzmine.taskcontrol.MZmineTask;
@@ -54,7 +54,7 @@ public class MsMsDetectionTask extends Task<Object> implements MZmineTask {
 
     private final @Nonnull RawDataFile rawDataFile;
     private final @Nonnull DataPointStore dataStore;
-    private final @Nonnull MZTolerance mzTolerance;
+    private final @Nonnull MaximumMzTolerance mzTolerance;
     private final @Nonnull RTTolerance rtTolerance;
     private final @Nonnull Double intensityTolerance;
     private final @Nonnull Double minHeight = 0d;
@@ -69,7 +69,7 @@ public class MsMsDetectionTask extends Task<Object> implements MZmineTask {
     public MsMsDetectionTask(String title, @Nullable String message,
             @Nonnull RawDataFile rawDataFile,
             @Nonnull ScanSelection scanSelection,
-            @Nonnull DataPointStore dataStore, @Nonnull MZTolerance mzTolerance,
+            @Nonnull DataPointStore dataStore, @Nonnull MaximumMzTolerance mzTolerance,
             @Nonnull RTTolerance rtTolerance,
             @Nonnull Double intensityTolerance, @Nullable String nameSuffix) {
         this.rawDataFile = rawDataFile;

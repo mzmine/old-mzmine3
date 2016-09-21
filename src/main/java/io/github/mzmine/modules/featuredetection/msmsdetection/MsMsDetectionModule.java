@@ -30,8 +30,8 @@ import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.util.MZTolerance;
-import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.tolerances.MaximumMzTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;
@@ -70,7 +70,7 @@ public class MsMsDetectionModule implements MZmineProcessingModule {
         final ScanSelection scanSelection = parameters
                 .getParameter(MsMsDetectionParameters.scanSelection).getValue();
 
-        final MZTolerance mzTolerance = parameters
+        final MaximumMzTolerance mzTolerance = parameters
                 .getParameter(MsMsDetectionParameters.mzTolerance).getValue();
 
         final RTTolerance rtTolerance = parameters

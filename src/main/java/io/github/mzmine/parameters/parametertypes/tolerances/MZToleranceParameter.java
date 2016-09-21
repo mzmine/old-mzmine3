@@ -26,11 +26,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import io.github.msdk.util.MZTolerance;
+import io.github.msdk.util.tolerances.MaximumMzTolerance;
 import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.AbstractParameter;
 
-public class MZToleranceParameter extends AbstractParameter<MZTolerance> {
+public class MZToleranceParameter
+        extends AbstractParameter<MaximumMzTolerance> {
 
     public MZToleranceParameter(@Nonnull String name,
             @Nonnull String description, @Nonnull String category) {
@@ -39,20 +40,20 @@ public class MZToleranceParameter extends AbstractParameter<MZTolerance> {
 
     public MZToleranceParameter(@Nonnull String name,
             @Nonnull String description, @Nonnull String category,
-            MZTolerance defaultValue) {
+            MaximumMzTolerance defaultValue) {
         this(name, description, category, null, defaultValue);
     }
 
     public MZToleranceParameter(@Nonnull String name,
             @Nonnull String description, @Nonnull String category,
-            @Nullable ParameterValidator<MZTolerance> validator) {
+            @Nullable ParameterValidator<MaximumMzTolerance> validator) {
         this(name, description, category, validator, null);
     }
 
     public MZToleranceParameter(@Nonnull String name,
             @Nonnull String description, @Nonnull String category,
-            @Nullable ParameterValidator<MZTolerance> validator,
-            @Nullable MZTolerance defaultValue) {
+            @Nullable ParameterValidator<MaximumMzTolerance> validator,
+            @Nullable MaximumMzTolerance defaultValue) {
         super(name, description, category, MZToleranceEditor.class, validator);
         setValue(defaultValue);
     }
@@ -67,19 +68,19 @@ public class MZToleranceParameter extends AbstractParameter<MZTolerance> {
     @Override
     public void loadValueFromXML(@Nonnull Element xmlElement) {
         // Set some default values
-        double mzTolerance = 0.005;
+        double MaximumMzTolerance = 0.005;
         double ppmTolerance = 5;
         NodeList items = xmlElement.getElementsByTagName("absolutetolerance");
         for (int i = 0; i < items.getLength(); i++) {
             String itemString = items.item(i).getTextContent();
-            mzTolerance = Double.parseDouble(itemString);
+            MaximumMzTolerance = Double.parseDouble(itemString);
         }
         items = xmlElement.getElementsByTagName("ppmtolerance");
         for (int i = 0; i < items.getLength(); i++) {
             String itemString = items.item(i).getTextContent();
             ppmTolerance = Double.parseDouble(itemString);
         }
-        setValue(new MZTolerance(mzTolerance, ppmTolerance));
+        setValue(new MaximumMzTolerance(MaximumMzTolerance, ppmTolerance));
     }
 
     @SuppressWarnings("null")

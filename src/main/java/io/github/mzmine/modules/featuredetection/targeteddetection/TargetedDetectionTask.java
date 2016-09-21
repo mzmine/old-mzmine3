@@ -37,8 +37,8 @@ import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.featdet.chromatogramtofeaturetable.ChromatogramToFeatureTableMethod;
 import io.github.msdk.featdet.targeteddetection.TargetedDetectionMethod;
-import io.github.msdk.util.MZTolerance;
-import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.tolerances.MaximumMzTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.taskcontrol.MZmineTask;
 import javafx.concurrent.Task;
@@ -52,7 +52,7 @@ public class TargetedDetectionTask extends Task<Object> implements MZmineTask {
     private final @Nonnull List<IonAnnotation> ionAnnotations;
     private final @Nonnull RawDataFile rawDataFile;
     private final @Nonnull DataPointStore dataStore;
-    private final @Nonnull MZTolerance mzTolerance;
+    private final @Nonnull MaximumMzTolerance mzTolerance;
     private final @Nonnull RTTolerance rtTolerance;
     private final @Nonnull Double intensityTolerance;
     private final @Nonnull Double minHeight;
@@ -66,7 +66,7 @@ public class TargetedDetectionTask extends Task<Object> implements MZmineTask {
     public TargetedDetectionTask(String title, @Nullable String message,
             @Nonnull List<IonAnnotation> ionAnnotations,
             @Nonnull RawDataFile rawDataFile, @Nonnull DataPointStore dataStore,
-            @Nonnull MZTolerance mzTolerance, @Nonnull RTTolerance rtTolerance,
+            @Nonnull MaximumMzTolerance mzTolerance, @Nonnull RTTolerance rtTolerance,
             @Nonnull Double intensityTolerance, @Nonnull Double minHeight,
             @Nullable String nameSuffix) {
         this.ionAnnotations = ionAnnotations;

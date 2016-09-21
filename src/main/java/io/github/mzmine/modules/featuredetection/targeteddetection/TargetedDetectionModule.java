@@ -41,8 +41,8 @@ import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
 import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.IonTypeUtil;
-import io.github.msdk.util.MZTolerance;
-import io.github.msdk.util.RTTolerance;
+import io.github.msdk.util.tolerances.MaximumMzTolerance;
+import io.github.msdk.util.tolerances.RTTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;
@@ -96,7 +96,7 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
                 .getParameter(TargetedDetectionParameters.rtTolerance)
                 .getValue();
 
-        final MZTolerance mzTolerance = parameters
+        final MaximumMzTolerance mzTolerance = parameters
                 .getParameter(TargetedDetectionParameters.mzTolerance)
                 .getValue();
 
