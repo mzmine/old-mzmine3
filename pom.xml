@@ -3,9 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.mzmine</groupId>
-	<artifactId>mzmine</artifactId>
+	<artifactId>mzmine3</artifactId>
 	<packaging>jar</packaging>
-	<version>3.0</version>
+	<version>3.0-SNAPSHOT</version>
 	<name>MZmine</name>
 	<description>MZmine 3 is an open-source project delivering a software for mass spectrometry data processing.</description>
 	<url>http://mzmine.github.io</url>
@@ -15,7 +15,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<cdk.version>1.5.13</cdk.version>
 		<guava.version>19.0</guava.version>
-		<controlsfx.version>8.40.10</controlsfx.version>
+		<controlsfx.version>8.40.12</controlsfx.version>
 		<slf4j.version>1.7.21</slf4j.version>
 		<jfreechart.version>1.0.19-fx</jfreechart.version>
 	</properties>
@@ -41,7 +41,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
+				<version>3.5.1</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
@@ -51,7 +51,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.5.5</version>
+				<version>2.6</version>
 				<configuration>
 					<descriptors>
 						<descriptor>src/main/assembly/assembly.xml</descriptor>
@@ -72,7 +72,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.6</version>
+				<version>3.0.2</version>
 				<configuration>
 					<archive>
 						<index>true</index>
@@ -108,7 +108,7 @@
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>jsr305</artifactId>
-			<version>3.0.0</version>
+			<version>3.0.1</version>
 		</dependency>
 
 		<dependency>
