@@ -54,7 +54,11 @@ public class FileNameUtil {
 
     public static @Nonnull String findCommonSuffix(
             @Nonnull List<File> fileNames) {
-        if (fileNames.size() < 2) {
+    	
+    	if (fileNames.isEmpty()) 
+    		return "";
+    	
+        if (fileNames.size() == 1) {
             // Return file extension
             String ext = Files
                     .getFileExtension(fileNames.get(0).getAbsolutePath());
