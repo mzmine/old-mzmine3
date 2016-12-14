@@ -64,7 +64,7 @@ import io.github.msdk.datamodel.rawdata.IsolationInfo;
 import io.github.msdk.datamodel.rawdata.MsFunction;
 import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.io.mgf.MgfExportAlgorithm;
+import io.github.msdk.io.mgf.MgfFileExportMethod;
 import io.github.msdk.io.msp.MspExportAlgorithm;
 import io.github.msdk.io.mzml.MzMLFileExportMethod;
 import io.github.msdk.io.txt.TxtExportAlgorithm;
@@ -846,7 +846,8 @@ public class MsSpectrumPlotWindowController {
         final File finalFile = file;
         new Thread(() -> {
             try {
-                MgfExportAlgorithm.exportSpectra(finalFile, spectra);
+                MgfFileExportMethod mgfEx = new MgfFileExportMethod(spectra, finalFile);
+                mgfEx.execute();
             } catch (Exception e) {
                 MZmineGUI.displayMessage("Unable to export: " + e.getMessage());
                 e.printStackTrace();
