@@ -9,6 +9,7 @@ More information about the software can be found on the [MZmine](http://mzmine.g
 MZmine requires Java runtime (JRE) version 1.8 or newer.
 
 ## License
+
 MZmine 3 is a free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either [version 2](http://www.gnu.org/licenses/gpl-2.0.html) of the License, or (at your option) any [later version](http://www.gnu.org/licenses/gpl.html).
 
 MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -19,9 +20,28 @@ MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY WARR
 
 Please read our brief [tutorial](http://mzmine.github.io/development.html) on how to contribute new code to MZmine.
 
+### Building
+
+You will need the following prerequisites to build MZmine from sources:
+- Java JDK version 1.8 or later
+- Apache Maven version 3.2 or later
+
+To build the MZmine package from the sources as version X.Y, run the following
+commands in this directory:
+
+mvn versions:set -DgenerateBackupPoms=false -DnewVersion=X.Y
+mvn clean jfx:native
+
+The MZmine distribution will be placed in target/jfx/native
+
+If you encounter any problems, please contact the developers:
+https://github.com/mzmine/mzmine3/issues
+
 ### Code style
 
 Since this is a collaborative project, please adhere to the following code formatting conventions:
 * All Java sources should be formatted according to the official [Java Code Conventions](http://www.oracle.com/technetwork/java/javase/documentation/codeconvtoc-136057.html) with only one adjustment: use spaces for indentation instead of tabs
 * You can use the `mzmine-eclipse-code-formater.xml` file to automatically format your code in the Eclipse IDE
 * Please write JavaDoc comments as full sentences, starting with a capital letter and ending with a period. Brevity is preferred (e.g., "Calculates standard deviation" is preferred over "This method calculates and returns a standard deviation of given set of numbers").
+
+

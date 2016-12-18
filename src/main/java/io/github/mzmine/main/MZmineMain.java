@@ -19,6 +19,7 @@
 
 package io.github.mzmine.main;
 
+import java.nio.file.Paths;
 import java.util.Locale;
 
 import org.slf4j.Logger;
@@ -32,61 +33,66 @@ import javafx.application.Application;
  */
 public final class MZmineMain {
 
-    private static final Logger logger = LoggerFactory
-            .getLogger(MZmineMain.class);
+	private static final Logger logger = LoggerFactory.getLogger(MZmineMain.class);
 
-    public static void main(String args[]) {
+	public static void main(String args[]) {
 
-        /*
-         * In the beginning, set the default locale to English, to avoid
-         * problems with conversion of numbers etc. (e.g. decimal separator may
-         * be . or , depending on the locale)
-         */
-        Locale.setDefault(new Locale("en", "US"));
+		/*
+		 * In the beginning, set the default locale to English, to avoid
+		 * problems with conversion of numbers etc. (e.g. decimal separator may
+		 * be . or , depending on the locale)
+		 */
+		Locale.setDefault(new Locale("en", "US"));
 
-        /*
-         * Configure the logging properties before we start logging
-         */
-        MZmineLogging.configureLogging();
+		/*
+		 * Configure the logging properties before we start logging
+		 */
+		MZmineLogging.configureLogging();
 
-        /*
-         * Cleanup old temporary files on a new thread
-         */
-        TmpFileCleanup cleanupClass = new TmpFileCleanup();
-        Thread cleanupThread = new Thread(cleanupClass);
-        cleanupThread.setPriority(Thread.MIN_PRIORITY);
-        cleanupThread.start();
+		/*
+		 * Report current working directory
+		 */
+		String cwd = Paths.get(".").toAbsolutePath().normalize().toString();
+		logger.info("MZmine " + MZmineCore.getMZmineVersion() + " starting");
+		logger.debug("Working directory is " + cwd);
 
-        /*
-         * Register shutdown hook
-         */
-        ShutDownHook shutDownHook = new ShutDownHook();
-        Thread shutDownThread = new Thread(shutDownHook);
-        Runtime.getRuntime().addShutdownHook(shutDownThread);
+		/*
+		 * Cleanup old temporary files on a new thread
+		 */
+		TmpFileCleanup cleanupClass = new TmpFileCleanup();
+		Thread cleanupThread = new Thread(cleanupClass);
+		cleanupThread.setPriority(Thread.MIN_PRIORITY);
+		cleanupThread.start();
 
-        /*
-         * Load modules on a new thread after the GUI has started
-         */
-        MZmineStarter moduleStarter = new MZmineStarter();
-        Thread moduleStarterThread = new Thread(moduleStarter);
-        moduleStarterThread.setPriority(Thread.MIN_PRIORITY);
-        moduleStarterThread.start();
+		/*
+		 * Register shutdown hook
+		 */
+		ShutDownHook shutDownHook = new ShutDownHook();
+		Thread shutDownThread = new Thread(shutDownHook);
+		Runtime.getRuntime().addShutdownHook(shutDownThread);
 
-        /*
-         * Usage Tracker
-         */
-        GoogleAnalyticsTracker GAT = new GoogleAnalyticsTracker(
-                "MZmine Loaded (GUI mode)", "/JAVA/Main/GUI");
-        Thread gatThread = new Thread(GAT);
-        gatThread.setPriority(Thread.MIN_PRIORITY);
-        gatThread.start();
+		/*
+		 * Load modules on a new thread after the GUI has started
+		 */
+		MZmineStarter moduleStarter = new MZmineStarter();
+		Thread moduleStarterThread = new Thread(moduleStarter);
+		moduleStarterThread.setPriority(Thread.MIN_PRIORITY);
+		moduleStarterThread.start();
 
-        /*
-         * Start the JavaFX GUI
-         */
-        logger.info("Starting MZmine GUI");
-        Application.launch(MZmineGUI.class, args);
+		/*
+		 * Usage Tracker
+		 */
+		GoogleAnalyticsTracker GAT = new GoogleAnalyticsTracker("MZmine Loaded (GUI mode)", "/JAVA/Main/GUI");
+		Thread gatThread = new Thread(GAT);
+		gatThread.setPriority(Thread.MIN_PRIORITY);
+		gatThread.start();
 
-    }
+		/*
+		 * Start the JavaFX GUI
+		 */
+		logger.info("Starting MZmine GUI");
+		Application.launch(MZmineGUI.class, args);
+
+	}
 
 }
