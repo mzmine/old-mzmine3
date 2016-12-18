@@ -121,7 +121,7 @@ public class MainWindowController {
                                 FeatureTableModuleParameters.featureTables);
                 inputTablesParam.switchType(
                         FeatureTablesSelectionType.GUI_SELECTED_FEATURE_TABLES);
-                MZmineCore.runModule(FeatureTableModule.class,
+                MZmineCore.runMZmineModule(FeatureTableModule.class,
                         moduleParameters);
             }
         });

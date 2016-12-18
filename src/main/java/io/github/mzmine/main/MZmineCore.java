@@ -44,7 +44,7 @@ public final class MZmineCore {
 
     private static final @Nonnull MZmineConfiguration configuration = new MZmineConfiguration();
 
-    private static final @Nonnull ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(
+    private static final @Nonnull ScheduledThreadPoolExecutor taskExecutor = new ScheduledThreadPoolExecutor(
             2);
 
     private static @Nonnull MZmineProject currentProject = new MZmineProject();
@@ -88,20 +88,20 @@ public final class MZmineCore {
             if (mwc != null) {
                 mwc.getTaskTable().getTasks().add(task);
             }
-            executor.execute(task);
+            taskExecutor.execute(task);
         }
     }
 
     public static @Nonnull ScheduledThreadPoolExecutor getTaskExecutor() {
-        return executor;
+        return taskExecutor;
     }
 
     public static <ModuleType extends MZmineModule> ModuleType getModuleInstance(
             Class<ModuleType> moduleClass) {
-        return MZmineStarter.getModuleInstance(moduleClass);
+        return MZmineModuleStarter.getModuleInstance(moduleClass);
     }
 
-    public static void runModule(
+    public static void runMZmineModule(
             @Nonnull Class<? extends MZmineRunnableModule> moduleClass,
             @Nonnull ParameterSet parameters) {
 

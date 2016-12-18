@@ -237,7 +237,7 @@ public final class MZmineGUI extends Application {
                 .getModuleParameters(moduleClass);
         ButtonType result = moduleParameters.showSetupDialog(null);
         if (result == ButtonType.OK) {
-            MZmineCore.runModule(moduleClass, moduleParameters);
+            MZmineCore.runMZmineModule(moduleClass, moduleParameters);
         }
 
     }

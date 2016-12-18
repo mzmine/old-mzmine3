@@ -73,7 +73,7 @@ public final class ModuleMenuItem extends MenuItem {
             ParameterSet parametersCopy = moduleParameters.clone();
             logger.debug("Starting module " + module.getName()
                     + " with parameters " + parametersCopy);
-            MZmineCore.runModule(moduleJavaClass, parametersCopy);
+            MZmineCore.runMZmineModule(moduleJavaClass, parametersCopy);
 
         });
     }

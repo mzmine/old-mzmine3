@@ -74,7 +74,7 @@ public final class MZmineMain {
 		/*
 		 * Load modules on a new thread after the GUI has started
 		 */
-		MZmineStarter moduleStarter = new MZmineStarter();
+		MZmineModuleStarter moduleStarter = new MZmineModuleStarter();
 		Thread moduleStarterThread = new Thread(moduleStarter);
 		moduleStarterThread.setPriority(Thread.MIN_PRIORITY);
 		moduleStarterThread.start();

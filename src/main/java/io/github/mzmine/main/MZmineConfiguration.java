@@ -83,7 +83,7 @@ public final class MZmineConfiguration {
             ParameterSet parameters) {
         assert moduleClass != null;
         assert parameters != null;
-        MZmineModule moduleInstance = MZmineStarter
+        MZmineModule moduleInstance = MZmineModuleStarter
                 .getModuleInstance(moduleClass);
         Class<? extends ParameterSet> parametersClass = moduleInstance
                 .getParameterSetClass();
@@ -139,7 +139,7 @@ public final class MZmineConfiguration {
 
             logger.info("Loading modules configuration");
 
-            for (MZmineModule module : MZmineStarter.getAllModules()) {
+            for (MZmineModule module : MZmineModuleStarter.getAllModules()) {
 
                 String className = module.getClass().getName();
                 expr = xpath.compile("//configuration/modules/module[@class='"
@@ -180,7 +180,7 @@ public final class MZmineConfiguration {
             configRoot.appendChild(modulesElement);
 
             // traverse modules
-            for (MZmineModule module : MZmineStarter.getAllModules()) {
+            for (MZmineModule module : MZmineModuleStarter.getAllModules()) {
 
                 String className = module.getClass().getName();
 

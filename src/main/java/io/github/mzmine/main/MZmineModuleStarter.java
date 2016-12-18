@@ -43,7 +43,7 @@ import io.github.mzmine.parameters.ParameterSet;
 /**
  * MZmine modules support class
  */
-public final class MZmineStarter implements Runnable {
+public final class MZmineModuleStarter implements Runnable {
 
     private static final File MODULES_FILE = new File("conf/Modules.xml");
 
