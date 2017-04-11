@@ -26,6 +26,9 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.github.msdk.datamodel.featuretables.ColumnName;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
@@ -55,6 +58,8 @@ import javafx.util.Callback;
 
 public class FeatureTableModule implements MZmineRunnableModule {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Nonnull
     private static final String MODULE_NAME = "Feature Table";
 
@@ -83,6 +88,12 @@ public class FeatureTableModule implements MZmineRunnableModule {
         final List<FeatureTable> featureTables = parameters
                 .getParameter(FeatureTableModuleParameters.featureTables)
                 .getValue().getMatchingFeatureTables();
+        
+        if (featureTables.isEmpty()) {
+            logger.warn("No feature table selected, cannot proceed");
+            return;
+        }
+        
         FeatureTable featureTable = featureTables.get(0);
 
         // Variables
