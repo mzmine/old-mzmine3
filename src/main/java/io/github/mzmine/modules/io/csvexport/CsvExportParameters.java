@@ -3,18 +3,17 @@
  * 
  * This file is part of MZmine 3.
  * 
- * MZmine 3 is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
+ * MZmine 3 is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  * 
- * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * MZmine 3; if not, write to the Free Software Foundation, Inc., 51 Franklin St,
- * Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a copy of the GNU General Public License along with MZmine 3; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 
 package io.github.mzmine.modules.io.csvexport;
@@ -32,40 +31,33 @@ import javafx.stage.FileChooser.ExtensionFilter;
 
 public class CsvExportParameters extends ParameterSet {
 
-    public static final FeatureTablesParameter featureTables = new FeatureTablesParameter();
+  public static final FeatureTablesParameter featureTables = new FeatureTablesParameter();
 
-    public static final FileNameParameter exportFileCSV = new FileNameParameter(
-            "Output file",
-            "Path and name of the exported CSV file. If the file already exists, it will be overwritten.\n"
-                    + "Use pattern \"{}\" in the file name to substitute with the feature table name.\n"
-                    + "I.e. \"123_{}_456.csv\" would become \"123_SourcePeakListName_456.csv\".",
-            "Algorithm Parameters",
-            ParameterValidator.createNonEmptyValidator(),
-            FileNameParameter.Type.SAVE,
-            Arrays.asList(new ExtensionFilter("CSV file", "*.csv")));
+  public static final FileNameParameter exportFileCSV = new FileNameParameter("Output file",
+      "Path and name of the exported CSV file. If the file already exists, it will be overwritten.\n"
+          + "Use pattern \"{}\" in the file name to substitute with the feature table name.\n"
+          + "I.e. \"123_{}_456.csv\" would become \"123_SourcePeakListName_456.csv\".",
+      "Algorithm Parameters", ParameterValidator.createNonEmptyValidator(),
+      FileNameParameter.Type.SAVE, Arrays.asList(new ExtensionFilter("CSV file", "*.csv")));
 
-    public static final StringParameter separator = new StringParameter(
-            "Field separator",
-            "Character(s) used to separate fields in the exported file.",
-            "Algorithm Parameters",
-            ParameterValidator.createNonEmptyValidator(), ",");
+  public static final StringParameter separator = new StringParameter("Field separator",
+      "Character(s) used to separate fields in the exported file.", "Algorithm Parameters",
+      ParameterValidator.createNonEmptyValidator(), ",");
 
-    public static final StringParameter itemSeparator = new StringParameter(
-            "Item separator",
-            "Character(s) used to separate multiple items in the same cell (e.g. identifications).",
-            "Algorithm Parameters",
-            ParameterValidator.createNonEmptyValidator(), ";");
+  public static final StringParameter itemSeparator = new StringParameter("Item separator",
+      "Character(s) used to separate multiple items in the same cell (e.g. identifications).",
+      "Algorithm Parameters", ParameterValidator.createNonEmptyValidator(), ";");
 
-    public static final BooleanParameter exportAllIds = new BooleanParameter(
-            "Export all feature identifications?",
-            "If checked, all possible identifications of a feature will be exported.",
-            "Algorithm Parameters", false);
+  public static final BooleanParameter exportAllIds =
+      new BooleanParameter("Export all feature identifications?",
+          "If checked, all possible identifications of a feature will be exported.",
+          "Algorithm Parameters", false);
 
-    public static final FeatureTableColumnsParameter tableColumns = new FeatureTableColumnsParameter();
+  public static final FeatureTableColumnsParameter tableColumns =
+      new FeatureTableColumnsParameter();
 
-    public CsvExportParameters() {
-        super(featureTables, exportFileCSV, separator, itemSeparator,
-                exportAllIds, tableColumns);
-    }
+  public CsvExportParameters() {
+    super(featureTables, exportFileCSV, separator, itemSeparator, exportAllIds, tableColumns);
+  }
 
 }

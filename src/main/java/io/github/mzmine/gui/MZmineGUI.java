@@ -3,18 +3,17 @@
  * 
  * This file is part of MZmine 3.
  * 
- * MZmine 3 is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
+ * MZmine 3 is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  * 
- * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * MZmine 3; if not, write to the Free Software Foundation, Inc., 51 Franklin St,
- * Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a copy of the GNU General Public License along with MZmine 3; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 
 package io.github.mzmine.gui;
@@ -60,186 +59,181 @@ import javafx.stage.Stage;
  */
 public final class MZmineGUI extends Application {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private static final Image mzMineIcon = new Image(
-            "file:icon/mzmine-icon.png");
-    private static final String mzMineFXML = "file:conf/MainWindow.fxml";
+  private static final Image mzMineIcon = new Image("file:icon/mzmine-icon.png");
+  private static final String mzMineFXML = "file:conf/MainWindow.fxml";
 
-    private static MainWindowController mainWindowController;
+  private static MainWindowController mainWindowController;
 
-    private static Scene rootScene;
+  private static Scene rootScene;
 
-    public void start(Stage stage) {
+  public void start(Stage stage) {
 
-        try {
-            // Load the main window
-            URL mainFXML = new URL(mzMineFXML);
-            FXMLLoader loader = new FXMLLoader(mainFXML);
+    try {
+      // Load the main window
+      URL mainFXML = new URL(mzMineFXML);
+      FXMLLoader loader = new FXMLLoader(mainFXML);
 
-            rootScene = loader.load();
-            mainWindowController = loader.getController();
-            stage.setScene(rootScene);
+      rootScene = loader.load();
+      mainWindowController = loader.getController();
+      stage.setScene(rootScene);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.error("Error loading MZmine GUI from FXML: " + e);
-            Platform.exit();
-        }
-
-        stage.setTitle("MZmine " + MZmineCore.getMZmineVersion());
-        stage.setMinWidth(300);
-        stage.setMinHeight(300);
-
-        // Set application icon
-        stage.getIcons().setAll(mzMineIcon);
-
-        stage.setOnCloseRequest(e -> {
-            requestQuit();
-            e.consume();
-        });
-
-        // Activate new GUI-supported project
-        MZmineGUIProject project = new MZmineGUIProject();
-        MZmineGUI.activateProject(project);
-
-        stage.show();
-
-        // Check for new version of MZmine
-        NewVersionCheck NVC = new NewVersionCheck(CheckType.DESKTOP);
-        Thread nvcThread = new Thread(NVC);
-        nvcThread.setPriority(Thread.MIN_PRIORITY);
-        nvcThread.start();
+    } catch (IOException e) {
+      e.printStackTrace();
+      logger.error("Error loading MZmine GUI from FXML: " + e);
+      Platform.exit();
     }
 
-    public static void requestQuit() {
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(mzMineIcon);
-        alert.setTitle("Confirmation");
-        alert.setHeaderText("Exit MZmine");
-        String s = "Are you sure you want to exit?";
-        alert.setContentText(s);
-        Optional<ButtonType> result = alert.showAndWait();
+    stage.setTitle("MZmine " + MZmineCore.getMZmineVersion());
+    stage.setMinWidth(300);
+    stage.setMinHeight(300);
 
-        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
-            Platform.exit();
-            System.exit(0);
-        }
+    // Set application icon
+    stage.getIcons().setAll(mzMineIcon);
+
+    stage.setOnCloseRequest(e -> {
+      requestQuit();
+      e.consume();
+    });
+
+    // Activate new GUI-supported project
+    MZmineGUIProject project = new MZmineGUIProject();
+    MZmineGUI.activateProject(project);
+
+    stage.show();
+
+    // Check for new version of MZmine
+    NewVersionCheck NVC = new NewVersionCheck(CheckType.DESKTOP);
+    Thread nvcThread = new Thread(NVC);
+    nvcThread.setPriority(Thread.MIN_PRIORITY);
+    nvcThread.start();
+  }
+
+  public static void requestQuit() {
+    Alert alert = new Alert(AlertType.CONFIRMATION);
+    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+    stage.getIcons().add(mzMineIcon);
+    alert.setTitle("Confirmation");
+    alert.setHeaderText("Exit MZmine");
+    String s = "Are you sure you want to exit?";
+    alert.setContentText(s);
+    Optional<ButtonType> result = alert.showAndWait();
+
+    if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+      Platform.exit();
+      System.exit(0);
+    }
+  }
+
+  public static void closeProject() {
+    Alert alert = new Alert(AlertType.CONFIRMATION);
+    Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
+    stage.getIcons().add(mzMineIcon);
+    alert.setTitle("Confirmation");
+    alert.setHeaderText("Close project");
+    String s = "Are you sure you want to close the current project?";
+    alert.setContentText(s);
+    Optional<ButtonType> result = alert.showAndWait();
+
+    if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
+      MZmineGUIProject newProject = new MZmineGUIProject();
+      activateProject(newProject);
+      setStatusBarMessage("");
+    }
+  }
+
+  public static void displayMessage(String msg) {
+    Platform.runLater(() -> {
+      Dialog<ButtonType> dialog = new Dialog<>();
+      Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+      stage.getIcons().add(mzMineIcon);
+      dialog.setTitle("Warning");
+      dialog.setContentText(msg);
+      dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+      dialog.showAndWait();
+    });
+  }
+
+  public static void setStatusBarMessage(String message) {
+    Platform.runLater(() -> {
+      StatusBar statusBar = mainWindowController.getStatusBar();
+      statusBar.setText(message);
+    });
+  }
+
+  public static MainWindowController getMainWindowController() {
+    return mainWindowController;
+  }
+
+  public static void addWindow(Node node, String title) {
+
+    BorderPane parent = new BorderPane();
+    parent.setCenter(node);
+    Scene newScene = new Scene(parent);
+
+    // Copy CSS styles
+    newScene.getStylesheets().addAll(rootScene.getStylesheets());
+
+    Stage newStage = new Stage();
+    newStage.setTitle(title);
+    newStage.getIcons().add(mzMineIcon);
+    newStage.setScene(newScene);
+    newStage.show();
+
+  }
+
+  public static void activateProject(MZmineGUIProject project) {
+    MZmineCore.setCurrentProject(project);
+
+    TreeView<Object> rawDataTree = mainWindowController.getRawDataTree();
+    rawDataTree.setRoot(project.getRawDataRootItem());
+
+    TreeView<Object> featureTree = mainWindowController.getFeatureTree();
+    featureTree.setRoot(project.getFeatureTableRootItem());
+
+  }
+
+  public static @Nonnull List<RawDataFile> getSelectedRawDataFiles() {
+
+    final ArrayList<RawDataFile> list = new ArrayList<>();
+    final TreeView<Object> rawDataTree = mainWindowController.getRawDataTree();
+    for (TreeItem<Object> item : rawDataTree.getSelectionModel().getSelectedItems()) {
+      if (!(item.getValue() instanceof RawDataFile))
+        continue;
+      RawDataFile file = (RawDataFile) item.getValue();
+      list.add(file);
     }
 
-    public static void closeProject() {
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-        stage.getIcons().add(mzMineIcon);
-        alert.setTitle("Confirmation");
-        alert.setHeaderText("Close project");
-        String s = "Are you sure you want to close the current project?";
-        alert.setContentText(s);
-        Optional<ButtonType> result = alert.showAndWait();
+    return list;
 
-        if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
-            MZmineGUIProject newProject = new MZmineGUIProject();
-            activateProject(newProject);
-            setStatusBarMessage("");
-        }
+  }
+
+  public static @Nonnull List<FeatureTable> getSelectedFeatureTables() {
+
+    final ArrayList<FeatureTable> list = new ArrayList<>();
+    final TreeView<Object> featureTableTree = mainWindowController.getFeatureTree();
+    for (TreeItem<Object> item : featureTableTree.getSelectionModel().getSelectedItems()) {
+      if (!(item.getValue() instanceof FeatureTable))
+        continue;
+      FeatureTable ft = (FeatureTable) item.getValue();
+      list.add(ft);
     }
 
-    public static void displayMessage(String msg) {
-        Platform.runLater(() -> {
-            Dialog<ButtonType> dialog = new Dialog<>();
-            Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
-            stage.getIcons().add(mzMineIcon);
-            dialog.setTitle("Warning");
-            dialog.setContentText(msg);
-            dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-            dialog.showAndWait();
-        });
+    return list;
+
+  }
+
+  public static <ModuleType extends MZmineRunnableModule> void setupAndRunModule(
+      @Nonnull Class<ModuleType> moduleClass) {
+
+    final ParameterSet moduleParameters =
+        MZmineCore.getConfiguration().getModuleParameters(moduleClass);
+    ButtonType result = moduleParameters.showSetupDialog(null);
+    if (result == ButtonType.OK) {
+      MZmineCore.runMZmineModule(moduleClass, moduleParameters);
     }
 
-    public static void setStatusBarMessage(String message) {
-        Platform.runLater(() -> {
-            StatusBar statusBar = mainWindowController.getStatusBar();
-            statusBar.setText(message);
-        });
-    }
-
-    public static MainWindowController getMainWindowController() {
-        return mainWindowController;
-    }
-
-    public static void addWindow(Node node, String title) {
-
-        BorderPane parent = new BorderPane();
-        parent.setCenter(node);
-        Scene newScene = new Scene(parent);
-
-        // Copy CSS styles
-        newScene.getStylesheets().addAll(rootScene.getStylesheets());
-
-        Stage newStage = new Stage();
-        newStage.setTitle(title);
-        newStage.getIcons().add(mzMineIcon);
-        newStage.setScene(newScene);
-        newStage.show();
-
-    }
-
-    public static void activateProject(MZmineGUIProject project) {
-        MZmineCore.setCurrentProject(project);
-
-        TreeView<Object> rawDataTree = mainWindowController
-                .getRawDataTree();
-        rawDataTree.setRoot(project.getRawDataRootItem());
-
-        TreeView<Object> featureTree = mainWindowController
-                .getFeatureTree();
-        featureTree.setRoot(project.getFeatureTableRootItem());
-
-    }
-
-    public static @Nonnull List<RawDataFile> getSelectedRawDataFiles() {
-
-        final ArrayList<RawDataFile> list = new ArrayList<>();
-        final TreeView<Object> rawDataTree = mainWindowController
-                .getRawDataTree();
-        for (TreeItem<Object> item : rawDataTree.getSelectionModel()
-                .getSelectedItems()) {
-            if (! (item.getValue() instanceof RawDataFile)) continue;
-            RawDataFile file = (RawDataFile) item.getValue();
-            list.add(file);
-        }
-
-        return list;
-
-    }
-
-    public static @Nonnull List<FeatureTable> getSelectedFeatureTables() {
-
-        final ArrayList<FeatureTable> list = new ArrayList<>();
-        final TreeView<Object> featureTableTree = mainWindowController
-                .getFeatureTree();
-        for (TreeItem<Object> item : featureTableTree
-                .getSelectionModel().getSelectedItems()) {
-            if (! (item.getValue() instanceof FeatureTable)) continue;
-            FeatureTable ft = (FeatureTable) item.getValue();
-            list.add(ft);
-        }
-
-        return list;
-
-    }
-
-    public static <ModuleType extends MZmineRunnableModule> void setupAndRunModule(
-            @Nonnull Class<ModuleType> moduleClass) {
-
-        final ParameterSet moduleParameters = MZmineCore.getConfiguration()
-                .getModuleParameters(moduleClass);
-        ButtonType result = moduleParameters.showSetupDialog(null);
-        if (result == ButtonType.OK) {
-            MZmineCore.runMZmineModule(moduleClass, moduleParameters);
-        }
-
-    }
+  }
 
 }

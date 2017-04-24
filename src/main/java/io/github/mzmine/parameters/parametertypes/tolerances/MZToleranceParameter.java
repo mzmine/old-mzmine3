@@ -3,18 +3,17 @@
  * 
  * This file is part of MZmine 3.
  * 
- * MZmine 3 is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
+ * MZmine 3 is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  * 
- * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * MZmine 3; if not, write to the Free Software Foundation, Inc., 51 Franklin
- * St, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a copy of the GNU General Public License along with MZmine 3; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 
 package io.github.mzmine.parameters.parametertypes.tolerances;
@@ -30,70 +29,66 @@ import io.github.msdk.util.tolerances.MaximumMzTolerance;
 import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.AbstractParameter;
 
-public class MZToleranceParameter
-        extends AbstractParameter<MaximumMzTolerance> {
+public class MZToleranceParameter extends AbstractParameter<MaximumMzTolerance> {
 
-    public MZToleranceParameter(@Nonnull String name,
-            @Nonnull String description, @Nonnull String category) {
-        this(name, description, category, null, null);
-    }
+  public MZToleranceParameter(@Nonnull String name, @Nonnull String description,
+      @Nonnull String category) {
+    this(name, description, category, null, null);
+  }
 
-    public MZToleranceParameter(@Nonnull String name,
-            @Nonnull String description, @Nonnull String category,
-            MaximumMzTolerance defaultValue) {
-        this(name, description, category, null, defaultValue);
-    }
+  public MZToleranceParameter(@Nonnull String name, @Nonnull String description,
+      @Nonnull String category, MaximumMzTolerance defaultValue) {
+    this(name, description, category, null, defaultValue);
+  }
 
-    public MZToleranceParameter(@Nonnull String name,
-            @Nonnull String description, @Nonnull String category,
-            @Nullable ParameterValidator<MaximumMzTolerance> validator) {
-        this(name, description, category, validator, null);
-    }
+  public MZToleranceParameter(@Nonnull String name, @Nonnull String description,
+      @Nonnull String category, @Nullable ParameterValidator<MaximumMzTolerance> validator) {
+    this(name, description, category, validator, null);
+  }
 
-    public MZToleranceParameter(@Nonnull String name,
-            @Nonnull String description, @Nonnull String category,
-            @Nullable ParameterValidator<MaximumMzTolerance> validator,
-            @Nullable MaximumMzTolerance defaultValue) {
-        super(name, description, category, MZToleranceEditor.class, validator);
-        setValue(defaultValue);
-    }
+  public MZToleranceParameter(@Nonnull String name, @Nonnull String description,
+      @Nonnull String category, @Nullable ParameterValidator<MaximumMzTolerance> validator,
+      @Nullable MaximumMzTolerance defaultValue) {
+    super(name, description, category, MZToleranceEditor.class, validator);
+    setValue(defaultValue);
+  }
 
-    @Override
-    public @Nonnull MZToleranceParameter clone() {
-        MZToleranceParameter copy = new MZToleranceParameter(getName(),
-                getDescription(), getCategory(), getValidator(), getValue());
-        return copy;
-    }
+  @Override
+  public @Nonnull MZToleranceParameter clone() {
+    MZToleranceParameter copy = new MZToleranceParameter(getName(), getDescription(), getCategory(),
+        getValidator(), getValue());
+    return copy;
+  }
 
-    @Override
-    public void loadValueFromXML(@Nonnull Element xmlElement) {
-        // Set some default values
-        double MaximumMzTolerance = 0.005;
-        double ppmTolerance = 5;
-        NodeList items = xmlElement.getElementsByTagName("absolutetolerance");
-        for (int i = 0; i < items.getLength(); i++) {
-            String itemString = items.item(i).getTextContent();
-            MaximumMzTolerance = Double.parseDouble(itemString);
-        }
-        items = xmlElement.getElementsByTagName("ppmtolerance");
-        for (int i = 0; i < items.getLength(); i++) {
-            String itemString = items.item(i).getTextContent();
-            ppmTolerance = Double.parseDouble(itemString);
-        }
-        setValue(new MaximumMzTolerance(MaximumMzTolerance, ppmTolerance));
+  @Override
+  public void loadValueFromXML(@Nonnull Element xmlElement) {
+    // Set some default values
+    double MaximumMzTolerance = 0.005;
+    double ppmTolerance = 5;
+    NodeList items = xmlElement.getElementsByTagName("absolutetolerance");
+    for (int i = 0; i < items.getLength(); i++) {
+      String itemString = items.item(i).getTextContent();
+      MaximumMzTolerance = Double.parseDouble(itemString);
     }
+    items = xmlElement.getElementsByTagName("ppmtolerance");
+    for (int i = 0; i < items.getLength(); i++) {
+      String itemString = items.item(i).getTextContent();
+      ppmTolerance = Double.parseDouble(itemString);
+    }
+    setValue(new MaximumMzTolerance(MaximumMzTolerance, ppmTolerance));
+  }
 
-    @SuppressWarnings("null")
-    @Override
-    public void saveValueToXML(@Nonnull Element xmlElement) {
-        if (getValue() == null)
-            return;
-        Document parentDocument = xmlElement.getOwnerDocument();
-        Element newElement = parentDocument.createElement("absolutetolerance");
-        newElement.setTextContent(String.valueOf(getValue().getMzTolerance()));
-        xmlElement.appendChild(newElement);
-        newElement = parentDocument.createElement("ppmtolerance");
-        newElement.setTextContent(String.valueOf(getValue().getPpmTolerance()));
-        xmlElement.appendChild(newElement);
-    }
+  @SuppressWarnings("null")
+  @Override
+  public void saveValueToXML(@Nonnull Element xmlElement) {
+    if (getValue() == null)
+      return;
+    Document parentDocument = xmlElement.getOwnerDocument();
+    Element newElement = parentDocument.createElement("absolutetolerance");
+    newElement.setTextContent(String.valueOf(getValue().getMzTolerance()));
+    xmlElement.appendChild(newElement);
+    newElement = parentDocument.createElement("ppmtolerance");
+    newElement.setTextContent(String.valueOf(getValue().getPpmTolerance()));
+    xmlElement.appendChild(newElement);
+  }
 }

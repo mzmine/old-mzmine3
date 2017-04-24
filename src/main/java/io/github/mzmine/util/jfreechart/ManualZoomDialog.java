@@ -3,18 +3,17 @@
  * 
  * This file is part of MZmine 2.
  * 
- * MZmine 2 is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
+ * MZmine 2 is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  * 
- * MZmine 2 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * MZmine 2 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * MZmine 2; if not, write to the Free Software Foundation, Inc., 51 Franklin St,
- * Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a copy of the GNU General Public License along with MZmine 2; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 
 package io.github.mzmine.util.jfreechart;
@@ -45,181 +44,170 @@ import javafx.util.converter.NumberStringConverter;
 
 public class ManualZoomDialog extends Dialog<Void> {
 
-    private static final String DIALOG_FXML = "ManualZoomDialog.fxml";
+  private static final String DIALOG_FXML = "ManualZoomDialog.fxml";
 
-    private NumberAxis xAxis, yAxis;
+  private NumberAxis xAxis, yAxis;
 
-    @FXML
-    private Label xAxisLabel;
+  @FXML
+  private Label xAxisLabel;
 
-    @FXML
-    private Label yAxisLabel;
+  @FXML
+  private Label yAxisLabel;
 
-    @FXML
-    private TextField xAxisRangeMin;
+  @FXML
+  private TextField xAxisRangeMin;
 
-    @FXML
-    private TextField yAxisRangeMin;
+  @FXML
+  private TextField yAxisRangeMin;
 
-    @FXML
-    private TextField xAxisRangeMax;
+  @FXML
+  private TextField xAxisRangeMax;
 
-    @FXML
-    private TextField yAxisRangeMax;
+  @FXML
+  private TextField yAxisRangeMax;
 
-    @FXML
-    private TextField xAxisTickSize;
+  @FXML
+  private TextField xAxisTickSize;
 
-    @FXML
-    private TextField yAxisTickSize;
+  @FXML
+  private TextField yAxisTickSize;
 
-    @FXML
-    private CheckBox xAxisAutoRange;
+  @FXML
+  private CheckBox xAxisAutoRange;
 
-    @FXML
-    private CheckBox yAxisAutoRange;
+  @FXML
+  private CheckBox yAxisAutoRange;
 
-    @FXML
-    private CheckBox xAxisAutoTickSize;
+  @FXML
+  private CheckBox xAxisAutoTickSize;
 
-    @FXML
-    private CheckBox yAxisAutoTickSize;
+  @FXML
+  private CheckBox yAxisAutoTickSize;
 
-    /**
-     * Constructor
-     */
-    public ManualZoomDialog(Window parent, XYPlot plot) {
+  /**
+   * Constructor
+   */
+  public ManualZoomDialog(Window parent, XYPlot plot) {
 
-        initOwner(parent);
+    initOwner(parent);
 
-        setTitle("Manual zoom");
-        
-        setGraphic(new ImageView("file:icons/axesicon.png"));
+    setTitle("Manual zoom");
 
-        getDialogPane().getButtonTypes().addAll(ButtonType.OK,
-                ButtonType.CANCEL);
+    setGraphic(new ImageView("file:icons/axesicon.png"));
 
-        xAxis = (NumberAxis) plot.getDomainAxis();
-        yAxis = (NumberAxis) plot.getRangeAxis();
+    getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        try {
-            URL layersDialogFXML = getClass().getResource(DIALOG_FXML);
-            FXMLLoader loader = new FXMLLoader(layersDialogFXML);
-            loader.setController(this);
-            GridPane grid = loader.load();
-            getDialogPane().setContent(grid);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    xAxis = (NumberAxis) plot.getDomainAxis();
+    yAxis = (NumberAxis) plot.getRangeAxis();
 
-        final Button btOk = (Button) getDialogPane()
-                .lookupButton(ButtonType.OK);
-        btOk.addEventFilter(ActionEvent.ACTION, event -> {
-            commitChanges(event);
-        });
-
+    try {
+      URL layersDialogFXML = getClass().getResource(DIALOG_FXML);
+      FXMLLoader loader = new FXMLLoader(layersDialogFXML);
+      loader.setController(this);
+      GridPane grid = loader.load();
+      getDialogPane().setContent(grid);
+    } catch (Exception e) {
+      e.printStackTrace();
     }
 
-    @FXML
-    public void initialize() {
+    final Button btOk = (Button) getDialogPane().lookupButton(ButtonType.OK);
+    btOk.addEventFilter(ActionEvent.ACTION, event -> {
+      commitChanges(event);
+    });
 
-        NumberFormat xAxisFormatter;
-        if (xAxis instanceof NumberAxis)
-            xAxisFormatter = ((NumberAxis) xAxis).getNumberFormatOverride();
-        else
-            xAxisFormatter = NumberFormat.getNumberInstance();
+  }
 
-        NumberFormat yAxisFormatter;
-        if (yAxis instanceof NumberAxis)
-            yAxisFormatter = ((NumberAxis) yAxis).getNumberFormatOverride();
-        else
-            yAxisFormatter = NumberFormat.getNumberInstance();
+  @FXML
+  public void initialize() {
 
-        xAxisLabel.setText(xAxis.getLabel());
-        yAxisLabel.setText(yAxis.getLabel());
+    NumberFormat xAxisFormatter;
+    if (xAxis instanceof NumberAxis)
+      xAxisFormatter = ((NumberAxis) xAxis).getNumberFormatOverride();
+    else
+      xAxisFormatter = NumberFormat.getNumberInstance();
 
-        xAxisRangeMin.setTextFormatter(
-                new TextFormatter<>(new NumberStringConverter(xAxisFormatter)));
-        xAxisRangeMin.disableProperty().bind(xAxisAutoRange.selectedProperty());
-        xAxisRangeMin.setText(String.valueOf(xAxis.getLowerBound()));
-        xAxisRangeMax.setTextFormatter(
-                new TextFormatter<>(new NumberStringConverter(xAxisFormatter)));
-        xAxisRangeMax.disableProperty().bind(xAxisAutoRange.selectedProperty());
-        xAxisRangeMax.setText(String.valueOf(xAxis.getUpperBound()));
-        xAxisAutoRange.setSelected(xAxis.isAutoRange());
+    NumberFormat yAxisFormatter;
+    if (yAxis instanceof NumberAxis)
+      yAxisFormatter = ((NumberAxis) yAxis).getNumberFormatOverride();
+    else
+      yAxisFormatter = NumberFormat.getNumberInstance();
 
-        yAxisRangeMin.setTextFormatter(
-                new TextFormatter<>(new NumberStringConverter(yAxisFormatter)));
-        yAxisRangeMin.setText(String.valueOf(yAxis.getLowerBound()));
-        yAxisRangeMin.disableProperty().bind(yAxisAutoRange.selectedProperty());
-        yAxisRangeMax.setTextFormatter(
-                new TextFormatter<>(new NumberStringConverter(yAxisFormatter)));
-        yAxisRangeMax.setText(String.valueOf(yAxis.getUpperBound()));
-        yAxisRangeMax.disableProperty().bind(yAxisAutoRange.selectedProperty());
-        yAxisAutoRange.setSelected(yAxis.isAutoRange());
+    xAxisLabel.setText(xAxis.getLabel());
+    yAxisLabel.setText(yAxis.getLabel());
 
-        xAxisTickSize.disableProperty()
-                .bind(xAxisAutoTickSize.selectedProperty());
-        xAxisTickSize.setText(String.valueOf(xAxis.getTickUnit().getSize()));
-        xAxisAutoTickSize.setSelected(xAxis.isAutoTickUnitSelection());
+    xAxisRangeMin.setTextFormatter(new TextFormatter<>(new NumberStringConverter(xAxisFormatter)));
+    xAxisRangeMin.disableProperty().bind(xAxisAutoRange.selectedProperty());
+    xAxisRangeMin.setText(String.valueOf(xAxis.getLowerBound()));
+    xAxisRangeMax.setTextFormatter(new TextFormatter<>(new NumberStringConverter(xAxisFormatter)));
+    xAxisRangeMax.disableProperty().bind(xAxisAutoRange.selectedProperty());
+    xAxisRangeMax.setText(String.valueOf(xAxis.getUpperBound()));
+    xAxisAutoRange.setSelected(xAxis.isAutoRange());
 
-        yAxisTickSize.setTextFormatter(
-                new TextFormatter<>(new NumberStringConverter(yAxisFormatter)));
-        yAxisTickSize.setText(String.valueOf(yAxis.getTickUnit().getSize()));
-        yAxisTickSize.disableProperty()
-                .bind(yAxisAutoTickSize.selectedProperty());
-        yAxisAutoTickSize.setSelected(yAxis.isAutoTickUnitSelection());
+    yAxisRangeMin.setTextFormatter(new TextFormatter<>(new NumberStringConverter(yAxisFormatter)));
+    yAxisRangeMin.setText(String.valueOf(yAxis.getLowerBound()));
+    yAxisRangeMin.disableProperty().bind(yAxisAutoRange.selectedProperty());
+    yAxisRangeMax.setTextFormatter(new TextFormatter<>(new NumberStringConverter(yAxisFormatter)));
+    yAxisRangeMax.setText(String.valueOf(yAxis.getUpperBound()));
+    yAxisRangeMax.disableProperty().bind(yAxisAutoRange.selectedProperty());
+    yAxisAutoRange.setSelected(yAxis.isAutoRange());
 
+    xAxisTickSize.disableProperty().bind(xAxisAutoTickSize.selectedProperty());
+    xAxisTickSize.setText(String.valueOf(xAxis.getTickUnit().getSize()));
+    xAxisAutoTickSize.setSelected(xAxis.isAutoTickUnitSelection());
+
+    yAxisTickSize.setTextFormatter(new TextFormatter<>(new NumberStringConverter(yAxisFormatter)));
+    yAxisTickSize.setText(String.valueOf(yAxis.getTickUnit().getSize()));
+    yAxisTickSize.disableProperty().bind(yAxisAutoTickSize.selectedProperty());
+    yAxisAutoTickSize.setSelected(yAxis.isAutoTickUnitSelection());
+
+  }
+
+  private void commitChanges(ActionEvent event) {
+
+    if (xAxisAutoRange.isSelected()) {
+      xAxis.setAutoRange(true);
+    } else {
+
+      double lower = Double.parseDouble(xAxisRangeMin.getText());
+      double upper = Double.parseDouble(xAxisRangeMax.getText());
+      if (lower > upper) {
+        Alert alert = new Alert(AlertType.ERROR, "Invalid " + xAxis.getLabel() + " range.");
+        alert.show();
+        event.consume();
+        return;
+      }
+      xAxis.setRange(lower, upper);
     }
 
-    private void commitChanges(ActionEvent event) {
-        
-        if (xAxisAutoRange.isSelected()) {
-            xAxis.setAutoRange(true);
-        } else {
-
-            double lower = Double.parseDouble(xAxisRangeMin.getText());
-            double upper = Double.parseDouble(xAxisRangeMax.getText());
-            if (lower > upper) {
-                Alert alert = new Alert(AlertType.ERROR,
-                        "Invalid " + xAxis.getLabel() + " range.");
-                alert.show();
-                event.consume();
-                return;
-            }
-            xAxis.setRange(lower, upper);
-        }
-
-        if (xAxisAutoTickSize.isSelected()) {
-            xAxis.setAutoTickUnitSelection(true);
-        } else {
-            double tickSize = Double.parseDouble(xAxisTickSize.getText());
-            xAxis.setTickUnit(new NumberTickUnit(tickSize));
-        }
-
-        if (yAxisAutoRange.isSelected()) {
-            yAxis.setAutoRange(true);
-        } else {
-
-            double lower = Double.parseDouble(yAxisRangeMin.getText());
-            double upper = Double.parseDouble(yAxisRangeMax.getText());
-            if (lower > upper) {
-                Alert alert = new Alert(AlertType.ERROR,
-                        "Invalid " + yAxis.getLabel() + " range.");
-                alert.show();
-                event.consume();
-                return;
-            }
-            yAxis.setRange(lower, upper);
-        }
-
-        if (yAxisAutoTickSize.isSelected()) {
-            yAxis.setAutoTickUnitSelection(true);
-        } else {
-            double tickSize = Double.parseDouble(yAxisTickSize.getText());
-            yAxis.setTickUnit(new NumberTickUnit(tickSize));
-        }
-
+    if (xAxisAutoTickSize.isSelected()) {
+      xAxis.setAutoTickUnitSelection(true);
+    } else {
+      double tickSize = Double.parseDouble(xAxisTickSize.getText());
+      xAxis.setTickUnit(new NumberTickUnit(tickSize));
     }
+
+    if (yAxisAutoRange.isSelected()) {
+      yAxis.setAutoRange(true);
+    } else {
+
+      double lower = Double.parseDouble(yAxisRangeMin.getText());
+      double upper = Double.parseDouble(yAxisRangeMax.getText());
+      if (lower > upper) {
+        Alert alert = new Alert(AlertType.ERROR, "Invalid " + yAxis.getLabel() + " range.");
+        alert.show();
+        event.consume();
+        return;
+      }
+      yAxis.setRange(lower, upper);
+    }
+
+    if (yAxisAutoTickSize.isSelected()) {
+      yAxis.setAutoTickUnitSelection(true);
+    } else {
+      double tickSize = Double.parseDouble(yAxisTickSize.getText());
+      yAxis.setTickUnit(new NumberTickUnit(tickSize));
+    }
+
+  }
 
 }

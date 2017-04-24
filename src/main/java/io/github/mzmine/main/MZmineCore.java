@@ -3,18 +3,17 @@
  * 
  * This file is part of MZmine 3.
  * 
- * MZmine 3 is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
+ * MZmine 3 is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  * 
- * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * MZmine 3; if not, write to the Free Software Foundation, Inc., 51 Franklin St,
- * Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a copy of the GNU General Public License along with MZmine 3; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 
 package io.github.mzmine.main;
@@ -42,89 +41,86 @@ import javafx.concurrent.Task;
  */
 public final class MZmineCore {
 
-    private static final @Nonnull MZmineConfiguration configuration = new MZmineConfiguration();
+  private static final @Nonnull MZmineConfiguration configuration = new MZmineConfiguration();
 
-    private static final @Nonnull ScheduledThreadPoolExecutor taskExecutor = new ScheduledThreadPoolExecutor(
-            2);
+  private static final @Nonnull ScheduledThreadPoolExecutor taskExecutor =
+      new ScheduledThreadPoolExecutor(2);
 
-    private static @Nonnull MZmineProject currentProject = new MZmineProject();
+  private static @Nonnull MZmineProject currentProject = new MZmineProject();
 
-    public static @Nonnull MZmineConfiguration getConfiguration() {
-        return configuration;
+  public static @Nonnull MZmineConfiguration getConfiguration() {
+    return configuration;
+  }
+
+  public static @Nonnull String getMZmineVersion() {
+    try {
+      ClassLoader myClassLoader = MZmineCore.class.getClassLoader();
+      InputStream inStream = myClassLoader
+          .getResourceAsStream("META-INF/maven/io.github.mzmine/mzmine/pom.properties");
+      if (inStream == null)
+        return "0.0";
+      Properties properties = new Properties();
+      properties.load(inStream);
+      String value = properties.getProperty("version");
+      if (value == null)
+        return "0.0";
+      else
+        return value;
+    } catch (Exception e) {
+      e.printStackTrace();
+      return "0.0";
     }
+  }
 
-    public static @Nonnull String getMZmineVersion() {
-        try {
-            ClassLoader myClassLoader = MZmineCore.class.getClassLoader();
-            InputStream inStream = myClassLoader.getResourceAsStream(
-                    "META-INF/maven/io.github.mzmine/mzmine/pom.properties");
-            if (inStream == null)
-                return "0.0";
-            Properties properties = new Properties();
-            properties.load(inStream);
-            String value = properties.getProperty("version");
-            if (value == null)
-                return "0.0";
-            else
-                return value;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "0.0";
-        }
+  public static @Nonnull MZmineProject getCurrentProject() {
+    return currentProject;
+  }
+
+  public static void setCurrentProject(@Nonnull MZmineProject newProject) {
+    currentProject = newProject;
+  }
+
+  public static void submitTasks(@Nonnull Collection<Task<?>> tasks) {
+
+    for (Task<?> task : tasks) {
+      MainWindowController mwc = MZmineGUI.getMainWindowController();
+      if (mwc != null) {
+        mwc.getTaskTable().getTasks().add(task);
+      }
+      taskExecutor.execute(task);
     }
+  }
 
-    public static @Nonnull MZmineProject getCurrentProject() {
-        return currentProject;
-    }
+  public static @Nonnull ScheduledThreadPoolExecutor getTaskExecutor() {
+    return taskExecutor;
+  }
 
-    public static void setCurrentProject(@Nonnull MZmineProject newProject) {
-        currentProject = newProject;
-    }
+  public static <ModuleType extends MZmineModule> ModuleType getModuleInstance(
+      Class<ModuleType> moduleClass) {
+    return MZmineModuleStarter.getModuleInstance(moduleClass);
+  }
 
-    public static void submitTasks(@Nonnull Collection<Task<?>> tasks) {
+  public static void runMZmineModule(@Nonnull Class<? extends MZmineRunnableModule> moduleClass,
+      @Nonnull ParameterSet parameters) {
 
-        for (Task<?> task : tasks) {
-            MainWindowController mwc = MZmineGUI.getMainWindowController();
-            if (mwc != null) {
-                mwc.getTaskTable().getTasks().add(task);
-            }
-            taskExecutor.execute(task);
-        }
-    }
+    MZmineRunnableModule module = (MZmineRunnableModule) getModuleInstance(moduleClass);
 
-    public static @Nonnull ScheduledThreadPoolExecutor getTaskExecutor() {
-        return taskExecutor;
-    }
+    // Usage Tracker
+    GoogleAnalyticsTracker GAT =
+        new GoogleAnalyticsTracker(module.getName(), "/JAVA/" + module.getName());
+    Thread gatThread = new Thread(GAT);
+    gatThread.setPriority(Thread.MIN_PRIORITY);
+    gatThread.start();
 
-    public static <ModuleType extends MZmineModule> ModuleType getModuleInstance(
-            Class<ModuleType> moduleClass) {
-        return MZmineModuleStarter.getModuleInstance(moduleClass);
-    }
+    // Run the module
+    final List<Task<?>> newTasks = new ArrayList<>();
+    module.runModule(currentProject, parameters, newTasks);
+    submitTasks(newTasks);
 
-    public static void runMZmineModule(
-            @Nonnull Class<? extends MZmineRunnableModule> moduleClass,
-            @Nonnull ParameterSet parameters) {
+    // Log module run in audit log
+    AuditLogEntry auditLogEntry = new AuditLogEntry(module, parameters, newTasks);
+    currentProject.logProcessingStep(auditLogEntry);
 
-        MZmineRunnableModule module = (MZmineRunnableModule) getModuleInstance(
-                moduleClass);
-
-        // Usage Tracker
-        GoogleAnalyticsTracker GAT = new GoogleAnalyticsTracker(
-                module.getName(), "/JAVA/" + module.getName());
-        Thread gatThread = new Thread(GAT);
-        gatThread.setPriority(Thread.MIN_PRIORITY);
-        gatThread.start();
-
-        // Run the module
-        final List<Task<?>> newTasks = new ArrayList<>();
-        module.runModule(currentProject, parameters, newTasks);
-        submitTasks(newTasks);
-
-        // Log module run in audit log
-        AuditLogEntry auditLogEntry = new AuditLogEntry(module, parameters,
-                newTasks);
-        currentProject.logProcessingStep(auditLogEntry);
-
-    }
+  }
 
 }

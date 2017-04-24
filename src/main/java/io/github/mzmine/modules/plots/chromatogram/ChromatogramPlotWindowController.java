@@ -3,18 +3,17 @@
  * 
  * This file is part of MZmine 3.
  * 
- * MZmine 3 is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
+ * MZmine 3 is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  * 
- * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * MZmine 3; if not, write to the Free Software Foundation, Inc., 51 Franklin St,
- * Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a copy of the GNU General Public License along with MZmine 3; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 
 package io.github.mzmine.modules.plots.chromatogram;
@@ -74,326 +73,311 @@ import javafx.stage.Window;
  */
 public class ChromatogramPlotWindowController {
 
-    private final ObservableList<ChromatogramPlotDataSet> datasets = FXCollections
-            .observableArrayList();
-    private int numberOfDataSets = 0;
+  private final ObservableList<ChromatogramPlotDataSet> datasets =
+      FXCollections.observableArrayList();
+  private int numberOfDataSets = 0;
 
-    // Colors
-    private static final Color gridColor = Color.rgb(220, 220, 220, 0.5);
-    private static final Color crossHairColor = Color.GRAY;
+  // Colors
+  private static final Color gridColor = Color.rgb(220, 220, 220, 0.5);
+  private static final Color crossHairColor = Color.GRAY;
 
-    private static final Color labelsColor = Color.BLACK;
-    private static final Color backgroundColor = Color.WHITE;
-    private static final Color[] plotColors = { Color.rgb(0, 0, 192), // blue
-            Color.rgb(192, 0, 0), // red
-            Color.rgb(0, 192, 0), // green
-            Color.MAGENTA, Color.CYAN, Color.ORANGE };
+  private static final Color labelsColor = Color.BLACK;
+  private static final Color backgroundColor = Color.WHITE;
+  private static final Color[] plotColors = {Color.rgb(0, 0, 192), // blue
+      Color.rgb(192, 0, 0), // red
+      Color.rgb(0, 192, 0), // green
+      Color.MAGENTA, Color.CYAN, Color.ORANGE};
 
-    private static final Font titleFont = new Font("SansSerif", Font.BOLD, 12);
+  private static final Font titleFont = new Font("SansSerif", Font.BOLD, 12);
 
-    private static final String LAYERS_DIALOG_FXML = "ChromatogramLayersDialog.fxml";
+  private static final String LAYERS_DIALOG_FXML = "ChromatogramLayersDialog.fxml";
 
-    private final BooleanProperty itemLabelsVisible = new SimpleBooleanProperty(
-            this, "itemLabelsVisible", true);
-    private final BooleanProperty legendVisible = new SimpleBooleanProperty(
-            this, "legendVisible", true);
+  private final BooleanProperty itemLabelsVisible =
+      new SimpleBooleanProperty(this, "itemLabelsVisible", true);
+  private final BooleanProperty legendVisible =
+      new SimpleBooleanProperty(this, "legendVisible", true);
 
-    private File lastSaveDirectory;
+  private File lastSaveDirectory;
 
-    private TextTitle chartTitle, chartSubTitle;
+  private TextTitle chartTitle, chartSubTitle;
 
-    @FXML
-    private BorderPane chartPane;
+  @FXML
+  private BorderPane chartPane;
 
-    @FXML
-    private ChartNodeJFreeChart chartNode;
+  @FXML
+  private ChartNodeJFreeChart chartNode;
 
-    @FXML
-    private MenuItem showSpectrumMenuItem;
+  @FXML
+  private MenuItem showSpectrumMenuItem;
 
-    @FXML
-    private Menu removeDatasetMenu;
+  @FXML
+  private Menu removeDatasetMenu;
 
-    @FXML
-    public void initialize() {
+  @FXML
+  public void initialize() {
 
-        final JFreeChart chart = chartNode.getChart();
-        final XYPlot plot = chart.getXYPlot();
+    final JFreeChart chart = chartNode.getChart();
+    final XYPlot plot = chart.getXYPlot();
 
-        // Do not set colors and strokes dynamically. They are instead provided
-        // by the dataset and configured in configureRenderer()
-        plot.setDrawingSupplier(null);
-        plot.setDomainGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
-        plot.setRangeGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
-        plot.setBackgroundPaint(JavaFXUtil.convertColorToAWT(backgroundColor));
-        plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
-        plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
-        plot.setDomainCrosshairPaint(
-                JavaFXUtil.convertColorToAWT(crossHairColor));
-        plot.setRangeCrosshairPaint(
-                JavaFXUtil.convertColorToAWT(crossHairColor));
-        plot.setDomainCrosshairVisible(true);
-        plot.setRangeCrosshairVisible(true);
+    // Do not set colors and strokes dynamically. They are instead provided
+    // by the dataset and configured in configureRenderer()
+    plot.setDrawingSupplier(null);
+    plot.setDomainGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
+    plot.setRangeGridlinePaint(JavaFXUtil.convertColorToAWT(gridColor));
+    plot.setBackgroundPaint(JavaFXUtil.convertColorToAWT(backgroundColor));
+    plot.setAxisOffset(new RectangleInsets(5.0, 5.0, 5.0, 5.0));
+    plot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
+    plot.setDomainCrosshairPaint(JavaFXUtil.convertColorToAWT(crossHairColor));
+    plot.setRangeCrosshairPaint(JavaFXUtil.convertColorToAWT(crossHairColor));
+    plot.setDomainCrosshairVisible(true);
+    plot.setRangeCrosshairVisible(true);
 
-        // chart properties
-        chart.setBackgroundPaint(JavaFXUtil.convertColorToAWT(backgroundColor));
+    // chart properties
+    chart.setBackgroundPaint(JavaFXUtil.convertColorToAWT(backgroundColor));
 
-        // legend properties
-        LegendTitle legend = chart.getLegend();
-        // legend.setItemFont(legendFont);
-        legend.setFrame(BlockBorder.NONE);
+    // legend properties
+    LegendTitle legend = chart.getLegend();
+    // legend.setItemFont(legendFont);
+    legend.setFrame(BlockBorder.NONE);
 
-        // set the X axis (retention time) properties
-        NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
-        xAxis.setLabel("Retention time (min)");
-        xAxis.setUpperMargin(0.03);
-        xAxis.setLowerMargin(0.03);
-        xAxis.setRangeType(RangeType.POSITIVE);
-        xAxis.setTickLabelInsets(new RectangleInsets(0, 0, 20, 20));
+    // set the X axis (retention time) properties
+    NumberAxis xAxis = (NumberAxis) plot.getDomainAxis();
+    xAxis.setLabel("Retention time (min)");
+    xAxis.setUpperMargin(0.03);
+    xAxis.setLowerMargin(0.03);
+    xAxis.setRangeType(RangeType.POSITIVE);
+    xAxis.setTickLabelInsets(new RectangleInsets(0, 0, 20, 20));
 
-        // set the Y axis (intensity) properties
-        NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
-        yAxis.setLabel("Intensity");
-        yAxis.setRangeType(RangeType.POSITIVE);
-        yAxis.setAutoRangeIncludesZero(true);
+    // set the Y axis (intensity) properties
+    NumberAxis yAxis = (NumberAxis) plot.getRangeAxis();
+    yAxis.setLabel("Intensity");
+    yAxis.setRangeType(RangeType.POSITIVE);
+    yAxis.setAutoRangeIncludesZero(true);
 
-        // set the fixed number formats, because otherwise JFreeChart sometimes
-        // shows exponent, sometimes it doesn't
-        DecimalFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
-        xAxis.setNumberFormatOverride(mzFormat);
-        DecimalFormat intensityFormat = MZmineCore.getConfiguration()
-                .getIntensityFormat();
-        yAxis.setNumberFormatOverride(intensityFormat);
+    // set the fixed number formats, because otherwise JFreeChart sometimes
+    // shows exponent, sometimes it doesn't
+    DecimalFormat mzFormat = MZmineCore.getConfiguration().getMZFormat();
+    xAxis.setNumberFormatOverride(mzFormat);
+    DecimalFormat intensityFormat = MZmineCore.getConfiguration().getIntensityFormat();
+    yAxis.setNumberFormatOverride(intensityFormat);
 
-        chartTitle = chartNode.getChart().getTitle();
-        chartTitle.setMargin(5, 0, 0, 0);
-        chartTitle.setFont(titleFont);
-        chartTitle.setText("Chromatogram");
+    chartTitle = chartNode.getChart().getTitle();
+    chartTitle.setMargin(5, 0, 0, 0);
+    chartTitle.setFont(titleFont);
+    chartTitle.setText("Chromatogram");
 
-        chartNode.setCursor(Cursor.CROSSHAIR);
+    chartNode.setCursor(Cursor.CROSSHAIR);
 
-        // Remove the dataset if it is removed from the list
-        datasets.addListener((Change<? extends ChromatogramPlotDataSet> c) -> {
-            while (c.next()) {
-                if (c.wasRemoved()) {
-                    for (ChromatogramPlotDataSet ds : c.getRemoved()) {
-                        int index = plot.indexOf(ds);
-                        plot.setDataset(index, null);
-                    }
-                }
-            }
-        });
-
-        itemLabelsVisible.addListener((prop, oldVal, newVal) -> {
-            for (ChromatogramPlotDataSet dataset : datasets) {
-                int datasetIndex = plot.indexOf(dataset);
-                XYItemRenderer renderer = plot.getRenderer(datasetIndex);
-                renderer.setBaseItemLabelsVisible(newVal);
-            }
-        });
-
-        legendVisible.addListener((prop, oldVal, newVal) -> {
-            legend.setVisible(newVal);
-        });
-    }
-
-    void addChromatogram(Chromatogram chromatogram, String title) {
-
-        if (!Platform.isFxApplicationThread()) {
-            throw new IllegalStateException(
-                    "Not on FX application thread; currentThread = "
-                            + Thread.currentThread().getName());
+    // Remove the dataset if it is removed from the list
+    datasets.addListener((Change<? extends ChromatogramPlotDataSet> c) -> {
+      while (c.next()) {
+        if (c.wasRemoved()) {
+          for (ChromatogramPlotDataSet ds : c.getRemoved()) {
+            int index = plot.indexOf(ds);
+            plot.setDataset(index, null);
+          }
         }
+      }
+    });
 
-        final int datasetIndex = numberOfDataSets;
-        numberOfDataSets++;
+    itemLabelsVisible.addListener((prop, oldVal, newVal) -> {
+      for (ChromatogramPlotDataSet dataset : datasets) {
+        int datasetIndex = plot.indexOf(dataset);
+        XYItemRenderer renderer = plot.getRenderer(datasetIndex);
+        renderer.setBaseItemLabelsVisible(newVal);
+      }
+    });
 
-        ChromatogramDataSet newDataSet = new ChromatogramDataSet(chromatogram,
-                title);
+    legendVisible.addListener((prop, oldVal, newVal) -> {
+      legend.setVisible(newVal);
+    });
+  }
 
-        datasets.add(newDataSet);
+  void addChromatogram(Chromatogram chromatogram, String title) {
 
-        final XYPlot plot = chartNode.getChart().getXYPlot();
-
-        final Color newColor = plotColors[datasetIndex % plotColors.length];
-        newDataSet.setColor(newColor);
-
-        configureRenderer(newDataSet, datasetIndex);
-
-        newDataSet.colorProperty().addListener(e -> {
-            Platform.runLater(
-                    () -> configureRenderer(newDataSet, datasetIndex));
-        });
-
-        newDataSet.lineThicknessProperty().addListener(e -> {
-            Platform.runLater(
-                    () -> configureRenderer(newDataSet, datasetIndex));
-        });
-        newDataSet.showDataPointsProperty().addListener(e -> {
-            Platform.runLater(
-                    () -> configureRenderer(newDataSet, datasetIndex));
-        });
-
-        // Once everything is configured, add the dataset to the plot
-        plot.setDataset(datasetIndex, newDataSet);
+    if (!Platform.isFxApplicationThread()) {
+      throw new IllegalStateException(
+          "Not on FX application thread; currentThread = " + Thread.currentThread().getName());
     }
 
-    private void configureRenderer(ChromatogramPlotDataSet dataset,
-            int datasetIndex) {
+    final int datasetIndex = numberOfDataSets;
+    numberOfDataSets++;
 
-        final XYPlot plot = chartNode.getChart().getXYPlot();
+    ChromatogramDataSet newDataSet = new ChromatogramDataSet(chromatogram, title);
 
-        XYLineAndShapeRenderer newRenderer = new XYLineAndShapeRenderer();
-        final int lineThickness = dataset.getLineThickness();
-        newRenderer.setBaseShape(
-                new Ellipse2D.Double(-2 * lineThickness, -2 * lineThickness,
-                        4 * lineThickness + 1, 4 * lineThickness + 1));
-        newRenderer.setBaseShapesFilled(true);
-        newRenderer.setBaseShapesVisible(dataset.getShowDataPoints());
-        newRenderer.setDrawOutlines(false);
+    datasets.add(newDataSet);
 
-        Stroke baseStroke = new BasicStroke(lineThickness);
-        newRenderer.setBaseStroke(baseStroke);
+    final XYPlot plot = chartNode.getChart().getXYPlot();
 
-        // Set tooltips for legend
-        newRenderer.setLegendItemToolTipGenerator((ds, series) -> {
-            if (ds instanceof ChromatogramPlotDataSet) {
-                return ((ChromatogramPlotDataSet) ds).getDescription();
-            } else
-                return null;
-        });
+    final Color newColor = plotColors[datasetIndex % plotColors.length];
+    newDataSet.setColor(newColor);
 
-        // Set color
-        Color baseColor = dataset.getColor();
-        newRenderer.setBasePaint(JavaFXUtil.convertColorToAWT(baseColor));
+    configureRenderer(newDataSet, datasetIndex);
 
-        // Set label generator
-        XYItemLabelGenerator intelligentLabelGenerator = new IntelligentItemLabelGenerator(
-                chartNode, 100, dataset);
-        newRenderer.setBaseItemLabelGenerator(intelligentLabelGenerator);
-        newRenderer.setBaseItemLabelPaint(
-                JavaFXUtil.convertColorToAWT(labelsColor));
-        newRenderer.setBaseItemLabelsVisible(itemLabelsVisible.get());
-        newRenderer.setBaseItemLabelsVisible(true);
+    newDataSet.colorProperty().addListener(e -> {
+      Platform.runLater(() -> configureRenderer(newDataSet, datasetIndex));
+    });
 
-        // Set tooltip generator
-        newRenderer.setBaseToolTipGenerator(dataset);
+    newDataSet.lineThicknessProperty().addListener(e -> {
+      Platform.runLater(() -> configureRenderer(newDataSet, datasetIndex));
+    });
+    newDataSet.showDataPointsProperty().addListener(e -> {
+      Platform.runLater(() -> configureRenderer(newDataSet, datasetIndex));
+    });
 
-        plot.setRenderer(datasetIndex, newRenderer);
+    // Once everything is configured, add the dataset to the plot
+    plot.setDataset(datasetIndex, newDataSet);
+  }
 
+  private void configureRenderer(ChromatogramPlotDataSet dataset, int datasetIndex) {
+
+    final XYPlot plot = chartNode.getChart().getXYPlot();
+
+    XYLineAndShapeRenderer newRenderer = new XYLineAndShapeRenderer();
+    final int lineThickness = dataset.getLineThickness();
+    newRenderer.setBaseShape(new Ellipse2D.Double(-2 * lineThickness, -2 * lineThickness,
+        4 * lineThickness + 1, 4 * lineThickness + 1));
+    newRenderer.setBaseShapesFilled(true);
+    newRenderer.setBaseShapesVisible(dataset.getShowDataPoints());
+    newRenderer.setDrawOutlines(false);
+
+    Stroke baseStroke = new BasicStroke(lineThickness);
+    newRenderer.setBaseStroke(baseStroke);
+
+    // Set tooltips for legend
+    newRenderer.setLegendItemToolTipGenerator((ds, series) -> {
+      if (ds instanceof ChromatogramPlotDataSet) {
+        return ((ChromatogramPlotDataSet) ds).getDescription();
+      } else
+        return null;
+    });
+
+    // Set color
+    Color baseColor = dataset.getColor();
+    newRenderer.setBasePaint(JavaFXUtil.convertColorToAWT(baseColor));
+
+    // Set label generator
+    XYItemLabelGenerator intelligentLabelGenerator =
+        new IntelligentItemLabelGenerator(chartNode, 100, dataset);
+    newRenderer.setBaseItemLabelGenerator(intelligentLabelGenerator);
+    newRenderer.setBaseItemLabelPaint(JavaFXUtil.convertColorToAWT(labelsColor));
+    newRenderer.setBaseItemLabelsVisible(itemLabelsVisible.get());
+    newRenderer.setBaseItemLabelsVisible(true);
+
+    // Set tooltip generator
+    newRenderer.setBaseToolTipGenerator(dataset);
+
+    plot.setRenderer(datasetIndex, newRenderer);
+
+  }
+
+  public void handleShowSpectrum(Event e) {
+
+  }
+
+  public void handleNormalizeIntensityScale(Event e) {
+
+  }
+
+  public void handleResetIntensityScale(Event e) {
+
+  }
+
+  public void handleSetupLayers(Event e) {
+    try {
+      URL layersDialogFXML = getClass().getResource(LAYERS_DIALOG_FXML);
+      FXMLLoader loader = new FXMLLoader(layersDialogFXML);
+      Stage layersDialog = loader.load();
+      ChromatogramLayersDialogController controller = loader.getController();
+      controller.configure(datasets, this);
+      layersDialog.initModality(Modality.APPLICATION_MODAL);
+      layersDialog.show();
+    } catch (Exception ex) {
+      ex.printStackTrace();
     }
+  }
 
-    public void handleShowSpectrum(Event e) {
+  public void handleContextMenuShowing(Event e) {
 
-    }
+  }
 
-    public void handleNormalizeIntensityScale(Event e) {
+  public void handleChartMousePressed(Event e) {
 
-    }
+  }
 
-    public void handleResetIntensityScale(Event e) {
+  public void handleChartKeyPressed(Event e) {
 
-    }
+  }
 
-    public void handleSetupLayers(Event e) {
-        try {
-            URL layersDialogFXML = getClass().getResource(LAYERS_DIALOG_FXML);
-            FXMLLoader loader = new FXMLLoader(layersDialogFXML);
-            Stage layersDialog = loader.load();
-            ChromatogramLayersDialogController controller = loader
-                    .getController();
-            controller.configure(datasets, this);
-            layersDialog.initModality(Modality.APPLICATION_MODAL);
-            layersDialog.show();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+  public void handleAddChromatogramFromFile(Event e) {
 
-    public void handleContextMenuShowing(Event e) {
+  }
 
-    }
+  public void handleAddChromatogramFromText(Event e) {
 
-    public void handleChartMousePressed(Event e) {
+  }
 
-    }
+  public void handleCopyImage(Event e) {
+    JFreeChartUtils.exportToClipboard(chartNode);
+  }
 
-    public void handleChartKeyPressed(Event e) {
+  public void handleCopyChromatogram(Event e) {
 
-    }
+  }
 
-    public void handleAddChromatogramFromFile(Event e) {
+  public void handleExportJPG(Event event) {
+    JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.JPG);
+  }
 
-    }
+  public void handleExportPNG(Event event) {
+    JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.PNG);
+  }
 
-    public void handleAddChromatogramFromText(Event e) {
+  public void handleExportPDF(Event event) {
+    JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.PDF);
+  }
 
-    }
+  public void handleExportSVG(Event event) {
+    JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.SVG);
+  }
 
-    public void handleCopyImage(Event e) {
-        JFreeChartUtils.exportToClipboard(chartNode);
-    }
+  public void handleExportEMF(Event event) {
+    JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.EMF);
+  }
 
-    public void handleCopyChromatogram(Event e) {
+  public void handleExportEPS(Event event) {
+    JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.EPS);
+  }
 
-    }
+  public void handleExportMzML(Event e) {}
 
-    public void handleExportJPG(Event event) {
-        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.JPG);
-    }
+  public void handleExportCSV(Event e) {}
 
-    public void handleExportPNG(Event event) {
-        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.PNG);
-    }
+  public void handleExportTXT(Event e) {}
 
-    public void handleExportPDF(Event event) {
-        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.PDF);
-    }
+  public void handleManualZoom(Event e) {
+    XYPlot plot = chartNode.getChart().getXYPlot();
+    Window parent = chartNode.getScene().getWindow();
+    ManualZoomDialog dialog = new ManualZoomDialog(parent, plot);
+    dialog.show();
+  }
 
-    public void handleExportSVG(Event event) {
-        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.SVG);
-    }
+  public void handleZoomOut(Event e) {
+    XYPlot plot = chartNode.getChart().getXYPlot();
+    plot.getDomainAxis().setAutoRange(true);
+    plot.getRangeAxis().setAutoRange(true);
+  }
 
-    public void handleExportEMF(Event event) {
-        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.EMF);
-    }
+  public void handleToggleLabels(Event event) {
+    itemLabelsVisible.set(!itemLabelsVisible.get());
+  }
 
-    public void handleExportEPS(Event event) {
-        JFreeChartUtils.showSaveDialog(chartNode, ImgFileType.EPS);
-    }
+  public void handleToggleLegend(Event event) {
+    legendVisible.set(!legendVisible.get());
+  }
 
-    public void handleExportMzML(Event e) {
-    }
-
-    public void handleExportCSV(Event e) {
-    }
-
-    public void handleExportTXT(Event e) {
-    }
-
-    public void handleManualZoom(Event e) {
-        XYPlot plot = chartNode.getChart().getXYPlot();
-        Window parent = chartNode.getScene().getWindow();
-        ManualZoomDialog dialog = new ManualZoomDialog(parent, plot);
-        dialog.show();
-    }
-
-    public void handleZoomOut(Event e) {
-        XYPlot plot = chartNode.getChart().getXYPlot();
-        plot.getDomainAxis().setAutoRange(true);
-        plot.getRangeAxis().setAutoRange(true);
-    }
-
-    public void handleToggleLabels(Event event) {
-        itemLabelsVisible.set(!itemLabelsVisible.get());
-    }
-
-    public void handleToggleLegend(Event event) {
-        legendVisible.set(!legendVisible.get());
-    }
-
-    public void handlePrint(Event event) {
-        JFreeChartUtils.printChart(chartNode);
-    }
+  public void handlePrint(Event event) {
+    JFreeChartUtils.printChart(chartNode);
+  }
 
 }

@@ -3,18 +3,17 @@
  * 
  * This file is part of MZmine 3.
  * 
- * MZmine 3 is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
+ * MZmine 3 is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  * 
- * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * MZmine 3; if not, write to the Free Software Foundation, Inc., 51 Franklin St,
- * Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a copy of the GNU General Public License along with MZmine 3; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 
 package io.github.mzmine.modules.featuredetection.targeteddetection;
@@ -47,121 +46,113 @@ import javafx.event.EventHandler;
 
 public class TargetedDetectionTask extends Task<Object> implements MZmineTask {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+  private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final @Nonnull List<IonAnnotation> ionAnnotations;
-    private final @Nonnull RawDataFile rawDataFile;
-    private final @Nonnull DataPointStore dataStore;
-    private final @Nonnull MaximumMzTolerance mzTolerance;
-    private final @Nonnull RTTolerance rtTolerance;
-    private final @Nonnull Double intensityTolerance;
-    private final @Nonnull Double minHeight;
-    private final @Nullable String nameSuffix;
-    private String title, message;
-    private FeatureTable featureTable;
+  private final @Nonnull List<IonAnnotation> ionAnnotations;
+  private final @Nonnull RawDataFile rawDataFile;
+  private final @Nonnull DataPointStore dataStore;
+  private final @Nonnull MaximumMzTolerance mzTolerance;
+  private final @Nonnull RTTolerance rtTolerance;
+  private final @Nonnull Double intensityTolerance;
+  private final @Nonnull Double minHeight;
+  private final @Nullable String nameSuffix;
+  private String title, message;
+  private FeatureTable featureTable;
 
-    private MSDKMethod<List<Chromatogram>> targetedDetectionMethod;
-    private MSDKMethod<?> chromatogramToFeatureTableMethod;
+  private MSDKMethod<List<Chromatogram>> targetedDetectionMethod;
+  private MSDKMethod<?> chromatogramToFeatureTableMethod;
 
-    public TargetedDetectionTask(String title, @Nullable String message,
-            @Nonnull List<IonAnnotation> ionAnnotations,
-            @Nonnull RawDataFile rawDataFile, @Nonnull DataPointStore dataStore,
-            @Nonnull MaximumMzTolerance mzTolerance, @Nonnull RTTolerance rtTolerance,
-            @Nonnull Double intensityTolerance, @Nonnull Double minHeight,
-            @Nullable String nameSuffix) {
-        this.ionAnnotations = ionAnnotations;
-        this.rawDataFile = rawDataFile;
-        this.dataStore = dataStore;
-        this.mzTolerance = mzTolerance;
-        this.rtTolerance = rtTolerance;
-        this.intensityTolerance = intensityTolerance;
-        this.minHeight = minHeight;
-        this.nameSuffix = nameSuffix;
-        this.title = title;
-        this.message = message;
+  public TargetedDetectionTask(String title, @Nullable String message,
+      @Nonnull List<IonAnnotation> ionAnnotations, @Nonnull RawDataFile rawDataFile,
+      @Nonnull DataPointStore dataStore, @Nonnull MaximumMzTolerance mzTolerance,
+      @Nonnull RTTolerance rtTolerance, @Nonnull Double intensityTolerance,
+      @Nonnull Double minHeight, @Nullable String nameSuffix) {
+    this.ionAnnotations = ionAnnotations;
+    this.rawDataFile = rawDataFile;
+    this.dataStore = dataStore;
+    this.mzTolerance = mzTolerance;
+    this.rtTolerance = rtTolerance;
+    this.intensityTolerance = intensityTolerance;
+    this.minHeight = minHeight;
+    this.nameSuffix = nameSuffix;
+    this.title = title;
+    this.message = message;
 
-        // Targeted detection method
-        targetedDetectionMethod = new TargetedDetectionMethod(ionAnnotations,
-                rawDataFile, dataStore, mzTolerance, rtTolerance,
-                intensityTolerance, minHeight);
+    // Targeted detection method
+    targetedDetectionMethod = new TargetedDetectionMethod(ionAnnotations, rawDataFile, dataStore,
+        mzTolerance, rtTolerance, intensityTolerance, minHeight);
 
-        refreshStatus();
+    refreshStatus();
 
-        EventHandler<WorkerStateEvent> cancelEvent = new EventHandler<WorkerStateEvent>() {
-            @Override
-            public void handle(WorkerStateEvent workerEvent) {
-                targetedDetectionMethod.cancel();
-            }
-        };
+    EventHandler<WorkerStateEvent> cancelEvent = new EventHandler<WorkerStateEvent>() {
+      @Override
+      public void handle(WorkerStateEvent workerEvent) {
+        targetedDetectionMethod.cancel();
+      }
+    };
 
-        setOnCancelled(cancelEvent);
+    setOnCancelled(cancelEvent);
+  }
+
+  @Override
+  public void refreshStatus() {
+
+    // Progress
+    Float finishedPercent = 0f;
+
+    final Float method1Percent = targetedDetectionMethod.getFinishedPercentage();
+    if (method1Percent != null)
+      finishedPercent = method1Percent * 0.9f;
+
+    if (chromatogramToFeatureTableMethod != null) {
+      final Float method2Percent = chromatogramToFeatureTableMethod.getFinishedPercentage();
+      if (method2Percent != null)
+        finishedPercent = finishedPercent + method2Percent * 0.1f;
     }
 
-    @Override
-    public void refreshStatus() {
+    updateProgress(finishedPercent.doubleValue(), 1.0);
 
-        // Progress
-        Float finishedPercent = 0f;
+    // Title and message
+    updateTitle(title);
+    updateMessage(message);
+  }
 
-        final Float method1Percent = targetedDetectionMethod
-                .getFinishedPercentage();
-        if (method1Percent != null)
-            finishedPercent = method1Percent * 0.9f;
+  @Override
+  protected Object call() throws Exception {
+    try {
+      List<Chromatogram> detectedChromatograms = targetedDetectionMethod.execute();
 
-        if (chromatogramToFeatureTableMethod != null) {
-            final Float method2Percent = chromatogramToFeatureTableMethod
-                    .getFinishedPercentage();
-            if (method2Percent != null)
-                finishedPercent = finishedPercent + method2Percent * 0.1f;
-        }
+      // Create a new feature table
+      featureTable =
+          MSDKObjectBuilder.getFeatureTable(rawDataFile.getName() + nameSuffix, dataStore);
 
-        updateProgress(finishedPercent.doubleValue(), 1.0);
+      // Create a new sample
+      Sample sample = MSDKObjectBuilder.getSample(rawDataFile.getName());
+      sample.setRawDataFile(rawDataFile);
 
-        // Title and message
-        updateTitle(title);
-        updateMessage(message);
+      // Add the chromatograms to the feature table
+      this.chromatogramToFeatureTableMethod =
+          new ChromatogramToFeatureTableMethod(detectedChromatograms, featureTable, sample);
+
+      // Run method
+      try {
+        chromatogramToFeatureTableMethod.execute();
+      } catch (Throwable e) {
+        final String msg = "Error executing task " + title + ": " + e.getMessage();
+        logger.error(msg, e);
+        MZmineGUI.displayMessage(msg);
+      }
+    } catch (Throwable e) {
+      final String msg = "Error executing task " + title + ": " + e.getMessage();
+      logger.error(msg, e);
+      MZmineGUI.displayMessage(msg);
     }
 
-    @Override
-    protected Object call() throws Exception {
-        try {
-            List<Chromatogram> detectedChromatograms = targetedDetectionMethod
-                    .execute();
+    return featureTable;
+  }
 
-            // Create a new feature table
-            featureTable = MSDKObjectBuilder.getFeatureTable(
-                    rawDataFile.getName() + nameSuffix, dataStore);
-
-            // Create a new sample
-            Sample sample = MSDKObjectBuilder
-                    .getSample(rawDataFile.getName());
-            sample.setRawDataFile(rawDataFile);
-
-            // Add the chromatograms to the feature table
-            this.chromatogramToFeatureTableMethod = new ChromatogramToFeatureTableMethod(
-                    detectedChromatograms, featureTable, sample);
-
-            // Run method
-            try {
-                chromatogramToFeatureTableMethod.execute();
-            } catch (Throwable e) {
-                final String msg = "Error executing task " + title + ": "
-                        + e.getMessage();
-                logger.error(msg, e);
-                MZmineGUI.displayMessage(msg);
-            }
-        } catch (Throwable e) {
-            final String msg = "Error executing task " + title + ": "
-                    + e.getMessage();
-            logger.error(msg, e);
-            MZmineGUI.displayMessage(msg);
-        }
-
-        return featureTable;
-    }
-
-    public FeatureTable getResult() {
-        return featureTable;
-    }
+  public FeatureTable getResult() {
+    return featureTable;
+  }
 
 }

@@ -3,18 +3,17 @@
  * 
  * This file is part of MZmine 3.
  * 
- * MZmine 3 is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
+ * MZmine 3 is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  * 
- * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * MZmine 3; if not, write to the Free Software Foundation, Inc., 51 Franklin St,
- * Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a copy of the GNU General Public License along with MZmine 3; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 
 package io.github.mzmine.project;
@@ -38,82 +37,82 @@ import io.github.mzmine.project.auditlog.AuditLogEntry;
  */
 public class MZmineProject {
 
-    private @Nullable File projectFile;
+  private @Nullable File projectFile;
 
-    private final List<RawDataFile> rawDataFiles = new ArrayList<>();
-    private final List<FeatureTable> featureTables = new ArrayList<>();
-    private final List<AuditLogEntry> auditLog = new ArrayList<>();
+  private final List<RawDataFile> rawDataFiles = new ArrayList<>();
+  private final List<FeatureTable> featureTables = new ArrayList<>();
+  private final List<AuditLogEntry> auditLog = new ArrayList<>();
 
-    @Nullable
-    public File getProjectFile() {
-        return projectFile;
-    }
+  @Nullable
+  public File getProjectFile() {
+    return projectFile;
+  }
 
-    public void setProjectFile(@Nullable File projectFile) {
-        this.projectFile = projectFile;
-    }
+  public void setProjectFile(@Nullable File projectFile) {
+    this.projectFile = projectFile;
+  }
 
-    @Nonnull
-    public List<Sample> getSamples() {
-        final ArrayList<Sample> allSamples = new ArrayList<>();
-        synchronized (featureTables) {
-            for (FeatureTable peakList : featureTables) {
-                for (Sample s : peakList.getSamples()) {
-                    if (!allSamples.contains(s))
-                        allSamples.add(s);
-                }
-            }
+  @Nonnull
+  public List<Sample> getSamples() {
+    final ArrayList<Sample> allSamples = new ArrayList<>();
+    synchronized (featureTables) {
+      for (FeatureTable peakList : featureTables) {
+        for (Sample s : peakList.getSamples()) {
+          if (!allSamples.contains(s))
+            allSamples.add(s);
         }
-        return ImmutableList.copyOf(allSamples);
+      }
     }
+    return ImmutableList.copyOf(allSamples);
+  }
 
-    public void addFile(final RawDataFile rawDataFile) {
-        synchronized (rawDataFiles) {
-            rawDataFiles.add(rawDataFile);
-        }
+  public void addFile(final RawDataFile rawDataFile) {
+    synchronized (rawDataFiles) {
+      rawDataFiles.add(rawDataFile);
     }
+  }
 
-    public void removeFile(final RawDataFile rawDataFile) {
-        synchronized (rawDataFiles) {
-            rawDataFiles.remove(rawDataFile);
-        }
+  public void removeFile(final RawDataFile rawDataFile) {
+    synchronized (rawDataFiles) {
+      rawDataFiles.remove(rawDataFile);
     }
+  }
 
-    public @Nonnull List<RawDataFile> getRawDataFiles() {
-        synchronized (rawDataFiles) {
-            return ImmutableList.copyOf(rawDataFiles);
-        }
+  public @Nonnull List<RawDataFile> getRawDataFiles() {
+    synchronized (rawDataFiles) {
+      return ImmutableList.copyOf(rawDataFiles);
     }
+  }
 
-    public void addFeatureTable(final FeatureTable featureTable) {
-        synchronized (featureTables) {
-            featureTables.add(featureTable);
-        }
+  public void addFeatureTable(final FeatureTable featureTable) {
+    synchronized (featureTables) {
+      featureTables.add(featureTable);
     }
+  }
 
-    public void removeFeatureTable(final FeatureTable featureTable) {
-        synchronized (featureTables) {
-            featureTables.remove(featureTable);
-        }
+  public void removeFeatureTable(final FeatureTable featureTable) {
+    synchronized (featureTables) {
+      featureTables.remove(featureTable);
     }
+  }
 
-    public @Nonnull List<FeatureTable> getFeatureTables() {
-        synchronized (featureTables) {
-            return ImmutableList.copyOf(featureTables);
-        }
+  public @Nonnull List<FeatureTable> getFeatureTables() {
+    synchronized (featureTables) {
+      return ImmutableList.copyOf(featureTables);
     }
+  }
 
-    public void logProcessingStep(final AuditLogEntry auditLog) {
-        synchronized (auditLog) {
-            if (auditLog != null)
-                this.auditLog.add(auditLog);
-        }
+  public void logProcessingStep(final AuditLogEntry auditLog) {
+    synchronized (auditLog) {
+      if (auditLog != null)
+        this.auditLog.add(auditLog);
     }
+  }
 
-    public @Nonnull List<AuditLogEntry> getAuditLog() {
-        synchronized (auditLog) {
-            return ImmutableList.copyOf(auditLog);
-        }
+  public @Nonnull List<AuditLogEntry> getAuditLog() {
+    synchronized (auditLog) {
+      return ImmutableList.copyOf(auditLog);
     }
+  }
 
 }

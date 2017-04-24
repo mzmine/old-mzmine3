@@ -3,18 +3,17 @@
  * 
  * This file is part of MZmine 3.
  * 
- * MZmine 3 is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
+ * MZmine 3 is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  * 
- * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * MZmine 3; if not, write to the Free Software Foundation, Inc., 51 Franklin St,
- * Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a copy of the GNU General Public License along with MZmine 3; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 
 package io.github.mzmine.parameters.parametertypes.selectors;
@@ -38,70 +37,69 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class FeatureTableColumnsEditor extends HBox
-        implements ParameterEditor<FeatureTableColumnsSelection> {
+    implements ParameterEditor<FeatureTableColumnsSelection> {
 
-    private final ListView<String> namePatternList;
-    private FeatureTableColumnsSelection value;
+  private final ListView<String> namePatternList;
+  private FeatureTableColumnsSelection value;
 
-    public FeatureTableColumnsEditor(PropertySheet.Item parameter) {
+  public FeatureTableColumnsEditor(PropertySheet.Item parameter) {
 
-        // HBox properties
-        setSpacing(10);
-        setAlignment(Pos.CENTER_LEFT);
+    // HBox properties
+    setSpacing(10);
+    setAlignment(Pos.CENTER_LEFT);
 
-        namePatternList = new ListView<>();
-        namePatternList.setEditable(true);
-        namePatternList.setPrefHeight(150);
-        namePatternList.setCellFactory(TextFieldListCell.forListView());
+    namePatternList = new ListView<>();
+    namePatternList.setEditable(true);
+    namePatternList.setPrefHeight(150);
+    namePatternList.setCellFactory(TextFieldListCell.forListView());
 
-        Button addButton = new Button("Add");
-        addButton.setOnAction(e -> {
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Add name pattern");
-            dialog.setHeaderText("New name pattern");
-            Optional<String> result = dialog.showAndWait();
-            result.ifPresent(value -> namePatternList.getItems().add(value));
-        });
+    Button addButton = new Button("Add");
+    addButton.setOnAction(e -> {
+      TextInputDialog dialog = new TextInputDialog();
+      dialog.setTitle("Add name pattern");
+      dialog.setHeaderText("New name pattern");
+      Optional<String> result = dialog.showAndWait();
+      result.ifPresent(value -> namePatternList.getItems().add(value));
+    });
 
-        Button removeButton = new Button("Remove");
-        removeButton.setOnAction(e -> {
-            List<String> selectedItems = namePatternList.getSelectionModel()
-                    .getSelectedItems();
-            namePatternList.getItems().removeAll(selectedItems);
-        });
+    Button removeButton = new Button("Remove");
+    removeButton.setOnAction(e -> {
+      List<String> selectedItems = namePatternList.getSelectionModel().getSelectedItems();
+      namePatternList.getItems().removeAll(selectedItems);
+    });
 
-        VBox buttons = new VBox(addButton, removeButton);
-        buttons.setSpacing(10);
+    VBox buttons = new VBox(addButton, removeButton);
+    buttons.setSpacing(10);
 
-        getChildren().addAll(namePatternList, buttons);
+    getChildren().addAll(namePatternList, buttons);
+  }
+
+  @Override
+  public Node getEditor() {
+    return this;
+  }
+
+  @Override
+  public FeatureTableColumnsSelection getValue() {
+    return this.value;
+  }
+
+  @Override
+  public void setValue(FeatureTableColumnsSelection value) {
+
+    this.value = value;
+
+    if (this.value == null) {
+      this.value = new FeatureTableColumnsSelection();
     }
 
-    @Override
-    public Node getEditor() {
-        return this;
-    }
+    namePatternList.setItems(this.value.getNamePatterns());
 
-    @Override
-    public FeatureTableColumnsSelection getValue() {
-        return this.value;
-    }
+  }
 
-    @Override
-    public void setValue(FeatureTableColumnsSelection value) {
-
-        this.value = value;
-
-        if (this.value == null) {
-            this.value = new FeatureTableColumnsSelection();
-        }
-
-        namePatternList.setItems(this.value.getNamePatterns());
-
-    }
-
-    @Override
-    @Nullable
-    public Control getMainControl() {
-        return namePatternList;
-    }
+  @Override
+  @Nullable
+  public Control getMainControl() {
+    return namePatternList;
+  }
 }

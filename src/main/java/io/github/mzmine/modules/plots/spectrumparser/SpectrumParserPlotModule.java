@@ -3,18 +3,17 @@
  * 
  * This file is part of MZmine 3.
  * 
- * MZmine 3 is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
+ * MZmine 3 is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  * 
- * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * MZmine 3; if not, write to the Free Software Foundation, Inc., 51 Franklin
- * St, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a copy of the GNU General Public License along with MZmine 3; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 
 package io.github.mzmine.modules.plots.spectrumparser;
@@ -39,47 +38,43 @@ import javafx.concurrent.Task;
  */
 public class SpectrumParserPlotModule implements MZmineRunnableModule {
 
-    private static final @Nonnull String MODULE_NAME = "Spectrum parsed from text";
-    private static final @Nonnull String MODULE_DESCRIPTION = "Spectrum parsed from text";
+  private static final @Nonnull String MODULE_NAME = "Spectrum parsed from text";
+  private static final @Nonnull String MODULE_DESCRIPTION = "Spectrum parsed from text";
 
-    @Override
-    public @Nonnull String getName() {
-        return MODULE_NAME;
-    }
+  @Override
+  public @Nonnull String getName() {
+    return MODULE_NAME;
+  }
 
-    @Override
-    public @Nonnull String getDescription() {
-        return MODULE_DESCRIPTION;
-    }
+  @Override
+  public @Nonnull String getDescription() {
+    return MODULE_DESCRIPTION;
+  }
 
-    @Override
-    public void runModule(@Nonnull MZmineProject project,
-            @Nonnull ParameterSet parameters,
-            @Nonnull Collection<Task<?>> tasks) {
+  @Override
+  public void runModule(@Nonnull MZmineProject project, @Nonnull ParameterSet parameters,
+      @Nonnull Collection<Task<?>> tasks) {
 
-        final String spectrumText = parameters
-                .getParameter(SpectrumParserPlotParameters.spectrumText)
-                .getValue();
-        final MsSpectrumType spectrumType = parameters
-                .getParameter(SpectrumParserPlotParameters.spectrumType)
-                .getValue();
+    final String spectrumText =
+        parameters.getParameter(SpectrumParserPlotParameters.spectrumText).getValue();
+    final MsSpectrumType spectrumType =
+        parameters.getParameter(SpectrumParserPlotParameters.spectrumType).getValue();
 
-        Preconditions.checkNotNull(spectrumText);
-        Preconditions.checkNotNull(spectrumType);
+    Preconditions.checkNotNull(spectrumText);
+    Preconditions.checkNotNull(spectrumType);
 
-        final MsSpectrum spectrum = TxtImportAlgorithm
-                .parseMsSpectrum(spectrumText);
-        spectrum.setSpectrumType(spectrumType);
+    final MsSpectrum spectrum = TxtImportAlgorithm.parseMsSpectrum(spectrumText);
+    spectrum.setSpectrumType(spectrumType);
 
-        String spectrumName = "Manual spectrum";
+    String spectrumName = "Manual spectrum";
 
-        MsSpectrumPlotModule.showNewSpectrumWindow(spectrum, spectrumName);
+    MsSpectrumPlotModule.showNewSpectrumWindow(spectrum, spectrumName);
 
-    }
+  }
 
-    @Override
-    public @Nonnull Class<? extends ParameterSet> getParameterSetClass() {
-        return SpectrumParserPlotParameters.class;
-    }
+  @Override
+  public @Nonnull Class<? extends ParameterSet> getParameterSetClass() {
+    return SpectrumParserPlotParameters.class;
+  }
 
 }

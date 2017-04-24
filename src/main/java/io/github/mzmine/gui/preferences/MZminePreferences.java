@@ -3,18 +3,17 @@
  * 
  * This file is part of MZmine 3.
  * 
- * MZmine 3 is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
+ * MZmine 3 is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  * 
- * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * MZmine 3; if not, write to the Free Software Foundation, Inc., 51 Franklin St,
- * Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a copy of the GNU General Public License along with MZmine 3; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 
 package io.github.mzmine.gui.preferences;
@@ -36,111 +35,100 @@ import javafx.scene.control.ButtonType;
 
 public class MZminePreferences extends ParameterSet {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public static final NumberFormatParameter mzFormat = new NumberFormatParameter(
-            "m/z value format", "Format of m/z values", "Number formatting",
-            false, new DecimalFormat("0.0000"));
+  public static final NumberFormatParameter mzFormat = new NumberFormatParameter("m/z value format",
+      "Format of m/z values", "Number formatting", false, new DecimalFormat("0.0000"));
 
-    public static final NumberFormatParameter rtFormat = new NumberFormatParameter(
-            "Retention time format", "Format of retention time values",
-            "Number formatting", false, new DecimalFormat("0.00"));
+  public static final NumberFormatParameter rtFormat =
+      new NumberFormatParameter("Retention time format", "Format of retention time values",
+          "Number formatting", false, new DecimalFormat("0.00"));
 
-    public static final NumberFormatParameter intensityFormat = new NumberFormatParameter(
-            "Intensity format", "Format of intensity values",
-            "Number formatting", true, new DecimalFormat("0.0E0"));
+  public static final NumberFormatParameter intensityFormat =
+      new NumberFormatParameter("Intensity format", "Format of intensity values",
+          "Number formatting", true, new DecimalFormat("0.0E0"));
 
-    public static final NumOfThreadsParameter numOfThreads = new NumOfThreadsParameter();
+  public static final NumOfThreadsParameter numOfThreads = new NumOfThreadsParameter();
 
-    public static final OptionalModuleParameter proxySettings = new OptionalModuleParameter(
-            "Use proxy", "Use proxy for internet connection?", "Proxy",
-            new ProxySettings());
+  public static final OptionalModuleParameter proxySettings = new OptionalModuleParameter(
+      "Use proxy", "Use proxy for internet connection?", "Proxy", new ProxySettings());
 
-    public static final FileNameParameter rExecPath = new FileNameParameter(
-            "R executable path",
-            "Full R executable file path (If left blank, MZmine will try to find out automatically). On Windows, this should point to your R.exe file.",
-            "R support", (value, messages) -> {
-                if (value == null)
-                    return true;
-                if (!value.exists()) {
-                    messages.add("File does not exist");
-                    return false;
-                }
-                if (!value.canExecute()) {
-                    messages.add("File is not executable");
-                    return false;
-                }
-                return true;
-
-            } , FileNameParameter.Type.OPEN);
-
-    public static final BooleanParameter sendStatistics = new BooleanParameter(
-            "Send statistics",
-            "Allow MZmine to send anonymous statistics on the usage of its modules?",
-            "Statistics", true);
-
-    // public static final WindowSettingsParameter windowSetttings = new
-    // WindowSettingsParameter();
-
-    public MZminePreferences() {
-        super(mzFormat, rtFormat, intensityFormat, numOfThreads, proxySettings,
-                rExecPath, sendStatistics);
-    }
-
-    @Override
-    public ButtonType showSetupDialog(@Nullable String title) {
-
-        ButtonType retVal = super.showSetupDialog(title);
-        if (retVal == ButtonType.OK) {
-
-            // Update system settings
-            updateSystemSettings();
-
-            // Repaint windows to update number formats
-            // TODO: MZmineCore..getDesktop().getMainWindow().repaint();
+  public static final FileNameParameter rExecPath = new FileNameParameter("R executable path",
+      "Full R executable file path (If left blank, MZmine will try to find out automatically). On Windows, this should point to your R.exe file.",
+      "R support", (value, messages) -> {
+        if (value == null)
+          return true;
+        if (!value.exists()) {
+          messages.add("File does not exist");
+          return false;
         }
-
-        return retVal;
-    }
-
-    public void loadValuesFromXML(Element xmlElement) {
-        super.loadValuesFromXML(xmlElement);
-        updateSystemSettings();
-    }
-
-    private void updateSystemSettings() {
-
-        // Update system proxy settings
-        Boolean proxyEnabled = getParameter(proxySettings).getValue();
-        if ((proxyEnabled != null) && (proxyEnabled)) {
-            ParameterSet proxyParams = getParameter(proxySettings)
-                    .getEmbeddedParameters();
-            String address = proxyParams
-                    .getParameter(ProxySettings.proxyAddress).getValue();
-            String port = proxyParams.getParameter(ProxySettings.proxyPort)
-                    .getValue();
-            System.setProperty("http.proxySet", "true");
-            System.setProperty("http.proxyHost", address);
-            System.setProperty("http.proxyPort", port);
-        } else {
-            System.clearProperty("http.proxySet");
-            System.clearProperty("http.proxyHost");
-            System.clearProperty("http.proxyPort");
+        if (!value.canExecute()) {
+          messages.add("File is not executable");
+          return false;
         }
+        return true;
 
-        NumOfThreadsValue numOfThreadsValue = getParameter(numOfThreads)
-                .getValue();
-        if (numOfThreadsValue != null) {
-            int threadPoolSize = numOfThreadsValue.getNumberOfThreads();
-            int currentThreadPoolSize = MZmineCore.getTaskExecutor()
-                    .getCorePoolSize();
-            if (threadPoolSize != currentThreadPoolSize) {
-                logger.debug(
-                        "Setting the thread pool size to " + threadPoolSize);
-                MZmineCore.getTaskExecutor().setCorePoolSize(threadPoolSize);
-            }
-        }
+      }, FileNameParameter.Type.OPEN);
 
+  public static final BooleanParameter sendStatistics = new BooleanParameter("Send statistics",
+      "Allow MZmine to send anonymous statistics on the usage of its modules?", "Statistics", true);
+
+  // public static final WindowSettingsParameter windowSetttings = new
+  // WindowSettingsParameter();
+
+  public MZminePreferences() {
+    super(mzFormat, rtFormat, intensityFormat, numOfThreads, proxySettings, rExecPath,
+        sendStatistics);
+  }
+
+  @Override
+  public ButtonType showSetupDialog(@Nullable String title) {
+
+    ButtonType retVal = super.showSetupDialog(title);
+    if (retVal == ButtonType.OK) {
+
+      // Update system settings
+      updateSystemSettings();
+
+      // Repaint windows to update number formats
+      // TODO: MZmineCore..getDesktop().getMainWindow().repaint();
     }
+
+    return retVal;
+  }
+
+  public void loadValuesFromXML(Element xmlElement) {
+    super.loadValuesFromXML(xmlElement);
+    updateSystemSettings();
+  }
+
+  private void updateSystemSettings() {
+
+    // Update system proxy settings
+    Boolean proxyEnabled = getParameter(proxySettings).getValue();
+    if ((proxyEnabled != null) && (proxyEnabled)) {
+      ParameterSet proxyParams = getParameter(proxySettings).getEmbeddedParameters();
+      String address = proxyParams.getParameter(ProxySettings.proxyAddress).getValue();
+      String port = proxyParams.getParameter(ProxySettings.proxyPort).getValue();
+      System.setProperty("http.proxySet", "true");
+      System.setProperty("http.proxyHost", address);
+      System.setProperty("http.proxyPort", port);
+    } else {
+      System.clearProperty("http.proxySet");
+      System.clearProperty("http.proxyHost");
+      System.clearProperty("http.proxyPort");
+    }
+
+    NumOfThreadsValue numOfThreadsValue = getParameter(numOfThreads).getValue();
+    if (numOfThreadsValue != null) {
+      int threadPoolSize = numOfThreadsValue.getNumberOfThreads();
+      int currentThreadPoolSize = MZmineCore.getTaskExecutor().getCorePoolSize();
+      if (threadPoolSize != currentThreadPoolSize) {
+        logger.debug("Setting the thread pool size to " + threadPoolSize);
+        MZmineCore.getTaskExecutor().setCorePoolSize(threadPoolSize);
+      }
+    }
+
+  }
 
 }

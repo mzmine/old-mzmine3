@@ -3,18 +3,17 @@
  * 
  * This file is part of MZmine 3.
  * 
- * MZmine 3 is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
+ * MZmine 3 is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  * 
- * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * MZmine 3; if not, write to the Free Software Foundation, Inc., 51 Franklin St,
- * Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a copy of the GNU General Public License along with MZmine 3; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 
 package io.github.mzmine.parameters.parametertypes.ranges;
@@ -37,80 +36,77 @@ import javafx.scene.layout.HBox;
 /**
  * Parameter editor for double ranges
  */
-public class DoubleRangeEditor extends HBox
-        implements ParameterEditor<Range<Double>> {
+public class DoubleRangeEditor extends HBox implements ParameterEditor<Range<Double>> {
 
-    private final TextField minTxtField;
-    private final TextField maxTxtField;
-    private @Nullable NumberFormat numberFormat;
+  private final TextField minTxtField;
+  private final TextField maxTxtField;
+  private @Nullable NumberFormat numberFormat;
 
-    public DoubleRangeEditor(PropertySheet.Item parameter) {
-        if (!(parameter instanceof DoubleRangeParameter))
-            throw new IllegalArgumentException();
+  public DoubleRangeEditor(PropertySheet.Item parameter) {
+    if (!(parameter instanceof DoubleRangeParameter))
+      throw new IllegalArgumentException();
 
-        // Get the number formatter
-        DoubleRangeParameter drp = (DoubleRangeParameter) parameter;
-        this.numberFormat = drp.getNumberFormat();
+    // Get the number formatter
+    DoubleRangeParameter drp = (DoubleRangeParameter) parameter;
+    this.numberFormat = drp.getNumberFormat();
 
-        // The minimum value field
-        minTxtField = new TextField();
+    // The minimum value field
+    minTxtField = new TextField();
 
-        // The separator label
-        Label separatorLabel = new Label("-");
+    // The separator label
+    Label separatorLabel = new Label("-");
 
-        // The maximum value field
-        maxTxtField = new TextField();
+    // The maximum value field
+    maxTxtField = new TextField();
 
-        // Spacing setting
-        setSpacing(10);
+    // Spacing setting
+    setSpacing(10);
 
-        // Add the elements
-        getChildren().addAll(minTxtField, separatorLabel, maxTxtField);
+    // Add the elements
+    getChildren().addAll(minTxtField, separatorLabel, maxTxtField);
+  }
+
+  @Override
+  public Node getEditor() {
+    return this;
+  }
+
+  @Override
+  public Range<Double> getValue() {
+    String minValueS = minTxtField.getText();
+    String maxValueS = maxTxtField.getText();
+    try {
+      double minValue = Double.parseDouble(minValueS);
+      double maxValue = Double.parseDouble(maxValueS);
+      return Range.closed(minValue, maxValue);
+    } catch (NumberFormatException e) {
+      return null;
+    }
+  }
+
+  @SuppressWarnings("null")
+  @Override
+  public void setValue(Range<Double> value) {
+    if (value == null)
+      return;
+    String minValue;
+    String maxValue;
+
+    if (numberFormat != null) {
+      minValue = String.valueOf(numberFormat.format(value.lowerEndpoint()));
+      maxValue = String.valueOf(numberFormat.format(value.upperEndpoint()));
+    } else {
+      minValue = String.valueOf(value.lowerEndpoint());
+      maxValue = String.valueOf(value.upperEndpoint());
     }
 
-    @Override
-    public Node getEditor() {
-        return this;
-    }
+    minTxtField.setText(minValue);
+    maxTxtField.setText(maxValue);
+  }
 
-    @Override
-    public Range<Double> getValue() {
-        String minValueS = minTxtField.getText();
-        String maxValueS = maxTxtField.getText();
-        try {
-            double minValue = Double.parseDouble(minValueS);
-            double maxValue = Double.parseDouble(maxValueS);
-            return Range.closed(minValue, maxValue);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    @SuppressWarnings("null")
-    @Override
-    public void setValue(Range<Double> value) {
-        if (value == null)
-            return;
-        String minValue;
-        String maxValue;
-
-        if (numberFormat != null) {
-            minValue = String
-                    .valueOf(numberFormat.format(value.lowerEndpoint()));
-            maxValue = String
-                    .valueOf(numberFormat.format(value.upperEndpoint()));
-        } else {
-            minValue = String.valueOf(value.lowerEndpoint());
-            maxValue = String.valueOf(value.upperEndpoint());
-        }
-
-        minTxtField.setText(minValue);
-        maxTxtField.setText(maxValue);
-    }
-
-    @Override
-    public Control getMainControl() {
-        return minTxtField;
-    }
+  @Override
+  public Control getMainControl() {
+    return minTxtField;
+  }
 
 }

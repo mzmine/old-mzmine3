@@ -3,18 +3,17 @@
  * 
  * This file is part of MZmine 3.
  * 
- * MZmine 3 is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
+ * MZmine 3 is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  * 
- * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * MZmine 3; if not, write to the Free Software Foundation, Inc., 51 Franklin
- * St, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a copy of the GNU General Public License along with MZmine 3; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 
 package io.github.mzmine.modules.plots.msspectrum;
@@ -45,94 +44,86 @@ import javafx.util.converter.NumberStringConverter;
  */
 public class MsSpectrumLayersDialogController {
 
-    @FXML
-    private Stage dialogStage;
+  @FXML
+  private Stage dialogStage;
 
-    @FXML
-    private TableView<MsSpectrumDataSet> layersTable;
+  @FXML
+  private TableView<MsSpectrumDataSet> layersTable;
 
-    @FXML
-    private TableColumn<MsSpectrumDataSet, MsSpectrumType> renderingTypeColumn;
+  @FXML
+  private TableColumn<MsSpectrumDataSet, MsSpectrumType> renderingTypeColumn;
 
-    @FXML
-    private TableColumn<MsSpectrumDataSet, Color> colorColumn;
+  @FXML
+  private TableColumn<MsSpectrumDataSet, Color> colorColumn;
 
-    @FXML
-    private TableColumn<MsSpectrumDataSet, Number> intensityScaleColumn;
+  @FXML
+  private TableColumn<MsSpectrumDataSet, Number> intensityScaleColumn;
 
-    @FXML
-    private TableColumn<MsSpectrumDataSet, Integer> lineThicknessColumn;
+  @FXML
+  private TableColumn<MsSpectrumDataSet, Integer> lineThicknessColumn;
 
-    @FXML
-    private TableColumn<MsSpectrumDataSet, Boolean> showDataPointsColumn;
+  @FXML
+  private TableColumn<MsSpectrumDataSet, Boolean> showDataPointsColumn;
 
-    private MsSpectrumPlotWindowController plotController;
+  private MsSpectrumPlotWindowController plotController;
 
-    public void initialize() {
+  public void initialize() {
 
-        final ObservableList<MsSpectrumType> renderingChoices = FXCollections
-                .observableArrayList(MsSpectrumType.CENTROIDED,
-                        MsSpectrumType.PROFILE);
-        renderingTypeColumn.setCellFactory(
-                ChoiceBoxTableCell.forTableColumn(renderingChoices));
+    final ObservableList<MsSpectrumType> renderingChoices =
+        FXCollections.observableArrayList(MsSpectrumType.CENTROIDED, MsSpectrumType.PROFILE);
+    renderingTypeColumn.setCellFactory(ChoiceBoxTableCell.forTableColumn(renderingChoices));
 
-        colorColumn.setCellFactory(
-                column -> new ColorTableCell<MsSpectrumDataSet>(column));
+    colorColumn.setCellFactory(column -> new ColorTableCell<MsSpectrumDataSet>(column));
 
-        lineThicknessColumn.setCellFactory(
-                column -> new SpinnerTableCell<MsSpectrumDataSet>(column, 1,
-                        5));
+    lineThicknessColumn
+        .setCellFactory(column -> new SpinnerTableCell<MsSpectrumDataSet>(column, 1, 5));
 
-        intensityScaleColumn.setCellFactory(
-                TextFieldTableCell.forTableColumn(new NumberStringConverter(
-                        MZmineCore.getConfiguration().getIntensityFormat())));
+    intensityScaleColumn.setCellFactory(TextFieldTableCell.forTableColumn(
+        new NumberStringConverter(MZmineCore.getConfiguration().getIntensityFormat())));
 
-        showDataPointsColumn.setCellFactory(
-                column -> new CheckBoxTableCell<MsSpectrumDataSet, Boolean>() {
-                    {
-                        tableRowProperty().addListener(e -> {
-                            TableRow<?> row = getTableRow();
-                            if (row == null)
-                                return;
-                            MsSpectrumDataSet dataSet = (MsSpectrumDataSet) row
-                                    .getItem();
-                            if (dataSet == null)
-                                return;
-                            disableProperty().bind(
-                                    dataSet.renderingTypeProperty().isEqualTo(
-                                            MsSpectrumType.CENTROIDED));
+    showDataPointsColumn
+        .setCellFactory(column -> new CheckBoxTableCell<MsSpectrumDataSet, Boolean>() {
+          {
+            tableRowProperty().addListener(e -> {
+              TableRow<?> row = getTableRow();
+              if (row == null)
+                return;
+              MsSpectrumDataSet dataSet = (MsSpectrumDataSet) row.getItem();
+              if (dataSet == null)
+                return;
+              disableProperty()
+                  .bind(dataSet.renderingTypeProperty().isEqualTo(MsSpectrumType.CENTROIDED));
 
-                        });
-                    }
-                });
-    }
+            });
+          }
+        });
+  }
 
-    public void handleDeleteLayer(Event event) {
-        List<MsSpectrumDataSet> selected = layersTable.getSelectionModel()
-                .getSelectedItems();
-        layersTable.getItems().removeAll(selected);
-    }
+  public void handleDeleteLayer(Event event) {
+    List<MsSpectrumDataSet> selected = layersTable.getSelectionModel().getSelectedItems();
+    layersTable.getItems().removeAll(selected);
+  }
 
-    public void handleAddScan(Event event) {
-        plotController.handleAddScan(event);
-    }
+  public void handleAddScan(Event event) {
+    plotController.handleAddScan(event);
+  }
 
-    public void handleAddSpectrumFromText(Event event) {
-        plotController.handleAddSpectrumFromText(event);
-    }
+  public void handleAddSpectrumFromText(Event event) {
+    plotController.handleAddSpectrumFromText(event);
+  }
 
-    public void handleAddIsotopePattern(Event event) {
-        plotController.handleAddIsotopePattern(event);
-    }
+  public void handleAddIsotopePattern(Event event) {
+    plotController.handleAddIsotopePattern(event);
+  }
 
-    public void handleClose(Event event) {
-        dialogStage.close();
-    }
+  public void handleClose(Event event) {
+    dialogStage.close();
+  }
 
-    public void configure(ObservableList<MsSpectrumDataSet> items,
-            MsSpectrumPlotWindowController plotController) {
-        layersTable.setItems(items);
-        this.plotController = plotController;
-    }
+  public void configure(ObservableList<MsSpectrumDataSet> items,
+      MsSpectrumPlotWindowController plotController) {
+    layersTable.setItems(items);
+    this.plotController = plotController;
+  }
 
 }

@@ -3,18 +3,17 @@
  * 
  * This file is part of MZmine 3.
  * 
- * MZmine 3 is free software; you can redistribute it and/or modify it under the
- * terms of the GNU General Public License as published by the Free Software
- * Foundation; either version 2 of the License, or (at your option) any later
- * version.
+ * MZmine 3 is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the
+ * License, or (at your option) any later version.
  * 
- * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY
- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
- * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * MZmine 3 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License along with
- * MZmine 3; if not, write to the Free Software Foundation, Inc., 51 Franklin
- * St, Fifth Floor, Boston, MA 02110-1301 USA
+ * You should have received a copy of the GNU General Public License along with MZmine 3; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+ * USA
  */
 
 package io.github.mzmine.modules.plots.chromatogram;
@@ -34,40 +33,40 @@ import javafx.scene.paint.Color;
  * Chromatogram data set
  */
 public interface ChromatogramPlotDataSet
-        extends XYDataset, XYItemLabelGenerator, XYToolTipGenerator {
+    extends XYDataset, XYItemLabelGenerator, XYToolTipGenerator {
 
-    String getDescription();
+  String getDescription();
 
-    String getName();
+  String getName();
 
-    void setName(String newName);
+  void setName(String newName);
 
-    StringProperty nameProperty();
+  StringProperty nameProperty();
 
-    Double getIntensityScale();
+  Double getIntensityScale();
 
-    void setIntensityScale(Double newIntensityScale);
+  void setIntensityScale(Double newIntensityScale);
 
-    DoubleProperty intensityScaleProperty();
+  DoubleProperty intensityScaleProperty();
 
-    void resetIntensityScale();
+  void resetIntensityScale();
 
-    Integer getLineThickness();
+  Integer getLineThickness();
 
-    void setLineThickness(Integer newLineThickness);
+  void setLineThickness(Integer newLineThickness);
 
-    IntegerProperty lineThicknessProperty();
+  IntegerProperty lineThicknessProperty();
 
-    Boolean getShowDataPoints();
+  Boolean getShowDataPoints();
 
-    void setShowDataPoints(Boolean newShowDataPoints);
+  void setShowDataPoints(Boolean newShowDataPoints);
 
-    BooleanProperty showDataPointsProperty();
+  BooleanProperty showDataPointsProperty();
 
-    Color getColor();
+  Color getColor();
 
-    void setColor(Color newColor);
+  void setColor(Color newColor);
 
-    ObjectProperty<Color> colorProperty();
+  ObjectProperty<Color> colorProperty();
 
 }
