@@ -25,11 +25,11 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.github.msdk.datamodel.RawDataFile;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
-import io.github.msdk.rawdata.centroiding.MSDKCentroidingMethod;
-import io.github.msdk.rawdata.centroiding.WaveletCentroidingAlgorithm;
+import io.github.msdk.spectra.centroiding.MSDKCentroidingMethod;
+import io.github.msdk.spectra.centroiding.WaveletCentroidingAlgorithm;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;

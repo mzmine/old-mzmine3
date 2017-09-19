@@ -18,8 +18,8 @@
 
 package io.github.mzmine.project;
 
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.RawDataFile;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

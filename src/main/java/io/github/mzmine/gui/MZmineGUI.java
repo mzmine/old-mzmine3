@@ -30,8 +30,8 @@ import org.controlsfx.control.StatusBar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.RawDataFile;
 import io.github.mzmine.gui.mainwindow.MainWindowController;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.main.NewVersionCheck;

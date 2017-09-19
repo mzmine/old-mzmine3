@@ -31,9 +31,9 @@ import org.slf4j.LoggerFactory;
 
 import io.github.msdk.datamodel.featuretables.FeatureTable;
 import io.github.msdk.datamodel.featuretables.FeatureTableColumn;
-import io.github.msdk.io.csv.CsvFileExportMethod;
 import io.github.mzmine.gui.MZmineGUI;
 import io.github.mzmine.modules.MZmineProcessingModule;
+import io.github.mzmine.modules.io.csv.CsvFileExportMethod;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureTableColumnsSelection;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesSelection;

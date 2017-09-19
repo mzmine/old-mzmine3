@@ -23,9 +23,9 @@ import java.text.NumberFormat;
 import org.jfree.data.xy.AbstractXYDataset;
 import org.jfree.data.xy.XYDataset;
 
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.Chromatogram;
+import io.github.msdk.datamodel.MsScan;
 import io.github.msdk.datamodel.rawdata.ChromatographyInfo;
-import io.github.msdk.datamodel.rawdata.MsScan;
 import io.github.msdk.util.ChromatogramUtil;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.modules.plots.chromatogram.ChromatogramPlotDataSet;

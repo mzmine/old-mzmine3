@@ -21,8 +21,8 @@ package io.github.mzmine.main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.RawDataFile;
 import io.github.mzmine.project.MZmineProject;
 
 /**

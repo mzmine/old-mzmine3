@@ -24,8 +24,8 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
 
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.spectra.isotopepattern.IsotopePatternGeneratorAlgorithm;
+import io.github.msdk.datamodel.MsSpectrum;
+import io.github.msdk.isotopes.isotopepattern.IsotopePatternGeneratorAlgorithm;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.modules.plots.msspectrum.MsSpectrumPlotModule;
 import io.github.mzmine.parameters.ParameterSet;

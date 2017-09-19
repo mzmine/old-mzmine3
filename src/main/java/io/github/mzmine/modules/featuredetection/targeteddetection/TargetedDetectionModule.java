@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
 import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.impl.MSDKObjectBuilder;
 import io.github.msdk.datamodel.ionannotations.IonAnnotation;
 import io.github.msdk.datamodel.ionannotations.IonType;
 import io.github.msdk.datamodel.rawdata.RawDataFile;
@@ -42,6 +41,7 @@ import io.github.msdk.datamodel.rawdata.SeparationType;
 import io.github.msdk.util.IonTypeUtil;
 import io.github.msdk.util.tolerances.MaximumMzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;
+import io.github.mzmine.datamodel.MSDKObjectBuilder;
 import io.github.mzmine.modules.MZmineProcessingModule;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.RawDataFilesSelection;
@@ -137,7 +137,7 @@ public class TargetedDetectionModule implements MZmineProcessingModule {
               ionType = IonTypeUtil.createIonType(adductString);
           }
 
-          IonAnnotation ion = MSDKObjectBuilder.getIonAnnotation();
+          SimpleIonAnnotation ion = new SimpleIonAnnotation();
           ion.setAnnotationId(annotationId);
           ion.setExpectedMz(mz);
           ion.setDescription(name);

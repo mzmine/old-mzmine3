@@ -26,9 +26,9 @@ import org.jfree.data.xy.XYDataset;
 
 import com.google.common.collect.Range;
 
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
-import io.github.msdk.datamodel.rawdata.MsScan;
+import io.github.msdk.datamodel.MsScan;
+import io.github.msdk.datamodel.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrumType;
 import io.github.msdk.spectra.splash.SplashCalculationAlgorithm;
 import io.github.msdk.util.MsSpectrumUtil;
 import io.github.mzmine.main.MZmineCore;

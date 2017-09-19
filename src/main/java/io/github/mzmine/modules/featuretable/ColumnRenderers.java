@@ -1,6 +1,6 @@
 package io.github.mzmine.modules.featuretable;
 
-import io.github.msdk.datamodel.featuretables.ColumnName;
+import io.github.mzmine.datamodel.ColumnName;
 import io.github.mzmine.modules.featuretable.renderers.ChromatogramRenderer;
 import io.github.mzmine.modules.featuretable.renderers.ChromatographyInfoRenderer;
 import io.github.mzmine.modules.featuretable.renderers.DefaultRenderer;

@@ -25,10 +25,10 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.github.msdk.alignment.joinaligner.JoinAlignerMethod;
+import io.github.msdk.datamodel.FeatureTable;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.features.joinaligner.JoinAlignerMethod;
 import io.github.msdk.util.tolerances.MaximumMzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;

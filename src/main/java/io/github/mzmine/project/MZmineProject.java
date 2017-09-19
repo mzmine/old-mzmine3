@@ -27,9 +27,9 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.datamodel.featuretables.Sample;
-import io.github.msdk.datamodel.rawdata.RawDataFile;
+import io.github.msdk.datamodel.FeatureTable;
+import io.github.msdk.datamodel.RawDataFile;
+import io.github.msdk.datamodel.Sample;
 import io.github.mzmine.project.auditlog.AuditLogEntry;
 
 /**

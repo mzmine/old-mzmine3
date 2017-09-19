@@ -25,13 +25,13 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.github.msdk.datamodel.FeatureTable;
 import io.github.msdk.datamodel.datastore.DataPointStore;
 import io.github.msdk.datamodel.datastore.DataPointStoreFactory;
-import io.github.msdk.datamodel.featuretables.FeatureTable;
-import io.github.msdk.features.gapfilling.GapFillingMethod;
 import io.github.msdk.util.tolerances.MaximumMzTolerance;
 import io.github.msdk.util.tolerances.RTTolerance;
 import io.github.mzmine.modules.MZmineProcessingModule;
+import io.github.mzmine.modules.featuretable.gapfilling.GapFillingMethod;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.parametertypes.selectors.FeatureTablesSelection;
 import io.github.mzmine.project.MZmineProject;

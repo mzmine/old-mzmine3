@@ -24,8 +24,8 @@ import javax.annotation.Nonnull;
 
 import com.google.common.base.Preconditions;
 
-import io.github.msdk.datamodel.msspectra.MsSpectrum;
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import io.github.msdk.datamodel.MsSpectrum;
+import io.github.msdk.datamodel.MsSpectrumType;
 import io.github.msdk.io.txt.TxtImportAlgorithm;
 import io.github.mzmine.modules.MZmineRunnableModule;
 import io.github.mzmine.modules.plots.msspectrum.MsSpectrumPlotModule;

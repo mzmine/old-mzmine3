@@ -20,7 +20,7 @@ package io.github.mzmine.modules.plots.spectrumparser;
 
 import java.util.Arrays;
 
-import io.github.msdk.datamodel.msspectra.MsSpectrumType;
+import io.github.msdk.datamodel.MsSpectrumType;
 import io.github.mzmine.parameters.ParameterSet;
 import io.github.mzmine.parameters.ParameterValidator;
 import io.github.mzmine.parameters.parametertypes.ComboParameter;

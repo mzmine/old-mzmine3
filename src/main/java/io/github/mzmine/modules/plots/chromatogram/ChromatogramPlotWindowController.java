@@ -39,9 +39,7 @@ import org.jfree.chart.title.TextTitle;
 import org.jfree.data.RangeType;
 import org.jfree.ui.RectangleInsets;
 
-import com.sun.javafx.tk.Toolkit;
-
-import io.github.msdk.datamodel.chromatograms.Chromatogram;
+import io.github.msdk.datamodel.Chromatogram;
 import io.github.mzmine.main.MZmineCore;
 import io.github.mzmine.modules.plots.chromatogram.datasets.ChromatogramDataSet;
 import io.github.mzmine.util.JavaFXUtil;
